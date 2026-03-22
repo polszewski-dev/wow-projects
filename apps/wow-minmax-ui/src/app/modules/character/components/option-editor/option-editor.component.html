@@ -1,0 +1,9 @@
+@if (data$ | async; as data) {
+	@for (group of data.statuses; track group.groupId) {
+		<app-option-select
+				[elementPrefix]="elementPrefix"
+				[group]="group"
+				(changed)="onChange(data.playerId, $event)"
+		></app-option-select>
+	}
+}

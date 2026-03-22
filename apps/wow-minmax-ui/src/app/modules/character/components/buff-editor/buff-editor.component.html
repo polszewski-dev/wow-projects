@@ -1,18 +1,5 @@
-@if (data$ | async; as data) {
-	@for (buffStatus of data.buffStatusList; track buffStatus.buff.id) {
-		@let buff = buffStatus.buff;
-		<div class="form-check">
-			<input
-				class="form-check-input"
-				type="checkbox"
-				id="buff-select-{{buff.id}}"
-				[(ngModel)]="buffStatus.enabled"
-				(change)="onChange(data.playerId, buffStatus)"
-			>
-			<label class="form-check-label" for="buff-select-{{buff.id}}">
-				<app-description [source]="buff" class="buff-name"></app-description>
-				<span class="buff-stats">= {{buff.attributes}}</span>
-			</label>
-		</div>
-	}
-}
+<app-option-editor
+	[selector]="selector"
+	[actionGenerator]="actionGenerator"
+	elementPrefix="buff"
+></app-option-editor>

@@ -139,7 +139,7 @@ export class CharacterEffects {
 	changeBuffStatus$ = createEffect(() => this.actions$.pipe(
 		ofType(changeBuffStatus),
 		switchMap(({ playerId, buffListType, buffStatus }) => this.buffService.changeBuffStatus(playerId, buffListType, buffStatus).pipe(
-			map(buffStatusList => changeBuffStatusSuccess({ playerId, buffListType, buffStatusList })),
+			map(() => changeBuffStatusSuccess({ playerId, buffListType, buffStatus })),
 			catchError(error => of(changeBuffStatusFailure({ buffListType, error })))
 		))
 	));
@@ -147,7 +147,7 @@ export class CharacterEffects {
 	changeConsumableStatus$ = createEffect(() => this.actions$.pipe(
 		ofType(changeConsumableStatus),
 		switchMap(({ playerId, consumableStatus }) => this.consumableService.changeConsumableStatus(playerId, consumableStatus).pipe(
-			map(consumableStatuses => changeConsumableStatusSuccess({ playerId, consumableStatuses })),
+			map(() => changeConsumableStatusSuccess({ playerId, consumableStatus })),
 			catchError(error => of(changeConsumableStatusFailure({ error })))
 		))
 	));

@@ -7,7 +7,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import wow.minmax.client.dto.BuffDTO;
-import wow.minmax.client.dto.BuffStatusDTO;
+import wow.minmax.client.dto.OptionStatusDTO;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -38,7 +38,7 @@ class BuffControllerTest extends ControllerTest {
 		var buffDTO = new BuffDTO(
 				28189, FEL_ARMOR, 2, null, null, null
 		);
-		var buffStatusDTO = new BuffStatusDTO(
+		var buffStatusDTO = new OptionStatusDTO<>(
 				buffDTO,
 				true
 		);
@@ -51,7 +51,6 @@ class BuffControllerTest extends ControllerTest {
 								.content(requestBody)
 				)
 				.andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;
 	}
 }

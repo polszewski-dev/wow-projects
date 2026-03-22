@@ -1,18 +1,5 @@
-@if (data$ | async; as data) {
-	@for (consumableStatus of data.consumableStatuses; track consumableStatus.consumable.id) {
-		@let consumable = consumableStatus.consumable;
-		<div class="form-check">
-			<input
-				class="form-check-input"
-				type="checkbox"
-				id="consumable-select-{{consumable.id}}"
-				[(ngModel)]="consumableStatus.enabled"
-				(change)="onChange(data.playerId, consumableStatus)"
-			>
-			<label class="form-check-label" for="consumable-select-{{consumable.id}}">
-				<app-description [source]="consumable" class="consumable-name"></app-description>
-				<span class="consumable-stats">= {{consumable.attributes}}</span>
-			</label>
-		</div>
-	}
-}
+<app-option-editor
+	[selector]="selector"
+	[actionGenerator]="actionGenerator"
+	elementPrefix="consumable"
+></app-option-editor>

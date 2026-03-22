@@ -19,7 +19,7 @@ class ConsumableServiceTest extends ServiceTest {
 		var consumableStatuses = underTest.getConsumableStatuses(PLAYER_ID);
 
 		var statusStrings = consumableStatuses.stream()
-				.map(x -> x.consumable().getName() + "#" + x.enabled())
+				.map(x -> x.option().getName() + "#" + x.enabled())
 				.sorted()
 				.toList();
 

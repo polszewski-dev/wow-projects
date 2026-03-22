@@ -93,6 +93,12 @@ public abstract class Options<T, I> {
 		}
 	}
 
+	public List<OptionStatus<T>> getStatuses() {
+		return getAvailable().stream()
+				.map(option -> new OptionStatus<>(option, has(getId(option))))
+				.toList();
+	}
+
 	private boolean isAvailable(String name) {
 		return availableByName.containsKey(name);
 	}

@@ -1,0 +1,15 @@
+@for (status of group.statuses; track status.option.id) {
+	@let option = status.option;
+	<div class="form-check">
+		<input
+			class="form-check-input"
+			type="checkbox"
+			id="{{elementPrefix}}-select-{{option.id}}"
+			[(ngModel)]="status.enabled"
+			(change)="onChange(status)"
+		>
+		<label class="form-check-label" for="{{elementPrefix}}-select-{{option.id}}">
+			<app-description [source]="option" class="option-name"></app-description>
+		</label>
+	</div>
+}

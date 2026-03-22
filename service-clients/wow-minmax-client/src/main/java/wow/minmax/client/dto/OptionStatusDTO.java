@@ -2,10 +2,10 @@ package wow.minmax.client.dto;
 
 /**
  * User: POlszewski
- * Date: 2025-08-30
+ * Date: 2026-03-19
  */
-public record ConsumableStatusDTO(
-		ConsumableDTO consumable,
+public record OptionStatusDTO<T>(
+		T option,
 		boolean enabled
 ) {
 }

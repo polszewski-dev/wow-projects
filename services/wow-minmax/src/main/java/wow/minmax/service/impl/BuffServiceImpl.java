@@ -3,8 +3,9 @@ package wow.minmax.service.impl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import wow.character.model.character.BuffListType;
+import wow.character.model.character.OptionStatus;
+import wow.commons.model.buff.Buff;
 import wow.commons.model.buff.BuffId;
-import wow.minmax.model.BuffStatus;
 import wow.minmax.model.Player;
 import wow.minmax.model.PlayerId;
 import wow.minmax.service.BuffService;
@@ -22,19 +23,10 @@ public class BuffServiceImpl implements BuffService {
 	private final PlayerService playerService;
 
 	@Override
-	public List<BuffStatus> getBuffStatuses(PlayerId playerId, BuffListType buffListType) {
+	public List<OptionStatus<Buff>> getBuffStatuses(PlayerId playerId, BuffListType buffListType) {
 		var player = playerService.getPlayer(playerId);
 
-		return getBuffStatuses(player, buffListType);
-	}
-
-	@Override
-	public List<BuffStatus> getBuffStatuses(Player player, BuffListType buffListType) {
-		var buffs = player.getBuffList(buffListType);
-
-		return buffs.getAvailable().stream()
-				.map(buff -> new BuffStatus(buff, buffs.has(buff.getName())))
-				.toList();
+		return player.getBuffList(buffListType).getStatuses();
 	}
 
 	@Override

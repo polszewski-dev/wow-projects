@@ -1,8 +1,8 @@
 import { createAction, props } from "@ngrx/store";
 import { BuffListType } from '../../model/buff/BuffListType';
-import { BuffStatus } from "../../model/buff/BuffStatus";
+import { BuffGroup, BuffStatus } from "../../model/buff/BuffStatus";
 import { Character } from '../../model/Character';
-import { ConsumableStatus } from "../../model/consumable/ConsumableStatus";
+import { ConsumableGroup, ConsumableStatus } from "../../model/consumable/ConsumableStatus";
 import { Enchant } from "../../model/equipment/Enchant";
 import { Equipment } from '../../model/equipment/Equipment';
 import { EquipmentSocketStatus } from '../../model/equipment/EquipmentSocketStatus';
@@ -73,7 +73,7 @@ export const loadBuffs = createAction(
 
 export const loadBuffListSuccess = createAction(
 	"[Character] Load Buff Status List Success",
-	props<{ buffListType: BuffListType, buffStatusList: BuffStatus[] }>()
+	props<{ buffListType: BuffListType, buffStatusList: BuffGroup[] }>()
 );
 
 export const loadBuffListFailure = createAction(
@@ -88,7 +88,7 @@ export const loadConsumableStatuses = createAction(
 
 export const loadConsumableStatusesSuccess = createAction(
 	"[Character] Load Consumable Statuses Success",
-	props<{ consumableStatuses: ConsumableStatus[] }>()
+	props<{ consumableStatuses: ConsumableGroup[] }>()
 );
 
 export const loadConsumableStatusesFailure = createAction(
@@ -208,7 +208,7 @@ export const changeBuffStatus = createAction(
 
 export const changeBuffStatusSuccess = createAction(
 	"[Character] Change Buff Status Success",
-	props<{ playerId: string, buffListType: BuffListType, buffStatusList: BuffStatus[] }>()
+	props<{ playerId: string, buffListType: BuffListType, buffStatus: BuffStatus }>()
 );
 
 export const changeBuffStatusFailure = createAction(
@@ -223,7 +223,7 @@ export const changeConsumableStatus = createAction(
 
 export const changeConsumableStatusSuccess = createAction(
 	"[Character] Change Consumable Status Success",
-	props<{ playerId: string, consumableStatuses: ConsumableStatus[] }>()
+	props<{ playerId: string, consumableStatus: ConsumableStatus }>()
 );
 
 export const changeConsumableStatusFailure = createAction(

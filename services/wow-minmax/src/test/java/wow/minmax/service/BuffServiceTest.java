@@ -24,7 +24,7 @@ class BuffServiceTest extends ServiceTest {
 		var buffStatuses = underTest.getBuffStatuses(PLAYER_ID, CHARACTER_BUFF);
 
 		var statusStrings = buffStatuses.stream()
-				.map(x -> x.buff().getName() + "#" + x.enabled())
+				.map(x -> x.option().getName() + "#" + x.enabled())
 				.sorted()
 				.toList();
 

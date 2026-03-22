@@ -12,12 +12,14 @@ import wow.commons.repository.spell.BuffRepository;
 import wow.commons.util.PhaseMap;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
 import static java.util.Comparator.comparingInt;
 import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
 import static wow.commons.util.PhaseMap.addEntryForEveryPhase;
 import static wow.commons.util.PhaseMap.putForEveryPhase;
 
@@ -39,7 +41,7 @@ public class BuffRepositoryImpl implements BuffRepository {
 	public List<Buff> getAvailableBuffs(PhaseId phaseId, Predicate<Buff> predicate) {
 		return buffsById.values(phaseId).stream()
 				.filter(predicate)
-				.collect(groupingBy(Described::getName))
+				.collect(groupingBy(Described::getName, LinkedHashMap::new, toList()))
 				.values()
 				.stream()
 				.map(x -> x.stream().max(comparingInt(Buff::getRank).thenComparing(Buff::getId)))

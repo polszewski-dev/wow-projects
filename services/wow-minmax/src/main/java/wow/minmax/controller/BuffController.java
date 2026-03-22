@@ -5,7 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import wow.character.model.character.BuffListType;
 import wow.commons.model.buff.BuffId;
-import wow.minmax.client.dto.BuffStatusDTO;
+import wow.minmax.client.dto.BuffDTO;
+import wow.minmax.client.dto.OptionGroupDTO;
+import wow.minmax.client.dto.OptionStatusDTO;
 import wow.minmax.converter.dto.BuffStatusConverter;
 import wow.minmax.model.PlayerId;
 import wow.minmax.service.BuffService;
@@ -25,30 +27,26 @@ public class BuffController {
 	private final BuffStatusConverter buffStatusConverter;
 
 	@GetMapping("{playerId}/{buffListType}")
-	public List<BuffStatusDTO> getBuffStatuses(
+	public List<OptionGroupDTO<BuffDTO>> getBuffStatuses(
 			@PathVariable("playerId") PlayerId playerId,
 			@PathVariable("buffListType") BuffListType buffListType
 	) {
 		var buffStatuses = buffService.getBuffStatuses(playerId, buffListType);
 
-		return buffStatusConverter.convertList(buffStatuses);
+		return buffStatusConverter.convertAndGroup(buffStatuses);
 	}
 
 	@PutMapping("{playerId}/{buffListType}")
-	public List<BuffStatusDTO> changeBuffStatus(
+	public void changeBuffStatus(
 			@PathVariable("playerId") PlayerId playerId,
 			@PathVariable("buffListType") BuffListType buffListType,
-			@RequestBody BuffStatusDTO buffStatus
+			@RequestBody OptionStatusDTO<BuffDTO> buffStatus
 	) {
-		var buffId = BuffId.of(buffStatus.buff().id());
+		var buffId = BuffId.of(buffStatus.option().id());
 		var enabled = buffStatus.enabled();
 
-		var player = buffService.changeBuffStatus(playerId, buffListType, buffId, enabled);
+		buffService.changeBuffStatus(playerId, buffListType, buffId, enabled);
 
 		log.info("Changed buff charId: {}, list: {}, buffId: {}, enabled: {}", playerId, buffListType, buffId, enabled);
-
-		var buffStatuses = buffService.getBuffStatuses(player, buffListType);
-
-		return buffStatusConverter.convertList(buffStatuses);
 	}
 }

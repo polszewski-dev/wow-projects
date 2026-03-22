@@ -7,7 +7,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import wow.minmax.client.dto.ConsumableDTO;
-import wow.minmax.client.dto.ConsumableStatusDTO;
+import wow.minmax.client.dto.OptionStatusDTO;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -36,7 +36,7 @@ class ConsumableControllerTest extends ControllerTest {
 		var consumableDTO = new ConsumableDTO(
 				22839, "Destruction Potion", null, null, null
 		);
-		var consumableStatusDTO = new ConsumableStatusDTO(
+		var consumableStatusDTO = new OptionStatusDTO<>(
 				consumableDTO,
 				true
 		);
@@ -49,7 +49,6 @@ class ConsumableControllerTest extends ControllerTest {
 								.content(requestBody)
 				)
 				.andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		;
 	}
 }

@@ -2,9 +2,8 @@ package wow.minmax.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import wow.character.model.character.Consumables;
+import wow.character.model.character.OptionStatus;
 import wow.commons.model.item.Consumable;
-import wow.minmax.model.ConsumableStatus;
 import wow.minmax.model.Player;
 import wow.minmax.model.PlayerId;
 import wow.minmax.service.ConsumableService;
@@ -22,27 +21,15 @@ public class ConsumableServiceImpl implements ConsumableService {
 	private final PlayerService playerService;
 
 	@Override
-	public List<ConsumableStatus> getConsumableStatuses(PlayerId playerId) {
+	public List<OptionStatus<Consumable>> getConsumableStatuses(PlayerId playerId) {
 		var player = playerService.getPlayer(playerId);
 
 		return getConsumableStatuses(player);
 	}
 
 	@Override
-	public List<ConsumableStatus> getConsumableStatuses(Player player) {
-		var consumables = player.getConsumables();
-		var availableConsumables = consumables.getAvailable();
-
-		return availableConsumables.stream()
-				.map(consumable -> getConsumableStatus(consumable, consumables))
-				.toList();
-	}
-
-	private ConsumableStatus getConsumableStatus(Consumable consumable, Consumables consumables) {
-		return new ConsumableStatus(
-				consumable,
-				consumables.has(consumable.getId())
-		);
+	public List<OptionStatus<Consumable>> getConsumableStatuses(Player player) {
+		return player.getConsumables().getStatuses();
 	}
 
 	@Override

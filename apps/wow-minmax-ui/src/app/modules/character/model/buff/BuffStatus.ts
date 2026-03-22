@@ -1,6 +1,6 @@
+import { OptionGroup } from "../OptionGroup";
+import { OptionStatus } from "../OptionStatus";
 import { Buff } from "./Buff";
 
-export interface BuffStatus {
-	buff: Buff;
-	enabled: boolean;
-}
+export type BuffStatus = OptionStatus<Buff>
+export type BuffGroup = OptionGroup<Buff>

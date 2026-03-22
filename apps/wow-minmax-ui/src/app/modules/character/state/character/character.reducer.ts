@@ -1,14 +1,16 @@
 import { createReducer, on } from "@ngrx/store";
 import { failure, Loadable, loading, pending, success } from '../../../shared/state/Loadable';
 import { BuffListType } from '../../model/buff/BuffListType';
-import { BuffStatus } from "../../model/buff/BuffStatus";
+import { BuffGroup, BuffStatus } from "../../model/buff/BuffStatus";
 import { Character } from '../../model/Character';
-import { ConsumableStatus } from "../../model/consumable/ConsumableStatus";
+import { ConsumableGroup, ConsumableStatus } from "../../model/consumable/ConsumableStatus";
 import { Equipment } from '../../model/equipment/Equipment';
 import { EquipmentSocketStatus } from '../../model/equipment/EquipmentSocketStatus';
 import { EquippableItem } from '../../model/equipment/EquippableItem';
 import { ItemSlot } from '../../model/equipment/ItemSlot';
 import { EquipmentDiff } from "../../model/equipment/ItemSlotStatus";
+import { copyOptionGroup, OptionGroup } from "../../model/OptionGroup";
+import { OptionStatus } from "../../model/OptionStatus";
 import { changeBuffStatusSuccess, changeConsumableStatusSuccess, changeProfessionSuccess, changeScriptSuccess, changeTalentLinkSuccess, dpsChanged, equipEnchantSuccess, equipGearSetSuccess, equipGemSuccess, equipItemBestVariantSuccess, equipItemGroupSuccess, equipPreviousPhaseSuccess, loadBuffListFailure, loadBuffListSuccess, loadBuffs, loadCharacter, loadCharacterFailure, loadCharacterSuccess, loadConsumableStatuses, loadConsumableStatusesSuccess, loadEquipment, loadEquipmentFailure, loadEquipmentSuccess, loadSocketStatusFailure, loadSocketStatusSuccess, resetEquipmentSuccess, selectCharacter } from './character.actions';
 
 export interface CharacterState {
@@ -16,8 +18,8 @@ export interface CharacterState {
 	character: Loadable<Character | null>;
 	equipment: Record<ItemSlot, Loadable<EquippableItem | null>>;
 	socketStatus: Loadable<EquipmentSocketStatus | null>;
-	buffStatuses: Record<BuffListType, Loadable<BuffStatus[]>>;
-	consumableStatuses: Loadable<ConsumableStatus[]>;
+	buffStatuses: Record<BuffListType, Loadable<BuffGroup[]>>;
+	consumableStatuses: Loadable<ConsumableGroup[]>;
 	dpsChangeIdx: number;
 }
 
@@ -124,14 +126,14 @@ export const characterReducer = createReducer(
 		equipment: withAllSlotsFilledFrom(equipment),
 	})),
 
-	on(changeBuffStatusSuccess, (state, { buffListType, buffStatusList }) => ({
+	on(changeBuffStatusSuccess, (state, { buffListType, buffStatus }) => ({
 		...state,
-		buffStatuses: withBuffListSetTo(state.buffStatuses, buffListType, success(buffStatusList))
+		buffStatuses: withBuffStatusChanged(state.buffStatuses, buffListType, buffStatus)
 	})),
 
-	on(changeConsumableStatusSuccess, (state, { consumableStatuses }) => ({
+	on(changeConsumableStatusSuccess, (state, { consumableStatus }) => ({
 		...state,
-		consumableStatuses: success(consumableStatuses)
+		consumableStatuses: withConsumableStatusChanged(state.consumableStatuses, consumableStatus)
 	})),
 
 	on(dpsChanged, (state) => ({
@@ -214,15 +216,50 @@ function withEquipmentDiffApplied(
 	return result;
 }
 
-function withAllBuffListsSetTo(value: Loadable<BuffStatus[]>) {
+function withAllBuffListsSetTo(value: Loadable<BuffGroup[]>) {
 	return {
 		CHARACTER_BUFF: value,
 		TARGET_DEBUFF: value
 	}
 }
 
-function withBuffListSetTo(buffStatuses: Record<BuffListType, Loadable<BuffStatus[]>>, key: BuffListType, value: Loadable<BuffStatus[]>) {
+function withBuffListSetTo(buffStatuses: Record<BuffListType, Loadable<BuffGroup[]>>, key: BuffListType, value: Loadable<BuffGroup[]>) {
 	const result = { ...buffStatuses };
 	result[key] = value;
 	return result;
+}
+
+function withBuffStatusChanged(buffStatuses: Record<BuffListType, Loadable<BuffGroup[]>>, key: BuffListType, buffStatus: BuffStatus): Record<BuffListType, Loadable<BuffGroup[]>> {
+	const result = { ...buffStatuses };
+
+	result[key] = withChangedStatus(buffStatuses[key], buffStatus);
+
+	return result;
+}
+
+function withConsumableStatusChanged(consumableStatuses: Loadable<ConsumableGroup[]>, consumableStatus: ConsumableStatus): Loadable<ConsumableGroup[]> {
+	return withChangedStatus(consumableStatuses, consumableStatus);
+}
+
+function withChangedStatus<T extends { id: number }>(groups: Loadable<OptionGroup<T>[]>, status: OptionStatus<T>): Loadable<OptionGroup<T>[]> {
+	const withChangedStatus = groups.value.map(group => changeOptionStatus(group, status));
+
+	return {
+		...groups,
+		value: withChangedStatus
+	};
+}
+
+function changeOptionStatus<T extends { id: number }>(group: OptionGroup<T>, status: OptionStatus<T>) {
+	const index = group.statuses.findIndex(x => x.option.id == status.option.id);
+
+	if (index < 0) {
+		return group;
+	}
+
+	const copy = copyOptionGroup(group)
+
+	copy.statuses.forEach(status => status.enabled = false);
+	copy.statuses[index] = status;
+	return copy;
 }

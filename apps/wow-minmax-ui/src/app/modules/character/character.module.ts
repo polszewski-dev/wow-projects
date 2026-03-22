@@ -8,15 +8,17 @@ import { EnchantSelectComponent } from './components/enchant-select/enchant-sele
 import { EquipUpgradeButtonComponent } from './components/equip-upgrade-button/equip-upgrade-button.component';
 import { EquipmentEditorComponent } from './components/equipment-editor/equipment-editor.component';
 import { EquipmentSlotEditorComponent } from './components/equipment-slot-editor/equipment-slot-editor.component';
+import { ExclusiveFactionSelectComponent } from './components/exclusive-faction-select/exclusive-faction-select.component';
 import { GemSelectComponent } from './components/gem-select/gem-select.component';
 import { ItemFilterComponent } from './components/item-filter/item-filter.component';
 import { ItemSelectComponent } from './components/item-select/item-select.component';
+import { OptionEditorComponent } from './components/option-editor/option-editor.component';
+import { OptionSelectComponent } from './components/option-select/option-select.component';
 import { ProfessionSelectComponent } from './components/profession-select/profession-select.component';
-import { SocketStatusComponent } from './components/socket-status/socket-status.component';
-import { UpgradeListComponent } from './components/upgrade-list/upgrade-list.component';
 import { ScriptSelectComponent } from './components/script-select/script-select.component';
+import { SocketStatusComponent } from './components/socket-status/socket-status.component';
 import { TalentLinkSelectComponent } from './components/talent-link-select/talent-link-select.component';
-import { ExclusiveFactionSelectComponent } from './components/exclusive-faction-select/exclusive-faction-select.component';
+import { UpgradeListComponent } from './components/upgrade-list/upgrade-list.component';
 
 @NgModule({
 	declarations: [
@@ -36,6 +38,8 @@ import { ExclusiveFactionSelectComponent } from './components/exclusive-faction-
 		ExclusiveFactionSelectComponent,
 		TalentLinkSelectComponent,
 		ScriptSelectComponent,
+		OptionSelectComponent,
+		OptionEditorComponent,
 	],
 	imports: [
 		FormsModule,
@@ -61,6 +65,8 @@ import { ExclusiveFactionSelectComponent } from './components/exclusive-faction-
 		ExclusiveFactionSelectComponent,
 		TalentLinkSelectComponent,
 		ScriptSelectComponent,
+		OptionSelectComponent,
+		OptionEditorComponent,
 	]
 })
 export class CharacterModule { }

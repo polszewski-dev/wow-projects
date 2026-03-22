@@ -3,7 +3,9 @@ package wow.minmax.controller;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import wow.minmax.client.dto.ConsumableStatusDTO;
+import wow.minmax.client.dto.ConsumableDTO;
+import wow.minmax.client.dto.OptionGroupDTO;
+import wow.minmax.client.dto.OptionStatusDTO;
 import wow.minmax.converter.dto.ConsumableStatusConverter;
 import wow.minmax.model.PlayerId;
 import wow.minmax.service.ConsumableService;
@@ -23,29 +25,25 @@ public class ConsumableController {
 	private final ConsumableStatusConverter consumableStatusConverter;
 
 	@GetMapping("{playerId}")
-	public List<ConsumableStatusDTO> getConsumables(
+	public List<OptionGroupDTO<ConsumableDTO>> getConsumables(
 			@PathVariable("playerId") PlayerId playerId
 	) {
 		var consumableStatuses = consumableService.getConsumableStatuses(playerId);
 
-		return consumableStatusConverter.convertList(consumableStatuses);
+		return consumableStatusConverter.convertAndGroup(consumableStatuses);
 	}
 
 	@PutMapping("{playerId}")
-	public List<ConsumableStatusDTO> enableConsumable(
+	public void enableConsumable(
 			@PathVariable("playerId") PlayerId playerId,
-			@RequestBody ConsumableStatusDTO consumableStatus
+			@RequestBody OptionStatusDTO<ConsumableDTO> consumableStatus
 	) {
-		var consumable = consumableStatus.consumable();
+		var consumable = consumableStatus.option();
 		var consumableName = consumable.name();
 		var enabled = consumableStatus.enabled();
 
-		var player = consumableService.changeConsumableStatus(playerId, consumableName, enabled);
+		consumableService.changeConsumableStatus(playerId, consumableName, enabled);
 
 		log.info("Changed consumable charId: {}, name: {}, enabled: {}", playerId, consumableName, enabled);
-
-		var consumableStatuses = consumableService.getConsumableStatuses(player);
-
-		return consumableStatusConverter.convertList(consumableStatuses);
 	}
 }
