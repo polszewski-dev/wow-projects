@@ -83,27 +83,34 @@ public abstract class WowEstimatorSpringTest {
 	}
 
 	protected Player getPlayer(CharacterClassId characterClass, RaceId race, int level, PhaseId phase) {
-		var character = characterService.createPlayerCharacter(
-				"Player",
+		var character = getNakedPlayer("Player", characterClass, race, level, phase);
+		var target = getTarget(level, phase);
+
+		character.setTarget(target);
+
+		characterService.applyDefaultCharacterTemplate(character);
+		return character;
+	}
+
+	protected PlayerImpl getNakedPlayer(String name, CharacterClassId characterClass, RaceId race, int level, PhaseId phase) {
+		return characterService.createPlayerCharacter(
+				name,
 				characterClass,
 				race,
 				level,
 				phase,
 				PlayerImpl::new
 		);
+	}
 
-		var target = characterService.createNonPlayerCharacter(
+	protected NonPlayerImpl getTarget(int level, PhaseId phase) {
+		return characterService.createNonPlayerCharacter(
 				"Target",
 				ENEMY_TYPE,
 				level + LVL_DIFF,
 				phase,
 				NonPlayerImpl::new
 		);
-
-		character.setTarget(target);
-
-		characterService.applyDefaultCharacterTemplate(character);
-		return character;
 	}
 
 	protected static final CharacterClassId CHARACTER_CLASS = WARLOCK;

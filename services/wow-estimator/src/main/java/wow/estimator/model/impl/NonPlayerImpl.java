@@ -6,9 +6,11 @@ import wow.character.model.character.Character;
 import wow.character.model.character.CombatRatingInfo;
 import wow.character.model.character.Spellbook;
 import wow.character.model.character.impl.CharacterImpl;
+import wow.character.model.effect.EffectCollector;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.pve.Phase;
+import wow.estimator.model.EffectInstances;
 import wow.estimator.model.NonPlayer;
 import wow.estimator.model.Unit;
 
@@ -21,6 +23,7 @@ import static wow.character.model.character.BaseStatInfo.getDummyBaseStatInfo;
 @Getter
 public class NonPlayerImpl extends CharacterImpl implements NonPlayer {
 	private final CreatureType creatureType;
+	private final EffectInstances effectInstances;
 
 	public NonPlayerImpl(
 			String name,
@@ -32,6 +35,7 @@ public class NonPlayerImpl extends CharacterImpl implements NonPlayer {
 	) {
 		super(name, phase, characterClass, level, getDummyBaseStatInfo(characterClass, level, phase), combatRatingInfo);
 		this.creatureType = creatureType;
+		this.effectInstances = new EffectInstances();
 	}
 
 	private NonPlayerImpl(
@@ -42,10 +46,12 @@ public class NonPlayerImpl extends CharacterImpl implements NonPlayer {
 			BaseStatInfo baseStatInfo,
 			CombatRatingInfo combatRatingInfo,
 			Spellbook spellbook,
-			CreatureType creatureType
+			CreatureType creatureType,
+			EffectInstances effectInstances
 	) {
 		super(name, phase, characterClass, level, baseStatInfo, combatRatingInfo, spellbook);
 		this.creatureType = creatureType;
+		this.effectInstances = effectInstances;
 	}
 
 	@Override
@@ -71,9 +77,16 @@ public class NonPlayerImpl extends CharacterImpl implements NonPlayer {
 				getBaseStatInfo(),
 				getCombatRatingInfo(),
 				getSpellbook().copy(),
-				getCreatureType()
+				getCreatureType(),
+				getEffectInstances().copy()
 		);
 		copy.setTarget(getTarget());
 		return copy;
+	}
+
+	@Override
+	public void collectEffects(EffectCollector collector) {
+		NonPlayer.super.collectEffects(collector);
+		getEffectInstances().collectEffects(collector);
 	}
 }

@@ -7,6 +7,8 @@ import wow.character.model.character.Character;
  * Date: 2024-11-20
  */
 public interface Unit extends Character {
+	EffectInstances getEffectInstances();
+
 	@Override
 	Unit getTarget();
 }

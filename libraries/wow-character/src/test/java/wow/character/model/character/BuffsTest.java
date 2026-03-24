@@ -46,7 +46,7 @@ class BuffsTest extends WowCharacterSpringTest {
 
 	@Test
 	void getAvailableHighestRanks() {
-		var names = buffs.getAvailable().stream()
+		var names = buffs.getAvailableStream()
 				.map(Buff::getName)
 				.toList();
 

@@ -12,6 +12,7 @@ import wow.commons.model.character.Race;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.talent.TalentTree;
+import wow.estimator.model.EffectInstances;
 import wow.estimator.model.Player;
 import wow.estimator.model.Unit;
 
@@ -29,6 +30,7 @@ public class PlayerImpl extends CharacterImpl implements Player {
 	private final Buffs buffs;
 	private final Consumables consumables;
 	private final Assets assets;
+	private final EffectInstances effectInstances;
 
 	public PlayerImpl(
 			String name,
@@ -51,6 +53,7 @@ public class PlayerImpl extends CharacterImpl implements Player {
 		this.buffs = new Buffs();
 		this.consumables = new Consumables();
 		this.assets = new Assets();
+		this.effectInstances = new EffectInstances();
 	}
 
 	private PlayerImpl(
@@ -68,7 +71,8 @@ public class PlayerImpl extends CharacterImpl implements Player {
 			CharacterProfessions professions,
 			ExclusiveFactions exclusiveFactions,
 			Consumables consumables,
-			Assets assets
+			Assets assets,
+			EffectInstances effectInstances
 	) {
 		super(name, phase, characterClass, level, baseStatInfo, combatRatingInfo, spellbook);
 		this.race = race;
@@ -79,6 +83,7 @@ public class PlayerImpl extends CharacterImpl implements Player {
 		this.buffs = buffs;
 		this.consumables = consumables;
 		this.assets = assets;
+		this.effectInstances = effectInstances;
 	}
 
 	@Override
@@ -111,7 +116,8 @@ public class PlayerImpl extends CharacterImpl implements Player {
 				getProfessions().copy(),
 				getExclusiveFactions().copy(),
 				getConsumables().copy(),
-				getAssets().copy()
+				getAssets().copy(),
+				getEffectInstances().copy()
 		);
 		copy.setTarget(getTarget());
 		return copy;
@@ -128,7 +134,7 @@ public class PlayerImpl extends CharacterImpl implements Player {
 	}
 
 	private boolean isSchoolPrevented(Ability ability) {
-		return getBuffs().getStream().anyMatch(x -> x.isSchoolPrevented(ability.getSchool()));
+		return getEffectInstances().isSchoolPrevented(ability.getSchool());
 	}
 
 	@Override
@@ -140,5 +146,6 @@ public class PlayerImpl extends CharacterImpl implements Player {
 		for (var racial : getRace().getRacials(this)) {
 			collector.addEffect(racial);
 		}
+		getEffectInstances().collectEffects(collector);
 	}
 }

@@ -1,7 +1,6 @@
 package wow.character.service;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -439,29 +438,27 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		assertThat(durationSnapshot.getTickInterval()).isEqualTo(Duration.millis(757));
 	}
 
-	@Disabled
 	@Test
 	void getDirectSpellDamageSnapshot() {
 		player.resetEquipment();
 
 		var baseStats = characterCalculationService.getBaseStatsSnapshot(player);
 
-		assertThat(baseStats.getIntellect()).isEqualTo(203);
+		assertThat(baseStats.getIntellect()).isEqualTo(131);
 
 		var ability = player.getAbility(SHADOW_BOLT).orElseThrow();
 		var directCommand = (DealDamageDirectly) ability.getDirectCommands().getFirst();
 		var snapshot = characterCalculationService.getDirectSpellDamageSnapshot(player, ability, target, directCommand, baseStats);
 
-		assertThat(snapshot.getCritPct()).isEqualTo(15.87, PRECISION);
+		assertThat(snapshot.getCritPct()).isEqualTo(11.97, PRECISION);
 		assertThat(snapshot.getCritCoeff()).isEqualTo(2);
 		assertThat(snapshot.getAmount()).isZero();
-		assertThat(snapshot.getAmountPct()).isEqualTo(25);
-		assertThat(snapshot.getPower()).isEqualTo(370);
+		assertThat(snapshot.getAmountPct()).isZero();
+		assertThat(snapshot.getPower()).isEqualTo(139);
 		assertThat(snapshot.getPowerPct()).isZero();
 		assertThat(snapshot.getCoeff()).isEqualTo(105.71, PRECISION);
 	}
 
-	@Disabled
 	@Test
 	void getDirectSpellDamageSnapshotIntToSpConversion() {
 		player.resetEquipment();
@@ -475,22 +472,21 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 
 		var baseStats = characterCalculationService.getBaseStatsSnapshot(player);
 
-		assertThat(baseStats.getIntellect()).isEqualTo(253);
+		assertThat(baseStats.getIntellect()).isEqualTo(176);
 
 		var ability = player.getAbility(SHADOW_BOLT).orElseThrow();
 		var directCommand = (DealDamageDirectly) ability.getDirectCommands().getFirst();
 		var snapshot = characterCalculationService.getDirectSpellDamageSnapshot(player, ability, target, directCommand, baseStats);
 
-		assertThat(snapshot.getCritPct()).isEqualTo(19.62, PRECISION);
+		assertThat(snapshot.getCritPct()).isEqualTo(15.66, PRECISION);
 		assertThat(snapshot.getCritCoeff()).isEqualTo(2);
 		assertThat(snapshot.getAmount()).isZero();
-		assertThat(snapshot.getAmountPct()).isEqualTo(25);
-		assertThat(snapshot.getPower()).isEqualTo(387);//370 + 253 * 0.07
+		assertThat(snapshot.getAmountPct()).isZero();
+		assertThat(snapshot.getPower()).isEqualTo(151);
 		assertThat(snapshot.getPowerPct()).isZero();
 		assertThat(snapshot.getCoeff()).isEqualTo(105.71, PRECISION);
 	}
 
-	@Disabled
 	@Test
 	void getPeriodicSpellDamageSnapshot() {
 		player.resetEquipment();
@@ -502,8 +498,8 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		var snapshot = characterCalculationService.getPeriodicSpellDamageSnapshot(player, ability, target, periodicCommand, baseStats);
 
 		assertThat(snapshot.getAmount()).isZero();
-		assertThat(snapshot.getAmountPct()).isEqualTo(25);
-		assertThat(snapshot.getPower()).isEqualTo(370);
+		assertThat(snapshot.getAmountPct()).isZero();
+		assertThat(snapshot.getPower()).isEqualTo(139);
 		assertThat(snapshot.getPowerPct()).isZero();
 		assertThat(snapshot.getCoeff()).isEqualTo(120);
 	}

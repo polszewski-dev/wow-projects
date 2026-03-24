@@ -66,7 +66,8 @@ class AssetServiceTest extends WowCharacterSpringTest {
 					),
 					List.of(
 							cast("Fire Mage", MOLTEN_ARMOR),
-							cast("Fire Mage", ARCANE_BRILLIANCE)
+							cast("Fire Mage", ARCANE_BRILLIANCE),
+							cast("Fire Mage", IMPROVED_SCORCH)
 					)
 			),
 
@@ -76,7 +77,9 @@ class AssetServiceTest extends WowCharacterSpringTest {
 					),
 					List.of(
 							cast("Shadow Priest", SHADOWFORM),
-							cast("Shadow Priest", PRAYER_OF_FORTITUDE)
+							cast("Shadow Priest", PRAYER_OF_FORTITUDE),
+							cast("Shadow Priest", SHADOW_WEAVING),
+							cast("Shadow Priest", MISERY)
 					)
 			),
 
@@ -158,7 +161,8 @@ class AssetServiceTest extends WowCharacterSpringTest {
 					List.of(
 							cast("Fire Mage #1", MOLTEN_ARMOR),
 							cast("Fire Mage #2", MOLTEN_ARMOR),
-							cast("Fire Mage #1", ARCANE_BRILLIANCE)
+							cast("Fire Mage #1", ARCANE_BRILLIANCE),
+							cast("Fire Mage #1", IMPROVED_SCORCH)
 					)
 			),
 
@@ -170,7 +174,8 @@ class AssetServiceTest extends WowCharacterSpringTest {
 					List.of(
 							cast("Fire Mage #1", MOLTEN_ARMOR),
 							cast("Fire Mage #2", MOLTEN_ARMOR),
-							cast("Fire Mage #1", ARCANE_BRILLIANCE)
+							cast("Fire Mage #1", ARCANE_BRILLIANCE),
+							cast("Fire Mage #1", IMPROVED_SCORCH)
 					)
 			),
 
@@ -182,7 +187,9 @@ class AssetServiceTest extends WowCharacterSpringTest {
 					List.of(
 							cast("Shadow Priest #1", SHADOWFORM),
 							cast("Shadow Priest #2", SHADOWFORM),
-							cast("Shadow Priest #1", PRAYER_OF_FORTITUDE)
+							cast("Shadow Priest #1", PRAYER_OF_FORTITUDE),
+							cast("Shadow Priest #1", SHADOW_WEAVING),
+							cast("Shadow Priest #1", MISERY)
 					)
 			),
 

@@ -6,6 +6,7 @@ import wow.commons.model.attribute.AttributeTarget;
 import wow.commons.model.config.Described;
 import wow.commons.model.config.TimeRestricted;
 import wow.commons.model.effect.component.*;
+import wow.commons.model.effect.impl.AugmentedEffect;
 import wow.commons.model.effect.impl.EmptyEffect;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.SpellSchool;
@@ -114,5 +115,13 @@ public interface Effect extends Described, TimeRestricted {
 	default boolean isAura() {
 		return hasModifierComponent() && getModifierAttributeList().stream()
 				.anyMatch(x -> x.id().getTarget() == AttributeTarget.PARTY);
+	}
+
+	default Effect augment(EffectAugmentations augmentations) {
+		if (augmentations.isEmpty()) {
+			return this;
+		}
+
+		return new AugmentedEffect(this, augmentations);
 	}
 }

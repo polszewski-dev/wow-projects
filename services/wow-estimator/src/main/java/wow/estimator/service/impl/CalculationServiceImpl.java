@@ -2,7 +2,6 @@ package wow.estimator.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import wow.character.model.character.Buffs;
 import wow.character.model.character.Character;
 import wow.character.model.snapshot.AccumulatedBaseStats;
 import wow.character.model.snapshot.BaseStatsSnapshot;
@@ -12,7 +11,6 @@ import wow.character.service.CharacterService;
 import wow.commons.model.Duration;
 import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.Attributes;
-import wow.commons.model.buff.Buff;
 import wow.commons.model.buff.BuffCategory;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.impl.EffectImpl;
@@ -303,15 +301,11 @@ public class CalculationServiceImpl implements CalculationService {
 	@Override
 	public StatSummary getStats(Player player, BuffCategory... buffCategories) {
 		var copy = player.copy();
-		copy.getBuffs().setNames(getFilteredBuffs(player.getBuffs(), buffCategories));
-		return getStats(copy);
-	}
 
-	private List<String> getFilteredBuffs(Buffs buffs, BuffCategory[] buffCategories) {
-		return buffs.getStream()
-				.filter(x -> Stream.of(buffCategories).anyMatch(y -> x.getCategories().contains(y)))
-				.map(Buff::getName)
-				.toList();
+		copy.getBuffs().setIf(buff -> Stream.of(buffCategories).anyMatch(buff::hasCategory));
+		copy.getEffectInstances().removeIf(effectInstance -> Stream.of(buffCategories).noneMatch(effectInstance::hasCategory));
+
+		return getStats(copy);
 	}
 
 	@Override
@@ -320,6 +314,8 @@ public class CalculationServiceImpl implements CalculationService {
 
 		copy.resetBuild();
 		copy.resetBuffs();
+		copy.getConsumables().reset();
+		copy.getEffectInstances().reset();
 		characterService.updateAfterRestrictionChange(copy);
 
 		var withEquipment = getStats(copy);

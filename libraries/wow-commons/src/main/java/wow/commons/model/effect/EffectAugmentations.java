@@ -24,4 +24,8 @@ public record EffectAugmentations(
 		Objects.requireNonNull(statConversions);
 		Objects.requireNonNull(events);
 	}
+
+	public boolean isEmpty() {
+		return this.equals(EMPTY);
+	}
 }

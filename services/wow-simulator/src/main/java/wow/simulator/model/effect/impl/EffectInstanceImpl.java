@@ -25,8 +25,6 @@ import wow.simulator.util.IdGenerator;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static wow.commons.util.CollectionUtil.join;
-
 /**
  * User: POlszewski
  * Date: 2023-11-03
@@ -39,7 +37,7 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	protected final Unit owner;
 	protected final Unit target;
 
-	protected final Effect effect;
+	protected Effect effect;
 	protected final AnyDuration duration;
 
 	protected int numStacks;
@@ -60,10 +58,6 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	private boolean fireCountersMaxed;
 
 	private Runnable onEffectFinished;
-
-	private List<Attribute> modifierAttributeList;
-	private List<StatConversion> statConversions;
-	private List<Event> events;
 
 	protected EffectInstanceImpl(
 			Unit owner,
@@ -88,10 +82,6 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 		this.effectSource = effectSource;
 		this.sourceSpell = sourceSpell;
 		this.effectUpdateContext = new EffectUpdateContext(this, parentContext);
-
-		this.modifierAttributeList = effect.getModifierAttributeList();
-		this.statConversions = effect.getStatConversions();
-		this.events = effect.getEvents();
 
 		if (numStacks > effect.getMaxStacks()) {
 			throw new IllegalArgumentException();
@@ -404,7 +394,7 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 
 	@Override
 	public List<Attribute> getModifierAttributeList() {
-		return modifierAttributeList;
+		return effect.getModifierAttributeList();
 	}
 
 	@Override
@@ -419,12 +409,12 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 
 	@Override
 	public List<StatConversion> getStatConversions() {
-		return statConversions;
+		return effect.getStatConversions();
 	}
 
 	@Override
 	public List<Event> getEvents() {
-		return events;
+		return effect.getEvents();
 	}
 
 	@Override
@@ -443,40 +433,10 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	}
 
 	@Override
-	public void augment(EffectAugmentations augmentations) {
-		addModifiers(augmentations.modifiers());
-		addStatConversions(augmentations.statConversions());
-		addEvents(augmentations.events());
-		addEffectIncrease(augmentations.effectIncreasePct());
+	public EffectInstance augment(EffectAugmentations augmentations) {
+		this.effect = effect.augment(augmentations);
 		effectListChanged();
-	}
-
-	private void addEffectIncrease(double effectIncreasePct) {
-		this.modifierAttributeList = getScaledAttributes(effectIncreasePct);
-	}
-
-	private List<Attribute> getScaledAttributes(double effectIncreasePct) {
-		if (effectIncreasePct == 0 || modifierAttributeList == null) {
-			return modifierAttributeList;
-		}
-
-		var factor = 1 + effectIncreasePct / 100.0;
-
-		return modifierAttributeList.stream()
-				.map(x -> x.intScale(factor))
-				.toList();
-	}
-
-	private void addModifiers(List<Attribute> extraModifiers) {
-		this.modifierAttributeList = join(modifierAttributeList, extraModifiers);
-	}
-
-	private void addStatConversions(List<StatConversion> extraStatConversions) {
-		this.statConversions = join(statConversions, extraStatConversions);
-	}
-
-	private void addEvents(List<Event> extraEvents) {
-		this.events = join(events, extraEvents);
+		return this;
 	}
 
 	@Override
@@ -485,17 +445,17 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	}
 
 	private void effectListChanged() {
-		if (modifierAttributeList == null) {
-			return;
-		}
-
 		if (hasResourceModifier()) {
 			target.onResourcesNeedRefresh();
 		}
 	}
 
 	private boolean hasResourceModifier() {
-		return modifierAttributeList.stream().anyMatch(this::isResourceModifier);
+		if (getModifierAttributeList() == null) {
+			return false;
+		}
+
+		return getModifierAttributeList().stream().anyMatch(this::isResourceModifier);
 	}
 
 	private boolean isResourceModifier(Attribute attribute) {

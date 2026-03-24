@@ -80,7 +80,6 @@ public class AssetServiceImpl implements AssetService {
 		private List<AssetExecution<P>> getExecutions(P player, Asset.Scope scope) {
 			return player.getAssets().getList().stream()
 					.filter(asset -> asset.scope() == scope)
-					.filter(asset -> asset.buffCommand() != null)
 					.map(asset -> newExecution(player, asset))
 					.toList();
 		}

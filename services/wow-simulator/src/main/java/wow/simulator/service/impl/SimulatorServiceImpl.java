@@ -123,6 +123,10 @@ public class SimulatorServiceImpl implements SimulatorService {
 		var player = command.player();
 		var asset = command.asset();
 
+		if (asset.buffCommand() == null) {
+			return;
+		}
+
 		switch (asset.buffCommand()) {
 			case CastAbility(var target, var abilityId) ->
 					execCastAbility(player, abilityId, target, targetEnemy);

@@ -3,6 +3,7 @@ package wow.character.model.character;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 /**
@@ -24,6 +25,10 @@ public abstract class Options<T, I> {
 
 	public List<T> getAvailable() {
 		return List.copyOf(availableById.values());
+	}
+
+	public Stream<T> getAvailableStream() {
+		return availableById.values().stream();
 	}
 
 	public void forEach(Consumer<T> action) {
@@ -105,8 +110,14 @@ public abstract class Options<T, I> {
 		}
 	}
 
+	public void setIf(Predicate<T> predicate) {
+		getAvailable().stream()
+				.filter(predicate)
+				.forEach(option -> enableImpl(option, true));
+	}
+
 	public List<OptionStatus<T>> getStatuses() {
-		return getAvailable().stream()
+		return getAvailableStream()
 				.map(option -> new OptionStatus<>(option, has(getId(option))))
 				.toList();
 	}
