@@ -70,6 +70,6 @@ public interface NonPlayerCharacter extends Character {
 
 	@Override
 	default void collectEffects(EffectCollector collector) {
-		getBuffs().collectEffects(collector);
+		// void
 	}
 }

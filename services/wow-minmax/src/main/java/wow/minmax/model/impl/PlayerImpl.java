@@ -27,6 +27,7 @@ public class PlayerImpl extends CharacterImpl implements Player {
 	private final Equipment equipment;
 	private final CharacterProfessions professions;
 	private final ExclusiveFactions exclusiveFactions;
+	private final Buffs buffs;
 	private final Consumables consumables;
 	private final Assets assets;
 
@@ -50,6 +51,7 @@ public class PlayerImpl extends CharacterImpl implements Player {
 		this.equipment = new Equipment();
 		this.professions = professions;
 		this.exclusiveFactions = exclusiveFactions;
+		this.buffs = new Buffs();
 		this.consumables = new Consumables();
 		this.assets = new Assets();
 	}

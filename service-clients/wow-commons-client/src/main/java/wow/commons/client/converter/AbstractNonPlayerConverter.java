@@ -5,7 +5,6 @@ import wow.character.model.character.NonPlayerCharacter;
 import wow.character.service.CharacterService;
 import wow.character.service.NonPlayerCharacterFactory;
 import wow.commons.client.dto.NonPlayerDTO;
-import wow.commons.model.buff.BuffId;
 
 /**
  * User: POlszewski
@@ -17,14 +16,11 @@ public abstract class AbstractNonPlayerConverter<N extends NonPlayerCharacter> i
 
 	@Override
 	public NonPlayerDTO doConvert(N source) {
-		var buffIds = source.getBuffs().getIds(BuffId::value);
-
 		return new NonPlayerDTO(
 				source.getName(),
 				source.getCreatureType(),
 				source.getLevel(),
-				source.getPhaseId(),
-				buffIds
+				source.getPhaseId()
 		);
 	}
 

@@ -285,8 +285,7 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	}
 
 	private boolean isSchoolPrevented(SpellSchool school) {
-		return getBuffs().getStream().anyMatch(x -> x.isSchoolPrevented(school)) ||
-				effects.getStream().anyMatch(x -> x.isSchoolPrevented(school));
+		return effects.getStream().anyMatch(x -> x.isSchoolPrevented(school));
 	}
 
 	@Override

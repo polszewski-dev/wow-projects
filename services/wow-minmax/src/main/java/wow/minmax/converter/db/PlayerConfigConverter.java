@@ -76,7 +76,6 @@ public class PlayerConfigConverter implements Converter<Player, PlayerConfig>, B
 		characterService.updateAfterRestrictionChange(player);
 
 		player.getBuffs().setIds(source.getBuffIds(), BuffId::of);
-		player.getTarget().getBuffs().setIds(source.getTarget().getDebuffIds(), BuffId::of);
 		player.getConsumables().setIds(source.getConsumableIds(), ConsumableId::of);
 		player.getAssets().setIds(source.getAssetIds(), AssetId::of);
 

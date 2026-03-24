@@ -70,7 +70,6 @@ class CharacterServiceTest extends WowCharacterSpringTest {
 		assertThat(nonPlayer.getPhaseId()).isEqualTo(TBC_P5);
 
 		assertThat(nonPlayer.getSpellbook().getAbilityById()).isEmpty();
-		assertThat(nonPlayer.getBuffs().getList()).isEmpty();
 		assertThat(nonPlayer.getActivePetType()).isNull();
 	}
 
@@ -104,23 +103,6 @@ class CharacterServiceTest extends WowCharacterSpringTest {
 		assertThat(player.getExclusiveFactions().getNameList()).hasSameElementsAs(List.of(
 				SCRYERS
 		));
-	}
-
-	@Test
-	void applyDefaultCharacterTemplateOnTarget() {
-		var player = underTest.createPlayerCharacter(
-				"Player", WARLOCK, ORC, 70, TBC_P5
-		);
-		var nonPlayer = underTest.createNonPlayerCharacter("Target", UNDEAD, 73, TBC_P5);
-
-		underTest.applyDefaultCharacterTemplate(player);
-
-		player.setTarget(nonPlayer);
-
-		var debuffs = nonPlayer.getBuffs().getList().stream()
-				.map(Object::toString);
-
-		assertThat(debuffs).hasSameElementsAs(DEBUFFS);
 	}
 
 	@Test
@@ -618,9 +600,6 @@ class CharacterServiceTest extends WowCharacterSpringTest {
 			"Well Fed (sp)",
 			"Brilliant Wizard Oil",
 			"Flask of Pure Death"
-	);
-
-	static final List<String> DEBUFFS = List.of(
 	);
 
 	static final List<String> ASSETS = List.of(

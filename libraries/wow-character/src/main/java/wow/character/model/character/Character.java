@@ -86,12 +86,6 @@ public interface Character extends CharacterInfo, EffectCollection {
 		return getAbility(abilityId).isPresent();
 	}
 
-	Buffs getBuffs();
-
-	default void resetBuffs() {
-		getBuffs().reset();
-	}
-
 	static int getLevelDifference(Character caster, Character target) {
 		return target.getLevel() - caster.getLevel();
 	}

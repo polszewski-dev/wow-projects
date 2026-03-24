@@ -26,6 +26,7 @@ public class PlayerImpl extends CharacterImpl implements Player {
 	private final Equipment equipment;
 	private final CharacterProfessions professions;
 	private final ExclusiveFactions exclusiveFactions;
+	private final Buffs buffs;
 	private final Consumables consumables;
 	private final Assets assets;
 
@@ -47,6 +48,7 @@ public class PlayerImpl extends CharacterImpl implements Player {
 		this.equipment = new Equipment();
 		this.professions = professions;
 		this.exclusiveFactions = exclusiveFactions;
+		this.buffs = new Buffs();
 		this.consumables = new Consumables();
 		this.assets = new Assets();
 	}
@@ -68,12 +70,13 @@ public class PlayerImpl extends CharacterImpl implements Player {
 			Consumables consumables,
 			Assets assets
 	) {
-		super(name, phase, characterClass, level, baseStatInfo, combatRatingInfo, spellbook, buffs);
+		super(name, phase, characterClass, level, baseStatInfo, combatRatingInfo, spellbook);
 		this.race = race;
 		this.build = build;
 		this.equipment = equipment;
 		this.professions = professions;
 		this.exclusiveFactions = exclusiveFactions;
+		this.buffs = buffs;
 		this.consumables = consumables;
 		this.assets = assets;
 	}

@@ -1,8 +1,10 @@
 package wow.estimator.model.impl;
 
 import lombok.Getter;
+import wow.character.model.character.BaseStatInfo;
 import wow.character.model.character.Character;
-import wow.character.model.character.*;
+import wow.character.model.character.CombatRatingInfo;
+import wow.character.model.character.Spellbook;
 import wow.character.model.character.impl.CharacterImpl;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.CreatureType;
@@ -40,10 +42,9 @@ public class NonPlayerImpl extends CharacterImpl implements NonPlayer {
 			BaseStatInfo baseStatInfo,
 			CombatRatingInfo combatRatingInfo,
 			Spellbook spellbook,
-			Buffs buffs,
 			CreatureType creatureType
 	) {
-		super(name, phase, characterClass, level, baseStatInfo, combatRatingInfo, spellbook, buffs);
+		super(name, phase, characterClass, level, baseStatInfo, combatRatingInfo, spellbook);
 		this.creatureType = creatureType;
 	}
 
@@ -70,7 +71,6 @@ public class NonPlayerImpl extends CharacterImpl implements NonPlayer {
 				getBaseStatInfo(),
 				getCombatRatingInfo(),
 				getSpellbook().copy(),
-				getBuffs().copy(),
 				getCreatureType()
 		);
 		copy.setTarget(getTarget());

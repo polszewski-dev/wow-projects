@@ -61,9 +61,6 @@ class CharacterTemplateRepositoryTest extends WowCharacterSpringTest {
 				BRILLIANT_WIZARD_OIL,
 				FLASK_OF_PURE_DEATH
 		));
-		assertThat(characterTemplate.getDefaultDebuffs()).hasSameElementsAs(List.of(
-				CURSE_OF_THE_ELEMENTS
-		));
 		assertThat(characterTemplate.getProfessions()).isEqualTo(List.of(
 				new ProfIdSpecId(ENCHANTING, null),
 				new ProfIdSpecId(TAILORING, SHADOWEAVE_TAILORING)

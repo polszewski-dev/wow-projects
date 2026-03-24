@@ -141,13 +141,7 @@ public class CharacterServiceImpl implements CharacterService {
 		player.setProfessionMaxLevels(characterTemplate.getProfessions());
 		player.getExclusiveFactions().set(characterTemplate.getExclusiveFactions());
 		player.getBuffs().setNames(characterTemplate.getDefaultBuffs());
-
-		if (player.getTarget() != null) {
-			player.getTarget().getBuffs().setNames(characterTemplate.getDefaultDebuffs());
-		}
-
 		player.getConsumables().setNames(characterTemplate.getConsumables());
-
 		player.getAssets().setNames(characterTemplate.getDefaultAssets());
 
 		updateAfterRestrictionChange(player);
@@ -193,15 +187,9 @@ public class CharacterServiceImpl implements CharacterService {
 	}
 
 	private void refreshBuffs(PlayerCharacter player) {
-		var buffs = getAvailableBuffs(player, false);
+		var buffs = getAvailableBuffs(player);
 
 		player.getBuffs().setAvailable(buffs);
-
-		if (player.getTarget() != null) {
-			var debuffs = getAvailableBuffs(player, true);
-
-			player.getTarget().getBuffs().setAvailable(debuffs);
-		}
 	}
 
 	private void refreshConsumables(PlayerCharacter player) {
@@ -276,10 +264,10 @@ public class CharacterServiceImpl implements CharacterService {
 		return factionRepository.getAvailableExclusiveFactions(phaseId.getGameVersionId());
 	}
 
-	private List<Buff> getAvailableBuffs(PlayerCharacter player, boolean debuff) {
+	private List<Buff> getAvailableBuffs(PlayerCharacter player) {
 		return buffRepository.getAvailableBuffs(
 				player.getPhaseId(),
-				buff -> buff.isAvailableTo(player) && buff.isDebuff() == debuff
+				buff -> buff.isAvailableTo(player) && !buff.isDebuff()
 		);
 	}
 

@@ -55,6 +55,14 @@ public interface PlayerCharacter extends Character {
 		getEquipment().reset();
 	}
 
+	// buffs
+
+	Buffs getBuffs();
+
+	default void resetBuffs() {
+		getBuffs().reset();
+	}
+
 	// race
 
 	Race getRace();
