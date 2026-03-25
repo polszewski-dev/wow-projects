@@ -7,8 +7,6 @@ import wow.character.service.NonPlayerCharacterFactory;
 import wow.commons.client.dto.NonPlayerDTO;
 import wow.commons.model.buff.BuffId;
 
-import java.util.List;
-
 /**
  * User: POlszewski
  * Date: 2024-11-10
@@ -26,8 +24,7 @@ public abstract class AbstractNonPlayerConverter<N extends NonPlayerCharacter> i
 				source.getCreatureType(),
 				source.getLevel(),
 				source.getPhaseId(),
-				buffIds,
-				List.of()
+				buffIds
 		);
 	}
 

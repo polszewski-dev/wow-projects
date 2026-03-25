@@ -27,7 +27,6 @@ public record PlayerDTO(
 		PetType activePet,
 		String script,
 		List<Integer> buffIds,
-		List<ActiveEffectDTO> activeEffects,
 		List<Integer> consumableIds,
 		List<Integer> assetIds
 ) {

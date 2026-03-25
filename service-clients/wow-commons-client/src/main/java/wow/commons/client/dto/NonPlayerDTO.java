@@ -14,7 +14,6 @@ public record NonPlayerDTO(
 		CreatureType enemyType,
 		int enemyLevel,
 		PhaseId phaseId,
-		List<Integer> buffIds,
-		List<ActiveEffectDTO> activeEffects
+		List<Integer> buffIds
 ) {
 }

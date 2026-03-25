@@ -11,8 +11,6 @@ import wow.commons.model.buff.BuffId;
 import wow.commons.model.item.ConsumableId;
 import wow.commons.model.talent.TalentId;
 
-import java.util.List;
-
 /**
  * User: POlszewski
  * Date: 2024-11-10
@@ -45,7 +43,6 @@ public abstract class AbstractPlayerConverter<P extends PlayerCharacter> impleme
 				source.getActivePetType(),
 				source.getBuild().getScript(),
 				buffIds,
-				List.of(),
 				consumableIds,
 				assetIds
 		);
