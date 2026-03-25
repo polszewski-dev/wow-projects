@@ -17,5 +17,5 @@ public interface BuffRepository {
 
 	Optional<Buff> getBuff(BuffId buffId, PhaseId phaseId);
 
-	List<Buff> getBuff(String name, int rank, PhaseId phaseId);
+	List<Buff> getBuff(String name, PhaseId phaseId);
 }

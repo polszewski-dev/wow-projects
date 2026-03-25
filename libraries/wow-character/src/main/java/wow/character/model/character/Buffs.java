@@ -15,7 +15,7 @@ import wow.commons.model.buff.BuffId;
 public class Buffs extends Options<Buff, BuffId> implements EffectCollection, Copyable<Buffs> {
 	@Override
 	public void collectEffects(EffectCollector collector) {
-		forEach(buff -> collector.addEffect(buff.getEffect(), buff.getStacks()));
+		forEach(buff -> collector.addEffect(buff.getEffect()));
 	}
 
 	@Override

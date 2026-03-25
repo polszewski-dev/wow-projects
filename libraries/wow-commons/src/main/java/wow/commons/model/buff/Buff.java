@@ -17,12 +17,6 @@ import java.util.Set;
 public interface Buff extends Described, TimeRestricted, CharacterRestricted, PveRoleClassified {
 	BuffId getId();
 
-	BuffNameRank getNameRank();
-
-	default int getRank() {
-		return getNameRank().rank();
-	}
-
 	BuffType getType();
 
 	BuffExclusionGroup getExclusionGroup();
@@ -31,13 +25,7 @@ public interface Buff extends Described, TimeRestricted, CharacterRestricted, Pv
 
 	Set<BuffCategory> getCategories();
 
-	default boolean isDebuff() {
-		return getType() == BuffType.DEBUFF;
-	}
-
 	Effect getEffect();
-
-	int getStacks();
 
 	default boolean isSchoolPrevented(SpellSchool school) {
 		return getEffect().isSchoolPrevented(school);

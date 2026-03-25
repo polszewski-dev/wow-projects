@@ -22,10 +22,9 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static wow.commons.model.categorization.ItemSlot.*;
-import static wow.commons.model.character.CharacterClassId.PRIEST;
-import static wow.commons.model.character.CharacterClassId.WARLOCK;
+import static wow.commons.model.character.CharacterClassId.*;
 import static wow.commons.model.character.CreatureType.UNDEAD;
-import static wow.commons.model.character.RaceId.ORC;
+import static wow.commons.model.character.RaceId.*;
 import static wow.commons.model.profession.ProfessionId.*;
 import static wow.commons.model.profession.ProfessionSpecializationId.SHADOWEAVE_TAILORING;
 import static wow.commons.model.pve.GameVersionId.TBC;
@@ -588,15 +587,6 @@ class CharacterServiceTest extends WowCharacterSpringTest {
 	);
 
 	static final List<String> BUFFS = List.of(
-			"Fel Armor",
-			"Touch of Shadow",
-			"Arcane Brilliance",
-			"Prayer of Fortitude",
-			"Prayer of Spirit",
-			"Gift of the Wild",
-			"Greater Blessing of Kings",
-			"Wrath of Air Totem",
-			"Totem of Wrath",
 			"Well Fed (sp)",
 			"Brilliant Wizard Oil",
 			"Flask of Pure Death"
@@ -792,14 +782,6 @@ class CharacterServiceTest extends WowCharacterSpringTest {
 	);
 
 	static final List<String> BUFFS_AFTER_TALENT_RESET = List.of(
-			"Fel Armor",
-			"Arcane Brilliance",
-			"Prayer of Fortitude",
-			"Prayer of Spirit",
-			"Gift of the Wild",
-			"Greater Blessing of Kings",
-			"Wrath of Air Totem",
-			"Totem of Wrath",
 			"Well Fed (sp)",
 			"Brilliant Wizard Oil",
 			"Flask of Pure Death"
@@ -819,7 +801,11 @@ class CharacterServiceTest extends WowCharacterSpringTest {
 	static List<ClassRaceLevel> getClassRaceLevelCombinations() {
 		var classes = List.of(
 				new ClassRaceLevel(WARLOCK, RaceId.UNDEAD, 1, null),
-				new ClassRaceLevel(PRIEST, RaceId.UNDEAD, 1, null)
+				new ClassRaceLevel(PRIEST, RaceId.UNDEAD, 1, null),
+				new ClassRaceLevel(MAGE, RaceId.UNDEAD, 1, null),
+				new ClassRaceLevel(DRUID, TAUREN, 1, null),
+				new ClassRaceLevel(SHAMAN, ORC, 1, null),
+				new ClassRaceLevel(PALADIN, HUMAN, 1, null)
 		);
 
 		var gameVersions = List.of(VANILLA, TBC);

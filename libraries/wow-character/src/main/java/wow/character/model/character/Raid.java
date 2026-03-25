@@ -35,6 +35,13 @@ public class Raid<M extends Character> {
 		party.add(member);
 	}
 
+	@SafeVarargs
+	public final void add(M... members) {
+		for (var member : members) {
+			add(member);
+		}
+	}
+
 	public void add(Collection<? extends M> members) {
 		for (var member : members) {
 			add(member);

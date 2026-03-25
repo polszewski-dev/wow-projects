@@ -7,7 +7,6 @@ package wow.minmax.client.dto;
 public record BuffDTO(
 		int id,
 		String name,
-		int rank,
 		String attributes,
 		String icon,
 		String tooltip

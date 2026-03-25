@@ -4,7 +4,6 @@ package wow.commons.repository.impl.spell;
 import org.springframework.stereotype.Component;
 import wow.commons.model.buff.Buff;
 import wow.commons.model.buff.BuffId;
-import wow.commons.model.buff.BuffNameRank;
 import wow.commons.model.config.Described;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.impl.parser.spell.BuffExcelParser;
@@ -17,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import static java.util.Comparator.comparingInt;
+import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import static wow.commons.util.PhaseMap.addEntryForEveryPhase;
@@ -30,7 +29,7 @@ import static wow.commons.util.PhaseMap.putForEveryPhase;
 @Component
 public class BuffRepositoryImpl implements BuffRepository {
 	private final PhaseMap<BuffId, Buff> buffsById = new PhaseMap<>();
-	private final PhaseMap<BuffNameRank, List<Buff>> buffsByNameRank = new PhaseMap<>();
+	private final PhaseMap<String, List<Buff>> buffsByNameRank = new PhaseMap<>();
 
 	public BuffRepositoryImpl(BuffExcelParser parser) throws IOException {
 		parser.readFromXls();
@@ -44,7 +43,7 @@ public class BuffRepositoryImpl implements BuffRepository {
 				.collect(groupingBy(Described::getName, LinkedHashMap::new, toList()))
 				.values()
 				.stream()
-				.map(x -> x.stream().max(comparingInt(Buff::getRank).thenComparing(Buff::getId)))
+				.map(x -> x.stream().max(comparing(Buff::getId)))
 				.flatMap(Optional::stream)
 				.toList();
 	}
@@ -55,14 +54,12 @@ public class BuffRepositoryImpl implements BuffRepository {
 	}
 
 	@Override
-	public List<Buff> getBuff(String name, int rank, PhaseId phaseId) {
-		var nameRank = new BuffNameRank(name, rank);
-
-		return buffsByNameRank.getOrDefault(phaseId, nameRank, List.of());
+	public List<Buff> getBuff(String name, PhaseId phaseId) {
+		return buffsByNameRank.getOrDefault(phaseId, name, List.of());
 	}
 
 	private void addBuff(Buff buff) {
 		putForEveryPhase(buffsById, buff.getId(), buff);
-		addEntryForEveryPhase(buffsByNameRank, buff.getNameRank(), buff);
+		addEntryForEveryPhase(buffsByNameRank, buff.getName(), buff);
 	}
 }

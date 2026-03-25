@@ -14,7 +14,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static wow.test.commons.BuffNames.FEL_ARMOR;
+import static wow.test.commons.BuffNames.FLASK_OF_BLINDING_LIGHT;
 
 /**
  * User: POlszewski
@@ -36,7 +36,7 @@ class OptionControllerTest extends ControllerTest {
 	@Test
 	void enableBuff() throws Exception {
 		var buffDTO = new BuffDTO(
-				28189, FEL_ARMOR, 2, null, null, null
+				28521, FLASK_OF_BLINDING_LIGHT, null, null, null
 		);
 		var buffStatusDTO = new OptionStatusDTO<>(
 				buffDTO,

@@ -18,7 +18,6 @@ import java.util.Set;
 @Getter
 public class BuffImpl implements Buff {
 	private final BuffId id;
-	private final BuffNameRank nameRank;
 	private final Description description;
 	private final TimeRestriction timeRestriction;
 	private final CharacterRestriction characterRestriction;
@@ -27,21 +26,17 @@ public class BuffImpl implements Buff {
 	private final Set<PveRole> pveRoles;
 	private final Set<BuffCategory> categories;
 	private final Effect effect;
-	private final int stacks;
 
 	public BuffImpl(
-			int rank,
 			TimeRestriction timeRestriction,
 			CharacterRestriction characterRestriction,
 			BuffType type,
 			BuffExclusionGroup exclusionGroup,
 			Set<PveRole> pveRoles,
 			Set<BuffCategory> categories,
-			Effect effect,
-			int stacks
+			Effect effect
 	) {
 		this.id = BuffId.of(effect.getId().value());
-		this.nameRank = new BuffNameRank(effect.getName(), rank);
 		this.description = effect.getDescription();
 		this.timeRestriction = timeRestriction;
 		this.characterRestriction = characterRestriction;
@@ -50,7 +45,6 @@ public class BuffImpl implements Buff {
 		this.pveRoles = pveRoles;
 		this.categories = categories;
 		this.effect = effect;
-		this.stacks = stacks;
 	}
 
 	@Override

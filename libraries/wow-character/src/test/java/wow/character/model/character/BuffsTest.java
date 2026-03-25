@@ -2,23 +2,16 @@ package wow.character.model.character;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import wow.character.WowCharacterSpringTest;
-import wow.commons.model.attribute.Attribute;
 import wow.commons.model.buff.Buff;
 import wow.commons.model.buff.BuffId;
-import wow.commons.model.buff.BuffNameRank;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import static org.assertj.core.api.Assertions.*;
-import static wow.character.constant.AttributeConditions.SPELL_DAMAGE;
-import static wow.commons.model.attribute.AttributeId.HEALING_TAKEN_PCT;
-import static wow.commons.model.attribute.AttributeId.POWER;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static wow.test.commons.BuffNames.*;
-import static wow.test.commons.TalentNames.DEMONIC_AEGIS;
 
 /**
  * User: POlszewski
@@ -27,191 +20,136 @@ import static wow.test.commons.TalentNames.DEMONIC_AEGIS;
 class BuffsTest extends WowCharacterSpringTest {
 	@Test
 	void copy() {
-		buffs.enable(ARCANE_BRILLIANCE);
+		buffs.enable(FLASK_OF_SUPREME_POWER);
 
-		assertThat(buffs.getList()).hasSize(1);
-		assertBuff(buffs.getList().getFirst(), ARCANE_BRILLIANCE, 2);
+		assertBuffs(FLASK_OF_SUPREME_POWER);
 
 		var copy = buffs.copy();
 		buffs.reset();
 
-		assertThat(buffs.getList()).isEmpty();
-
-		assertThat(copy.getList()).hasSize(1);
-		assertBuff(copy.getList().getFirst(), ARCANE_BRILLIANCE, 2);
+		assertNoBuffs();
+		assertBuffs(copy, FLASK_OF_SUPREME_POWER);
 	}
 
 	@Test
 	void getList() {
-		assertThat(buffs.getList()).isEmpty();
+		assertNoBuffs();
 
-		buffs.enable(ARCANE_BRILLIANCE);
+		buffs.enable(FLASK_OF_SUPREME_POWER);
 
-		assertThat(buffs.getList()).hasSize(1);
-		assertBuff(buffs.getList().getFirst(), ARCANE_BRILLIANCE, 2);
+		assertBuffs(FLASK_OF_SUPREME_POWER);
 
-		buffs.disable(ARCANE_BRILLIANCE);
+		buffs.disable(FLASK_OF_SUPREME_POWER);
 
-		assertThat(buffs.getList()).isEmpty();
+		assertNoBuffs();
 	}
 
 	@Test
 	void getAvailableHighestRanks() {
 		var names = buffs.getAvailable().stream()
-				.map(x -> x.getName() + "#" + x.getRank())
+				.map(Buff::getName)
 				.toList();
 
 		assertThat(names).hasSameElementsAs(List.of(
-				"Arcane Brilliance#2",
-				"Prayer of Fortitude#3",
-				"Prayer of Spirit#2",
-				"Gift of the Wild#3",
-				"Greater Blessing of Kings#0",
-				"Demon Armor#6",
-				"Fel Armor#2",
-				"Touch of Shadow#0",
-				"Burning Wish#0",
-				"Brilliant Wizard Oil#0",
-				"Superior Wizard Oil#0",
-				"Well Fed (sp)#0",
-				"Flask of Supreme Power#0",
-				"Flask of Pure Death#0",
-				"Moonkin Aura#0",
-				"Wrath of Air Totem#1",
-				"Totem of Wrath#1",
-				"Drums of Battle#0"
+				BRILLIANT_WIZARD_OIL,
+				SUPERIOR_WIZARD_OIL,
+				WELL_FED_SP,
+				FLASK_OF_SUPREME_POWER,
+				FLASK_OF_PURE_DEATH,
+				FLASK_OF_BLINDING_LIGHT,
+				DRUMS_OF_BATTLE
 		));
 	}
 
 	@Test
 	void reset() {
-		assertBuff(ARCANE_BRILLIANCE, false);
+		assertBuff(FLASK_OF_SUPREME_POWER, false);
 
-		buffs.enable(ARCANE_BRILLIANCE);
+		buffs.enable(FLASK_OF_SUPREME_POWER);
 
-		assertBuff(ARCANE_BRILLIANCE, true);
+		assertBuff(FLASK_OF_SUPREME_POWER, true);
 
 		buffs.reset();
 
-		assertBuff(ARCANE_BRILLIANCE, false);
+		assertBuff(FLASK_OF_SUPREME_POWER, false);
 
-		buffs.enable(ARCANE_BRILLIANCE);
+		buffs.enable(FLASK_OF_SUPREME_POWER);
 
-		assertBuff(ARCANE_BRILLIANCE, true);
+		assertBuff(FLASK_OF_SUPREME_POWER, true);
 	}
 
 	@Test
 	void setNames() {
-		assertBuff(ARCANE_BRILLIANCE, false);
+		assertBuff(FLASK_OF_PURE_DEATH, false);
 		assertBuff(FLASK_OF_SUPREME_POWER, false);
 
-		buffs.setNames(List.of(ARCANE_BRILLIANCE, FLASK_OF_SUPREME_POWER));
+		buffs.setNames(List.of(BRILLIANT_WIZARD_OIL, FLASK_OF_SUPREME_POWER));
 
-		assertBuff(ARCANE_BRILLIANCE, true);
+		assertBuff(BRILLIANT_WIZARD_OIL, true);
 		assertBuff(FLASK_OF_SUPREME_POWER, true);
+		assertBuffs(BRILLIANT_WIZARD_OIL, FLASK_OF_SUPREME_POWER);
 
-		assertThat(buffs.getList()).hasSize(2);
-		assertBuff(buffs.getList().getFirst(), ARCANE_BRILLIANCE, 2);
-		assertBuff(buffs.getList().get(1), FLASK_OF_SUPREME_POWER, 0);
+		buffs.setNames(List.of(FLASK_OF_PURE_DEATH));
 
-		assertThatNoException().isThrownBy(() -> buffs.setNames(List.of(WARCHIEFS_BLESSING, FLASK_OF_PURE_DEATH)));
-
-		assertThat(buffs.getList()).hasSize(1);
-		assertBuff(buffs.getList().getFirst(), FLASK_OF_PURE_DEATH, 0);
+		assertBuffs(FLASK_OF_PURE_DEATH);
 	}
 
 	@Test
 	void set() {
-		assertBuff(ARCANE_BRILLIANCE, false);
+		assertBuff(FLASK_OF_SUPREME_POWER, false);
 
-		buffs.setNames(List.of(ARCANE_BRILLIANCE));
+		buffs.setNames(List.of(FLASK_OF_SUPREME_POWER));
 
-		assertBuff(ARCANE_BRILLIANCE, true);
-
-		assertThat(buffs.getList()).hasSize(1);
-		assertBuff(buffs.getList().getFirst(), ARCANE_BRILLIANCE, 2);
+		assertBuff(FLASK_OF_SUPREME_POWER, true);
+		assertBuffs(FLASK_OF_SUPREME_POWER);
 
 		var invalidIds = List.of(BuffId.of(-1));
 
 		assertThatThrownBy(() -> buffs.setIds(invalidIds)).isInstanceOf(NoSuchElementException.class);
-		assertThat(buffs.getList()).isEmpty();
+		assertNoBuffs();
 	}
 
 	@Test
 	void enable() {
-		assertBuff(ARCANE_BRILLIANCE, false);
+		assertBuff(FLASK_OF_SUPREME_POWER, false);
 
-		buffs.enable(ARCANE_BRILLIANCE);
+		buffs.enable(FLASK_OF_SUPREME_POWER);
 
-		assertThat(buffs.getList()).hasSize(1);
-		assertBuff(buffs.getList().getFirst(), ARCANE_BRILLIANCE, 2);
+		assertBuffs(FLASK_OF_SUPREME_POWER);
 
 		assertThatThrownBy(() -> buffs.enable(BuffId.of(-1))).isInstanceOf(NoSuchElementException.class);
 
 		assertThat(buffs.getList()).hasSize(1);
-		assertBuff(buffs.getList().getFirst(), ARCANE_BRILLIANCE, 2);
+		assertBuffs(FLASK_OF_SUPREME_POWER);
 	}
 
 	@Test
 	void exclusionGroups() {
-		assertBuff(DEMON_ARMOR, false);
-		assertBuff(FEL_ARMOR, false);
+		assertBuff(FLASK_OF_SUPREME_POWER, false);
+		assertBuff(FLASK_OF_PURE_DEATH, false);
 
-		buffs.enable(DEMON_ARMOR);
+		buffs.enable(FLASK_OF_SUPREME_POWER);
 
-		assertBuff(DEMON_ARMOR, true);
-		assertBuff(FEL_ARMOR, false);
+		assertBuff(FLASK_OF_SUPREME_POWER, true);
+		assertBuff(FLASK_OF_PURE_DEATH, false);
 
-		buffs.enable(FEL_ARMOR);
+		buffs.enable(FLASK_OF_PURE_DEATH);
 
-		assertBuff(DEMON_ARMOR, false);
-		assertBuff(FEL_ARMOR, true);
+		assertBuff(FLASK_OF_SUPREME_POWER, false);
+		assertBuff(FLASK_OF_PURE_DEATH, true);
 	}
 
 	@Test
 	void has() {
-		assertBuff(ARCANE_BRILLIANCE, false);
+		assertBuff(FLASK_OF_SUPREME_POWER, false);
 
-		buffs.enable(ARCANE_BRILLIANCE);
+		buffs.enable(FLASK_OF_SUPREME_POWER);
 
-		assertBuff(ARCANE_BRILLIANCE, true);
+		assertBuff(FLASK_OF_SUPREME_POWER, true);
 
-		buffs.disable(ARCANE_BRILLIANCE);
+		buffs.disable(FLASK_OF_SUPREME_POWER);
 
-		assertBuff(ARCANE_BRILLIANCE, false);
-	}
-
-	@ParameterizedTest
-	@CsvSource({
-			"0, 20, 100",
-			"1, 22, 110",
-			"2, 24, 120",
-			"3, 26, 130",
-	})
-	void demonicAegisCorrectlyAffectsFelArmor(int rank, int healingTakenPct, int spellDamage) {
-		var player = getPlayer();
-
-		player.resetEquipment();
-		player.resetBuffs();
-		player.resetBuild();
-
-		if (rank > 0) {
-			player.getTalents().enable(DEMONIC_AEGIS, rank);
-		}
-
-		characterService.updateAfterRestrictionChange(player);
-
-		player.getBuffs().enable(FEL_ARMOR);
-
-		var buff = player.getBuffs().getList().stream()
-				.filter(x -> x.getName().equals(FEL_ARMOR))
-				.findFirst()
-				.orElseThrow();
-
-		assertThat(buff.getEffect().getModifierAttributeList()).isEqualTo(List.of(
-				Attribute.of(HEALING_TAKEN_PCT, healingTakenPct),
-				Attribute.of(POWER, spellDamage, SPELL_DAMAGE)
-		));
+		assertBuff(FLASK_OF_SUPREME_POWER, false);
 	}
 
 	Buffs buffs;
@@ -222,11 +160,19 @@ class BuffsTest extends WowCharacterSpringTest {
 		buffs.reset();
 	}
 
-	void assertBuff(Buff buff, String name, int rank) {
-		assertThat(buff.getNameRank()).isEqualTo(new BuffNameRank(name, rank));
+	void assertNoBuffs() {
+		assertBuffs(buffs);
 	}
 
 	void assertBuff(String name, boolean enabled) {
 		assertThat(buffs.has(name)).isEqualTo(enabled);
+	}
+
+	void assertBuffs(String... buffNames) {
+		assertBuffs(buffs, buffNames);
+	}
+	
+	void assertBuffs(Buffs buffs, String... buffNames) {
+		assertThat(buffs.getList().stream().map(Buff::getName)).hasSameElementsAs(List.of(buffNames));
 	}
 }

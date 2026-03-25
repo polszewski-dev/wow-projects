@@ -48,15 +48,6 @@ class CharacterTemplateRepositoryTest extends WowCharacterSpringTest {
 		assertThat(characterTemplate.getDefaultScript()).isEqualTo("warlock-destro-shadow");
 		assertThat(characterTemplate.getActivePet()).isNull();
 		assertThat(characterTemplate.getDefaultBuffs()).hasSameElementsAs(List.of(
-				FEL_ARMOR,
-				TOUCH_OF_SHADOW,
-				ARCANE_BRILLIANCE,
-				PRAYER_OF_FORTITUDE,
-				PRAYER_OF_SPIRIT,
-				GIFT_OF_THE_WILD,
-				GREATER_BLESSING_OF_KINGS,
-				WRATH_OF_AIR_TOTEM,
-				TOTEM_OF_WRATH,
 				WELL_FED_SP,
 				BRILLIANT_WIZARD_OIL,
 				FLASK_OF_PURE_DEATH

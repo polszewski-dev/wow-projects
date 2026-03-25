@@ -18,7 +18,6 @@ public class BuffConverter implements Converter<Buff, BuffDTO> {
 		return new BuffDTO(
 				source.getId().value(),
 				source.getName(),
-				source.getRank(),
 				source.getEffect().getTooltip(),
 				source.getIcon(),
 				source.getTooltip()

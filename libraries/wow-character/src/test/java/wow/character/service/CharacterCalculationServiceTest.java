@@ -380,7 +380,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		var ability = player.getAbility(CURSE_OF_AGONY).orElseThrow();
 		var hitPct = characterCalculationService.getSpellHitPct(player, ability, target);
 
-		assertThat(hitPct).isEqualTo(96);
+		assertThat(hitPct).isEqualTo(93);
 	}
 
 	@Test
@@ -514,32 +514,32 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 
 		var snapshot = characterCalculationService.getStatSummary(player);
 
-		assertThat(snapshot.getStrength()).isEqualTo(77);
-		assertThat(snapshot.getAgility()).isEqualTo(83);
-		assertThat(snapshot.getStamina()).isEqualTo(818);
-		assertThat(snapshot.getIntellect()).isEqualTo(632);
-		assertThat(snapshot.getSpirit()).isEqualTo(245);
-		assertThat(snapshot.getMaxHealth()).isEqualTo(11834);
-		assertThat(snapshot.getMaxMana()).isEqualTo(12155);
-		assertThat(snapshot.getSpellPower()).isEqualTo(1277);
-		assertThat(snapshot.getSpellDamage()).isEqualTo(1604);
+		assertThat(snapshot.getStrength()).isEqualTo(56);
+		assertThat(snapshot.getAgility()).isEqualTo(62);
+		assertThat(snapshot.getStamina()).isEqualTo(646);
+		assertThat(snapshot.getIntellect()).isEqualTo(521);
+		assertThat(snapshot.getSpirit()).isEqualTo(161);
+		assertThat(snapshot.getMaxHealth()).isEqualTo(10063);
+		assertThat(snapshot.getMaxMana()).isEqualTo(10440);
+		assertThat(snapshot.getSpellPower()).isEqualTo(1176);
+		assertThat(snapshot.getSpellDamage()).isEqualTo(1373);
 		assertThat(snapshot.getSpellDamageBySchool()).isEqualTo(Map.ofEntries(
-				Map.entry(SpellSchool.FROST, 1738),
-				Map.entry(SpellSchool.FIRE, 1684),
-				Map.entry(SpellSchool.ARCANE, 1604),
-				Map.entry(SpellSchool.SHADOW, 1738),
-				Map.entry(SpellSchool.HOLY, 1604),
-				Map.entry(SpellSchool.NATURE, 1604)
+				Map.entry(SpellSchool.FROST, 1507),
+				Map.entry(SpellSchool.FIRE, 1453),
+				Map.entry(SpellSchool.ARCANE, 1373),
+				Map.entry(SpellSchool.SHADOW, 1507),
+				Map.entry(SpellSchool.HOLY, 1373),
+				Map.entry(SpellSchool.NATURE, 1373)
 		));
-		assertThat(snapshot.getSpellHitPctBonus()).isEqualTo(16.39, PRECISION);
-		assertThat(snapshot.getSpellHitPct()).isEqualTo(98.99, PRECISION);
-		assertThat(snapshot.getSpellCritPct()).isEqualTo(27.83, PRECISION);
+		assertThat(snapshot.getSpellHitPctBonus()).isEqualTo(13.39, PRECISION);
+		assertThat(snapshot.getSpellHitPct()).isEqualTo(96.39, PRECISION);
+		assertThat(snapshot.getSpellCritPct()).isEqualTo(23.44, PRECISION);
 		assertThat(snapshot.getSpellHastePct()).isEqualTo(31.96, PRECISION);
 		assertThat(snapshot.getSpellHitRating()).isEqualTo(169);
 		assertThat(snapshot.getSpellCritRating()).isEqualTo(270);
 		assertThat(snapshot.getOutOfCombatHealthRegen()).isZero();
 		assertThat(snapshot.getInCombatHealthRegen()).isZero();
-		assertThat(snapshot.getUninterruptedManaRegen()).isEqualTo(288);
+		assertThat(snapshot.getUninterruptedManaRegen()).isEqualTo(172);
 		assertThat(snapshot.getInterruptedManaRegen()).isZero();
 	}
 

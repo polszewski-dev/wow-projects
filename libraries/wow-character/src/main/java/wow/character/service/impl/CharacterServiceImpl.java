@@ -267,7 +267,7 @@ public class CharacterServiceImpl implements CharacterService {
 	private List<Buff> getAvailableBuffs(PlayerCharacter player) {
 		return buffRepository.getAvailableBuffs(
 				player.getPhaseId(),
-				buff -> buff.isAvailableTo(player) && !buff.isDebuff()
+				buff -> buff.isAvailableTo(player)
 		);
 	}
 

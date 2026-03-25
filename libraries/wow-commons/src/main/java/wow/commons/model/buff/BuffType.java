@@ -12,14 +12,11 @@ import wow.commons.util.EnumUtil;
 @Getter
 public enum BuffType {
 	BUFF,
-	SELF_BUFF,
-	DEBUFF,
 	OIL,
 	FLASK,
 	ELIXIR,
 	FOOD,
-	POTION,
-	RACIAL;
+	POTION;
 
 	public static BuffType parse(String value) {
 		return EnumUtil.parse(value, values());

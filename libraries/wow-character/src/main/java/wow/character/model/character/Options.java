@@ -51,7 +51,7 @@ public abstract class Options<T, I> {
 
 		reset();
 
-		setNames(namesToEnable);
+		setNamesIgnoreMissing(namesToEnable);
 	}
 
 	private List<String> getEnabledNames() {
@@ -88,6 +88,14 @@ public abstract class Options<T, I> {
 	}
 
 	public void setNames(Collection<String> names) {
+		reset();
+
+		for (var name : names) {
+			enable(name);
+		}
+	}
+
+	private void setNamesIgnoreMissing(Collection<String> names) {
 		reset();
 
 		for (var name : names) {

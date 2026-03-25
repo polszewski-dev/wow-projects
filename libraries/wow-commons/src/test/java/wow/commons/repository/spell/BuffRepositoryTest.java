@@ -1,28 +1,25 @@
 package wow.commons.repository.spell;
 
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.commons.WowCommonsSpringTest;
-import wow.commons.constant.AttributeConditions;
 import wow.commons.model.attribute.Attribute;
-import wow.commons.model.attribute.AttributeCondition;
+import wow.commons.model.buff.Buff;
 import wow.commons.model.buff.BuffExclusionGroup;
-import wow.commons.model.buff.BuffType;
-import wow.commons.model.pve.PhaseId;
 
 import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.commons.model.attribute.AttributeId.*;
-import static wow.commons.model.buff.BuffCategory.RAID_BUFF;
+import static wow.commons.constant.AttributeConditions.SPELL;
+import static wow.commons.constant.AttributeConditions.SPELL_DAMAGE;
+import static wow.commons.model.attribute.AttributeId.CRIT_RATING;
+import static wow.commons.model.attribute.AttributeId.POWER;
+import static wow.commons.model.buff.BuffCategory.CONSUME;
+import static wow.commons.model.buff.BuffType.OIL;
 import static wow.commons.model.categorization.PveRole.CASTER_DPS;
 import static wow.commons.model.pve.PhaseId.TBC_P5;
-import static wow.test.commons.BuffNames.ARCANE_BRILLIANCE;
-import static wow.test.commons.BuffNames.CURSE_OF_THE_ELEMENTS;
+import static wow.test.commons.BuffNames.BRILLIANT_WIZARD_OIL;
 
 /**
  * User: POlszewski
@@ -33,95 +30,48 @@ class BuffRepositoryTest extends WowCommonsSpringTest {
 	BuffRepository buffRepository;
 
 	@Test
-	void buffIsCorrect() {
-		var buff = buffRepository.getBuff(CURSE_OF_THE_ELEMENTS, 4, TBC_P5).getFirst();
+	void buff_attributes_are_correct() {
+		var buff = buffRepository.getBuff(BRILLIANT_WIZARD_OIL, TBC_P5).getFirst();
 
-		assertThat(buff.getName()).isEqualTo(CURSE_OF_THE_ELEMENTS);
-		assertThat(buff.getRank()).isEqualTo(4);
-		assertThat(buff.getName()).isEqualTo("Curse of the Elements");
-		assertThat(buff.getRequiredLevel()).isNull();
-		assertThat(buff.getType()).isEqualTo(BuffType.DEBUFF);
-		assertThat(buff.getExclusionGroup()).isEqualTo(BuffExclusionGroup.COE);
+		assertThat(buff.getName()).isEqualTo(BRILLIANT_WIZARD_OIL);
+		assertThat(buff.getRequiredLevel()).isEqualTo(55);
+		assertThat(buff.getType()).isEqualTo(OIL);
+		assertThat(buff.getExclusionGroup()).isEqualTo(BuffExclusionGroup.OIL);
 		assertThat(buff.getSourceSpell()).isNull();
 		assertThat(buff.getPveRoles()).hasSameElementsAs(Set.of(CASTER_DPS));
-		assertThat(buff.getCategories()).hasSameElementsAs(Set.of(RAID_BUFF));
+		assertThat(buff.getCategories()).hasSameElementsAs(Set.of(CONSUME));
 
 		assertModifier(buff.getEffect(), List.of(
-				Attribute.of(RESISTANCE, -88, AttributeCondition.comma(
-						AttributeConditions.ARCANE,
-						AttributeConditions.FIRE,
-						AttributeConditions.FROST,
-						AttributeConditions.SHADOW
-				)),
-				Attribute.of(DAMAGE_TAKEN_PCT, 10, AttributeCondition.comma(
-						AttributeConditions.ARCANE,
-						AttributeConditions.FIRE,
-						AttributeConditions.FROST,
-						AttributeConditions.SHADOW
-				))
-		 ));
-	}
-
-	@Test
-	void bufByNamefIsCorrect() {
-		var buffNames = buffRepository.getAvailableBuffs(TBC_P5, buff -> true).stream()
-				.map(buff -> buff.getName() + "#" + buff.getRank())
-				.toList();
-
-		assertThat(buffNames).hasSameElementsAs(List.of(
-				"Arcane Brilliance#2",
-				"Prayer of Fortitude#3",
-				"Power Word: Fortitude#5",
-				"Prayer of Spirit#2",
-				"Gift of the Wild#3",
-				"Greater Blessing of Kings#0",
-				"Demon Skin#2",
-				"Demon Armor#6",
-				"Fel Armor#2",
-				"Touch of Shadow#0",
-				"Burning Wish#0",
-				"Shadowform#0",
-				"Brilliant Wizard Oil#0",
-				"Superior Wizard Oil#0",
-				"Runn Tum Tuber#0",
-				"Well Fed (sp)#0",
-				"Flask of Supreme Power#0",
-				"Flask of Pure Death#0",
-				"Spirit of Zanza#0",
-				"Greater Arcane Elixir#0",
-				"Elixir of Shadow Power#0",
-				"Moonkin Aura#0",
-				"Wrath of Air Totem#1",
-				"Totem of Wrath#1",
-				"Drums of Battle#0",
-				"Misery#0",
-				"Rallying Cry of the Dragonslayer#0",
-				"Spirit of Zandalar#0",
-				"Warchief's Blessing#0",
-				"Sayge's Dark Fortune of Damage#0",
-				"Mol'dar's Moxie#0",
-				"Slip'kik's Savvy#0",
-				"Songflower Serenade#0",
-				"Shadow Vulnerability#0",
-				"Fire Vulnerability#0",
-				"Curse of the Elements#4",
-				"Curse of the Elements (improved)#4"
+				Attribute.of(POWER, 36, SPELL_DAMAGE),
+				Attribute.of(CRIT_RATING, 14, SPELL)
 		));
 	}
 
-	@Nested
-	class BuffAttributes {
-		@ParameterizedTest(name = "{0}")
-		@CsvSource({
-				"VANILLA_P1, 1, 31",
-				"TBC_P1, 2, 40",
-		})
-		void talent(PhaseId phaseId, int rank, int statValue) {
-			var buff = buffRepository.getBuff(ARCANE_BRILLIANCE, rank, phaseId).getFirst();
+	@Test
+	void available_buffs_are_correct() {
+		var buffNames = buffRepository.getAvailableBuffs(TBC_P5, buff -> true).stream()
+				.map(Buff::getName)
+				.toList();
 
-			assertModifier(buff.getEffect(), List.of(
-					Attribute.of(INTELLECT, statValue)
-			));
-		}
+		assertThat(buffNames).hasSameElementsAs(List.of(
+				"Brilliant Wizard Oil",
+				"Superior Wizard Oil",
+				"Runn Tum Tuber",
+				"Well Fed (sp)",
+				"Flask of Supreme Power",
+				"Flask of Pure Death",
+				"Flask of Blinding Light",
+				"Spirit of Zanza",
+				"Greater Arcane Elixir",
+				"Elixir of Shadow Power",
+				"Drums of Battle",
+				"Rallying Cry of the Dragonslayer",
+				"Spirit of Zandalar",
+				"Warchief's Blessing",
+				"Sayge's Dark Fortune of Damage",
+				"Mol'dar's Moxie",
+				"Slip'kik's Savvy",
+				"Songflower Serenade"
+		));
 	}
 }

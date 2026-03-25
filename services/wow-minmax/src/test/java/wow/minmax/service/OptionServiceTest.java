@@ -30,24 +30,13 @@ class OptionServiceTest extends ServiceTest {
 				.toList();
 
 		assertThat(statusStrings).hasSameElementsAs(List.of(
-				"Arcane Brilliance#true",
 				"Brilliant Wizard Oil#true",
-				"Burning Wish#false",
-				"Demon Armor#false",
 				"Drums of Battle#false",
-				"Fel Armor#true",
+				"Flask of Blinding Light#false",
 				"Flask of Pure Death#true",
 				"Flask of Supreme Power#false",
-				"Gift of the Wild#true",
-				"Greater Blessing of Kings#true",
-				"Moonkin Aura#false",
-				"Prayer of Fortitude#true",
-				"Prayer of Spirit#true",
 				"Superior Wizard Oil#false",
-				"Totem of Wrath#true",
-				"Touch of Shadow#true",
-				"Well Fed (sp)#true",
-				"Wrath of Air Totem#true"
+				"Well Fed (sp)#true"
 		));
 	}
 
