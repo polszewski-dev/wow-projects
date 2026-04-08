@@ -4,7 +4,7 @@ import wow.character.model.character.Character;
 import wow.character.model.snapshot.AccumulatedStats;
 import wow.character.util.AbstractEffectCollector;
 import wow.commons.model.effect.Effect;
-import wow.commons.model.effect.impl.EffectImpl;
+import wow.commons.model.effect.impl.AttributeEffect;
 import wow.commons.model.spell.ActivatedAbility;
 import wow.estimator.util.NonModifierHandler;
 
@@ -95,7 +95,7 @@ public class EffectList extends AbstractEffectCollector {
 			return Effect.EMPTY;
 		}
 
-		return EffectImpl.newAttributeEffect(
+		return new AttributeEffect(
 				effect.getAugmentedAbilities(),
 				modifierComponent.attributes().scale(-1),
 				null

@@ -8,7 +8,7 @@ import wow.commons.constant.AttributeConditions;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.Attributes;
 import wow.commons.model.effect.EffectId;
-import wow.commons.model.effect.impl.EffectImpl;
+import wow.commons.model.effect.impl.AttributeEffect;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.spell.SpellRepository;
 
@@ -30,7 +30,7 @@ class ItemEffectMapperTest extends WowCommonsSpringTest {
 				Attribute.of(CRIT_RATING, 20, AttributeConditions.SPELL),
 				Attribute.of(CAST_TIME, -0.25, AttributeConditions.FLAMESTRIKE)
 		);
-		var original = EffectImpl.newAttributeEffect(attributes);
+		var original = new AttributeEffect(attributes);
 		var serialized = itemEffectMapper.toString(original);
 		var deserialized = itemEffectMapper.fromString(serialized, phaseId);
 

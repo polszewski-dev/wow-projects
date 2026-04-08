@@ -2,7 +2,7 @@ package wow.scraper.parser.effect;
 
 import lombok.RequiredArgsConstructor;
 import wow.commons.model.effect.Effect;
-import wow.commons.model.effect.impl.EffectImpl;
+import wow.commons.model.effect.impl.AttributeEffect;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.util.CollectionUtil;
 import wow.scraper.parser.stat.StatParser;
@@ -73,6 +73,6 @@ public class ItemStatParser {
 			return null;
 		}
 
-		return EffectImpl.newAttributeEffect(statParser.getParsedStats(), line);
+		return new AttributeEffect(statParser.getParsedStats(), line);
 	}
 }

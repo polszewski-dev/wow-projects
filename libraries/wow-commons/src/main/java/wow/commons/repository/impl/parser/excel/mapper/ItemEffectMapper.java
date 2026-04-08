@@ -3,7 +3,7 @@ package wow.commons.repository.impl.parser.excel.mapper;
 import org.springframework.stereotype.Component;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.EffectId;
-import wow.commons.model.effect.impl.EffectImpl;
+import wow.commons.model.effect.impl.AttributeEffect;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.spell.SpellRepository;
 import wow.commons.util.AttributesFormater;
@@ -50,6 +50,6 @@ public final class ItemEffectMapper {
 
 		var attributes = AttributesParser.parse(value);
 
-		return EffectImpl.newAttributeEffect(attributes);
+		return new AttributeEffect(attributes);
 	}
 }

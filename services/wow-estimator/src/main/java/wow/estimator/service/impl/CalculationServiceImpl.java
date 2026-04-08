@@ -13,7 +13,7 @@ import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.Attributes;
 import wow.commons.model.buff.BuffCategory;
 import wow.commons.model.effect.Effect;
-import wow.commons.model.effect.impl.EffectImpl;
+import wow.commons.model.effect.impl.AttributeEffect;
 import wow.commons.model.spell.Ability;
 import wow.estimator.model.*;
 import wow.estimator.service.CalculationService;
@@ -278,7 +278,7 @@ public class CalculationServiceImpl implements CalculationService {
 		var stat = usesCombatRatings ? ratingStat : pctStat;
 
 		var specialAbility = SpecialAbility.of(
-				EffectImpl.newAttributeEffect(
+				new AttributeEffect(
 						Attributes.of(stat, equivalentAmount)
 				)
 		);

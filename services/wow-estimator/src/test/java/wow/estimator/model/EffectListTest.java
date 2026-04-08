@@ -6,7 +6,7 @@ import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.Attributes;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.EffectId;
-import wow.commons.model.effect.impl.EffectImpl;
+import wow.commons.model.effect.impl.AttributeEffect;
 import wow.commons.model.spell.ActivatedAbility;
 import wow.commons.model.spell.SpellId;
 import wow.estimator.WowEstimatorSpringTest;
@@ -90,7 +90,7 @@ class EffectListTest extends WowEstimatorSpringTest {
 	@Test
 	void removeEffectNotOnTheListModifierOnly() {
 		var effectList = new EffectList(player);
-		var effect = EffectImpl.newAttributeEffect(Attributes.of(
+		var effect = new AttributeEffect(Attributes.of(
 				POWER_PCT, 1
 		));
 

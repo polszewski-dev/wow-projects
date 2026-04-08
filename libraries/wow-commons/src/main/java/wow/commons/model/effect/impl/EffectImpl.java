@@ -3,7 +3,6 @@ package wow.commons.model.effect.impl;
 import lombok.Getter;
 import lombok.Setter;
 import wow.commons.model.attribute.Attribute;
-import wow.commons.model.attribute.Attributes;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.effect.*;
@@ -33,7 +32,6 @@ public class EffectImpl implements Effect {
 	private EffectExclusionGroup exclusionGroup;
 	private PeriodicComponent periodicComponent;
 	private ModifierComponent modifierComponent;
-	private List<Attribute> modifierAttributeList;
 	private AbsorptionComponent absorptionComponent;
 	private List<SpellSchool> preventedSchools;
 	private List<StatConversion> statConversions;
@@ -44,35 +42,16 @@ public class EffectImpl implements Effect {
 		this.augmentedAbilities = augmentedAbilities;
 	}
 
-	public static EffectImpl newAttributeEffect(Attributes attributes) {
-		return newAttributeEffect(List.of(), attributes, null);
-	}
-
-	public static EffectImpl newAttributeEffect(Attributes attributes, String tooltip) {
-		return newAttributeEffect(List.of(), attributes, tooltip);
-	}
-
-	public static EffectImpl newAttributeEffect(List<AbilityId> augmentedAbilities, Attributes attributes, String tooltip) {
-		var effect = new EffectImpl(augmentedAbilities);
-		effect.setModifierComponent(new ModifierComponent(attributes));
-		if (tooltip != null) {
-			effect.setDescription(new Description("", null, tooltip));
+	@Override
+	public List<Attribute> getModifierAttributeList() {
+		if (modifierComponent == null) {
+			return null;
 		}
-		effect.setPreventedSchools(List.of());
-		effect.setStatConversions(List.of());
-		effect.setEvents(List.of());
-		return effect;
+		return modifierComponent.attributes().list();
 	}
 
 	public void attachSource(EffectSource source) {
 		this.source = source;
-	}
-
-	public void setModifierComponent(ModifierComponent modifierComponent) {
-		this.modifierComponent = modifierComponent;
-		if (modifierComponent != null) {
-			this.modifierAttributeList = modifierComponent.attributes().list();
-		}
 	}
 
 	@Override

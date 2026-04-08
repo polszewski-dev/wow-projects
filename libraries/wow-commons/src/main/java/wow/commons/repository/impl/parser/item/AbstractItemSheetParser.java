@@ -9,6 +9,7 @@ import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.EffectSource;
 import wow.commons.model.effect.component.ModifierComponent;
+import wow.commons.model.effect.impl.AttributeEffect;
 import wow.commons.model.effect.impl.EffectImpl;
 import wow.commons.model.item.BasicItemInfo;
 import wow.commons.model.item.ItemSource;
@@ -94,19 +95,28 @@ public abstract class AbstractItemSheetParser extends WowExcelSheetParser {
 		}
 
 		var phaseId = timeRestriction.earliestPhaseId();
-		var effect = (EffectImpl) itemEffectMapper.fromString(stats, phaseId);
+		var effect = itemEffectMapper.fromString(stats, phaseId);
 
-		if (effect.getDescription() == null) {
-			effect.setDescription(cache(new Description("", null, descr)));
-			var modifierCompoent = new ModifierComponent(cache(effect.getModifierComponent().attributes()));
-			effect.setModifierComponent(cache(modifierCompoent));
+		if (effect instanceof AttributeEffect) {
+			var description = effect.getDescription();
+
+			if (description == null) {
+				description = new Description("", null, descr);
+			}
+
+			effect = new AttributeEffect(
+					effect.getAugmentedAbilities(),
+					cache(new ModifierComponent(cache(effect.getModifierComponent().attributes()))),
+					source,
+					cache(description)
+			);
+		} else {
+			((EffectImpl) effect).attachSource(source);
 		}
 
 		if (!Objects.equals(effect.getTooltip(), descr)) {
 			throw new IllegalArgumentException(descr);
 		}
-
-		effect.attachSource(source);
 
 		return effect;
 	}
