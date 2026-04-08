@@ -96,8 +96,9 @@ public class ItemSheetParser extends AbstractItemSheetParser {
 		var damageType = colWeaponDamageType.getEnum(SpellSchool::parse, null);
 		var dps = colWeaponDps.getDouble();
 		var speed = colWeaponSpeed.getDuration();
+		var weaponStats = new WeaponStats(damageMin, damageMax, damageType, dps, speed);
 
-		return new WeaponStats(damageMin, damageMax, damageType, dps, speed);
+		return cache(weaponStats);
 	}
 
 	private void validateItem(Item item) {

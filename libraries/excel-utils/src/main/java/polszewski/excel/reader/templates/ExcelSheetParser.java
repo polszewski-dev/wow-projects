@@ -20,6 +20,8 @@ public abstract class ExcelSheetParser {
 	protected ExcelReader excelReader;
 	protected Map<String, Integer> header;
 
+	private final Map<Object, Object> cache = new HashMap<>();
+
 	protected ExcelSheetParser(String sheetName) {
 		this(Pattern.compile("^" + Pattern.quote(sheetName) + "$"));
 	}
@@ -86,6 +88,14 @@ public abstract class ExcelSheetParser {
 		return column(name, false);
 	}
 
+	protected <T> T cache(T value) {
+		if (cache.containsKey(value)) {
+			return (T) cache.get(value);
+		}
+		cache.put(value, value);
+		return value;
+	}
+
 	protected class ExcelColumn {
 		private final String name;
 		private final boolean optional;
@@ -131,18 +141,19 @@ public abstract class ExcelSheetParser {
 		}
 
 		public <T> T getInteger(IntFunction<T> mapper) {
-			return mapper.apply(getInteger());
+			return cache(mapper.apply(getInteger()));
 		}
 
 		public Integer getNullableInteger() {
 			return getOptionalString()
 					.map(Integer::valueOf)
+					.map(ExcelSheetParser.this::cache)
 					.orElse(null);
 		}
 
 		public <T> T getNullableInteger(IntFunction<T> mapper) {
 			var value = getNullableInteger();
-			return value != null ? mapper.apply(value) : null;
+			return value != null ? cache(mapper.apply(value)) : null;
 		}
 
 		public double getDouble(double defaultValue) {
@@ -156,6 +167,7 @@ public abstract class ExcelSheetParser {
 		public Double getNullableDouble() {
 			return getOptionalString()
 					.map(Double::valueOf)
+					.map(ExcelSheetParser.this::cache)
 					.orElse(null);
 		}
 
@@ -198,38 +210,49 @@ public abstract class ExcelSheetParser {
 		}
 
 		protected Optional<String> getOptionalString() {
-			Integer colNo = header.get(name);
+			var colNo = header.get(name);
+
 			if (colNo != null) {
-				return Optional.ofNullable(excelReader.getCellStringValue(colNo));
+				var cellValue = excelReader.getCellStringValue(colNo);
+
+				return Optional.ofNullable(cache(cellValue));
 			}
+
 			if (optional) {
 				return Optional.empty();
 			}
+
 			throw new IllegalArgumentException("No column: " + name);
 		}
 
 		private OptionalInt getOptionalInteger() {
 			return getOptionalString()
 					.map(s -> OptionalInt.of(Integer.parseInt(s)))
+					.map(ExcelSheetParser.this::cache)
 					.orElse(OptionalInt.empty());
 		}
 
 		private OptionalDouble getOptionalDouble() {
 			return getOptionalString()
 					.map(s -> OptionalDouble.of(Double.parseDouble(s)))
+					.map(ExcelSheetParser.this::cache)
 					.orElse(OptionalDouble.empty());
 		}
 
 		private <T> Optional<T> getOptionalEnum(Function<String, T> producer) {
-			return getOptionalString().map(producer);
+			return getOptionalString()
+					.map(producer)
+					.map(ExcelSheetParser.this::cache);
 		}
 
 		private <T, C extends Collection<T>> C getValues(Function<String, T> producer, String separator, Collector<T, ?, C> collector) {
-			return getOptionalString()
+			var values = getOptionalString()
 					.stream()
 					.flatMap(str -> Stream.of(str.split(separator)))
 					.map(x -> producer.apply(x.trim()))
 					.collect(collector);
+
+			return cache(values);
 		}
 
 		protected IllegalArgumentException columnIsEmpty() {

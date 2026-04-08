@@ -68,7 +68,7 @@ public abstract class AbstractSpellBaseSheetParser extends WowExcelSheetParser {
 			return null;
 		}
 
-		return new ModifierComponent(attributes);
+		return cache(new ModifierComponent(attributes));
 	}
 
 	protected List<Event> getEvents(int maxEvents) {
@@ -116,7 +116,9 @@ public abstract class AbstractSpellBaseSheetParser extends WowExcelSheetParser {
 	protected Coefficient getCoefficient(String prefix) {
 		var value = colCoeffValue.prefixed(prefix).getPercent(Percent.ZERO);
 		var school = colCoeffSchool.prefixed(prefix).getEnum(SpellSchool::parse, null);
-		return new Coefficient(value, school);
+		var coefficient = new Coefficient(value, school);
+
+		return cache(coefficient);
 	}
 
 	private final ExcelColumn colTarget = column(TARGET, true);

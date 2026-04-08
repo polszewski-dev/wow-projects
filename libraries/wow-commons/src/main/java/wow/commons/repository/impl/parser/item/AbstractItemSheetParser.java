@@ -8,6 +8,7 @@ import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.EffectSource;
+import wow.commons.model.effect.component.ModifierComponent;
 import wow.commons.model.effect.impl.EffectImpl;
 import wow.commons.model.item.BasicItemInfo;
 import wow.commons.model.item.ItemSource;
@@ -64,8 +65,9 @@ public abstract class AbstractItemSheetParser extends WowExcelSheetParser {
 		var itemLevel = colItemLevel.getInteger();
 		var source = colSource.getString();
 		var sources = getSources(source);
+		var basicItemInfo = new BasicItemInfo(itemType, itemSubType, rarity, binding, unique, itemLevel, sources);
 
-		return new BasicItemInfo(itemType, itemSubType, rarity, binding, unique, itemLevel, sources);
+		return cache(basicItemInfo);
 	}
 
 	private Set<ItemSource> getSources(String source) {
@@ -95,7 +97,9 @@ public abstract class AbstractItemSheetParser extends WowExcelSheetParser {
 		var effect = (EffectImpl) itemEffectMapper.fromString(stats, phaseId);
 
 		if (effect.getDescription() == null) {
-			effect.setDescription(new Description("", null, descr));
+			effect.setDescription(cache(new Description("", null, descr)));
+			var modifierCompoent = new ModifierComponent(cache(effect.getModifierComponent().attributes()));
+			effect.setModifierComponent(cache(modifierCompoent));
 		}
 
 		if (!Objects.equals(effect.getTooltip(), descr)) {

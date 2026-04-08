@@ -72,15 +72,15 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 		}
 
 		private Optional<Percent> getOptionalPercent() {
-			return getOptionalString().map(Percent::parse);
+			return getOptionalString().map(Percent::parse).map(WowExcelSheetParser.this::cache);
 		}
 
 		private Optional<Duration> getOptionalDuration() {
-			return getOptionalString().map(Duration::parse);
+			return getOptionalString().map(Duration::parse).map(WowExcelSheetParser.this::cache);
 		}
 
 		private Optional<AnyDuration> getOptionalAnyDuration() {
-			return getOptionalString().map(AnyDuration::parse);
+			return getOptionalString().map(AnyDuration::parse).map(WowExcelSheetParser.this::cache);
 		}
 
 		public <K, V> Map<K, V> getMap(K[] keys, Function<ExcelColumn, V> mapper) {
@@ -129,8 +129,9 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 		var name = colName.getString();
 		var icon = colIcon.getString(null);
 		var tooltip = colTooltip.getString(null);
+		var description = new Description(name, icon, tooltip);
 
-		return new Description(name, icon, tooltip);
+		return cache(description);
 	}
 
 	private final ExcelColumn colReqVersion = column(REQ_VERSION, true);
@@ -144,7 +145,9 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 			return null;
 		}
 
-		return TimeRestriction.of(version, phase);
+		var timeRestriction = TimeRestriction.of(version, phase);
+
+		return cache(timeRestriction);
 	}
 
 	private final ExcelColumn colReqLevel = column(REQ_LEVEL, true);
@@ -178,7 +181,7 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 		var role = colReqRole.getEnum(PveRole::parse, null);
 		var maxLevel = colReqMaxLevel.getNullableInteger();
 
-		return new CharacterRestriction(
+		var characterRestriction = new CharacterRestriction(
 				level,
 				characterClasses,
 				races,
@@ -192,12 +195,15 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 				role,
 				maxLevel
 		);
+
+		return cache(characterRestriction);
 	}
 
 	protected Attributes readAttributes(String prefix, int maxAttributes) {
 		var list = readSections(maxAttributes, idx -> readAttribute(prefix, idx));
+		var attributes = Attributes.of(list);
 
-		return Attributes.of(list);
+		return cache(attributes);
 	}
 
 	private Attribute readAttribute(String prefix, int statNo) {
@@ -211,8 +217,9 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 
 		var id = colAttrId.getString();
 		var value = colAttrValue.getDouble();
+		var attribute = AttributesParser.parse(id, value);
 
-		return AttributesParser.parse(id, value);
+		return cache(attribute);
 	}
 
 	private final ExcelColumn coPveRoles = column("pve_roles");

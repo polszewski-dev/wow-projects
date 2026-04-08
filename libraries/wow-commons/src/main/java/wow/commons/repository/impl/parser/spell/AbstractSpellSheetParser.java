@@ -146,7 +146,9 @@ public abstract class AbstractSpellSheetParser extends AbstractSpellBaseSheetPar
 		var baseStatPct = colCostBaseStatPct.getPercent(Percent.ZERO);
 		var coeff = getCoefficient(COST_PREFIX);
 		var reagent = colReagent.getEnum(Reagent::parse, null);
-		return new Cost(type, amount, baseStatPct, coeff, reagent);
+		var cost = new Cost(type, amount, baseStatPct, coeff, reagent);
+
+		return cache(cost);
 	}
 
 	private final ExcelColumn colCastTime = column(CAST_TIME);
@@ -157,7 +159,9 @@ public abstract class AbstractSpellSheetParser extends AbstractSpellBaseSheetPar
 		var castTime = colCastTime.getDuration(Duration.ZERO);
 		var channeled = colChanneled.getBoolean();
 		var ignoresGcd = activatedAbility || colIgnoresGcd.getBoolean();
-		return new CastInfo(castTime, channeled, ignoresGcd);
+		var castInfo = new CastInfo(castTime, channeled, ignoresGcd);
+
+		return cache(castInfo);
 	}
 
 	private DirectComponent getDirectComponent() {
@@ -376,8 +380,9 @@ public abstract class AbstractSpellSheetParser extends AbstractSpellBaseSheetPar
 		var min = colDirectBonusMin.prefixed(prefix).getInteger();
 		var max = colDirectBonusMax.prefixed(prefix).getInteger();
 		var requiredEffect = colDirectBonusRequiredEffect.prefixed(prefix).getEnum(AbilityId::parse, null);
+		var directComponentBonus = new DirectComponentBonus(min, max, requiredEffect);
 
-		return new DirectComponentBonus(min, max, requiredEffect);
+		return cache(directComponentBonus);
 	}
 
 	private EffectApplication getEffectApplication() {
