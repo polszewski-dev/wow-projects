@@ -10,6 +10,8 @@ import java.util.function.Function;
 public abstract class TimeMap<K, V, T extends Enum<T>> {
 	protected final Map<T, Map<K, V>> map;
 
+	private record TimeMinMap() {}
+
 	protected TimeMap(Class<T> tClass) {
 		this.map = new EnumMap<>(tClass);
 	}

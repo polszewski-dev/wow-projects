@@ -7,14 +7,14 @@ import wow.commons.model.talent.Talent;
 import wow.commons.model.talent.TalentId;
 import wow.commons.repository.impl.parser.spell.TalentExcelParser;
 import wow.commons.repository.spell.TalentRepository;
-import wow.commons.util.PhaseMap;
+import wow.commons.util.GameVersionMap;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-import static wow.commons.util.PhaseMap.addEntryForEveryPhase;
-import static wow.commons.util.PhaseMap.putForEveryPhase;
+import static wow.commons.util.GameVersionMap.addEntryForGameVersion;
+import static wow.commons.util.GameVersionMap.putForGameVersion;
 
 /**
  * User: POlszewski
@@ -25,10 +25,10 @@ public class TalentRepositoryImpl implements TalentRepository {
 	private record NameRankKey(CharacterClassId characterClassId, String name, int rank) {}
 	private record CalcPositionKey(CharacterClassId characterClassId, int talentCalculatorPosition, int rank) {}
 
-	private final PhaseMap<TalentId, Talent> talentById = new PhaseMap<>();
-	private final PhaseMap<CharacterClassId, List<Talent>> talentsByClass = new PhaseMap<>();
-	private final PhaseMap<NameRankKey, Talent> talentByClassByIdByRank = new PhaseMap<>();
-	private final PhaseMap<CalcPositionKey, Talent> talentByClassByCalcPosByRank = new PhaseMap<>();
+	private final GameVersionMap<TalentId, Talent> talentById = new GameVersionMap<>();
+	private final GameVersionMap<CharacterClassId, List<Talent>> talentsByClass = new GameVersionMap<>();
+	private final GameVersionMap<NameRankKey, Talent> talentByClassByIdByRank = new GameVersionMap<>();
+	private final GameVersionMap<CalcPositionKey, Talent> talentByClassByCalcPosByRank = new GameVersionMap<>();
 
 	public TalentRepositoryImpl(TalentExcelParser parser) throws IOException {
 		parser.readFromXls();
@@ -62,9 +62,9 @@ public class TalentRepositoryImpl implements TalentRepository {
 		var key1 = new NameRankKey(talent.getCharacterClass(), talent.getName(), talent.getRank());
 		var key2 = new CalcPositionKey(talent.getCharacterClass(), talent.getTalentCalculatorPosition(), talent.getRank());
 
-		addEntryForEveryPhase(talentsByClass, talent.getCharacterClass(), talent);
-		putForEveryPhase(talentById, talent.getId(), talent);
-		putForEveryPhase(talentByClassByIdByRank, key1, talent);
-		putForEveryPhase(talentByClassByCalcPosByRank, key2, talent);
+		addEntryForGameVersion(talentsByClass, talent.getCharacterClass(), talent);
+		putForGameVersion(talentById, talent.getId(), talent);
+		putForGameVersion(talentByClassByIdByRank, key1, talent);
+		putForGameVersion(talentByClassByCalcPosByRank, key2, talent);
 	}
 }
