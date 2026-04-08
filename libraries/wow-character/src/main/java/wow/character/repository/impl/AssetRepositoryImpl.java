@@ -8,7 +8,9 @@ import wow.commons.model.pve.PhaseId;
 import wow.commons.util.PhaseMap;
 
 import java.io.IOException;
-import java.util.Collection;
+import java.util.List;
+
+import static wow.commons.util.PhaseMap.putForEveryPhase;
 
 /**
  * User: POlszewski
@@ -24,11 +26,11 @@ public class AssetRepositoryImpl implements AssetRepository {
 	}
 
 	@Override
-	public Collection<Asset> getAvailableAssets(PhaseId phaseId) {
+	public List<Asset> getAvailableAssets(PhaseId phaseId) {
 		return assetByName.values(phaseId);
 	}
 
 	private void addAsset(Asset asset) {
-		assetByName.putForEveryPhase(asset.timeRestriction().earliestPhaseId(), asset.name(), asset);
+		putForEveryPhase(assetByName, asset.name(), asset);
 	}
 }

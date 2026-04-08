@@ -54,6 +54,6 @@ public class ZoneRepositoryImpl implements ZoneRepository {
 
 	private void addZone(Zone zone) {
 		zoneById.put(zone.getGameVersionId(), zone.getId(), zone);
-		zoneByName.computeIfAbsent(zone.getGameVersionId(), zone.getName(), x -> new ArrayList<>()).add(zone);
+		zoneByName.computeIfAbsent(zone.getGameVersionId(), zone.getName(), ArrayList::new).add(zone);
 	}
 }

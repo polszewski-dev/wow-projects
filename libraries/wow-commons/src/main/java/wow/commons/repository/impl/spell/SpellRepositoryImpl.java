@@ -119,7 +119,7 @@ public class SpellRepositoryImpl implements SpellRepository {
 
 		if (effect instanceof RacialEffect racial) {
 			for (var raceId : racial.getRequiredRaceIds()) {
-				racialEffects.computeIfAbsent(gameVersionId, raceId, x -> new ArrayList<>())
+				racialEffects.computeIfAbsent(gameVersionId, raceId, ArrayList::new)
 						.add(racial);
 			}
 		}

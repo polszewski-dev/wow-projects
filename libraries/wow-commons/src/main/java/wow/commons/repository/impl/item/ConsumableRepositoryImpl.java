@@ -9,7 +9,6 @@ import wow.commons.repository.item.ConsumableRepository;
 import wow.commons.util.PhaseMap;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,7 +38,7 @@ public class ConsumableRepositoryImpl implements ConsumableRepository {
 
 	@Override
 	public List<Consumable> getAvailableConsumables(PhaseId phaseId) {
-		return new ArrayList<>(consumableById.values(phaseId));
+		return consumableById.values(phaseId);
 	}
 
 	private void addConsumable(Consumable consumable) {

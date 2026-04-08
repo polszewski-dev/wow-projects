@@ -33,7 +33,7 @@ public class FactionRepositoryImpl implements FactionRepository {
 
 	@Override
 	public List<Faction> getAvailableExclusiveFactions(GameVersionId gameVersionId) {
-		return List.copyOf(exclusiveFactions.values(gameVersionId));
+		return exclusiveFactions.values(gameVersionId);
 	}
 
 	private void addFaction(Faction faction) {

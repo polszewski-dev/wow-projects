@@ -50,7 +50,7 @@ public class NpcImporter extends PveImporter<JsonNpcDetails> {
 		var npcs = getInstanceNpcs(gameVersion, instance);
 
 		for (var npc : npcs) {
-			var existingNpc = getResult().computeIfAbsent(gameVersion, npc.getId(), x -> {
+			var existingNpc = getResult().computeIfAbsent(gameVersion, npc.getId(), () -> {
 				npc.setLocation(new ArrayList<>());
 				return npc;
 			});
