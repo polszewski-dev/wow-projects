@@ -45,7 +45,8 @@ public final class CollectionUtil {
 		if (list2 == null || list2.isEmpty()) {
 			return list1;
 		}
-		var both = new ArrayList<>(list1);
+		var both = new ArrayList<T>(list1.size() + list2.size());
+		both.addAll(list1);
 		both.addAll(list2);
 		return both;
 	}

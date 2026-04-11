@@ -50,7 +50,7 @@ public class ItemSetSheetParser extends AbstractItemSheetParser {
 	}
 
 	private List<ItemSetBonus> getItemSetBonuses(ItemSet itemSet, TimeRestriction timeRestriction) {
-		List<ItemSetBonus> itemSetBonuses = new ArrayList<>();
+		var itemSetBonuses = new ArrayList<ItemSetBonus>();
 
 		for (int bonusIdx = 1; bonusIdx <= ITEM_SET_MAX_BONUSES; ++bonusIdx) {
 			ItemSetBonus itemSetBonus = getItemSetBonus(bonusIdx, itemSet, timeRestriction);
@@ -59,7 +59,7 @@ public class ItemSetSheetParser extends AbstractItemSheetParser {
 			}
 		}
 
-		return itemSetBonuses;
+		return List.copyOf(itemSetBonuses);
 	}
 
 	private ItemSetBonus getItemSetBonus(int bonusIdx, ItemSet itemSet, TimeRestriction timeRestriction) {

@@ -182,7 +182,7 @@ public class Equipment implements EffectCollection, Copyable<Equipment> {
 	}
 
 	public List<EquippableItem> toList() {
-		return new ArrayList<>(itemsBySlot.values());
+		return List.copyOf(itemsBySlot.values());
 	}
 
 	public Map<ItemSlot, EquippableItem> toMap() {

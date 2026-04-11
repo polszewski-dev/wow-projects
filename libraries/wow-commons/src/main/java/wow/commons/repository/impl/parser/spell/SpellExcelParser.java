@@ -98,6 +98,8 @@ public class SpellExcelParser extends ExcelParser {
 				.map(command -> replaceDummyEffect(command, spell))
 				.toList();
 
+		newCommands = List.copyOf(newCommands);
+
 		var newEffectApplication = new EffectApplication(newCommands);
 
 		((SpellImpl) spell).setEffectApplication(newEffectApplication);
@@ -124,6 +126,8 @@ public class SpellExcelParser extends ExcelParser {
 		var newEvents = effect.getEvents().stream()
 				.map(event -> replaceDummySpell(event, effect.getTimeRestriction()))
 				.toList();
+
+		newEvents = List.copyOf(newEvents);
 
 		((EffectImpl) effect).setEvents(newEvents);
 	}

@@ -5,6 +5,7 @@ import wow.commons.model.Percent;
 import wow.commons.model.attribute.*;
 import wow.commons.model.talent.TalentTree;
 
+import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
@@ -48,6 +49,8 @@ public class AttributesParser {
 				.map(AttributesParser::new)
 				.map(AttributesParser::parse)
 				.toList();
+
+		list = List.copyOf(list);
 
 		var attributes = Attributes.of(list);
 

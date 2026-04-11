@@ -106,7 +106,7 @@ public abstract class AbstractItemSheetParser extends WowExcelSheetParser {
 
 			effect = new AttributeEffect(
 					effect.getAugmentedAbilities(),
-					cache(new ModifierComponent(cache(effect.getModifierComponent().attributes()))),
+					cache(new ModifierComponent(effect.getModifierComponent().attributes())),
 					source,
 					cache(description)
 			);

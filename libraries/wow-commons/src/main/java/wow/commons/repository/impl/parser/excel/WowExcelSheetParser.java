@@ -222,10 +222,12 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 		return coPveRoles.getSet(PveRole::parse);
 	}
 
-	protected static <T> List<T> readSections(int numSections, IntFunction<T> sectionMapper) {
-		return IntStream.rangeClosed(1, numSections)
+	protected <T> List<T> readSections(int numSections, IntFunction<T> sectionMapper) {
+		var sections = IntStream.rangeClosed(1, numSections)
 				.mapToObj(sectionMapper)
 				.filter(Objects::nonNull)
 				.toList();
+
+		return cache(List.copyOf(sections));
 	}
 }
