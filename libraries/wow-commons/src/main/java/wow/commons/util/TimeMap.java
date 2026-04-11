@@ -1,5 +1,7 @@
 package wow.commons.util;
 
+import wow.commons.model.config.TimeRestricted;
+
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -44,6 +46,26 @@ public abstract class TimeMap<K, V, T extends Enum<T>> {
 
 		protected abstract T[] timeKeyValues();
 
+		public abstract void compactLists();
+
+		@SafeVarargs
+		protected final Map<V, V> getCompactedListMap(V... values) {
+			var result = new HashMap<V, V>();
+
+			for (V value : values) {
+				result.computeIfAbsent(value, this::getCompactedList);
+			}
+
+			return result;
+		}
+
+		private V getCompactedList(V value) {
+			if (!(value instanceof List<?> list)) {
+				return value;
+			}
+			return (V) List.copyOf(list);
+		}
+
 		private static class EmptyTimeEntryMap<T extends Enum<T>, V> extends TimeEntryMap<T, V> {
 			@Override
 			public V get(T timeKey) {
@@ -63,6 +85,11 @@ public abstract class TimeMap<K, V, T extends Enum<T>> {
 			@Override
 			protected T[] timeKeyValues() {
 				throw new UnsupportedOperationException();
+			}
+
+			@Override
+			public void compactLists() {
+				// void
 			}
 		}
 
@@ -130,4 +157,8 @@ public abstract class TimeMap<K, V, T extends Enum<T>> {
 	}
 
 	protected abstract TimeEntryMap<T, V> newTimeEntryMap();
+
+	public static <K, V extends TimeRestricted> void compactLists(TimeMap<K, List<V>, ?> map) {
+		map.map.forEach((key, value) -> value.compactLists());
+	}
 }

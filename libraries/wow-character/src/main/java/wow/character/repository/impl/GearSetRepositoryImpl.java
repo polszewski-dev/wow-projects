@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static wow.commons.util.PhaseMap.addEntryForEveryPhase;
+import static wow.commons.util.TimeMap.compactLists;
 
 /**
  * User: POlszewski
@@ -29,6 +30,8 @@ public class GearSetRepositoryImpl implements GearSetRepository {
 	public GearSetRepositoryImpl(GearSetExcelParser parser) throws IOException {
 		parser.readFromXls();
 		parser.getGearSets().forEach(this::addGearSet);
+		compactLists(gearSetByNameClass);
+		compactLists(gearSetByClass);
 	}
 
 	@Override

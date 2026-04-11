@@ -16,8 +16,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import static wow.commons.util.PhaseMap.addEntryForEveryPhase;
-import static wow.commons.util.PhaseMap.putForEveryPhase;
+import static wow.commons.util.PhaseMap.*;
 
 /**
  * User: POlszewski
@@ -31,6 +30,7 @@ public class EnchantRepositoryImpl implements EnchantRepository {
 	public EnchantRepositoryImpl(EnchantExcelParser parser) throws IOException {
 		parser.readFromXls();
 		parser.getEnchants().forEach(this::addEnchant);
+		compactLists(enchantByName);
 	}
 
 	@Override

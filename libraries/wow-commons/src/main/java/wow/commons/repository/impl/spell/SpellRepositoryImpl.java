@@ -20,8 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static wow.commons.util.CollectionUtil.getUniqueResult;
-import static wow.commons.util.PhaseMap.addEntryForEveryPhase;
-import static wow.commons.util.PhaseMap.putForEveryPhase;
+import static wow.commons.util.PhaseMap.*;
 
 /**
  * User: POlszewski
@@ -40,6 +39,10 @@ public class SpellRepositoryImpl implements SpellRepository {
 		parser.readFromXls();
 		parser.getSpells().forEach(this::addSpell);
 		parser.getEffects().forEach(this::addEffect);
+		compactLists(abilitiesByClass);
+		compactLists(abilitiesByNameRank);
+		compactLists(effectByName);
+		compactLists(racialEffects);
 	}
 
 	@Override

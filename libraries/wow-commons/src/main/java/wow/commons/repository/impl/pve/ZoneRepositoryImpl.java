@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static wow.commons.util.TimeMap.compactLists;
+
 /**
  * User: POlszewski
  * Date: 2021-03-14
@@ -25,6 +27,7 @@ public class ZoneRepositoryImpl implements ZoneRepository {
 	public ZoneRepositoryImpl(ZoneExcelParser parser) throws IOException {
 		parser.readFromXls();
 		parser.getZones().forEach(this::addZone);
+		compactLists(zoneByName);
 	}
 
 	@Override

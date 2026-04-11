@@ -99,6 +99,43 @@ public class PhaseMap<K, V> extends TimeMap<K, V, PhaseId> {
 		protected PhaseId[] timeKeyValues() {
 			return PhaseId.values();
 		}
+
+		@Override
+		public void compactLists() {
+			var compactedListMap = getCompactedListMap(
+					vanillaP1Value,
+					vanillaP2Value,
+					vanillaP25Value,
+					vanillaP3Value,
+					vanillaP4Value,
+					vanillaP5Value,
+					vanillaP6Value,
+					tbcP0Value,
+					tbcP1Value,
+					tbcP2Value,
+					tbcP3Value,
+					tbcP4Value,
+					tbcP5Value,
+					wotlkP0Value,
+					wotlkP1Value
+			);
+
+			vanillaP1Value = compactedListMap.get(vanillaP1Value);
+			vanillaP2Value = compactedListMap.get(vanillaP2Value);
+			vanillaP25Value = compactedListMap.get(vanillaP25Value);
+			vanillaP3Value = compactedListMap.get(vanillaP3Value);
+			vanillaP4Value = compactedListMap.get(vanillaP4Value);
+			vanillaP5Value = compactedListMap.get(vanillaP5Value);
+			vanillaP6Value = compactedListMap.get(vanillaP6Value);
+			tbcP0Value = compactedListMap.get(tbcP0Value);
+			tbcP1Value = compactedListMap.get(tbcP1Value);
+			tbcP2Value = compactedListMap.get(tbcP2Value);
+			tbcP3Value = compactedListMap.get(tbcP3Value);
+			tbcP4Value = compactedListMap.get(tbcP4Value);
+			tbcP5Value = compactedListMap.get(tbcP5Value);
+			wotlkP0Value = compactedListMap.get(wotlkP0Value);
+			wotlkP1Value = compactedListMap.get(wotlkP1Value);
+		}
 	}
 
 	@Override

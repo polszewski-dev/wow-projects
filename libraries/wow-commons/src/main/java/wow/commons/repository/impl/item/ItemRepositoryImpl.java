@@ -18,8 +18,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-import static wow.commons.util.PhaseMap.addEntryForEveryPhase;
-import static wow.commons.util.PhaseMap.putForEveryPhase;
+import static wow.commons.util.PhaseMap.*;
 
 /**
  * User: POlszewski
@@ -48,6 +47,9 @@ public class ItemRepositoryImpl implements ItemRepository {
 			parser.readFromXls();
 			parser.getItems().forEach(this::addItem);
 		}
+
+		compactLists(itemByName);
+		compactLists(itemBySlot);
 	}
 
 	@Override

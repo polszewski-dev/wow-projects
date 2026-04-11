@@ -15,6 +15,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static wow.commons.util.PhaseMap.addEntryForEveryPhase;
+import static wow.commons.util.TimeMap.compactLists;
 
 /**
  * User: POlszewski
@@ -29,6 +30,7 @@ public class CharacterTemplateRepositoryImpl implements CharacterTemplateReposit
 	public CharacterTemplateRepositoryImpl(CharacterTemplateExcelParser parser) throws IOException {
 		parser.readFromXls();
 		parser.getCharacterTemplates().forEach(this::addCharacterTemplate);
+		compactLists(characterTemplateByKey);
 	}
 
 	@Override

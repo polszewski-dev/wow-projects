@@ -15,6 +15,7 @@ import java.util.Optional;
 
 import static wow.commons.util.GameVersionMap.addEntryForGameVersion;
 import static wow.commons.util.GameVersionMap.putForGameVersion;
+import static wow.commons.util.TimeMap.compactLists;
 
 /**
  * User: POlszewski
@@ -33,6 +34,7 @@ public class TalentRepositoryImpl implements TalentRepository {
 	public TalentRepositoryImpl(TalentExcelParser parser) throws IOException {
 		parser.readFromXls();
 		parser.getTalents().forEach(this::addTalent);
+		compactLists(talentsByClass);
 	}
 
 	@Override

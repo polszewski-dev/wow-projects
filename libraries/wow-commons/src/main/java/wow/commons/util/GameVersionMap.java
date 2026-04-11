@@ -54,6 +54,15 @@ public class GameVersionMap<K, V> extends TimeMap<K, V, GameVersionId> {
 		protected GameVersionId[] timeKeyValues() {
 			return GameVersionId.values();
 		}
+
+		@Override
+		public void compactLists() {
+			var compactedListMap = getCompactedListMap(vanillaValue, tbcValue, wotlkValue);
+
+			vanillaValue = compactedListMap.get(vanillaValue);
+			tbcValue = compactedListMap.get(tbcValue);
+			wotlkValue = compactedListMap.get(wotlkValue);
+		}
 	}
 
 	@Override

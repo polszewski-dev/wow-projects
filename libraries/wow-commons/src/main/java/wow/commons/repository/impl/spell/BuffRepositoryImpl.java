@@ -19,8 +19,7 @@ import java.util.function.Predicate;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
-import static wow.commons.util.PhaseMap.addEntryForEveryPhase;
-import static wow.commons.util.PhaseMap.putForEveryPhase;
+import static wow.commons.util.PhaseMap.*;
 
 /**
  * User: POlszewski
@@ -34,6 +33,7 @@ public class BuffRepositoryImpl implements BuffRepository {
 	public BuffRepositoryImpl(BuffExcelParser parser) throws IOException {
 		parser.readFromXls();
 		parser.getBuffs().forEach(this::addBuff);
+		compactLists(buffsByNameRank);
 	}
 
 	@Override

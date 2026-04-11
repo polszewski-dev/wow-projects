@@ -14,8 +14,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-import static wow.commons.util.PhaseMap.addEntryForEveryPhase;
-import static wow.commons.util.PhaseMap.putForEveryPhase;
+import static wow.commons.util.PhaseMap.*;
 
 /**
  * User: POlszewski
@@ -30,6 +29,8 @@ public class GemRepositoryImpl implements GemRepository {
 	public GemRepositoryImpl(GemExcelParser parser) throws IOException {
 		parser.readFromXls();
 		parser.getGems().forEach(this::addGem);
+		compactLists(gemByName);
+		compactLists(gemBySocketType);
 	}
 
 	@Override
