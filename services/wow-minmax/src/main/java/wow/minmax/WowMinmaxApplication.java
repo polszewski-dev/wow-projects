@@ -1,6 +1,7 @@
 package wow.minmax;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -10,6 +11,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.reactive.function.client.WebClient;
+import wow.commons.util.ObjectCache;
 
 @SpringBootApplication
 @ComponentScan(basePackages = {
@@ -44,6 +46,11 @@ public class WowMinmaxApplication {
 		config.addAllowedMethod("PATCH");
 		source.registerCorsConfiguration("/**", config);
 		return new CorsFilter(source);
+	}
+
+	@Bean
+	public CommandLineRunner discardCache() {
+		return args -> ObjectCache.discard();
 	}
 
 	@Bean

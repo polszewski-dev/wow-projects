@@ -12,13 +12,10 @@ import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.ActionType;
 import wow.commons.model.spell.SpellSchool;
 import wow.commons.model.talent.TalentTree;
-import wow.commons.util.condition.ConditionCache;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Function;
 
-import static wow.commons.model.attribute.AttributeConditionCache.getCachedValue;
 import static wow.commons.util.condition.AttributeConditionParser.parseCondition;
 
 /**
@@ -38,58 +35,55 @@ public sealed interface AttributeCondition extends Condition {
 	HasPet HAS_PET = new HasPet();
 
 	static AttributeCondition of(ActionType actionType) {
-		return getCachedValue(actionType, ActionTypeCondition::new);
+		return new ActionTypeCondition(actionType);
 	}
 
 	static AttributeCondition of(PowerType powerType) {
-		return getCachedValue(powerType, PowerTypeCondition::new);
+		return new PowerTypeCondition(powerType);
 	}
 
 	static AttributeCondition of(TalentTree talentTree) {
-		return getCachedValue(talentTree, TalentTreeCondition::new);
+		return new TalentTreeCondition(talentTree);
 	}
 
 	static AttributeCondition of(SpellSchool spellSchool) {
-		return getCachedValue(spellSchool, SpellSchoolCondition::new);
+		return new SpellSchoolCondition(spellSchool);
 	}
 
 	static AttributeCondition of(AbilityId abilityId) {
-		return getCachedValue(abilityId, AbilityIdCondition::new);
+		return new AbilityIdCondition(abilityId);
 	}
 
 	static AttributeCondition of(AbilityCategory abilityCategory) {
-		return getCachedValue(abilityCategory, AbilityCategoryCondition::new);
+		return new AbilityCategoryCondition(abilityCategory);
 	}
 
 	static AttributeCondition of(PetType petType) {
-		return getCachedValue(petType, PetTypeCondition::new);
+		return new PetTypeCondition(petType);
 	}
 
 	static AttributeCondition of(CreatureType creatureType) {
-		return getCachedValue(creatureType, TargetTypeCondition::new);
+		return new TargetTypeCondition(creatureType);
 	}
 
 	static AttributeCondition of(EffectCategory effectCategory) {
-		return getCachedValue(effectCategory, EffectCategoryCondition::new);
+		return new EffectCategoryCondition(effectCategory);
 	}
 
 	static AttributeCondition of(WeaponSubType weaponSubType) {
-		return getCachedValue(weaponSubType, WeaponTypeCondition::new);
+		return new WeaponTypeCondition(weaponSubType);
 	}
 
 	static AttributeCondition of(ProfessionId professionId) {
-		return getCachedValue(professionId, ProfessionCondition::new);
+		return new ProfessionCondition(professionId);
 	}
 
 	static AttributeCondition of(MovementType movementType) {
-		return getCachedValue(movementType, MovementTypeCondition::new);
+		return new MovementTypeCondition(movementType);
 	}
 
 	static AttributeCondition parse(String value) {
-		return getCachedValue(
-				value,
-				x -> parseCondition(value)
-		);
+		return parseCondition(value);
 	}
 
 	static Or or(AttributeCondition left, AttributeCondition right) {
@@ -254,17 +248,4 @@ public sealed interface AttributeCondition extends Condition {
 	record OwnerHealthPctLessThan(double value) implements AttributeCondition {}
 
 	record TargetHealthPctLessThan(double value) implements AttributeCondition {}
-}
-
-class AttributeConditionCache extends ConditionCache<AttributeCondition> {
-	private static final AttributeConditionCache INSTANCE = new AttributeConditionCache();
-
-	static <K> AttributeCondition getCachedValue(K key, Function<K, AttributeCondition> conditionMapper) {
-		return INSTANCE.getValue(key, conditionMapper);
-	}
-
-	@Override
-	protected AttributeCondition emptyCondition() {
-		return AttributeCondition.EMPTY;
-	}
 }

@@ -4,6 +4,7 @@ import lombok.SneakyThrows;
 import polszewski.excel.reader.templates.ExcelParser;
 import polszewski.excel.reader.templates.ExcelSheetParser;
 import polszewski.excel.reader.templates.NullExcelSheetParser;
+import wow.commons.util.ObjectCache;
 
 import java.io.InputStream;
 import java.util.*;
@@ -98,6 +99,11 @@ public record AbilityId(String name) implements Comparable<AbilityId> {
 			if (type == CLASS_ABILITY || type == RACIAL_ABILITY || type == ACTIVATED_ABILITY) {
 				CACHE.computeIfAbsent(name, AbilityId::new);
 			}
+		}
+
+		@Override
+		protected <T> T cache(T value) {
+			return ObjectCache.cache(value);
 		}
 	}
 

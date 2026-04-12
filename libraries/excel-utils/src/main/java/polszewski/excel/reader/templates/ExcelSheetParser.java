@@ -20,8 +20,6 @@ public abstract class ExcelSheetParser {
 	protected ExcelReader excelReader;
 	protected Map<String, Integer> header;
 
-	private final Map<Object, Object> cache = new HashMap<>();
-
 	protected ExcelSheetParser(String sheetName) {
 		this(Pattern.compile("^" + Pattern.quote(sheetName) + "$"));
 	}
@@ -89,10 +87,6 @@ public abstract class ExcelSheetParser {
 	}
 
 	protected <T> T cache(T value) {
-		if (cache.containsKey(value)) {
-			return (T) cache.get(value);
-		}
-		cache.put(value, value);
 		return value;
 	}
 
@@ -147,7 +141,7 @@ public abstract class ExcelSheetParser {
 		public Integer getNullableInteger() {
 			return getOptionalString()
 					.map(Integer::valueOf)
-					.map(ExcelSheetParser.this::cache)
+					.map(this::cache)
 					.orElse(null);
 		}
 
@@ -167,7 +161,7 @@ public abstract class ExcelSheetParser {
 		public Double getNullableDouble() {
 			return getOptionalString()
 					.map(Double::valueOf)
-					.map(ExcelSheetParser.this::cache)
+					.map(this::cache)
 					.orElse(null);
 		}
 
@@ -209,6 +203,18 @@ public abstract class ExcelSheetParser {
 			return getValues(producer, separator, Collectors.toUnmodifiableSet());
 		}
 
+		public <K, V> Map<K, V> getMap(K[] keys, Function<ExcelColumn, V> mapper) {
+			return Stream.of(keys)
+					.collect(Collectors.toUnmodifiableMap(
+							Function.identity(),
+							key -> cache(mapper.apply(subColumn(key.toString().toLowerCase())))
+					));
+		}
+
+		private ExcelColumn subColumn(String subName) {
+			return new ExcelColumn(getName() + subName, isOptional());
+		}
+
 		protected Optional<String> getOptionalString() {
 			var colNo = header.get(name);
 
@@ -228,21 +234,21 @@ public abstract class ExcelSheetParser {
 		private OptionalInt getOptionalInteger() {
 			return getOptionalString()
 					.map(s -> OptionalInt.of(Integer.parseInt(s)))
-					.map(ExcelSheetParser.this::cache)
+					.map(this::cache)
 					.orElse(OptionalInt.empty());
 		}
 
 		private OptionalDouble getOptionalDouble() {
 			return getOptionalString()
 					.map(s -> OptionalDouble.of(Double.parseDouble(s)))
-					.map(ExcelSheetParser.this::cache)
+					.map(this::cache)
 					.orElse(OptionalDouble.empty());
 		}
 
 		private <T> Optional<T> getOptionalEnum(Function<String, T> producer) {
 			return getOptionalString()
 					.map(producer)
-					.map(ExcelSheetParser.this::cache);
+					.map(this::cache);
 		}
 
 		private <T, C extends Collection<T>> C getValues(Function<String, T> producer, String separator, Collector<T, ?, C> collector) {
@@ -250,6 +256,7 @@ public abstract class ExcelSheetParser {
 					.stream()
 					.flatMap(str -> Stream.of(str.split(separator)))
 					.map(x -> producer.apply(x.trim()))
+					.map(this::cache)
 					.collect(collector);
 
 			return cache(values);
@@ -259,6 +266,10 @@ public abstract class ExcelSheetParser {
 			return new IllegalArgumentException(
 					"%s[%s]: column '%s' is empty".formatted(getCurrentSheetName(), getCurrentRowIdx() + 1, name)
 			);
+		}
+
+		protected <T> T cache(T value) {
+			return ExcelSheetParser.this.cache(value);
 		}
 	}
 

@@ -4,12 +4,9 @@ import wow.commons.model.Condition;
 import wow.commons.model.attribute.PowerType;
 import wow.commons.model.spell.ActionType;
 import wow.commons.model.spell.SpellSchool;
-import wow.commons.util.condition.ConditionCache;
 
 import java.util.Objects;
-import java.util.function.Function;
 
-import static wow.commons.model.effect.component.AbsorptionConditionCache.getCachedValue;
 import static wow.commons.util.condition.AbsorptionConditionParser.parseCondition;
 
 /**
@@ -20,22 +17,19 @@ public sealed interface AbsorptionCondition extends Condition {
 	EmptyCondition EMPTY = new EmptyCondition();
 
 	static AbsorptionCondition of(ActionType actionType) {
-		return getCachedValue(actionType, ActionTypeCondition::new);
+		return new ActionTypeCondition(actionType);
 	}
 
 	static AbsorptionCondition of(PowerType powerType) {
-		return getCachedValue(powerType, PowerTypeCondition::new);
+		return new PowerTypeCondition(powerType);
 	}
 
 	static AbsorptionCondition of(SpellSchool spellSchool) {
-		return getCachedValue(spellSchool, SpellSchoolCondition::new);
+		return new SpellSchoolCondition(spellSchool);
 	}
 
 	static AbsorptionCondition parse(String value) {
-		return getCachedValue(
-				value,
-				x -> parseCondition(value)
-		);
+		return parseCondition(value);
 	}
 
 	record EmptyCondition() implements AbsorptionCondition {
@@ -61,18 +55,5 @@ public sealed interface AbsorptionCondition extends Condition {
 		public SpellSchoolCondition {
 			Objects.requireNonNull(spellSchool);
 		}
-	}
-}
-
-class AbsorptionConditionCache extends ConditionCache<AbsorptionCondition> {
-	private static final AbsorptionConditionCache INSTANCE = new AbsorptionConditionCache();
-
-	static <K> AbsorptionCondition getCachedValue(K key, Function<K, AbsorptionCondition> conditionMapper) {
-		return INSTANCE.getValue(key, conditionMapper);
-	}
-
-	@Override
-	protected AbsorptionCondition emptyCondition() {
-		return AbsorptionCondition.EMPTY;
 	}
 }

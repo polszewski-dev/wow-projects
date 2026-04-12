@@ -8,13 +8,10 @@ import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.ActionType;
 import wow.commons.model.spell.SpellSchool;
 import wow.commons.model.talent.TalentTree;
-import wow.commons.util.condition.ConditionCache;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Function;
 
-import static wow.commons.model.effect.component.EventConditionCache.getCachedValue;
 import static wow.commons.util.condition.EventConditionParser.parseCondition;
 
 /**
@@ -38,38 +35,35 @@ public sealed interface EventCondition extends Condition {
 	IsTargetingOthers IS_TARGETING_OTHERS = new IsTargetingOthers();
 
 	static EventCondition of(ActionType actionType) {
-		return getCachedValue(actionType, ActionTypeCondition::new);
+		return new ActionTypeCondition(actionType);
 	}
 
 	static EventCondition of(PowerType powerType) {
-		return getCachedValue(powerType, PowerTypeCondition::new);
+		return new PowerTypeCondition(powerType);
 	}
 
 	static EventCondition of(TalentTree talentTree) {
-		return getCachedValue(talentTree, TalentTreeCondition::new);
+		return new TalentTreeCondition(talentTree);
 	}
 
 	static EventCondition of(SpellSchool spellSchool) {
-		return getCachedValue(spellSchool, SpellSchoolCondition::new);
+		return new SpellSchoolCondition(spellSchool);
 	}
 
 	static EventCondition of(AbilityId abilityId) {
-		return getCachedValue(abilityId, AbilityIdCondition::new);
+		return new AbilityIdCondition(abilityId);
 	}
 
 	static EventCondition of(AbilityCategory abilityCategory) {
-		return getCachedValue(abilityCategory, AbilityCategoryCondition::new);
+		return new AbilityCategoryCondition(abilityCategory);
 	}
 
 	static EventCondition of(CreatureType creatureType) {
-		return getCachedValue(creatureType, TargetTypeCondition::new);
+		return new TargetTypeCondition(creatureType);
 	}
 
 	static EventCondition parse(String value) {
-		return getCachedValue(
-				value,
-				x -> parseCondition(value)
-		);
+		return parseCondition(value);
 	}
 
 	static Or or(EventCondition left, EventCondition right) {
@@ -212,17 +206,4 @@ public sealed interface EventCondition extends Condition {
 	record OwnerHealthPctLessThan(double value) implements EventCondition {}
 
 	record TargetHealthPctLessThan(double value) implements EventCondition {}
-}
-
-class EventConditionCache extends ConditionCache<EventCondition> {
-	private static final EventConditionCache INSTANCE = new EventConditionCache();
-
-	static <K> EventCondition getCachedValue(K key, Function<K, EventCondition> conditionMapper) {
-		return INSTANCE.getValue(key, conditionMapper);
-	}
-
-	@Override
-	protected EventCondition emptyCondition() {
-		return EventCondition.EMPTY;
-	}
 }

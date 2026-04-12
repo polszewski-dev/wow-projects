@@ -32,6 +32,15 @@ class AttributesParserTest {
 
 	@ParameterizedTest
 	@MethodSource("testData")
+	void subsequent_calls_return_the_same_object(TestData data) {
+		var parsed1 = AttributesParser.parse(data.string);
+		var parsed2 = AttributesParser.parse(data.string);
+
+		assertThat(parsed1).isSameAs(parsed2);
+	}
+
+	@ParameterizedTest
+	@MethodSource("testData")
 	void parseWithoutValue(TestData testData) {
 		if (testData.attributes().list().size() > 1) {
 			return;

@@ -11,6 +11,7 @@ import java.util.stream.Stream;
 import static java.lang.Double.parseDouble;
 import static wow.commons.model.attribute.AttributeScaling.*;
 import static wow.commons.util.AttributesFormater.ATTRIBUTE_SEPARATOR;
+import static wow.commons.util.ObjectCache.cache;
 
 /**
  * User: POlszewski
@@ -48,7 +49,9 @@ public class AttributesParser {
 				.map(AttributesParser::parse)
 				.toList();
 
-		return Attributes.of(list);
+		var attributes = Attributes.of(list);
+
+		return cache(attributes);
 	}
 
 	public static Attribute parse(String id, double value) {
@@ -60,9 +63,11 @@ public class AttributesParser {
 		parseScaledValue();
 
 		var id = AttributeId.parse(idStr);
-		var condition = AttributeCondition.parse(conditionStr);
+		var condition = cache(AttributeCondition.parse(conditionStr));
 
-		return Attribute.of(id, attributeValue, condition, attributeScaling);
+		var attribute = Attribute.of(id, attributeValue, condition, attributeScaling);
+
+		return cache(attribute);
 	}
 
 	private void splitIntoParts() {

@@ -37,6 +37,15 @@ class EventConditionParserTest {
 		assertThat(parsed).isEqualTo(data.condition);
 	}
 
+	@ParameterizedTest
+	@MethodSource("getTestData")
+	void subsequent_calls_return_the_same_object(TestData data) {
+		var parsed1 = parseCondition(data.string);
+		var parsed2 = parseCondition(data.string);
+
+		assertThat(parsed1).isSameAs(parsed2);
+	}
+
 	static List<TestData> getTestData() {
 		return TEST_DATA;
 	}

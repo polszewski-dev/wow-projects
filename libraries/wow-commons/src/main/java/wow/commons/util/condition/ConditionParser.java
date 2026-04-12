@@ -3,6 +3,7 @@ package wow.commons.util.condition;
 import lombok.RequiredArgsConstructor;
 import wow.commons.model.Condition;
 import wow.commons.model.spell.AbilityId;
+import wow.commons.util.ObjectCache;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,7 @@ public abstract class ConditionParser<T extends Condition, E> {
 	}
 
 	protected T transform(Node node) {
-		return switch (node) {
+		var result = switch (node) {
 			case OrNode(var left, var right) ->
 					orOperator(
 							transform(left),
@@ -91,6 +92,8 @@ public abstract class ConditionParser<T extends Condition, E> {
 			case PrimitiveNode(var value) ->
 					getBasicCondition(value);
 		};
+
+		return ObjectCache.cache(result);
 	}
 
 	protected E expressionTransform(Node node) {
@@ -230,7 +233,7 @@ public abstract class ConditionParser<T extends Condition, E> {
 				conditions.add(right);
 			} while (tokenizer.isCurrentToken(","));
 
-			return new CommaNode(conditions);
+			return new CommaNode(List.copyOf(conditions));
 		}
 
 		private Node comparisonExpression() {

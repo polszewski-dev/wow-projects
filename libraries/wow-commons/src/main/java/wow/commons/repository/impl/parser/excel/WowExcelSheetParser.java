@@ -18,14 +18,15 @@ import wow.commons.model.pve.PhaseId;
 import wow.commons.model.pve.Side;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.util.AttributesParser;
+import wow.commons.util.ObjectCache;
 
-import java.util.*;
-import java.util.function.Function;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.IntFunction;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import static wow.commons.repository.impl.parser.excel.CommonColumnNames.*;
 
@@ -72,27 +73,15 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 		}
 
 		private Optional<Percent> getOptionalPercent() {
-			return getOptionalString().map(Percent::parse).map(WowExcelSheetParser.this::cache);
+			return getOptionalString().map(Percent::parse).map(this::cache);
 		}
 
 		private Optional<Duration> getOptionalDuration() {
-			return getOptionalString().map(Duration::parse).map(WowExcelSheetParser.this::cache);
+			return getOptionalString().map(Duration::parse).map(this::cache);
 		}
 
 		private Optional<AnyDuration> getOptionalAnyDuration() {
-			return getOptionalString().map(AnyDuration::parse).map(WowExcelSheetParser.this::cache);
-		}
-
-		public <K, V> Map<K, V> getMap(K[] keys, Function<ExcelColumn, V> mapper) {
-			return Stream.of(keys)
-					.collect(Collectors.toMap(
-							Function.identity(),
-							key -> mapper.apply(subColumn(key.toString().toLowerCase()))
-					));
-		}
-
-		private ExcelColumn subColumn(String subName) {
-			return new ExcelColumn(getName() + subName, isOptional());
+			return getOptionalString().map(AnyDuration::parse).map(this::cache);
 		}
 
 		@Override
@@ -117,6 +106,11 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 	@Override
 	protected ExcelColumn getColumnIndicatingOptionalRow() {
 		return colName;
+	}
+
+	@Override
+	protected <T> T cache(T value) {
+		return ObjectCache.cache(value);
 	}
 
 	protected final ExcelColumn colId = column(ID);

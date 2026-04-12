@@ -5,13 +5,9 @@ import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.DruidFormType;
 import wow.commons.model.character.PetType;
-import wow.commons.util.condition.ConditionCache;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Function;
-
-import static wow.commons.model.spell.SpellTargetConditionCache.getCachedValue;
 
 /**
  * User: POlszewski
@@ -27,11 +23,11 @@ public sealed interface SpellTargetCondition extends Condition {
 	HasPet HAS_PET = new HasPet();
 
 	static SpellTargetCondition of(CreatureType creatureType) {
-		return getCachedValue(creatureType, IsCreatureType::new);
+		return new IsCreatureType(creatureType);
 	}
 
 	static SpellTargetCondition of(DruidFormType druidFormType) {
-		return getCachedValue(druidFormType, HasDruidForm::new);
+		return new HasDruidForm(druidFormType);
 	}
 
 	static Or or(SpellTargetCondition left, SpellTargetCondition right) {
@@ -145,18 +141,5 @@ public sealed interface SpellTargetCondition extends Condition {
 		public SacrificedPet {
 			Objects.requireNonNull(petType);
 		}
-	}
-}
-
-class SpellTargetConditionCache extends ConditionCache<SpellTargetCondition> {
-	private static final SpellTargetConditionCache INSTANCE = new SpellTargetConditionCache();
-
-	static <K> SpellTargetCondition getCachedValue(K key, Function<K, SpellTargetCondition> conditionMapper) {
-		return INSTANCE.getValue(key, conditionMapper);
-	}
-
-	@Override
-	protected SpellTargetCondition emptyCondition() {
-		return SpellTargetCondition.EMPTY;
 	}
 }
