@@ -16,16 +16,6 @@
 		<version>1.0</version>
 	</parent>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>21</maven.compiler.source>
-		<maven.compiler.target>21</maven.compiler.target>
-		<maven.compiler.plugin.version>3.12.1</maven.compiler.plugin.version>
-		<spring.boot.maven.dependencies.version>3.2.4</spring.boot.maven.dependencies.version>
-		<spring.boot.maven.plugin.version>3.2.4</spring.boot.maven.plugin.version>
-		<lombok.version>1.18.30</lombok.version>
-	</properties>
-
 	<modules>
 		<module>wow-commons-client</module>
 		<module>wow-minmax-client</module>
