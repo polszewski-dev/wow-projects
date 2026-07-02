@@ -1,5 +1,6 @@
 package wow.minmax.model.db;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,6 +39,7 @@ public class PlayerConfig {
 	private List<Integer> assetIds;
 	private NonPlayerConfig target;
 
+	@JsonIgnore
 	public PlayerId getPlayerIdAsRecord() {
 		return PlayerId.parse(playerId);
 	}

@@ -1,5 +1,6 @@
 package wow.minmax.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,14 +29,17 @@ public class PlayerProfile {
 	private LocalDateTime lastModified;
 	private String lastModifiedPlayerId;
 
+	@JsonIgnore
 	public UUID getProfileIdAsUUID() {
 		return UUID.fromString(profileId);
 	}
 
+	@JsonIgnore
 	public PlayerId getLastModifiedPlayerIdAsRecord() {
 		return PlayerId.parse(lastModifiedPlayerId);
 	}
 
+	@JsonIgnore
 	public PlayerProfileInfo getProfileInfo() {
 		return new PlayerProfileInfo(
 				getProfileIdAsUUID(),

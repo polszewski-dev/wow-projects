@@ -1,11 +1,18 @@
 package wow.minmax.repository;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
 import wow.minmax.model.db.PlayerConfig;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * User: POlszewski
  * Date: 2024-10-22
  */
-public interface PlayerConfigRepository extends MongoRepository<PlayerConfig, String> {
+public interface PlayerConfigRepository {
+	Optional<PlayerConfig> findById(String id);
+
+	List<PlayerConfig> findAll();
+
+	PlayerConfig save(PlayerConfig playerConfig);
 }

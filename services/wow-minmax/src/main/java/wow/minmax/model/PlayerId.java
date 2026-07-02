@@ -1,5 +1,6 @@
 package wow.minmax.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.pve.PhaseId;
 
@@ -35,6 +36,7 @@ public record PlayerId(
 		);
 	}
 
+	@JsonIgnore
 	public PlayerId getPreviousPhasePlayerId() {
 		return new PlayerId(
 				profileId,
