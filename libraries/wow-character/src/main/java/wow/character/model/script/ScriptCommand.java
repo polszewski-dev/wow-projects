@@ -1,7 +1,11 @@
 package wow.character.model.script;
 
+import wow.character.model.character.Character;
+import wow.character.model.character.PlayerCharacter;
 import wow.commons.model.categorization.ItemSlot;
+import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.AbilityId;
+import wow.commons.model.spell.ActivatedAbility;
 
 import java.util.List;
 import java.util.Objects;
@@ -21,6 +25,10 @@ public sealed interface ScriptCommand {
 			Objects.requireNonNull(abilityId);
 			Objects.requireNonNull(target);
 		}
+
+		public Ability getAbility(Character character) {
+			return character.getAbility(abilityId).orElse(null);
+		}
 	}
 
 	record CastSpellRank(ScriptCommandCondition condition, String abilityName, int rank, ScriptCommandTarget target, boolean optional) implements ComposableCommand {
@@ -29,6 +37,10 @@ public sealed interface ScriptCommand {
 			Objects.requireNonNull(abilityName);
 			Objects.requireNonNull(target);
 		}
+
+		public Ability getAbility(Character character) {
+			return character.getAbility(abilityName, rank).orElse(null);
+		}
 	}
 
 	record UseItem(ScriptCommandCondition condition, ItemSlot itemSlot, ScriptCommandTarget target, boolean optional) implements ComposableCommand {
@@ -36,6 +48,16 @@ public sealed interface ScriptCommand {
 			Objects.requireNonNull(condition);
 			Objects.requireNonNull(itemSlot);
 			Objects.requireNonNull(target);
+		}
+
+		public ActivatedAbility getActivatedAbility(PlayerCharacter player) {
+			var equippedItem = player.getEquippedItem(itemSlot);
+
+			if (equippedItem == null) {
+				return null;
+			}
+
+			return equippedItem.getItem().getActivatedAbility();
 		}
 	}
 
