@@ -2,6 +2,7 @@ package wow.simulator.script.command;
 
 import wow.commons.model.spell.Ability;
 import wow.simulator.model.unit.Player;
+import wow.simulator.script.ScriptParams;
 
 import static wow.character.model.script.ScriptCommand.CastSpell;
 
@@ -10,12 +11,12 @@ import static wow.character.model.script.ScriptCommand.CastSpell;
  * Date: 2025-09-18
  */
 public class CastSpellExecutor extends ComposableExecutor {
-	private CastSpellExecutor(CastSpell command, Player player, Player mainPlayer) {
-		super(player, mainPlayer, command.condition(), getAbility(command, player), command.target(), command.optional());
+	private CastSpellExecutor(CastSpell command, ScriptParams params) {
+		super(params, command.condition(), getAbility(command, params.player()), command.target(), command.optional());
 	}
 
-	public static CastSpellExecutor create(CastSpell command, Player player, Player mainPlayer) {
-		return new CastSpellExecutor(command, player, mainPlayer);
+	public static CastSpellExecutor create(CastSpell command, ScriptParams params) {
+		return new CastSpellExecutor(command, params);
 	}
 
 	private static Ability getAbility(CastSpell command, Player player) {

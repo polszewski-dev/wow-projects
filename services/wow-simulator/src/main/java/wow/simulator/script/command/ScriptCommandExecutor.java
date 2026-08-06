@@ -4,6 +4,7 @@ import wow.character.model.script.ScriptCommand;
 import wow.character.model.script.ScriptCommandTarget;
 import wow.simulator.model.unit.Player;
 import wow.simulator.model.unit.Unit;
+import wow.simulator.script.ScriptParams;
 
 import static wow.character.model.script.ScriptCommand.CastSequence;
 import static wow.character.model.script.ScriptCommand.ComposableCommand;
@@ -16,15 +17,15 @@ public abstract class ScriptCommandExecutor {
 	protected final Player player;
 	protected final Player mainPlayer;
 
-	protected ScriptCommandExecutor(Player player, Player mainPlayer) {
-		this.player = player;
-		this.mainPlayer = mainPlayer;
+	protected ScriptCommandExecutor(ScriptParams params) {
+		this.player = params.player();
+		this.mainPlayer = params.mainPlayer();
 	}
 
-	public static ScriptCommandExecutor create(ScriptCommand command, Player player, Player mainPlayer) {
+	public static ScriptCommandExecutor create(ScriptCommand command, ScriptParams params) {
 		return switch (command) {
-			case CastSequence castSequence -> CastSequenceExecutor.create(castSequence, player, mainPlayer);
-			case ComposableCommand composableCommand -> ComposableExecutor.create(composableCommand, player, mainPlayer);
+			case CastSequence castSequence -> CastSequenceExecutor.create(castSequence, params);
+			case ComposableCommand composableCommand -> ComposableExecutor.create(composableCommand, params);
 		};
 	}
 

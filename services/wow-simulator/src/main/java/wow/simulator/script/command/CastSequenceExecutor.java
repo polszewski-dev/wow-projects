@@ -1,6 +1,6 @@
 package wow.simulator.script.command;
 
-import wow.simulator.model.unit.Player;
+import wow.simulator.script.ScriptParams;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,18 +15,18 @@ public class CastSequenceExecutor extends ScriptCommandExecutor {
 	private final List<ComposableExecutor> list;
 	private List<ComposableExecutor> toExecute;
 
-	private CastSequenceExecutor(List<ComposableExecutor> list, Player player, Player mainPlayer) {
-		super(player, mainPlayer);
+	private CastSequenceExecutor(List<ComposableExecutor> list, ScriptParams params) {
+		super(params);
 		this.list = list;
 	}
 
-	public static CastSequenceExecutor create(CastSequence castSequence, Player player, Player mainPlayer) {
+	public static CastSequenceExecutor create(CastSequence castSequence, ScriptParams params) {
 		var list = castSequence.list().stream()
-				.map(command -> ComposableExecutor.create(command, player, mainPlayer))
+				.map(command -> ComposableExecutor.create(command, params))
 				.filter(executor -> executor.isValid() || !executor.isOptional())
 				.toList();
 
-		return new CastSequenceExecutor(list, player, mainPlayer);
+		return new CastSequenceExecutor(list, params);
 	}
 
 	@Override

@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import wow.character.model.script.ScriptCompiler;
 import wow.character.model.script.ScriptPathResolver;
 import wow.commons.model.Duration;
-import wow.simulator.model.unit.Player;
 import wow.simulator.script.command.ScriptCommandExecutor;
 
 import java.util.List;
@@ -17,18 +16,17 @@ import static wow.character.model.script.ScriptSectionType.ROTATION;
  */
 @RequiredArgsConstructor
 public class ScriptExecutor {
-	private final Player player;
-	private final Player mainPlayer;
-
+	private final ScriptParams params;
 	private List<ScriptCommandExecutor> rotationCommands;
 
 	public void setupPlayer() {
+		var player = params.player();
 		var scriptPath = ScriptPathResolver.getScriptPath(player);
 		var script = ScriptCompiler.compileResource(scriptPath);
 		var rotationSection = script.getSection(ROTATION);
 
 		this.rotationCommands = rotationSection.commands().stream()
-				.map(command -> ScriptCommandExecutor.create(command, player, mainPlayer))
+				.map(command -> ScriptCommandExecutor.create(command, params))
 				.filter(ScriptCommandExecutor::isValid)
 				.toList();
 
@@ -41,7 +39,10 @@ public class ScriptExecutor {
 		if (command != null) {
 			command.execute();
 		} else {
-			player.idleFor(Duration.seconds(1));
+			var player = params.player();
+			var idleDuration = Duration.seconds(1);
+
+			player.idleFor(idleDuration);
 		}
 	}
 

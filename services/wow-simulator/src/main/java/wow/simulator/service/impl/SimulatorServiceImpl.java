@@ -21,6 +21,7 @@ import wow.simulator.model.unit.Player;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.update.Scheduler;
 import wow.simulator.script.ScriptExecutor;
+import wow.simulator.script.ScriptParams;
 import wow.simulator.script.SinglePassScriptExecutor;
 import wow.simulator.service.SimulatorService;
 import wow.simulator.simulation.Simulation;
@@ -70,7 +71,8 @@ public class SimulatorServiceImpl implements SimulatorService {
 
 	private Simulation createSimulation(Raid<Player> raid, Unit target, SimulationContext simulationContext) {
 		var mainPlayer = raid.getFirstMember();
-		var scriptExecutor = new ScriptExecutor(mainPlayer, mainPlayer);
+		var params = new ScriptParams(mainPlayer, mainPlayer);
+		var scriptExecutor = new ScriptExecutor(params);
 		var simulation = new Simulation(simulationContext);
 
 		scriptExecutor.setupPlayer();
@@ -163,10 +165,10 @@ public class SimulatorServiceImpl implements SimulatorService {
 			throw new IllegalArgumentException();
 		}
 
-		var scriptExecutor = new SinglePassScriptExecutor(scriptName, PREPARATION, player, player);
+		var params = new ScriptParams(player, player);
+		var scriptExecutor = new SinglePassScriptExecutor(scriptName, PREPARATION, params);
 
 		scriptExecutor.setupPlayer();
-
 		scriptExecutor.execute();
 	}
 

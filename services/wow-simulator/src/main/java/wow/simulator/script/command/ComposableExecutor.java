@@ -7,8 +7,8 @@ import wow.commons.model.AnyDuration;
 import wow.commons.model.Duration;
 import wow.commons.model.spell.Ability;
 import wow.simulator.model.effect.EffectInstance;
-import wow.simulator.model.unit.Player;
 import wow.simulator.model.unit.Unit;
+import wow.simulator.script.ScriptParams;
 
 import static wow.character.model.script.ScriptCommand.*;
 
@@ -24,25 +24,24 @@ public abstract class ComposableExecutor extends ScriptCommandExecutor {
 	protected final boolean optional;
 
 	protected ComposableExecutor(
-			Player player,
-			Player mainPlayer,
+			ScriptParams params,
 			ScriptCommandCondition commandCondition,
 			Ability ability,
 			ScriptCommandTarget commandTarget,
 			boolean optional
 	) {
-		super(player, mainPlayer);
+		super(params);
 		this.commandCondition = commandCondition;
 		this.ability = ability;
 		this.commandTarget = commandTarget;
 		this.optional = optional;
 	}
 
-	public static ComposableExecutor create(ComposableCommand command, Player player, Player mainPlayer) {
+	public static ComposableExecutor create(ComposableCommand command, ScriptParams params) {
 		return switch (command) {
-			case CastSpell castSpell -> CastSpellExecutor.create(castSpell, player, mainPlayer);
-			case CastSpellRank castSpellRank -> CastSpellRankExecutor.create(castSpellRank, player, mainPlayer);
-			case UseItem useItem -> UseItemExecutor.create(useItem, player, mainPlayer);
+			case CastSpell castSpell -> CastSpellExecutor.create(castSpell, params);
+			case CastSpellRank castSpellRank -> CastSpellRankExecutor.create(castSpellRank, params);
+			case UseItem useItem -> UseItemExecutor.create(useItem, params);
 		};
 	}
 

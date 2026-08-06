@@ -2,6 +2,7 @@ package wow.simulator.script.command;
 
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.spell.AbilityId;
+import wow.simulator.script.ScriptParams;
 import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
 
 import java.util.List;
@@ -27,8 +28,9 @@ abstract class CommandExecutorTest extends TbcWarlockSpellSimulationTest {
 
 	CastSpellExecutor getCastSpellExecutor(String abilityName) {
 		var command = castSpell(abilityName);
+		var params = new ScriptParams(player, player);
 
-		return CastSpellExecutor.create(command, player, player);
+		return CastSpellExecutor.create(command, params);
 	}
 
 	CastSpellRank castSpellRank(String abilityName, int rank) {
@@ -43,14 +45,16 @@ abstract class CommandExecutorTest extends TbcWarlockSpellSimulationTest {
 
 	CastSpellRankExecutor getCastSpellRankExecutor(String abilityName, int rank) {
 		var command = castSpellRank(abilityName, rank);
+		var params = new ScriptParams(player, player);
 
-		return CastSpellRankExecutor.create(command, player, player);
+		return CastSpellRankExecutor.create(command, params);
 	}
 
 	UseItemExecutor getUseItemExecutor(ItemSlot itemSlot) {
 		var command = useItem(itemSlot);
+		var params = new ScriptParams(player, player);
 
-		return UseItemExecutor.create(command, player, player);
+		return UseItemExecutor.create(command, params);
 	}
 
 	UseItem useItem(ItemSlot itemSlot) {
@@ -64,8 +68,9 @@ abstract class CommandExecutorTest extends TbcWarlockSpellSimulationTest {
 
 	CastSequenceExecutor getCastSequenceExecutor(ComposableCommand... commands) {
 		var castSequence = new CastSequence(List.of(commands));
+		var params = new ScriptParams(player, player);
 
-		return CastSequenceExecutor.create(castSequence, player, player);
+		return CastSequenceExecutor.create(castSequence, params);
 	}
 
 	double getCastTime(String abilityName) {
