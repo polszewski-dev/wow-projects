@@ -45,7 +45,7 @@ public class PlayerImpl extends CharacterImpl implements Player {
 			CharacterProfessions professions,
 			ExclusiveFactions exclusiveFactions
 	) {
-		super(name, phase, characterClass, level, baseStatInfo, combatRatingInfo);
+		super(name, phase, characterClass, level, race.getCreatureType(), baseStatInfo, combatRatingInfo);
 		this.playerId = playerId;
 		this.race = race;
 		this.build = new Build(phase.getGameVersion(), talents);

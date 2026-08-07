@@ -16,13 +16,11 @@ import static wow.character.model.character.BaseStatInfo.getDummyBaseStatInfo;
  * Date: 2023-10-31
  */
 @Getter
+@Setter
 public class NonPlayerCharacterImpl extends CharacterImpl implements NonPlayerCharacter {
-	private final CreatureType creatureType;
-	@Setter
 	private Percent healthPct = Percent._100;
 
 	public NonPlayerCharacterImpl(String name, Phase phase, CharacterClass characterClass, CreatureType creatureType, int level, CombatRatingInfo combatRatingInfo) {
-		super(name, phase, characterClass, level, getDummyBaseStatInfo(characterClass, level, phase), combatRatingInfo);
-		this.creatureType = creatureType;
+		super(name, phase, characterClass, level, creatureType, getDummyBaseStatInfo(characterClass, level, phase), combatRatingInfo);
 	}
 }

@@ -7,6 +7,7 @@ import wow.character.model.character.Character;
 import wow.character.model.character.*;
 import wow.character.model.equipment.Equipment;
 import wow.commons.model.character.CharacterClass;
+import wow.commons.model.character.CreatureType;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.AbilityId;
@@ -28,6 +29,7 @@ public abstract class CharacterImpl implements Character {
 	private final Phase phase;
 	private final CharacterClass characterClass;
 	private final int level;
+	private final CreatureType creatureType;
 	private final BaseStatInfo baseStatInfo;
 	private final CombatRatingInfo combatRatingInfo;
 	private final Spellbook spellbook;
@@ -35,11 +37,12 @@ public abstract class CharacterImpl implements Character {
 	private final Consumables consumables;
 	private Character target;
 
-	protected CharacterImpl(String name, Phase phase, CharacterClass characterClass, int level, BaseStatInfo baseStatInfo, CombatRatingInfo combatRatingInfo) {
+	protected CharacterImpl(String name, Phase phase, CharacterClass characterClass, int level, CreatureType creatureType, BaseStatInfo baseStatInfo, CombatRatingInfo combatRatingInfo) {
 		this.name = name;
 		this.phase = phase;
 		this.characterClass = characterClass;
 		this.level = level;
+		this.creatureType = creatureType;
 		this.baseStatInfo = baseStatInfo;
 		this.combatRatingInfo = combatRatingInfo;
 		this.spellbook = new Spellbook();

@@ -23,7 +23,6 @@ import static wow.character.model.character.BaseStatInfo.getDummyBaseStatInfo;
  */
 @Getter
 public class NonPlayerImpl extends CharacterImpl implements NonPlayer {
-	private final CreatureType creatureType;
 	private final EffectInstances effectInstances;
 	@Setter
 	private Percent healthPct = Percent._100;
@@ -36,8 +35,7 @@ public class NonPlayerImpl extends CharacterImpl implements NonPlayer {
 			int level,
 			CombatRatingInfo combatRatingInfo
 	) {
-		super(name, phase, characterClass, level, getDummyBaseStatInfo(characterClass, level, phase), combatRatingInfo);
-		this.creatureType = creatureType;
+		super(name, phase, characterClass, level, creatureType, getDummyBaseStatInfo(characterClass, level, phase), combatRatingInfo);
 		this.effectInstances = new EffectInstances();
 	}
 
@@ -46,16 +44,15 @@ public class NonPlayerImpl extends CharacterImpl implements NonPlayer {
 			Phase phase,
 			CharacterClass characterClass,
 			int level,
+			CreatureType creatureType,
 			BaseStatInfo baseStatInfo,
 			CombatRatingInfo combatRatingInfo,
 			Spellbook spellbook,
 			Equipment equipment,
 			Consumables consumables,
-			CreatureType creatureType,
 			EffectInstances effectInstances
 	) {
-		super(name, phase, characterClass, level, baseStatInfo, combatRatingInfo, spellbook, equipment, consumables);
-		this.creatureType = creatureType;
+		super(name, phase, characterClass, level, creatureType, baseStatInfo, combatRatingInfo, spellbook, equipment, consumables);
 		this.effectInstances = effectInstances;
 	}
 
@@ -79,12 +76,12 @@ public class NonPlayerImpl extends CharacterImpl implements NonPlayer {
 				getPhase(),
 				getCharacterClass(),
 				getLevel(),
+				getCreatureType(),
 				getBaseStatInfo(),
 				getCombatRatingInfo(),
 				getSpellbook().copy(),
 				getEquipment().copy(),
 				getConsumables().copy(),
-				getCreatureType(),
 				getEffectInstances().copy()
 		);
 		copy.setTarget(getTarget());

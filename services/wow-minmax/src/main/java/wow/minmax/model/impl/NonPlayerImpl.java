@@ -18,9 +18,8 @@ import static wow.character.model.character.BaseStatInfo.getDummyBaseStatInfo;
  * Date: 2026-02-09
  */
 @Getter
+@Setter
 public class NonPlayerImpl extends CharacterImpl implements NonPlayer {
-	private final CreatureType creatureType;
-	@Setter
 	private Percent healthPct = Percent._100;
 
 	public NonPlayerImpl(
@@ -31,8 +30,7 @@ public class NonPlayerImpl extends CharacterImpl implements NonPlayer {
 			int level,
 			CombatRatingInfo combatRatingInfo
 	) {
-		super(name, phase, characterClass, level, getDummyBaseStatInfo(characterClass, level, phase), combatRatingInfo);
-		this.creatureType = creatureType;
+		super(name, phase, characterClass, level, creatureType, getDummyBaseStatInfo(characterClass, level, phase), combatRatingInfo);
 	}
 
 	@Override

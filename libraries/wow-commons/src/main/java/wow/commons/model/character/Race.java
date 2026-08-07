@@ -39,4 +39,8 @@ public class Race implements Described {
 				.filter(x -> x.isAvailableTo(characterInfo))
 				.toList();
 	}
+
+	public CreatureType getCreatureType() {
+		return CreatureType.HUMANOID;
+	}
 }

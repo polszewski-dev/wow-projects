@@ -3,7 +3,10 @@ package wow.character.model.character;
 import wow.character.model.build.Build;
 import wow.character.model.build.Talents;
 import wow.commons.model.categorization.PveRole;
-import wow.commons.model.character.*;
+import wow.commons.model.character.Pet;
+import wow.commons.model.character.PetType;
+import wow.commons.model.character.Race;
+import wow.commons.model.character.RaceId;
 import wow.commons.model.effect.RacialEffect;
 import wow.commons.model.profession.ProfessionId;
 import wow.commons.model.profession.ProfessionSpecializationId;
@@ -44,11 +47,6 @@ public interface PlayerCharacter extends Character {
 
 	default List<RacialEffect> getRacials() {
 		return getRace().getRacials(this);
-	}
-
-	@Override
-	default CreatureType getCreatureType() {
-		return CreatureType.HUMANOID;
 	}
 
 	// professions

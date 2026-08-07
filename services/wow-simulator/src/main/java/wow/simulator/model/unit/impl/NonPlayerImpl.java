@@ -19,9 +19,6 @@ import static wow.character.model.character.BaseStatInfo.getDummyBaseStatInfo;
  */
 @Getter
 public class NonPlayerImpl extends UnitImpl implements NonPlayer, Party.OnAdd<NonPlayer> {
-	private final CreatureType creatureType;
-
-	@Getter
 	private Party<NonPlayer> party;
 
 	public NonPlayerImpl(
@@ -32,8 +29,7 @@ public class NonPlayerImpl extends UnitImpl implements NonPlayer, Party.OnAdd<No
 			int level,
 			CombatRatingInfo combatRatingInfo
 	) {
-		super(name, phase, characterClass, level, getDummyBaseStatInfo(characterClass, level, phase), combatRatingInfo);
-		this.creatureType = creatureType;
+		super(name, phase, characterClass, level, creatureType, getDummyBaseStatInfo(characterClass, level, phase), combatRatingInfo);
 
 		Raid.newRaid(this);
 	}

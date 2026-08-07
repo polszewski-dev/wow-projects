@@ -10,6 +10,7 @@ import wow.commons.model.AnyDuration;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.character.CharacterClass;
+import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.Pet;
 import wow.commons.model.character.PetType;
 import wow.commons.model.pve.Phase;
@@ -64,8 +65,8 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 
 	private SimulationContext simulationContext;
 
-	protected UnitImpl(String name, Phase phase, CharacterClass characterClass, int level, BaseStatInfo baseStatInfo, CombatRatingInfo combatRatingInfo) {
-		super(name, phase, characterClass, level, baseStatInfo, combatRatingInfo);
+	protected UnitImpl(String name, Phase phase, CharacterClass characterClass, int level, CreatureType creatureType, BaseStatInfo baseStatInfo, CombatRatingInfo combatRatingInfo) {
+		super(name, phase, characterClass, level, creatureType, baseStatInfo, combatRatingInfo);
 		this.resources.setHealth(10_000, 10_000);
 		this.resources.setMana(10_000, 10_000);
 	}
