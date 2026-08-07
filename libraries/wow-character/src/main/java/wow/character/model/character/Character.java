@@ -19,8 +19,6 @@ import wow.commons.model.talent.TalentTree;
 
 import java.util.Optional;
 
-import static java.util.function.Function.identity;
-
 /**
  * User: POlszewski
  * Date: 2022-10-31
@@ -73,21 +71,7 @@ public interface Character extends CharacterInfo, EffectCollection {
 
 	Spellbook getSpellbook();
 
-	default Optional<Ability> getAbility(AbilityId abilityId) {
-		var ability = getSpellbook().getAbility(abilityId);
-
-		if (ability.isPresent()) {
-			return ability;
-		}
-
-		ability = getEquipment().getAbility(abilityId).map(identity());
-
-		if (ability.isPresent()) {
-			return ability;
-		}
-
-		return getConsumables().getAbility(abilityId).map(identity());
-	}
+	Optional<Ability> getAbility(AbilityId abilityId);
 
 	default Optional<Ability> getAbility(AbilityId abilityId, int rank) {
 		return getSpellbook().getAbility(abilityId, rank);

@@ -12,17 +12,11 @@ import wow.commons.model.character.Race;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.spell.Ability;
-import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.Cost;
 import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.Player;
 import wow.simulator.model.unit.Unit;
-import wow.simulator.model.unit.ability.ShootAbility;
 
-import java.util.Optional;
-
-import static wow.commons.model.categorization.ItemSlot.RANGED;
-import static wow.commons.model.spell.AbilityId.SHOOT;
 import static wow.commons.model.spell.ResourceType.MANA;
 
 /**
@@ -64,26 +58,6 @@ public class PlayerImpl extends UnitImpl implements Player, Party.OnAdd<Player> 
 		this.assets = new Assets();
 
 		Raid.newRaid(this);
-	}
-
-	@Override
-	public Optional<Ability> getAbility(AbilityId abilityId) {
-		return Player.super.getAbility(abilityId)
-				.map(this::replaceShoot);
-	}
-
-	private Ability replaceShoot(Ability ability) {
-		if (!ability.getAbilityId().equals(SHOOT)) {
-			return ability;
-		}
-
-		var rangedWeapon = getEquippedItem(RANGED);
-
-		if (rangedWeapon == null || rangedWeapon.getWeaponStats() == null) {
-			return ability;
-		}
-
-		return new ShootAbility(ability, rangedWeapon);
 	}
 
 	@Override

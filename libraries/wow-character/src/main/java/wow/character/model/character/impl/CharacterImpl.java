@@ -2,12 +2,21 @@ package wow.character.model.character.impl;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import wow.character.model.ability.ShootAbility;
 import wow.character.model.character.Character;
 import wow.character.model.character.*;
 import wow.character.model.equipment.Equipment;
 import wow.commons.model.Percent;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.pve.Phase;
+import wow.commons.model.spell.Ability;
+import wow.commons.model.spell.AbilityId;
+
+import java.util.Optional;
+
+import static java.util.function.Function.identity;
+import static wow.commons.model.categorization.ItemSlot.RANGED;
+import static wow.commons.model.spell.AbilityId.SHOOT;
 
 /**
  * User: POlszewski
@@ -38,6 +47,37 @@ public abstract class CharacterImpl implements Character {
 		this.spellbook = new Spellbook();
 		this.equipment = new Equipment();
 		this.consumables = new Consumables();
+	}
+
+	@Override
+	public Optional<Ability> getAbility(AbilityId abilityId) {
+		var ability = getSpellbook().getAbility(abilityId);
+
+		if (ability.isPresent()) {
+			return ability.map(this::replaceShoot);
+		}
+
+		ability = getEquipment().getAbility(abilityId).map(identity());
+
+		if (ability.isPresent()) {
+			return ability;
+		}
+
+		return getConsumables().getAbility(abilityId).map(identity());
+	}
+
+	private Ability replaceShoot(Ability ability) {
+		if (!ability.getAbilityId().equals(SHOOT)) {
+			return ability;
+		}
+
+		var rangedWeapon = getEquippedItem(RANGED);
+
+		if (rangedWeapon == null || rangedWeapon.getWeaponStats() == null) {
+			return null;
+		}
+
+		return new ShootAbility(ability, rangedWeapon);
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package wow.simulator.model.unit.ability;
+package wow.character.model.ability;
 
 import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.Duration;
