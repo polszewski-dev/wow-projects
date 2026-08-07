@@ -6,7 +6,6 @@ import wow.character.model.build.Talents;
 import wow.character.model.character.*;
 import wow.character.model.character.impl.CharacterImpl;
 import wow.character.model.effect.EffectCollector;
-import wow.character.model.equipment.Equipment;
 import wow.character.service.PlayerCharacterFactory;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.Race;
@@ -24,11 +23,9 @@ public class PlayerImpl extends CharacterImpl implements Player {
 	private final PlayerId playerId;
 	private final Race race;
 	private final Build build;
-	private final Equipment equipment;
 	private final CharacterProfessions professions;
 	private final ExclusiveFactions exclusiveFactions;
 	private final Buffs buffs;
-	private final Consumables consumables;
 	private final Assets assets;
 
 	public PlayerImpl(
@@ -48,11 +45,9 @@ public class PlayerImpl extends CharacterImpl implements Player {
 		this.playerId = playerId;
 		this.race = race;
 		this.build = new Build(phase.getGameVersion(), talents);
-		this.equipment = new Equipment();
 		this.professions = professions;
 		this.exclusiveFactions = exclusiveFactions;
 		this.buffs = new Buffs();
-		this.consumables = new Consumables();
 		this.assets = new Assets();
 	}
 

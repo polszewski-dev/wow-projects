@@ -24,11 +24,9 @@ import wow.estimator.model.Unit;
 public class PlayerImpl extends CharacterImpl implements Player {
 	private final Race race;
 	private final BuildWithRotation build;
-	private final Equipment equipment;
 	private final CharacterProfessions professions;
 	private final ExclusiveFactions exclusiveFactions;
 	private final Buffs buffs;
-	private final Consumables consumables;
 	private final Assets assets;
 	private final EffectInstances effectInstances;
 
@@ -47,11 +45,9 @@ public class PlayerImpl extends CharacterImpl implements Player {
 		super(name, phase, characterClass, level, baseStatInfo, combatRatingInfo);
 		this.race = race;
 		this.build = new BuildWithRotation(phase.getGameVersion(), talents);
-		this.equipment = new Equipment();
 		this.professions = professions;
 		this.exclusiveFactions = exclusiveFactions;
 		this.buffs = new Buffs();
-		this.consumables = new Consumables();
 		this.assets = new Assets();
 		this.effectInstances = new EffectInstances();
 	}
@@ -74,14 +70,12 @@ public class PlayerImpl extends CharacterImpl implements Player {
 			Assets assets,
 			EffectInstances effectInstances
 	) {
-		super(name, phase, characterClass, level, baseStatInfo, combatRatingInfo, spellbook);
+		super(name, phase, characterClass, level, baseStatInfo, combatRatingInfo, spellbook, equipment, consumables);
 		this.race = race;
 		this.build = build;
-		this.equipment = equipment;
 		this.professions = professions;
 		this.exclusiveFactions = exclusiveFactions;
 		this.buffs = buffs;
-		this.consumables = consumables;
 		this.assets = assets;
 		this.effectInstances = effectInstances;
 	}

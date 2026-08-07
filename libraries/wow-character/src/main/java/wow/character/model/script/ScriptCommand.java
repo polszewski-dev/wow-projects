@@ -1,7 +1,6 @@
 package wow.character.model.script;
 
 import wow.character.model.character.Character;
-import wow.character.model.character.PlayerCharacter;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.AbilityId;
@@ -50,8 +49,8 @@ public sealed interface ScriptCommand {
 			Objects.requireNonNull(target);
 		}
 
-		public ActivatedAbility getActivatedAbility(PlayerCharacter player) {
-			var equippedItem = player.getEquippedItem(itemSlot);
+		public ActivatedAbility getActivatedAbility(Character character) {
+			var equippedItem = character.getEquippedItem(itemSlot);
 
 			if (equippedItem == null) {
 				return null;

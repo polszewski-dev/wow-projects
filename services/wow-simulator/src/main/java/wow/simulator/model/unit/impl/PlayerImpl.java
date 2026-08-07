@@ -5,7 +5,6 @@ import wow.character.model.build.Build;
 import wow.character.model.build.Talents;
 import wow.character.model.character.*;
 import wow.character.model.effect.EffectCollector;
-import wow.character.model.equipment.Equipment;
 import wow.character.util.AbstractEffectCollector;
 import wow.commons.model.Duration;
 import wow.commons.model.character.CharacterClass;
@@ -34,11 +33,9 @@ import static wow.commons.model.spell.ResourceType.MANA;
 public class PlayerImpl extends UnitImpl implements Player, Party.OnAdd<Player> {
 	private final Race race;
 	private final Build build;
-	private final Equipment equipment;
 	private final CharacterProfessions professions;
 	private final ExclusiveFactions exclusiveFactions;
 	private final Buffs buffs;
-	private final Consumables consumables;
 	private final Assets assets;
 
 	private Time lastTimeManaSpent;
@@ -61,11 +58,9 @@ public class PlayerImpl extends UnitImpl implements Player, Party.OnAdd<Player> 
 		super(name, phase, characterClass, level, baseStatInfo, combatRatingInfo);
 		this.race = race;
 		this.build = new Build(phase.getGameVersion(), talents);
-		this.equipment = new Equipment();
 		this.professions = professions;
 		this.exclusiveFactions = exclusiveFactions;
 		this.buffs = new Buffs();
-		this.consumables = new Consumables();
 		this.assets = new Assets();
 
 		Raid.newRaid(this);

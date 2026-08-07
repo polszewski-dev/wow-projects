@@ -2,10 +2,9 @@ package wow.character.model.character.impl;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import wow.character.model.character.BaseStatInfo;
 import wow.character.model.character.Character;
-import wow.character.model.character.CombatRatingInfo;
-import wow.character.model.character.Spellbook;
+import wow.character.model.character.*;
+import wow.character.model.equipment.Equipment;
 import wow.commons.model.Percent;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.pve.Phase;
@@ -24,6 +23,8 @@ public abstract class CharacterImpl implements Character {
 	private final BaseStatInfo baseStatInfo;
 	private final CombatRatingInfo combatRatingInfo;
 	private final Spellbook spellbook;
+	private final Equipment equipment;
+	private final Consumables consumables;
 	private Character target;
 	private Percent healthPct = Percent._100;
 
@@ -35,6 +36,8 @@ public abstract class CharacterImpl implements Character {
 		this.baseStatInfo = baseStatInfo;
 		this.combatRatingInfo = combatRatingInfo;
 		this.spellbook = new Spellbook();
+		this.equipment = new Equipment();
+		this.consumables = new Consumables();
 	}
 
 	@Override
