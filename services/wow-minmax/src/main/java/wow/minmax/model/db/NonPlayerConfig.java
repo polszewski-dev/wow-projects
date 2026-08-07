@@ -6,6 +6,7 @@ import lombok.Setter;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.pve.PhaseId;
+import wow.commons.model.pve.Side;
 
 /**
  * User: POlszewski
@@ -19,5 +20,6 @@ public class NonPlayerConfig {
 	private PhaseId phaseId;
 	private CharacterClassId characterClassId;
 	private CreatureType creatureType;
+	private Side side;
 	private int level;
 }

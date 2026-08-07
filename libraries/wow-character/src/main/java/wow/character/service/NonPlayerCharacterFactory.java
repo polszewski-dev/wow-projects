@@ -5,6 +5,7 @@ import wow.character.model.character.NonPlayerCharacter;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.pve.Phase;
+import wow.commons.model.pve.Side;
 
 /**
  * User: POlszewski
@@ -17,6 +18,7 @@ public interface NonPlayerCharacterFactory<T extends NonPlayerCharacter> {
 			Phase phase,
 			CharacterClass characterClass,
 			CreatureType creatureType,
+			Side side,
 			int level,
 			CombatRatingInfo combatRatingInfo
 	);

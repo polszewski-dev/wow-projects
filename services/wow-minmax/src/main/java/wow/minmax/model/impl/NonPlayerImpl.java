@@ -8,6 +8,7 @@ import wow.commons.model.Percent;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.pve.Phase;
+import wow.commons.model.pve.Side;
 import wow.minmax.model.NonPlayer;
 import wow.minmax.model.Unit;
 
@@ -27,10 +28,11 @@ public class NonPlayerImpl extends CharacterImpl implements NonPlayer {
 			Phase phase,
 			CharacterClass characterClass,
 			CreatureType creatureType,
+			Side side,
 			int level,
 			CombatRatingInfo combatRatingInfo
 	) {
-		super(name, phase, characterClass, level, creatureType, getDummyBaseStatInfo(characterClass, level, phase), combatRatingInfo);
+		super(name, phase, characterClass, level, creatureType, side, getDummyBaseStatInfo(characterClass, level, phase), combatRatingInfo);
 	}
 
 	@Override

@@ -46,7 +46,7 @@ public class PlayerImpl extends CharacterImpl implements Player {
 			CharacterProfessions professions,
 			ExclusiveFactions exclusiveFactions
 	) {
-		super(name, phase, characterClass, level, race.getCreatureType(), baseStatInfo, combatRatingInfo);
+		super(name, phase, characterClass, level, race.getCreatureType(), race.getSide(), baseStatInfo, combatRatingInfo);
 		this.race = race;
 		this.build = new BuildWithRotation(phase.getGameVersion(), talents);
 		this.professions = professions;
@@ -74,7 +74,7 @@ public class PlayerImpl extends CharacterImpl implements Player {
 			Assets assets,
 			EffectInstances effectInstances
 	) {
-		super(name, phase, characterClass, level, race.getCreatureType(), baseStatInfo, combatRatingInfo, spellbook, equipment, consumables);
+		super(name, phase, characterClass, level, race.getCreatureType(), race.getSide(), baseStatInfo, combatRatingInfo, spellbook, equipment, consumables);
 		this.race = race;
 		this.build = build;
 		this.professions = professions;

@@ -8,7 +8,9 @@ import wow.commons.util.EnumUtil;
  */
 public enum Side {
 	HORDE,
-	ALLIANCE;
+	ALLIANCE,
+	NEUTRAL,
+	HOSTILE;
 
 	public static Side parse(String value) {
 		return EnumUtil.parse(value, values());

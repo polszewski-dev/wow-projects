@@ -14,6 +14,7 @@ import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.Pet;
 import wow.commons.model.character.PetType;
 import wow.commons.model.pve.Phase;
+import wow.commons.model.pve.Side;
 import wow.commons.model.spell.*;
 import wow.commons.model.talent.TalentTree;
 import wow.simulator.model.cooldown.CooldownInstance;
@@ -65,8 +66,8 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 
 	private SimulationContext simulationContext;
 
-	protected UnitImpl(String name, Phase phase, CharacterClass characterClass, int level, CreatureType creatureType, BaseStatInfo baseStatInfo, CombatRatingInfo combatRatingInfo) {
-		super(name, phase, characterClass, level, creatureType, baseStatInfo, combatRatingInfo);
+	protected UnitImpl(String name, Phase phase, CharacterClass characterClass, int level, CreatureType creatureType, Side side, BaseStatInfo baseStatInfo, CombatRatingInfo combatRatingInfo) {
+		super(name, phase, characterClass, level, creatureType, side, baseStatInfo, combatRatingInfo);
 		this.resources.setHealth(10_000, 10_000);
 		this.resources.setMana(10_000, 10_000);
 	}

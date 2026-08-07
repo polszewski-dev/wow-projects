@@ -9,6 +9,7 @@ import wow.commons.model.Duration;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.pve.Phase;
+import wow.commons.model.pve.Side;
 import wow.simulator.model.unit.NonPlayer;
 
 import static wow.character.model.character.BaseStatInfo.getDummyBaseStatInfo;
@@ -26,10 +27,11 @@ public class NonPlayerImpl extends UnitImpl implements NonPlayer, Party.OnAdd<No
 			Phase phase,
 			CharacterClass characterClass,
 			CreatureType creatureType,
+			Side side,
 			int level,
 			CombatRatingInfo combatRatingInfo
 	) {
-		super(name, phase, characterClass, level, creatureType, getDummyBaseStatInfo(characterClass, level, phase), combatRatingInfo);
+		super(name, phase, characterClass, level, creatureType, side, getDummyBaseStatInfo(characterClass, level, phase), combatRatingInfo);
 
 		Raid.newRaid(this);
 	}

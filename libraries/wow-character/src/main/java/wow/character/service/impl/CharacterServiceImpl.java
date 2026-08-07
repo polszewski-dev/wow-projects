@@ -24,6 +24,7 @@ import wow.commons.model.profession.Profession;
 import wow.commons.model.pve.Faction;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.PhaseId;
+import wow.commons.model.pve.Side;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.talent.Talent;
 import wow.commons.repository.item.ConsumableRepository;
@@ -109,6 +110,7 @@ public class CharacterServiceImpl implements CharacterService {
 		var gameVersion = phase.getGameVersion();
 		var characterClassId = CharacterClassId.WARRIOR;
 		var characterClass = gameVersion.getCharacterClass(characterClassId).orElseThrow();
+		var side = Side.HOSTILE;
 		var combatRatingInfo = combatRatingInfoRepository.getCombatRatingInfo(gameVersion.getGameVersionId(), level).orElseThrow();
 
 		return factory.newPlayerCharacter(
@@ -116,6 +118,7 @@ public class CharacterServiceImpl implements CharacterService {
 				phase,
 				characterClass,
 				creatureType,
+				side,
 				level,
 				combatRatingInfo
 		);

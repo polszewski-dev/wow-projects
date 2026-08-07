@@ -49,7 +49,7 @@ public class PlayerImpl extends UnitImpl implements Player, Party.OnAdd<Player> 
 			CharacterProfessions professions,
 			ExclusiveFactions exclusiveFactions
 	) {
-		super(name, phase, characterClass, level, race.getCreatureType(), baseStatInfo, combatRatingInfo);
+		super(name, phase, characterClass, level, race.getCreatureType(), race.getSide(), baseStatInfo, combatRatingInfo);
 		this.race = race;
 		this.build = new Build(phase.getGameVersion(), talents);
 		this.professions = professions;

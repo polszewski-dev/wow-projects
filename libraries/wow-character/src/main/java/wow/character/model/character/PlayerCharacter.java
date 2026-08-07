@@ -10,7 +10,6 @@ import wow.commons.model.character.RaceId;
 import wow.commons.model.effect.RacialEffect;
 import wow.commons.model.profession.ProfessionId;
 import wow.commons.model.profession.ProfessionSpecializationId;
-import wow.commons.model.pve.Side;
 
 import java.util.List;
 
@@ -38,11 +37,6 @@ public interface PlayerCharacter extends Character {
 	@Override
 	default RaceId getRaceId() {
 		return getRace().getRaceId();
-	}
-
-	@Override
-	default Side getSide() {
-		return getRace().getSide();
 	}
 
 	default List<RacialEffect> getRacials() {

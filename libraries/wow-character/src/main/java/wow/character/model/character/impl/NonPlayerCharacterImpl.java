@@ -8,6 +8,7 @@ import wow.commons.model.Percent;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.pve.Phase;
+import wow.commons.model.pve.Side;
 
 import static wow.character.model.character.BaseStatInfo.getDummyBaseStatInfo;
 
@@ -20,7 +21,15 @@ import static wow.character.model.character.BaseStatInfo.getDummyBaseStatInfo;
 public class NonPlayerCharacterImpl extends CharacterImpl implements NonPlayerCharacter {
 	private Percent healthPct = Percent._100;
 
-	public NonPlayerCharacterImpl(String name, Phase phase, CharacterClass characterClass, CreatureType creatureType, int level, CombatRatingInfo combatRatingInfo) {
-		super(name, phase, characterClass, level, creatureType, getDummyBaseStatInfo(characterClass, level, phase), combatRatingInfo);
+	public NonPlayerCharacterImpl(
+			String name,
+			Phase phase,
+			CharacterClass characterClass,
+			CreatureType creatureType,
+			Side side,
+			int level,
+			CombatRatingInfo combatRatingInfo
+	) {
+		super(name, phase, characterClass, level, creatureType, side, getDummyBaseStatInfo(characterClass, level, phase), combatRatingInfo);
 	}
 }

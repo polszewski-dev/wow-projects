@@ -6,7 +6,6 @@ import wow.commons.model.character.PetType;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.profession.ProfessionId;
 import wow.commons.model.profession.ProfessionSpecializationId;
-import wow.commons.model.pve.Side;
 
 /**
  * User: POlszewski
@@ -20,11 +19,6 @@ public interface NonPlayerCharacter extends Character {
 
 	@Override
 	default RaceId getRaceId() {
-		return null;
-	}
-
-	@Override
-	default Side getSide() {
 		return null;
 	}
 
