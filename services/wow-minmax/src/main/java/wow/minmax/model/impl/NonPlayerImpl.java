@@ -27,9 +27,9 @@ public class NonPlayerImpl extends CharacterImpl implements NonPlayer {
 			String name,
 			Phase phase,
 			CharacterClass characterClass,
+			int level,
 			CreatureType creatureType,
 			Side side,
-			int level,
 			CombatRatingInfo combatRatingInfo
 	) {
 		super(name, phase, characterClass, level, creatureType, side, getDummyBaseStatInfo(characterClass, level, phase), combatRatingInfo);

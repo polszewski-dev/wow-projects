@@ -44,9 +44,9 @@ public class NonPlayerConfigConverter implements Converter<NonPlayer, NonPlayerC
 				source.getName(),
 				phase,
 				characterClass,
+				source.getLevel(),
 				source.getCreatureType(),
 				source.getSide(),
-				source.getLevel(),
 				combatRatingInfo
 		);
 	}

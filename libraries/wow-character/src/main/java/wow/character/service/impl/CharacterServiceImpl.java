@@ -113,13 +113,13 @@ public class CharacterServiceImpl implements CharacterService {
 		var side = Side.HOSTILE;
 		var combatRatingInfo = combatRatingInfoRepository.getCombatRatingInfo(gameVersion.getGameVersionId(), level).orElseThrow();
 
-		return factory.newPlayerCharacter(
+		return factory.newNonPlayerCharacter(
 				name,
 				phase,
 				characterClass,
+				level,
 				creatureType,
 				side,
-				level,
 				combatRatingInfo
 		);
 	}

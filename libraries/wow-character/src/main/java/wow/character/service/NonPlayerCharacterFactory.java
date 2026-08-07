@@ -13,13 +13,13 @@ import wow.commons.model.pve.Side;
  */
 @FunctionalInterface
 public interface NonPlayerCharacterFactory<T extends NonPlayerCharacter> {
-	T newPlayerCharacter(
+	T newNonPlayerCharacter(
 			String name,
 			Phase phase,
 			CharacterClass characterClass,
+			int level,
 			CreatureType creatureType,
 			Side side,
-			int level,
 			CombatRatingInfo combatRatingInfo
 	);
 }
