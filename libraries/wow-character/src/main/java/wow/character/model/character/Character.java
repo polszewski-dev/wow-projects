@@ -140,10 +140,6 @@ public interface Character extends CharacterInfo, EffectCollection {
 		return null;
 	}
 
-	default boolean hasEffect(AbilityId abilityId) {
-		return false;
-	}
-
 	default boolean hasEffect(String effectName) {
 		return false;
 	}

@@ -108,11 +108,6 @@ public abstract class Effects implements SimulationContextSource, EffectCollecti
 				.anyMatch(x -> x.matches(abilityId, owner));
 	}
 
-	public boolean isUnderEffect(AbilityId abilityId) {
-		return getStream()
-				.anyMatch(x -> x.matches(abilityId));
-	}
-
 	public boolean isUnderEffect(String effectName) {
 		return getStream()
 				.anyMatch(x -> x.matches(effectName));

@@ -1,7 +1,6 @@
 package wow.simulator.model.effect;
 
 import wow.commons.model.AnyDuration;
-import wow.commons.model.Duration;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.Spell;
@@ -36,10 +35,6 @@ public interface EffectInstance extends Effect, Updateable, SimulationContextSou
 	boolean matches(Pattern effectNamePattern, Unit owner);
 
 	AnyDuration getRemainingDuration();
-
-	default double getRemainingDurationSeconds() {
-		return ((Duration) getRemainingDuration()).getSeconds();
-	}
 
 	void removeSelf();
 

@@ -549,11 +549,6 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	}
 
 	@Override
-	public boolean hasEffect(AbilityId abilityId) {
-		return effects.isUnderEffect(abilityId);
-	}
-
-	@Override
 	public boolean hasEffect(String effectName) {
 		return effects.isUnderEffect(effectName);
 	}
