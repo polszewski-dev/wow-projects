@@ -153,7 +153,7 @@ public interface Character extends CharacterInfo, EffectCollection {
 	}
 
 	default boolean isFriendlyWith(Character target) {
-		return this.getSide() == target.getSide();
+		return this.getSide().isFriendlyWith(target.getSide());
 	}
 
 	default boolean isHostileWith(Character target) {

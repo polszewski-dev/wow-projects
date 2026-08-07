@@ -15,4 +15,12 @@ public enum Side {
 	public static Side parse(String value) {
 		return EnumUtil.parse(value, values());
 	}
+
+	public boolean isFriendlyWith(Side other) {
+		return this == other || switch (this) {
+			case HORDE, ALLIANCE -> other == NEUTRAL;
+			case NEUTRAL -> other == HORDE || other == ALLIANCE;
+			case HOSTILE -> false;
+		};
+	}
 }
