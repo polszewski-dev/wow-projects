@@ -1,12 +1,14 @@
 package wow.estimator.model.impl;
 
 import lombok.Getter;
+import lombok.Setter;
 import wow.character.model.build.Talents;
 import wow.character.model.character.Character;
 import wow.character.model.character.*;
 import wow.character.model.character.impl.CharacterImpl;
 import wow.character.model.effect.EffectCollector;
 import wow.character.model.equipment.Equipment;
+import wow.commons.model.Percent;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.Race;
 import wow.commons.model.pve.Phase;
@@ -29,6 +31,8 @@ public class PlayerImpl extends CharacterImpl implements Player {
 	private final Buffs buffs;
 	private final Assets assets;
 	private final EffectInstances effectInstances;
+	@Setter
+	private Percent healthPct = Percent._100;
 
 	public PlayerImpl(
 			String name,

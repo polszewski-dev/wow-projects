@@ -1,10 +1,12 @@
 package wow.character.model.character.impl;
 
 import lombok.Getter;
+import lombok.Setter;
 import wow.character.model.build.Build;
 import wow.character.model.build.Talents;
 import wow.character.model.character.*;
 import wow.character.model.effect.EffectCollector;
+import wow.commons.model.Percent;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.Race;
 import wow.commons.model.pve.Phase;
@@ -21,6 +23,8 @@ public class PlayerCharacterImpl extends CharacterImpl implements PlayerCharacte
 	private final ExclusiveFactions exclusiveFactions;
 	private final Buffs buffs;
 	private final Assets assets;
+	@Setter
+	private Percent healthPct = Percent._100;
 
 	public PlayerCharacterImpl(
 			String name,

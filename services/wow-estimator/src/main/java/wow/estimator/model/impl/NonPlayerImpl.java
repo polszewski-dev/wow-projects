@@ -1,11 +1,13 @@
 package wow.estimator.model.impl;
 
 import lombok.Getter;
+import lombok.Setter;
 import wow.character.model.character.Character;
 import wow.character.model.character.*;
 import wow.character.model.character.impl.CharacterImpl;
 import wow.character.model.effect.EffectCollector;
 import wow.character.model.equipment.Equipment;
+import wow.commons.model.Percent;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.pve.Phase;
@@ -23,6 +25,8 @@ import static wow.character.model.character.BaseStatInfo.getDummyBaseStatInfo;
 public class NonPlayerImpl extends CharacterImpl implements NonPlayer {
 	private final CreatureType creatureType;
 	private final EffectInstances effectInstances;
+	@Setter
+	private Percent healthPct = Percent._100;
 
 	public NonPlayerImpl(
 			String name,

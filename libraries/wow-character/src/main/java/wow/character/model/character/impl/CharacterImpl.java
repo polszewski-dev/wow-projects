@@ -6,7 +6,6 @@ import wow.character.model.ability.ShootAbility;
 import wow.character.model.character.Character;
 import wow.character.model.character.*;
 import wow.character.model.equipment.Equipment;
-import wow.commons.model.Percent;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.spell.Ability;
@@ -35,7 +34,6 @@ public abstract class CharacterImpl implements Character {
 	private final Equipment equipment;
 	private final Consumables consumables;
 	private Character target;
-	private Percent healthPct = Percent._100;
 
 	protected CharacterImpl(String name, Phase phase, CharacterClass characterClass, int level, BaseStatInfo baseStatInfo, CombatRatingInfo combatRatingInfo) {
 		this.name = name;
@@ -83,11 +81,6 @@ public abstract class CharacterImpl implements Character {
 	@Override
 	public void setTarget(Character target) {
 		this.target = target;
-	}
-
-	@Override
-	public void setHealthPct(Percent healthPct) {
-		this.healthPct = healthPct;
 	}
 
 	@Override
