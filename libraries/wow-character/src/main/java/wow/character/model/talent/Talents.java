@@ -1,4 +1,4 @@
-package wow.character.model.build;
+package wow.character.model.talent;
 
 import lombok.AllArgsConstructor;
 import wow.character.model.Copyable;

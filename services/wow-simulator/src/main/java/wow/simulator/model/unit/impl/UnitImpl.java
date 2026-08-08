@@ -1,11 +1,11 @@
 package wow.simulator.model.unit.impl;
 
-import wow.character.model.build.Talents;
 import wow.character.model.character.BaseStatInfo;
 import wow.character.model.character.Character;
 import wow.character.model.character.CombatRatingInfo;
 import wow.character.model.character.impl.CharacterImpl;
 import wow.character.model.snapshot.*;
+import wow.character.model.talent.Talents;
 import wow.commons.model.AnyDuration;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;

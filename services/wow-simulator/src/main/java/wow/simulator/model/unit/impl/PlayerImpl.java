@@ -1,9 +1,9 @@
 package wow.simulator.model.unit.impl;
 
 import lombok.Getter;
-import wow.character.model.build.Talents;
 import wow.character.model.character.*;
 import wow.character.model.effect.EffectCollector;
+import wow.character.model.talent.Talents;
 import wow.character.util.AbstractEffectCollector;
 import wow.commons.model.Duration;
 import wow.commons.model.character.CharacterClass;

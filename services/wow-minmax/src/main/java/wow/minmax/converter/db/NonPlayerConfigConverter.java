@@ -2,7 +2,7 @@ package wow.minmax.converter.db;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import wow.character.model.build.Talents;
+import wow.character.model.talent.Talents;
 import wow.character.repository.CombatRatingInfoRepository;
 import wow.commons.client.converter.BackConverter;
 import wow.commons.client.converter.Converter;

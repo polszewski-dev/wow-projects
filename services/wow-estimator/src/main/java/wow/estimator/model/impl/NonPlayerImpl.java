@@ -2,12 +2,12 @@ package wow.estimator.model.impl;
 
 import lombok.Getter;
 import lombok.Setter;
-import wow.character.model.build.Talents;
 import wow.character.model.character.Character;
 import wow.character.model.character.*;
 import wow.character.model.character.impl.CharacterImpl;
 import wow.character.model.effect.EffectCollector;
 import wow.character.model.equipment.Equipment;
+import wow.character.model.talent.Talents;
 import wow.commons.model.Percent;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.CreatureType;

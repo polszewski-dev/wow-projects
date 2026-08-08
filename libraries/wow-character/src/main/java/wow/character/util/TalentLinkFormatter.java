@@ -1,7 +1,7 @@
 package wow.character.util;
 
 import lombok.RequiredArgsConstructor;
-import wow.character.model.build.Talents;
+import wow.character.model.talent.Talents;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.talent.Talent;

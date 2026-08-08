@@ -1,7 +1,7 @@
 package wow.character.service;
 
-import wow.character.model.build.Talents;
 import wow.character.model.character.*;
+import wow.character.model.talent.Talents;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.Race;
 import wow.commons.model.pve.Phase;

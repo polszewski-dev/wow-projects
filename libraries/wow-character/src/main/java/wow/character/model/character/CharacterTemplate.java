@@ -2,7 +2,7 @@ package wow.character.model.character;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import wow.character.model.build.TalentLink;
+import wow.character.model.talent.TalentLink;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.config.CharacterRestricted;
 import wow.commons.model.config.CharacterRestriction;

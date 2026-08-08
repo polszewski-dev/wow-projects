@@ -3,7 +3,7 @@ package wow.character.util;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import wow.character.WowCharacterSpringTest;
-import wow.character.model.build.Talents;
+import wow.character.model.talent.Talents;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;

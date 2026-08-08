@@ -1,9 +1,9 @@
 package wow.character.model.character;
 
-import wow.character.model.build.Talents;
 import wow.character.model.effect.EffectCollection;
 import wow.character.model.equipment.Equipment;
 import wow.character.model.equipment.EquippableItem;
+import wow.character.model.talent.Talents;
 import wow.commons.model.Percent;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.PveRole;

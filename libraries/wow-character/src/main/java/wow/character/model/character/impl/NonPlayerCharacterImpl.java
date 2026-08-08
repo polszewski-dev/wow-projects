@@ -2,9 +2,9 @@ package wow.character.model.character.impl;
 
 import lombok.Getter;
 import lombok.Setter;
-import wow.character.model.build.Talents;
 import wow.character.model.character.CombatRatingInfo;
 import wow.character.model.character.NonPlayerCharacter;
+import wow.character.model.talent.Talents;
 import wow.commons.model.Percent;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.CreatureType;

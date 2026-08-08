@@ -1,11 +1,11 @@
 package wow.simulator.model.unit.impl;
 
 import lombok.Getter;
-import wow.character.model.build.Talents;
 import wow.character.model.character.CombatRatingInfo;
 import wow.character.model.character.Party;
 import wow.character.model.character.Raid;
 import wow.character.model.effect.EffectCollector;
+import wow.character.model.talent.Talents;
 import wow.commons.model.Duration;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.CreatureType;

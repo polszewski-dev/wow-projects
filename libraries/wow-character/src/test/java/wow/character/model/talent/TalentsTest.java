@@ -1,4 +1,4 @@
-package wow.character.model.build;
+package wow.character.model.talent;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

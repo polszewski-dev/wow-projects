@@ -1,4 +1,4 @@
-package wow.character.model.build;
+package wow.character.model.talent;
 
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.pve.GameVersionId;
