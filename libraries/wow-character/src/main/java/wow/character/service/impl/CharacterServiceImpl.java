@@ -111,6 +111,7 @@ public class CharacterServiceImpl implements CharacterService {
 		var characterClassId = CharacterClassId.WARRIOR;
 		var characterClass = gameVersion.getCharacterClass(characterClassId).orElseThrow();
 		var side = Side.HOSTILE;
+		var baseStatInfo = BaseStatInfo.getDummyBaseStatInfo(characterClass, level, phase);
 		var combatRatingInfo = combatRatingInfoRepository.getCombatRatingInfo(gameVersion.getGameVersionId(), level).orElseThrow();
 		var talents = new Talents(characterClassId, phaseId, List.of());
 
@@ -121,6 +122,7 @@ public class CharacterServiceImpl implements CharacterService {
 				level,
 				creatureType,
 				side,
+				baseStatInfo,
 				combatRatingInfo,
 				talents
 		);

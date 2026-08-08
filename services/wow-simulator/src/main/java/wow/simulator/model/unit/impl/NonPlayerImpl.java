@@ -1,6 +1,7 @@
 package wow.simulator.model.unit.impl;
 
 import lombok.Getter;
+import wow.character.model.character.BaseStatInfo;
 import wow.character.model.character.CombatRatingInfo;
 import wow.character.model.character.Party;
 import wow.character.model.character.Raid;
@@ -12,8 +13,6 @@ import wow.commons.model.character.CreatureType;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
 import wow.simulator.model.unit.NonPlayer;
-
-import static wow.character.model.character.BaseStatInfo.getDummyBaseStatInfo;
 
 /**
  * User: POlszewski
@@ -30,10 +29,11 @@ public class NonPlayerImpl extends UnitImpl implements NonPlayer, Party.OnAdd<No
 			int level,
 			CreatureType creatureType,
 			Side side,
+			BaseStatInfo baseStatInfo,
 			CombatRatingInfo combatRatingInfo,
 			Talents talents
 	) {
-		super(name, phase, characterClass, level, creatureType, side, getDummyBaseStatInfo(characterClass, level, phase), combatRatingInfo, talents);
+		super(name, phase, characterClass, level, creatureType, side, baseStatInfo, combatRatingInfo, talents);
 
 		Raid.newRaid(this);
 	}

@@ -2,6 +2,7 @@ package wow.character.model.character.impl;
 
 import lombok.Getter;
 import lombok.Setter;
+import wow.character.model.character.BaseStatInfo;
 import wow.character.model.character.CombatRatingInfo;
 import wow.character.model.character.NonPlayerCharacter;
 import wow.character.model.talent.Talents;
@@ -10,8 +11,6 @@ import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
-
-import static wow.character.model.character.BaseStatInfo.getDummyBaseStatInfo;
 
 /**
  * User: POlszewski
@@ -29,9 +28,10 @@ public class NonPlayerCharacterImpl extends CharacterImpl implements NonPlayerCh
 			int level,
 			CreatureType creatureType,
 			Side side,
+			BaseStatInfo baseStatInfo,
 			CombatRatingInfo combatRatingInfo,
 			Talents talents
 	) {
-		super(name, phase, characterClass, level, creatureType, side, getDummyBaseStatInfo(characterClass, level, phase), combatRatingInfo, talents);
+		super(name, phase, characterClass, level, creatureType, side, baseStatInfo, combatRatingInfo, talents);
 	}
 }

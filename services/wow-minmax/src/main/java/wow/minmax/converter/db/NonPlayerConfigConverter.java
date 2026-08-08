@@ -2,6 +2,7 @@ package wow.minmax.converter.db;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import wow.character.model.character.BaseStatInfo;
 import wow.character.model.talent.Talents;
 import wow.character.repository.CombatRatingInfoRepository;
 import wow.commons.client.converter.BackConverter;
@@ -41,6 +42,7 @@ public class NonPlayerConfigConverter implements Converter<NonPlayer, NonPlayerC
 	public NonPlayer doConvertBack(NonPlayerConfig source) {
 		var phase = phaseRepository.getPhase(source.getPhaseId()).orElseThrow();
 		var characterClass = characterClassRepository.getCharacterClass(source.getCharacterClassId(), phase.getGameVersionId()).orElseThrow();
+		var baseStatInfo = BaseStatInfo.getDummyBaseStatInfo(characterClass, source.getLevel(), phase);
 		var combatRatingInfo = combatRatingInfoRepository.getCombatRatingInfo(phase.getGameVersionId(), source.getLevel()).orElseThrow();
 		var talents = new Talents(characterClass.getCharacterClassId(), phase.getPhaseId(), List.of());
 
@@ -51,6 +53,7 @@ public class NonPlayerConfigConverter implements Converter<NonPlayer, NonPlayerC
 				source.getLevel(),
 				source.getCreatureType(),
 				source.getSide(),
+				baseStatInfo,
 				combatRatingInfo,
 				talents
 		);

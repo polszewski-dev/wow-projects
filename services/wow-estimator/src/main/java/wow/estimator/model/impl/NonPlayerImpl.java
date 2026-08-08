@@ -17,8 +17,6 @@ import wow.estimator.model.EffectInstances;
 import wow.estimator.model.NonPlayer;
 import wow.estimator.model.Unit;
 
-import static wow.character.model.character.BaseStatInfo.getDummyBaseStatInfo;
-
 /**
  * User: POlszewski
  * Date: 2024-11-20
@@ -36,10 +34,11 @@ public class NonPlayerImpl extends CharacterImpl implements NonPlayer {
 			int level,
 			CreatureType creatureType,
 			Side side,
+			BaseStatInfo baseStatInfo,
 			CombatRatingInfo combatRatingInfo,
 			Talents talents
 	) {
-		super(name, phase, characterClass, level, creatureType, side, getDummyBaseStatInfo(characterClass, level, phase), combatRatingInfo, talents);
+		super(name, phase, characterClass, level, creatureType, side, baseStatInfo, combatRatingInfo, talents);
 		this.effectInstances = new EffectInstances();
 	}
 

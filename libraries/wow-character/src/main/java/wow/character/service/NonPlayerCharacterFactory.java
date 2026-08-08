@@ -1,5 +1,6 @@
 package wow.character.service;
 
+import wow.character.model.character.BaseStatInfo;
 import wow.character.model.character.CombatRatingInfo;
 import wow.character.model.character.NonPlayerCharacter;
 import wow.character.model.talent.Talents;
@@ -21,6 +22,7 @@ public interface NonPlayerCharacterFactory<T extends NonPlayerCharacter> {
 			int level,
 			CreatureType creatureType,
 			Side side,
+			BaseStatInfo baseStatInfo,
 			CombatRatingInfo combatRatingInfo,
 			Talents talents
 	);
