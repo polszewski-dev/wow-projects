@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import wow.character.model.build.TalentLink;
 import wow.commons.model.character.CharacterClassId;
-import wow.commons.model.character.PetType;
 import wow.commons.model.config.CharacterRestricted;
 import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.TimeRestricted;
@@ -26,7 +25,6 @@ public class CharacterTemplate implements TimeRestricted, CharacterRestricted {
 	private final TimeRestriction timeRestriction;
 	private final TalentLink talentLink;
 	private final String defaultScript;
-	private final PetType activePet;
 	private final List<String> defaultBuffs;
 	private final List<String> consumables;
 	private final List<String> defaultAssets;

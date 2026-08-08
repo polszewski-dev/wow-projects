@@ -3,7 +3,6 @@ package wow.character.repository.impl.parser.character;
 import wow.character.model.character.CharacterTemplate;
 import wow.character.model.character.ProfIdSpecId;
 import wow.character.util.TalentLinkParser;
-import wow.commons.model.character.PetType;
 import wow.commons.model.profession.ProfessionId;
 import wow.commons.model.profession.ProfessionSpecializationId;
 import wow.commons.repository.impl.parser.excel.WowExcelSheetParser;
@@ -22,7 +21,6 @@ import static wow.character.model.script.ScriptPathResolver.requireExistingScrip
 public class CharacterTemplateSheetParser extends WowExcelSheetParser {
 	private final ExcelColumn colTalentLink = column("talent_link");
 	private final ExcelColumn colDefaultScript = column("default_script");
-	private final ExcelColumn colActivePet = column("active_pet");
 	private final ExcelColumn colDefaultBuffs = column("default_buffs");
 	private final ExcelColumn colDefaultConsumables = column("default_consumables");
 	private final ExcelColumn colDefaultAssets = column("default_assets");
@@ -55,7 +53,6 @@ public class CharacterTemplateSheetParser extends WowExcelSheetParser {
 		var characterRestriction = getRestriction();
 		var talentLink = colTalentLink.getEnum(x -> TalentLinkParser.parse(x, talentRepository));
 		var defaultScript = colDefaultScript.getString();
-		var activePet = colActivePet.getEnum(PetType::parse, null);
 		var defaultBuffs = colDefaultBuffs.getList(x -> x);
 		var consumables = colDefaultConsumables.getList(x -> x);
 		var defaultAssets = colDefaultAssets.getList(x -> x);
@@ -71,7 +68,6 @@ public class CharacterTemplateSheetParser extends WowExcelSheetParser {
 				timeRestriction,
 				talentLink,
 				defaultScript,
-				activePet,
 				defaultBuffs,
 				consumables,
 				defaultAssets,

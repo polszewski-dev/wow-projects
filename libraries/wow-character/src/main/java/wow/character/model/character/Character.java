@@ -136,7 +136,7 @@ public interface Character extends CharacterInfo, EffectCollection {
 		return MovementType.RUNNING;
 	}
 
-	default DruidFormType getDruidForm() {
+	default DruidFormType getDruidForm() {//todo
 		return null;
 	}
 

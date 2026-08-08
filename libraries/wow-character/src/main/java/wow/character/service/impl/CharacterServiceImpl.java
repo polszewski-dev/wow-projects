@@ -156,7 +156,6 @@ public class CharacterServiceImpl implements CharacterService {
 		build.reset();
 		build.getTalents().loadFromTalentLink(characterTemplate.getTalentLink());
 		build.setRole(characterTemplate.getRequiredRole());
-		build.setActivePet(characterTemplate.getActivePet());
 		build.setScript(characterTemplate.getDefaultScript());
 
 		refreshSpellbook(player);
