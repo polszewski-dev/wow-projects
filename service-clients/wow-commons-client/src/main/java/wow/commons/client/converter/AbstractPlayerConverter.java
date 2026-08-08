@@ -41,7 +41,7 @@ public abstract class AbstractPlayerConverter<P extends PlayerCharacter> impleme
 				talentIds,
 				source.getRole(),
 				source.getActivePetType(),
-				source.getBuild().getScript(),
+				source.getScript(),
 				buffIds,
 				consumableIds,
 				assetIds
@@ -75,11 +75,9 @@ public abstract class AbstractPlayerConverter<P extends PlayerCharacter> impleme
 	}
 
 	private void changeBuild(PlayerCharacter character, PlayerDTO source) {
-		var build = character.getBuild();
-
-		build.getTalents().setIds(source.talentIds(), TalentId::of);
-		build.setRole(source.role());
-		build.setScript(source.script());
+		character.getTalents().setIds(source.talentIds(), TalentId::of);
+		character.setRole(source.role());
+		character.setScript(source.script());
 	}
 
 	protected abstract PlayerCharacterFactory<P> getFactory();

@@ -169,7 +169,7 @@ public class PlayerServiceImpl implements PlayerService {
 	public Player changeTalents(PlayerId playerId, String talentLink) {
 		var player = getPlayer(playerId);
 
-		player.getBuild().getTalents().loadFromTalentLink(talentLink);
+		player.getTalents().loadFromTalentLink(talentLink);
 
 		characterService.updateAfterRestrictionChange(player);
 		savePlayer(player);
@@ -189,7 +189,7 @@ public class PlayerServiceImpl implements PlayerService {
 
 		requireExistingScriptFile(scriptPath, player.getGameVersionId());
 
-		player.getBuild().setScript(scriptPath);
+		player.setScript(scriptPath);
 
 		savePlayer(player);
 		return player;

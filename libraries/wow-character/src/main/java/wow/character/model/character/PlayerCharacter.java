@@ -1,8 +1,5 @@
 package wow.character.model.character;
 
-import wow.character.model.build.Build;
-import wow.character.model.build.Talents;
-import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.Race;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.effect.RacialEffect;
@@ -16,10 +13,6 @@ import java.util.List;
  * Date: 2023-10-31
  */
 public interface PlayerCharacter extends Character {
-	default void resetBuild() {
-		getBuild().reset();
-	}
-
 	// buffs
 
 	Buffs getBuffs();
@@ -86,33 +79,6 @@ public interface PlayerCharacter extends Character {
 
 	default void resetProfessions() {
 		getProfessions().reset();
-	}
-
-	// build
-
-	Build getBuild();
-
-	@Override
-	default boolean hasTalent(String name) {
-		return getBuild().hasTalent(name);
-	}
-
-	@Override
-	default boolean hasTalent(String name, int rank) {
-		return getBuild().hasTalent(name, rank);
-	}
-
-	default Talents getTalents() {
-		return getBuild().getTalents();
-	}
-
-	default String getTalentLink() {
-		return getTalents().getTalentLink();
-	}
-
-	@Override
-	default PveRole getRole() {
-		return getBuild().getRole();
 	}
 
 	// other

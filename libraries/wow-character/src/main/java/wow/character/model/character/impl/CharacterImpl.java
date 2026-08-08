@@ -3,9 +3,11 @@ package wow.character.model.character.impl;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import wow.character.model.ability.ShootAbility;
+import wow.character.model.build.Talents;
 import wow.character.model.character.Character;
 import wow.character.model.character.*;
 import wow.character.model.equipment.Equipment;
+import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.Pet;
@@ -35,13 +37,26 @@ public abstract class CharacterImpl implements Character {
 	private final Side side;
 	private final BaseStatInfo baseStatInfo;
 	private final CombatRatingInfo combatRatingInfo;
+	private final Talents talents;
 	private final Spellbook spellbook;
 	private final Equipment equipment;
 	private final Consumables consumables;
-	private Character target;
+	private PveRole role;
+	private String script;
 	private Pet activePet;
+	private Character target;
 
-	protected CharacterImpl(String name, Phase phase, CharacterClass characterClass, int level, CreatureType creatureType, Side side, BaseStatInfo baseStatInfo, CombatRatingInfo combatRatingInfo) {
+	protected CharacterImpl(
+			String name,
+			Phase phase,
+			CharacterClass characterClass,
+			int level,
+			CreatureType creatureType,
+			Side side,
+			BaseStatInfo baseStatInfo,
+			CombatRatingInfo combatRatingInfo,
+			Talents talents
+	) {
 		this.name = name;
 		this.phase = phase;
 		this.characterClass = characterClass;
@@ -50,6 +65,7 @@ public abstract class CharacterImpl implements Character {
 		this.side = side;
 		this.baseStatInfo = baseStatInfo;
 		this.combatRatingInfo = combatRatingInfo;
+		this.talents = talents;
 		this.spellbook = new Spellbook();
 		this.equipment = new Equipment();
 		this.consumables = new Consumables();
@@ -87,13 +103,36 @@ public abstract class CharacterImpl implements Character {
 	}
 
 	@Override
-	public void setTarget(Character target) {
-		this.target = target;
+	public void setRole(PveRole role) {
+		this.role = role;
+	}
+
+	@Override
+	public void setScript(String script) {
+		this.script = script;
+	}
+
+	@Override
+	public void resetBuild() {
+		talents.reset();
+		role = null;
+		script = null;
+		invalidateCaches();
+	}
+
+	@Override
+	public void invalidateCaches() {
+		// void
 	}
 
 	@Override
 	public void setActivePet(Pet activePet) {
 		this.activePet = activePet;
+	}
+
+	@Override
+	public void setTarget(Character target) {
+		this.target = target;
 	}
 
 	@Override

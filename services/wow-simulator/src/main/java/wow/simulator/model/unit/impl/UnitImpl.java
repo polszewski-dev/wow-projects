@@ -1,5 +1,6 @@
 package wow.simulator.model.unit.impl;
 
+import wow.character.model.build.Talents;
 import wow.character.model.character.BaseStatInfo;
 import wow.character.model.character.Character;
 import wow.character.model.character.CombatRatingInfo;
@@ -61,8 +62,18 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 
 	private SimulationContext simulationContext;
 
-	protected UnitImpl(String name, Phase phase, CharacterClass characterClass, int level, CreatureType creatureType, Side side, BaseStatInfo baseStatInfo, CombatRatingInfo combatRatingInfo) {
-		super(name, phase, characterClass, level, creatureType, side, baseStatInfo, combatRatingInfo);
+	protected UnitImpl(
+			String name,
+			Phase phase,
+			CharacterClass characterClass,
+			int level,
+			CreatureType creatureType,
+			Side side,
+			BaseStatInfo baseStatInfo,
+			CombatRatingInfo combatRatingInfo,
+			Talents talents
+	) {
+		super(name, phase, characterClass, level, creatureType, side, baseStatInfo, combatRatingInfo, talents);
 		this.resources.setHealth(10_000, 10_000);
 		this.resources.setMana(10_000, 10_000);
 	}

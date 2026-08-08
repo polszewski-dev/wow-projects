@@ -44,7 +44,7 @@ public class PlayerInfoConverter implements Converter<Player, PlayerInfoDTO> {
 	}
 
 	private ScriptInfo getScript(Player source) {
-		var scriptPath = source.getBuild().getScript();
+		var scriptPath = source.getScript();
 
 		return minmaxConfigRepository.getScript(scriptPath, source).orElseThrow();
 	}

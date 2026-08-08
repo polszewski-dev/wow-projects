@@ -8,6 +8,7 @@ import wow.commons.client.converter.BackConverter;
 import wow.commons.client.converter.Converter;
 import wow.commons.model.buff.BuffId;
 import wow.commons.model.item.ConsumableId;
+import wow.commons.model.talent.Talent;
 import wow.commons.model.talent.TalentId;
 import wow.minmax.converter.db.equipment.EquipmentConfigConverter;
 import wow.minmax.model.NonPlayer;
@@ -22,7 +23,6 @@ import wow.minmax.model.impl.PlayerImpl;
 @Component
 @AllArgsConstructor
 public class PlayerConfigConverter implements Converter<Player, PlayerConfig>, BackConverter<Player, PlayerConfig> {
-	private final BuildConfigConverter buildConfigConverter;
 	private final EquipmentConfigConverter equipmentConfigConverter;
 	private final CharacterProfessionConfigConverter characterProfessionConfigConverter;
 	private final NonPlayerConfigConverter nonPlayerConfigConverter;
@@ -31,6 +31,10 @@ public class PlayerConfigConverter implements Converter<Player, PlayerConfig>, B
 
 	@Override
 	public PlayerConfig doConvert(Player source) {
+		var talentIds = source.getTalents().getStream()
+				.map(Talent::getId)
+				.map(TalentId::value)
+				.toList();
 		var buffIds = source.getBuffs().getIds(BuffId::value);
 		var consumableIds = source.getConsumables().getIds(ConsumableId::value);
 		var assetIds = source.getAssets().getIds(AssetId::value);
@@ -42,7 +46,9 @@ public class PlayerConfigConverter implements Converter<Player, PlayerConfig>, B
 				source.getRaceId(),
 				source.getLevel(),
 				source.getPhaseId(),
-				buildConfigConverter.convert(source.getBuild()),
+				talentIds,
+				source.getRole(),
+				source.getScript(),
 				equipmentConfigConverter.convert(source.getEquipment()),
 				characterProfessionConfigConverter.convertList(source.getProfessions().getList()),
 				source.getExclusiveFactions().getNameList(),
@@ -83,11 +89,8 @@ public class PlayerConfigConverter implements Converter<Player, PlayerConfig>, B
 	}
 
 	private void changeBuild(Player player, PlayerConfig source) {
-		var build = player.getBuild();
-		var sourceBuild = source.getBuild();
-
-		build.getTalents().setIds(sourceBuild.getTalentIds(), TalentId::of);
-		build.setRole(sourceBuild.getRole());
-		build.setScript(sourceBuild.getScript());
+		player.getTalents().setIds(source.getTalentIds(), TalentId::of);
+		player.setRole(source.getRole());
+		player.setScript(source.getScript());
 	}
 }

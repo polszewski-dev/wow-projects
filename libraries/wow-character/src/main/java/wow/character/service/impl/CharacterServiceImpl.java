@@ -112,6 +112,7 @@ public class CharacterServiceImpl implements CharacterService {
 		var characterClass = gameVersion.getCharacterClass(characterClassId).orElseThrow();
 		var side = Side.HOSTILE;
 		var combatRatingInfo = combatRatingInfoRepository.getCombatRatingInfo(gameVersion.getGameVersionId(), level).orElseThrow();
+		var talents = new Talents(characterClassId, phaseId, List.of());
 
 		return factory.newNonPlayerCharacter(
 				name,
@@ -120,7 +121,8 @@ public class CharacterServiceImpl implements CharacterService {
 				level,
 				creatureType,
 				side,
-				combatRatingInfo
+				combatRatingInfo,
+				talents
 		);
 	}
 
@@ -151,12 +153,10 @@ public class CharacterServiceImpl implements CharacterService {
 	}
 
 	private void changeBuild(PlayerCharacter player, CharacterTemplate characterTemplate) {
-		var build = player.getBuild();
-
-		build.reset();
-		build.getTalents().loadFromTalentLink(characterTemplate.getTalentLink());
-		build.setRole(characterTemplate.getRequiredRole());
-		build.setScript(characterTemplate.getDefaultScript());
+		player.resetBuild();
+		player.getTalents().loadFromTalentLink(characterTemplate.getTalentLink());
+		player.setRole(characterTemplate.getRequiredRole());
+		player.setScript(characterTemplate.getDefaultScript());
 
 		refreshSpellbook(player);
 		refreshBuffs(player);
@@ -166,7 +166,7 @@ public class CharacterServiceImpl implements CharacterService {
 
 	@Override
 	public void updateAfterRestrictionChange(PlayerCharacter player) {
-		player.getBuild().invalidate();
+		player.invalidateCaches();
 		refreshSpellbook(player);
 		refreshActivePet(player);
 		refreshEquipment(player);

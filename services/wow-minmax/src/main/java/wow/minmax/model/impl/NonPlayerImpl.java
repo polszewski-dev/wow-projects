@@ -2,6 +2,7 @@ package wow.minmax.model.impl;
 
 import lombok.Getter;
 import lombok.Setter;
+import wow.character.model.build.Talents;
 import wow.character.model.character.CombatRatingInfo;
 import wow.character.model.character.impl.CharacterImpl;
 import wow.commons.model.Percent;
@@ -30,9 +31,10 @@ public class NonPlayerImpl extends CharacterImpl implements NonPlayer {
 			int level,
 			CreatureType creatureType,
 			Side side,
-			CombatRatingInfo combatRatingInfo
+			CombatRatingInfo combatRatingInfo,
+			Talents talents
 	) {
-		super(name, phase, characterClass, level, creatureType, side, getDummyBaseStatInfo(characterClass, level, phase), combatRatingInfo);
+		super(name, phase, characterClass, level, creatureType, side, getDummyBaseStatInfo(characterClass, level, phase), combatRatingInfo, talents);
 	}
 
 	@Override

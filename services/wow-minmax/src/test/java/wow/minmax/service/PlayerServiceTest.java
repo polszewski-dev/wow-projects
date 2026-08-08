@@ -130,11 +130,11 @@ class PlayerServiceTest extends ServiceTest {
 	void changeScript() {
 		var newScript = "warlock-shadow-bolt-spam";
 
-		assertThat(player.getBuild().getScript()).isEqualTo("warlock-destro-shadow");
+		assertThat(player.getScript()).isEqualTo("warlock-destro-shadow");
 
 		var player = underTest.changeScript(PLAYER_ID, newScript);
 
-		assertThat(player.getBuild().getScript()).isEqualTo(newScript);
+		assertThat(player.getScript()).isEqualTo(newScript);
 	}
 
 	@Autowired

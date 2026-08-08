@@ -8,15 +8,14 @@ import wow.character.model.character.*;
 import wow.character.model.character.impl.CharacterImpl;
 import wow.character.model.effect.EffectCollector;
 import wow.character.model.equipment.Equipment;
+import wow.character.model.script.ScriptPathResolver;
 import wow.commons.model.Percent;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.Race;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.talent.TalentTree;
-import wow.estimator.model.EffectInstances;
-import wow.estimator.model.Player;
-import wow.estimator.model.Unit;
+import wow.estimator.model.*;
 
 /**
  * User: POlszewski
@@ -25,12 +24,12 @@ import wow.estimator.model.Unit;
 @Getter
 public class PlayerImpl extends CharacterImpl implements Player {
 	private final Race race;
-	private final BuildWithRotation build;
 	private final CharacterProfessions professions;
 	private final ExclusiveFactions exclusiveFactions;
 	private final Buffs buffs;
 	private final Assets assets;
 	private final EffectInstances effectInstances;
+	private Rotation rotation;
 	@Setter
 	private Percent healthPct = Percent._100;
 
@@ -46,9 +45,8 @@ public class PlayerImpl extends CharacterImpl implements Player {
 			CharacterProfessions professions,
 			ExclusiveFactions exclusiveFactions
 	) {
-		super(name, phase, characterClass, level, race.getCreatureType(), race.getSide(), baseStatInfo, combatRatingInfo);
+		super(name, phase, characterClass, level, race.getCreatureType(), race.getSide(), baseStatInfo, combatRatingInfo, talents);
 		this.race = race;
-		this.build = new BuildWithRotation(phase.getGameVersion(), talents);
 		this.professions = professions;
 		this.exclusiveFactions = exclusiveFactions;
 		this.buffs = new Buffs();
@@ -66,7 +64,7 @@ public class PlayerImpl extends CharacterImpl implements Player {
 			Spellbook spellbook,
 			Buffs buffs,
 			Race race,
-			BuildWithRotation build,
+			Talents talents,
 			Equipment equipment,
 			CharacterProfessions professions,
 			ExclusiveFactions exclusiveFactions,
@@ -74,9 +72,8 @@ public class PlayerImpl extends CharacterImpl implements Player {
 			Assets assets,
 			EffectInstances effectInstances
 	) {
-		super(name, phase, characterClass, level, race.getCreatureType(), race.getSide(), baseStatInfo, combatRatingInfo, spellbook, equipment, consumables);
+		super(name, phase, characterClass, level, race.getCreatureType(), race.getSide(), baseStatInfo, combatRatingInfo, talents, spellbook, equipment, consumables);
 		this.race = race;
-		this.build = build;
 		this.professions = professions;
 		this.exclusiveFactions = exclusiveFactions;
 		this.buffs = buffs;
@@ -109,7 +106,7 @@ public class PlayerImpl extends CharacterImpl implements Player {
 				getSpellbook().copy(),
 				getBuffs().copy(),
 				getRace(),
-				getBuild().copy(),
+				getTalents().copy(),
 				getEquipment().copy(),
 				getProfessions().copy(),
 				getExclusiveFactions().copy(),
@@ -117,6 +114,8 @@ public class PlayerImpl extends CharacterImpl implements Player {
 				getAssets().copy(),
 				getEffectInstances().copy()
 		);
+		copy.setRole(getRole());
+		copy.setScript(getScript());
 		copy.setTarget(getTarget());
 		return copy;
 	}
@@ -137,7 +136,7 @@ public class PlayerImpl extends CharacterImpl implements Player {
 
 	@Override
 	public void collectEffects(EffectCollector collector) {
-		getBuild().collectEffects(collector);
+		getTalents().collectEffects(collector);
 		getEquipment().collectEffects(collector);
 		getBuffs().collectEffects(collector);
 		getConsumables().collectEffects(collector);
@@ -145,5 +144,31 @@ public class PlayerImpl extends CharacterImpl implements Player {
 			collector.addEffect(racial);
 		}
 		getEffectInstances().collectEffects(collector);
+	}
+
+	@Override
+	public Rotation getRotation() {
+		if (rotation == null) {
+			var scriptPath = ScriptPathResolver.getScriptPath(getScript(), getGameVersion());
+
+			this.rotation = RotationTemplate.parse(scriptPath)
+					.createRotation()
+					.compile(this);
+		}
+		return rotation;
+	}
+
+	@Override
+	public void setScript(String script) {
+		super.setScript(script);
+
+		this.rotation = null;
+	}
+
+	@Override
+	public void invalidateCaches() {
+		super.invalidateCaches();
+
+		this.rotation = null;
 	}
 }

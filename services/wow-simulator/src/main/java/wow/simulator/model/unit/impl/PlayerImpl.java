@@ -1,7 +1,6 @@
 package wow.simulator.model.unit.impl;
 
 import lombok.Getter;
-import wow.character.model.build.Build;
 import wow.character.model.build.Talents;
 import wow.character.model.character.*;
 import wow.character.model.effect.EffectCollector;
@@ -26,7 +25,6 @@ import static wow.commons.model.spell.ResourceType.MANA;
 @Getter
 public class PlayerImpl extends UnitImpl implements Player, Party.OnAdd<Player> {
 	private final Race race;
-	private final Build build;
 	private final CharacterProfessions professions;
 	private final ExclusiveFactions exclusiveFactions;
 	private final Buffs buffs;
@@ -49,9 +47,8 @@ public class PlayerImpl extends UnitImpl implements Player, Party.OnAdd<Player> 
 			CharacterProfessions professions,
 			ExclusiveFactions exclusiveFactions
 	) {
-		super(name, phase, characterClass, level, race.getCreatureType(), race.getSide(), baseStatInfo, combatRatingInfo);
+		super(name, phase, characterClass, level, race.getCreatureType(), race.getSide(), baseStatInfo, combatRatingInfo, talents);
 		this.race = race;
-		this.build = new Build(phase.getGameVersion(), talents);
 		this.professions = professions;
 		this.exclusiveFactions = exclusiveFactions;
 		this.buffs = new Buffs();
@@ -62,7 +59,7 @@ public class PlayerImpl extends UnitImpl implements Player, Party.OnAdd<Player> 
 
 	@Override
 	public void collectEffects(EffectCollector collector) {
-		getBuild().collectEffects(collector);
+		getTalents().collectEffects(collector);
 		getEquipment().collectEffects(collector);
 		getBuffs().collectEffects(collector);
 		for (var racial : getRace().getRacials(this)) {

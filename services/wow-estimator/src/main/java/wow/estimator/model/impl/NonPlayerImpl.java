@@ -2,6 +2,7 @@ package wow.estimator.model.impl;
 
 import lombok.Getter;
 import lombok.Setter;
+import wow.character.model.build.Talents;
 import wow.character.model.character.Character;
 import wow.character.model.character.*;
 import wow.character.model.character.impl.CharacterImpl;
@@ -35,9 +36,10 @@ public class NonPlayerImpl extends CharacterImpl implements NonPlayer {
 			int level,
 			CreatureType creatureType,
 			Side side,
-			CombatRatingInfo combatRatingInfo
+			CombatRatingInfo combatRatingInfo,
+			Talents talents
 	) {
-		super(name, phase, characterClass, level, creatureType, side, getDummyBaseStatInfo(characterClass, level, phase), combatRatingInfo);
+		super(name, phase, characterClass, level, creatureType, side, getDummyBaseStatInfo(characterClass, level, phase), combatRatingInfo, talents);
 		this.effectInstances = new EffectInstances();
 	}
 
@@ -50,12 +52,13 @@ public class NonPlayerImpl extends CharacterImpl implements NonPlayer {
 			Side side,
 			BaseStatInfo baseStatInfo,
 			CombatRatingInfo combatRatingInfo,
+			Talents talents,
 			Spellbook spellbook,
 			Equipment equipment,
 			Consumables consumables,
 			EffectInstances effectInstances
 	) {
-		super(name, phase, characterClass, level, creatureType, side, baseStatInfo, combatRatingInfo, spellbook, equipment, consumables);
+		super(name, phase, characterClass, level, creatureType, side, baseStatInfo, combatRatingInfo, talents, spellbook, equipment, consumables);
 		this.effectInstances = effectInstances;
 	}
 
@@ -83,12 +86,15 @@ public class NonPlayerImpl extends CharacterImpl implements NonPlayer {
 				getSide(),
 				getBaseStatInfo(),
 				getCombatRatingInfo(),
+				getTalents().copy(),
 				getSpellbook().copy(),
 				getEquipment().copy(),
 				getConsumables().copy(),
 				getEffectInstances().copy()
 		);
 		copy.setTarget(getTarget());
+		copy.setRole(getRole());
+		copy.setScript(getScript());
 		return copy;
 	}
 

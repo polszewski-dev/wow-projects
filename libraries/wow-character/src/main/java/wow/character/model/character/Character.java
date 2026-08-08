@@ -1,10 +1,12 @@
 package wow.character.model.character;
 
+import wow.character.model.build.Talents;
 import wow.character.model.effect.EffectCollection;
 import wow.character.model.equipment.Equipment;
 import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.Percent;
 import wow.commons.model.categorization.ItemSlot;
+import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.*;
 import wow.commons.model.config.CharacterInfo;
 import wow.commons.model.item.Item;
@@ -64,6 +66,36 @@ public interface Character extends CharacterInfo, EffectCollection {
 			default -> throw new IllegalArgumentException("Unhandled resource: " + resourceType);
 		};
 	}
+
+	// build
+
+	Talents getTalents();
+
+	@Override
+	default boolean hasTalent(String name) {
+		return getTalents().has(name);
+	}
+
+	@Override
+	default boolean hasTalent(String name, int rank) {
+		return getTalents().has(name, rank);
+	}
+
+	default String getTalentLink() {
+		return getTalents().getTalentLink();
+	}
+
+	PveRole getRole();
+
+	void setRole(PveRole role);
+
+	String getScript();
+
+	void setScript(String script);
+
+	void resetBuild();
+
+	void invalidateCaches();
 
 	// spellbook
 

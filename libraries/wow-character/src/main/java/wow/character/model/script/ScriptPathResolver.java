@@ -27,7 +27,7 @@ public final class ScriptPathResolver {
 	}
 
 	public static String getScriptPath(PlayerCharacter player) {
-		var scriptName = player.getBuild().getScript();
+		var scriptName = player.getScript();
 
 		return getScriptPath(scriptName, player.getGameVersionId());
 	}

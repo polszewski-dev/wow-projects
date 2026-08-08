@@ -2,7 +2,6 @@ package wow.minmax.model.impl;
 
 import lombok.Getter;
 import lombok.Setter;
-import wow.character.model.build.Build;
 import wow.character.model.build.Talents;
 import wow.character.model.character.*;
 import wow.character.model.character.impl.CharacterImpl;
@@ -24,7 +23,6 @@ import wow.minmax.model.Unit;
 public class PlayerImpl extends CharacterImpl implements Player {
 	private final PlayerId playerId;
 	private final Race race;
-	private final Build build;
 	private final CharacterProfessions professions;
 	private final ExclusiveFactions exclusiveFactions;
 	private final Buffs buffs;
@@ -45,10 +43,9 @@ public class PlayerImpl extends CharacterImpl implements Player {
 			CharacterProfessions professions,
 			ExclusiveFactions exclusiveFactions
 	) {
-		super(name, phase, characterClass, level, race.getCreatureType(), race.getSide(), baseStatInfo, combatRatingInfo);
+		super(name, phase, characterClass, level, race.getCreatureType(), race.getSide(), baseStatInfo, combatRatingInfo, talents);
 		this.playerId = playerId;
 		this.race = race;
-		this.build = new Build(phase.getGameVersion(), talents);
 		this.professions = professions;
 		this.exclusiveFactions = exclusiveFactions;
 		this.buffs = new Buffs();
@@ -57,7 +54,7 @@ public class PlayerImpl extends CharacterImpl implements Player {
 
 	@Override
 	public void collectEffects(EffectCollector collector) {
-		getBuild().collectEffects(collector);
+		getTalents().collectEffects(collector);
 		getEquipment().collectEffects(collector);
 		getBuffs().collectEffects(collector);
 		getConsumables().collectEffects(collector);

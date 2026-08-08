@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.pve.PhaseId;
@@ -30,7 +31,9 @@ public class PlayerConfig {
 	private RaceId race;
 	private int level;
 	private PhaseId phaseId;
-	private BuildConfig build;
+	private List<Integer> talentIds;
+	private PveRole role;
+	private String script;
 	private EquipmentConfig equipment;
 	private List<CharacterProfessionConfig> professions;
 	private List<String> exclusiveFactions;
