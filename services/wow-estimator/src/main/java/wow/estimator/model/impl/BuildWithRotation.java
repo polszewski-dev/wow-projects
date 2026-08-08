@@ -6,7 +6,6 @@ import wow.character.model.build.Build;
 import wow.character.model.build.Talents;
 import wow.character.model.script.ScriptPathResolver;
 import wow.commons.model.categorization.PveRole;
-import wow.commons.model.character.Pet;
 import wow.commons.model.pve.GameVersion;
 import wow.estimator.model.Rotation;
 import wow.estimator.model.RotationTemplate;
@@ -20,8 +19,8 @@ import wow.estimator.model.RotationTemplate;
 public class BuildWithRotation extends Build {
 	private Rotation rotation;
 
-	public BuildWithRotation(GameVersion gameVersion, Talents talents, PveRole role, Rotation rotation, String script, Pet activePet) {
-		super(gameVersion, talents, role, script, activePet);
+	public BuildWithRotation(GameVersion gameVersion, Talents talents, PveRole role, Rotation rotation, String script) {
+		super(gameVersion, talents, role, script);
 		this.rotation = rotation;
 	}
 
@@ -36,8 +35,7 @@ public class BuildWithRotation extends Build {
 				getTalents().copy(),
 				getRole(),
 				null,
-				getScript(),
-				getActivePet()
+				getScript()
 		);
 	}
 

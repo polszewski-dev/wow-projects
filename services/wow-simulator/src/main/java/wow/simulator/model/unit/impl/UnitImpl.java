@@ -1,6 +1,5 @@
 package wow.simulator.model.unit.impl;
 
-import lombok.Getter;
 import wow.character.model.character.BaseStatInfo;
 import wow.character.model.character.Character;
 import wow.character.model.character.CombatRatingInfo;
@@ -11,7 +10,6 @@ import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.CreatureType;
-import wow.commons.model.character.Pet;
 import wow.commons.model.character.PetType;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
@@ -60,9 +58,6 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	private Consumer<Unit> onPendingActionQueueEmpty;
 
 	private Rng rng;
-
-	@Getter
-	private Pet activePet;
 
 	private SimulationContext simulationContext;
 
@@ -676,10 +671,10 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 
 	@Override
 	public void setActivePet(PetType petType) {
-		if (petType != null) {
-			this.activePet = getGameVersion().getPet(petType).orElseThrow();
-		} else {
-			this.activePet = null;
-		}
+		var pet = (petType != null)
+				? getGameVersion().getPet(petType).orElseThrow()
+				: null;
+
+		this.setActivePet(pet);
 	}
 }

@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import wow.commons.model.categorization.PveRole;
-import wow.commons.model.character.PetType;
 
 import java.util.List;
 
@@ -19,5 +18,4 @@ public class BuildConfig {
 	private List<Integer> talentIds;
 	private PveRole role;
 	private String script;
-	private PetType activePet;
 }

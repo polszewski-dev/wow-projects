@@ -2,7 +2,6 @@ package wow.character.model.character;
 
 import wow.character.model.effect.EffectCollector;
 import wow.commons.model.categorization.PveRole;
-import wow.commons.model.character.PetType;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.profession.ProfessionId;
 import wow.commons.model.profession.ProfessionSpecializationId;
@@ -12,11 +11,6 @@ import wow.commons.model.profession.ProfessionSpecializationId;
  * Date: 2023-10-31
  */
 public interface NonPlayerCharacter extends Character {
-	@Override
-	default PetType getActivePetType() {
-		return null;
-	}
-
 	@Override
 	default RaceId getRaceId() {
 		return null;
@@ -39,11 +33,6 @@ public interface NonPlayerCharacter extends Character {
 
 	@Override
 	default boolean hasProfessionSpecialization(ProfessionSpecializationId specializationId) {
-		return false;
-	}
-
-	@Override
-	default boolean hasActivePet(PetType petType) {
 		return false;
 	}
 

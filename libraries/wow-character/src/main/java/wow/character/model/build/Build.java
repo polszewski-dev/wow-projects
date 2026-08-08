@@ -7,8 +7,6 @@ import wow.character.model.Copyable;
 import wow.character.model.effect.EffectCollection;
 import wow.character.model.effect.EffectCollector;
 import wow.commons.model.categorization.PveRole;
-import wow.commons.model.character.Pet;
-import wow.commons.model.character.PetType;
 import wow.commons.model.pve.GameVersion;
 
 /**
@@ -23,7 +21,6 @@ public class Build implements EffectCollection, Copyable<Build> {
 	private final Talents talents;
 	private PveRole role;
 	private String script;
-	private Pet activePet;
 
 	public Build(GameVersion gameVersion, Talents talents) {
 		this.gameVersion = gameVersion;
@@ -37,8 +34,7 @@ public class Build implements EffectCollection, Copyable<Build> {
 				gameVersion,
 				talents.copy(),
 				role,
-				script,
-				activePet
+				script
 		);
 	}
 
@@ -46,20 +42,7 @@ public class Build implements EffectCollection, Copyable<Build> {
 		this.talents.reset();
 		this.role = null;
 		this.script = null;
-		setActivePet(null);
 		invalidate();
-	}
-
-	public void setActivePet(PetType petType) {
-		if (petType == null) {
-			this.activePet = null;
-		} else {
-			this.activePet = gameVersion.getPet(petType).orElseThrow();
-		}
-	}
-
-	public PetType getActivePetType() {
-		return activePet != null ? activePet.getPetType() : null;
 	}
 
 	@Override

@@ -49,8 +49,6 @@ public interface Character extends CharacterInfo, EffectCollection {
 
 	CreatureType getCreatureType();
 
-	PetType getActivePetType();
-
 	Character getTarget();
 
 	void setTarget(Character target);
@@ -121,6 +119,21 @@ public interface Character extends CharacterInfo, EffectCollection {
 	// consumables
 
 	Consumables getConsumables();
+
+	// pet
+
+	Pet getActivePet();
+
+	void setActivePet(Pet pet);
+
+	default PetType getActivePetType() {
+		return getActivePet() != null ? getActivePet().getPetType() : null;
+	}
+
+	@Override
+	default boolean hasActivePet(PetType petType) {
+		return getActivePetType() == petType;
+	}
 
 	//
 

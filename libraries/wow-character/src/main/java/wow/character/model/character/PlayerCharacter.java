@@ -3,8 +3,6 @@ package wow.character.model.character;
 import wow.character.model.build.Build;
 import wow.character.model.build.Talents;
 import wow.commons.model.categorization.PveRole;
-import wow.commons.model.character.Pet;
-import wow.commons.model.character.PetType;
 import wow.commons.model.character.Race;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.effect.RacialEffect;
@@ -62,11 +60,6 @@ public interface PlayerCharacter extends Character {
 		return getProfessions().hasProfessionSpecialization(specializationId);
 	}
 
-	@Override
-	default boolean hasActivePet(PetType petType) {
-		return getActivePetType() == petType;
-	}
-
 	default void addProfession(ProfessionId professionId, ProfessionSpecializationId specializationId, int level) {
 		getProfessions().add(professionId, specializationId, level);
 	}
@@ -122,14 +115,7 @@ public interface PlayerCharacter extends Character {
 		return getBuild().getRole();
 	}
 
-	default Pet getActivePet() {
-		return getBuild().getActivePet();
-	}
-
-	@Override
-	default PetType getActivePetType() {
-		return getActivePet() != null ? getActivePet().getPetType() : null;
-	}
+	// other
 
 	ExclusiveFactions getExclusiveFactions();
 

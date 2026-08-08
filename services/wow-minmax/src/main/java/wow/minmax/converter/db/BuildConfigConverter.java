@@ -25,8 +25,7 @@ public class BuildConfigConverter implements Converter<Build, BuildConfig> {
 		return new BuildConfig(
 				talentIds,
 				source.getRole(),
-				source.getScript(),
-				source.getActivePetType()
+				source.getScript()
 		);
 	}
 }

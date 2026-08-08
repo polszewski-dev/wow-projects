@@ -79,7 +79,6 @@ public abstract class AbstractPlayerConverter<P extends PlayerCharacter> impleme
 
 		build.getTalents().setIds(source.talentIds(), TalentId::of);
 		build.setRole(source.role());
-		build.setActivePet(source.activePet());
 		build.setScript(source.script());
 	}
 

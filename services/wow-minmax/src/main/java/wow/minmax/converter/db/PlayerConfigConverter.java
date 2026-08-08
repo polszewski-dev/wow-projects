@@ -88,7 +88,6 @@ public class PlayerConfigConverter implements Converter<Player, PlayerConfig>, B
 
 		build.getTalents().setIds(sourceBuild.getTalentIds(), TalentId::of);
 		build.setRole(sourceBuild.getRole());
-		build.setActivePet(sourceBuild.getActivePet());
 		build.setScript(sourceBuild.getScript());
 	}
 }

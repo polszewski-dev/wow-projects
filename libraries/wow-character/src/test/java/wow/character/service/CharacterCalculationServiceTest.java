@@ -14,6 +14,7 @@ import wow.commons.model.Percent;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.attribute.AttributeId;
+import wow.commons.model.character.Pet;
 import wow.commons.model.character.PetType;
 import wow.commons.model.spell.ResourceType;
 import wow.commons.model.spell.SpellSchool;
@@ -146,7 +147,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 	void newAccumulatedTargetStatsTargetHasPet() {
 		var playerTarget = player;
 
-		playerTarget.getBuild().setActivePet(PetType.VOIDWALKER);
+		playerTarget.setActivePet(getPet(PetType.VOIDWALKER));
 
 		var idStr = "DamageTaken%";
 		var conditionStr = "Spell & Voidwalker";
@@ -234,7 +235,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 			"CritCoeff%,",
 	})
 	void newAccumulatedDirectComponentStats(String idStr, String conditionStr) {
-		player.getBuild().setActivePet(PetType.SUCCUBUS);
+		player.setActivePet(getPet(PetType.SUCCUBUS));
 
 		var ability = player.getAbility(SHADOW_BOLT).orElseThrow();
 		var directCommand = (ChangeHealthDirectly) ability.getDirectCommands().getFirst();
@@ -272,7 +273,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 			"CritRating,            SpellDamage",
 	})
 	void newAccumulatedPeriodicComponentStats(String idStr, String conditionStr) {
-		player.getBuild().setActivePet(PetType.SUCCUBUS);
+		player.setActivePet(getPet(PetType.SUCCUBUS));
 
 		var ability = player.getAbility(CURSE_OF_DOOM).orElseThrow();
 		var periodicCommand = ability.getApplyEffectCommands().getFirst().effect().getPeriodicComponent().commands().getFirst();
@@ -640,6 +641,10 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 			case CRIT_COEFF_PCT -> stats.getCritCoeffPct();
 			default -> throw new IllegalArgumentException();
 		};
+	}
+
+	private Pet getPet(PetType petType) {
+		return player.getGameVersion().getPet(petType).orElseThrow();
 	}
 
 	PlayerCharacter player;

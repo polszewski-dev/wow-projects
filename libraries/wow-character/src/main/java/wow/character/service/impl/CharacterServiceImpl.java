@@ -184,7 +184,7 @@ public class CharacterServiceImpl implements CharacterService {
 		var activePet = player.getActivePet();
 
 		if (activePet != null && !activePet.isAvailableTo(player)) {
-			player.getBuild().setActivePet(null);
+			player.setActivePet(null);//todo dismiss
 		}
 	}
 
