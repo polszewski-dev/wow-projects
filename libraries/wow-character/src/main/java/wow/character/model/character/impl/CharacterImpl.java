@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import wow.character.model.ability.ShootAbility;
 import wow.character.model.character.Character;
 import wow.character.model.character.*;
+import wow.character.model.effect.EffectCollector;
 import wow.character.model.equipment.Equipment;
 import wow.character.model.talent.Talents;
 import wow.commons.model.categorization.PveRole;
@@ -139,6 +140,16 @@ public abstract class CharacterImpl implements Character {
 	@Override
 	public void setTarget(Character target) {
 		this.target = target;
+	}
+
+	@Override
+	public void collectEffects(EffectCollector collector) {
+		getTalents().collectEffects(collector);
+		getEquipment().collectEffects(collector);
+		getBuffs().collectEffects(collector);
+		for (var racial : getRacials()) {
+			collector.addEffect(racial);
+		}
 	}
 
 	@Override

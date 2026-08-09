@@ -1,6 +1,5 @@
 package wow.character.model.character;
 
-import wow.character.model.effect.EffectCollector;
 import wow.commons.model.profession.ProfessionId;
 import wow.commons.model.profession.ProfessionSpecializationId;
 
@@ -27,10 +26,5 @@ public interface NonPlayerCharacter extends Character {
 	@Override
 	default boolean hasExclusiveFaction(String exclusiveFaction) {
 		return false;
-	}
-
-	@Override
-	default void collectEffects(EffectCollector collector) {
-		// void
 	}
 }

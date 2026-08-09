@@ -130,13 +130,8 @@ public class PlayerImpl extends CharacterImpl implements Player {
 
 	@Override
 	public void collectEffects(EffectCollector collector) {
-		getTalents().collectEffects(collector);
-		getEquipment().collectEffects(collector);
-		getBuffs().collectEffects(collector);
+		super.collectEffects(collector);
 		getConsumables().collectEffects(collector);
-		for (var racial : getRace().getRacials(this)) {
-			collector.addEffect(racial);
-		}
 		getEffectInstances().collectEffects(collector);
 	}
 

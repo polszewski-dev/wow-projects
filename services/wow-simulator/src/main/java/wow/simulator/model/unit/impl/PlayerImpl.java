@@ -55,12 +55,7 @@ public class PlayerImpl extends UnitImpl implements Player, Party.OnAdd<Player> 
 
 	@Override
 	public void collectEffects(EffectCollector collector) {
-		getTalents().collectEffects(collector);
-		getEquipment().collectEffects(collector);
-		getBuffs().collectEffects(collector);
-		for (var racial : getRace().getRacials(this)) {
-			collector.addEffect(racial);
-		}
+		super.collectEffects(collector);
 		effects.collectEffects(collector);
 		collectAurasFromOtherPartyMembers(collector);
 	}
@@ -79,7 +74,7 @@ public class PlayerImpl extends UnitImpl implements Player, Party.OnAdd<Player> 
 	public void collectAuras(EffectCollector collector) {
 		getEquipment().collectEffects(collector);
 
-		for (var racial : getRace().getRacials(this)) {
+		for (var racial : getRacials()) {
 			collector.addEffect(racial);
 		}
 

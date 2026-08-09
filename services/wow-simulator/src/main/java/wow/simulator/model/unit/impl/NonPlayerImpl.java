@@ -47,7 +47,6 @@ public class NonPlayerImpl extends UnitImpl implements NonPlayer, Party.OnAdd<No
 
 	@Override
 	public void collectEffects(EffectCollector collector) {
-		NonPlayer.super.collectEffects(collector);
 		effects.collectEffects(collector);
 	}
 

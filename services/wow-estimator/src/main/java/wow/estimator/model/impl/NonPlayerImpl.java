@@ -105,7 +105,6 @@ public class NonPlayerImpl extends CharacterImpl implements NonPlayer {
 
 	@Override
 	public void collectEffects(EffectCollector collector) {
-		NonPlayer.super.collectEffects(collector);
 		getEffectInstances().collectEffects(collector);
 	}
 }

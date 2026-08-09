@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import wow.character.model.character.*;
 import wow.character.model.character.impl.CharacterImpl;
-import wow.character.model.effect.EffectCollector;
 import wow.character.model.talent.Talents;
 import wow.character.service.PlayerCharacterFactory;
 import wow.commons.model.Percent;
@@ -46,17 +45,6 @@ public class PlayerImpl extends CharacterImpl implements Player {
 		this.professions = professions;
 		this.exclusiveFactions = exclusiveFactions;
 		this.assets = new Assets();
-	}
-
-	@Override
-	public void collectEffects(EffectCollector collector) {
-		getTalents().collectEffects(collector);
-		getEquipment().collectEffects(collector);
-		getBuffs().collectEffects(collector);
-		getConsumables().collectEffects(collector);
-		for (var racial : getRace().getRacials(this)) {
-			collector.addEffect(racial);
-		}
 	}
 
 	@Override
