@@ -1,8 +1,6 @@
 package wow.simulator.script;
 
-import lombok.RequiredArgsConstructor;
 import wow.character.model.script.ScriptCompiler;
-import wow.character.model.script.ScriptPathResolver;
 import wow.commons.model.Duration;
 import wow.simulator.script.command.ScriptCommandExecutor;
 
@@ -14,14 +12,13 @@ import static wow.character.model.script.ScriptSectionType.ROTATION;
  * User: POlszewski
  * Date: 2025-09-18
  */
-@RequiredArgsConstructor
 public class ScriptExecutor {
 	private final ScriptParams params;
-	private List<ScriptCommandExecutor> rotationCommands;
+	private final List<ScriptCommandExecutor> rotationCommands;
 
-	public void setupPlayer() {
-		var caster = params.caster();
-		var scriptPath = ScriptPathResolver.getScriptPath(caster);
+	public ScriptExecutor(String scriptPath, ScriptParams params) {
+		this.params = params;
+
 		var script = ScriptCompiler.compileResource(scriptPath);
 		var rotationSection = script.getSection(ROTATION);
 
@@ -29,8 +26,6 @@ public class ScriptExecutor {
 				.map(command -> ScriptCommandExecutor.create(command, params))
 				.filter(ScriptCommandExecutor::isValid)
 				.toList();
-
-		caster.setOnPendingActionQueueEmpty(x -> execute());
 	}
 
 	public void execute() {

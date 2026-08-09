@@ -137,10 +137,7 @@ class ScriptExecutorTest extends TbcWarlockSpellSimulationTest {
 		player.addHiddenEffect("Bonus Hp5", 5000);
 		player.addHiddenEffect("Bonus Mp5", 5000);
 
-		var params = new ScriptParams(player, player);
-		var executor = new ScriptExecutor(params);
-
-		executor.setupPlayer();
+		player.setupScript(player);
 
 		updateUntil(time);
 	}

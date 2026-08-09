@@ -21,7 +21,6 @@ import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.Player;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.update.Scheduler;
-import wow.simulator.script.ScriptExecutor;
 import wow.simulator.script.ScriptParams;
 import wow.simulator.script.SinglePassScriptExecutor;
 import wow.simulator.service.SimulatorService;
@@ -73,11 +72,9 @@ public class SimulatorServiceImpl implements SimulatorService {
 
 	private Simulation createSimulation(Raid<Player> raid, Unit target, SimulationContext simulationContext) {
 		var mainPlayer = raid.getFirstMember();
-		var params = new ScriptParams(mainPlayer, mainPlayer);
-		var scriptExecutor = new ScriptExecutor(params);
 		var simulation = new Simulation(simulationContext);
 
-		scriptExecutor.setupPlayer();
+		mainPlayer.setupScript(mainPlayer);
 
 		target.whenNoActionIdleForever();
 

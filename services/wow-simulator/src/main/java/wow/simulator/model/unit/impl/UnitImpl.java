@@ -4,6 +4,7 @@ import wow.character.model.character.BaseStatInfo;
 import wow.character.model.character.Character;
 import wow.character.model.character.CombatRatingInfo;
 import wow.character.model.character.impl.CharacterImpl;
+import wow.character.model.script.ScriptPathResolver;
 import wow.character.model.snapshot.*;
 import wow.character.model.talent.Talents;
 import wow.commons.model.AnyDuration;
@@ -30,6 +31,8 @@ import wow.simulator.model.unit.action.CastSpellAction;
 import wow.simulator.model.unit.action.IdleAction;
 import wow.simulator.model.unit.action.ImmediateAction;
 import wow.simulator.model.unit.action.UnitAction;
+import wow.simulator.script.ScriptExecutor;
+import wow.simulator.script.ScriptParams;
 import wow.simulator.simulation.SimulationContext;
 import wow.simulator.simulation.SimulationContextAware;
 import wow.simulator.util.IdGenerator;
@@ -156,6 +159,15 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	@Override
 	public void setOnPendingActionQueueEmpty(Consumer<Unit> onPendingActionQueueEmpty) {
 		this.onPendingActionQueueEmpty = onPendingActionQueueEmpty;
+	}
+
+	@Override
+	public void setupScript(Player mainPlayer) {
+		var scriptPath = ScriptPathResolver.getScriptPath(this);
+		var params = new ScriptParams(this, mainPlayer);
+		var scriptExecutor = new ScriptExecutor(scriptPath, params);
+
+		setOnPendingActionQueueEmpty(x -> scriptExecutor.execute());
 	}
 
 	public void whenNoActionIdleForever() {
