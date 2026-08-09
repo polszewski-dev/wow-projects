@@ -3,7 +3,10 @@ package wow.commons.model.pve;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
-import wow.commons.model.character.*;
+import wow.commons.model.character.CharacterClass;
+import wow.commons.model.character.CharacterClassId;
+import wow.commons.model.character.Race;
+import wow.commons.model.character.RaceId;
 import wow.commons.model.config.Described;
 import wow.commons.model.config.Description;
 import wow.commons.model.profession.Profession;
@@ -37,7 +40,6 @@ public class GameVersion implements Described {
 	private final List<Race> races = new ArrayList<>();
 	private final List<Profession> professions = new ArrayList<>();
 	private final List<ProfessionProficiency> proficiencies = new ArrayList<>();
-	private final List<Pet> pets = new ArrayList<>();
 
 	public Optional<Phase> getPhase(PhaseId phaseId) {
 		if (phaseId == null) {
@@ -78,12 +80,6 @@ public class GameVersion implements Described {
 	public Optional<ProfessionProficiency> getProficiency(ProfessionProficiencyId proficiencyId) {
 		return proficiencies.stream()
 				.filter(x -> x.getProficiencyId() == proficiencyId)
-				.findFirst();
-	}
-
-	public Optional<Pet> getPet(PetType petType) {
-		return pets.stream()
-				.filter(x -> x.getPetType() == petType)
 				.findFirst();
 	}
 
