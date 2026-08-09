@@ -21,9 +21,9 @@ public class SinglePassScriptExecutor {
 	private List<ScriptCommandExecutor> commands;
 
 	public void setupPlayer() {
-		var player = params.player();
+		var caster = params.caster();
 
-		var scriptPath = getScriptPath(scriptName, player.getGameVersionId());
+		var scriptPath = getScriptPath(scriptName, caster.getGameVersionId());
 		var script = ScriptCompiler.compileResource(scriptPath);
 		var section = script.getSection(sectionType);
 

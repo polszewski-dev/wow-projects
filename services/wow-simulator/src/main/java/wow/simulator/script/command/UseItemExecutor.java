@@ -10,7 +10,7 @@ import static wow.character.model.script.ScriptCommand.UseItem;
  */
 public class UseItemExecutor extends ComposableExecutor {
 	private UseItemExecutor(UseItem command, ScriptParams params) {
-		super(params, command.condition(), command.getActivatedAbility(params.player()), command.target(), command.optional());
+		super(params, command.condition(), command.getActivatedAbility(params.caster()), command.target(), command.optional());
 	}
 
 	public static UseItemExecutor create(UseItem command, ScriptParams params) {

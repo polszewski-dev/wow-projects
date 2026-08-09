@@ -14,11 +14,11 @@ import static wow.character.model.script.ScriptCommand.ComposableCommand;
  * Date: 2025-09-18
  */
 public abstract class ScriptCommandExecutor {
-	protected final Player player;
+	protected final Unit caster;
 	protected final Player mainPlayer;
 
 	protected ScriptCommandExecutor(ScriptParams params) {
-		this.player = params.player();
+		this.caster = params.caster();
 		this.mainPlayer = params.mainPlayer();
 	}
 
@@ -38,8 +38,8 @@ public abstract class ScriptCommandExecutor {
 	protected Unit getTarget(ScriptCommandTarget target) {
 		return switch (target) {
 			case DEFAULT -> null;
-			case SELF -> player;
-			case TARGET -> player.getTarget();
+			case SELF -> caster;
+			case TARGET -> caster.getTarget();
 			case MAIN -> mainPlayer;
 		};
 	}

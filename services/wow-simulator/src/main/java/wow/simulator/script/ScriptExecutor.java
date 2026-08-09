@@ -20,8 +20,8 @@ public class ScriptExecutor {
 	private List<ScriptCommandExecutor> rotationCommands;
 
 	public void setupPlayer() {
-		var player = params.player();
-		var scriptPath = ScriptPathResolver.getScriptPath(player);
+		var caster = params.caster();
+		var scriptPath = ScriptPathResolver.getScriptPath(caster);
 		var script = ScriptCompiler.compileResource(scriptPath);
 		var rotationSection = script.getSection(ROTATION);
 
@@ -30,7 +30,7 @@ public class ScriptExecutor {
 				.filter(ScriptCommandExecutor::isValid)
 				.toList();
 
-		player.setOnPendingActionQueueEmpty(x -> execute());
+		caster.setOnPendingActionQueueEmpty(x -> execute());
 	}
 
 	public void execute() {
@@ -39,10 +39,10 @@ public class ScriptExecutor {
 		if (command != null) {
 			command.execute();
 		} else {
-			var player = params.player();
+			var caster = params.caster();
 			var idleDuration = Duration.seconds(1);
 
-			player.idleFor(idleDuration);
+			caster.idleFor(idleDuration);
 		}
 	}
 

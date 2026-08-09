@@ -1,6 +1,6 @@
 package wow.character.model.script;
 
-import wow.character.model.character.PlayerCharacter;
+import wow.character.model.character.Character;
 import wow.commons.model.pve.GameVersion;
 import wow.commons.model.pve.GameVersionId;
 
@@ -26,10 +26,10 @@ public final class ScriptPathResolver {
 		return getScriptPath(scriptName, gameVersion.getGameVersionId());
 	}
 
-	public static String getScriptPath(PlayerCharacter player) {
-		var scriptName = player.getScript();
+	public static String getScriptPath(Character caster) {
+		var scriptName = caster.getScript();
 
-		return getScriptPath(scriptName, player.getGameVersionId());
+		return getScriptPath(scriptName, caster.getGameVersionId());
 	}
 
 	public static void requireExistingScriptFile(String scriptName, GameVersionId gameVersionId) {

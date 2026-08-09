@@ -55,7 +55,7 @@ public abstract class ComposableExecutor extends ScriptCommandExecutor {
 		var target = getTarget(commandTarget);
 
 		return isConditionMet(commandCondition, target) &&
-				player.canCast(ability, target) &&
+				caster.canCast(ability, target) &&
 				shouldCast(target);
 	}
 
@@ -63,7 +63,7 @@ public abstract class ComposableExecutor extends ScriptCommandExecutor {
 	public void execute() {
 		var target = getTarget(commandTarget);
 
-		player.cast(ability.getAbilityId(), target);
+		caster.cast(ability.getAbilityId(), target);
 	}
 
 	private boolean isConditionMet(ScriptCommandCondition condition, Unit target) {
@@ -71,15 +71,15 @@ public abstract class ComposableExecutor extends ScriptCommandExecutor {
 			return true;
 		}
 
-		var primaryTarget = player.getPrimaryTarget(ability, target);
-		var conditionChecker = new ScriptConditionChecker(player, ability, primaryTarget.requireSingleTarget());
+		var primaryTarget = caster.getPrimaryTarget(ability, target);
+		var conditionChecker = new ScriptConditionChecker(caster, ability, primaryTarget.requireSingleTarget());
 
 		return conditionChecker.check(condition);
 	}
 
 	private boolean shouldCast(Unit target) {
-		var remainingSimulationTime = player.getSimulation().getRemainingTime();
-		var castTime = Duration.seconds(player.getSpellCastSnapshot(ability).getCastTime());
+		var remainingSimulationTime = caster.getSimulation().getRemainingTime();
+		var castTime = Duration.seconds(caster.getSpellCastSnapshot(ability).getCastTime());
 
 		if (castTime.compareTo(remainingSimulationTime) > 0) {
 			return false;
@@ -89,7 +89,7 @@ public abstract class ComposableExecutor extends ScriptCommandExecutor {
 			return true;
 		}
 
-		var primaryTarget = player.getPrimaryTarget(ability, target);
+		var primaryTarget = caster.getPrimaryTarget(ability, target);
 
 		target = primaryTarget.requireSingleTarget();
 
@@ -99,13 +99,13 @@ public abstract class ComposableExecutor extends ScriptCommandExecutor {
 			return false;
 		}
 
-		var effectDuration = player.getEffectDurationSnapshot(ability, target).getDuration();
+		var effectDuration = caster.getEffectDurationSnapshot(ability, target).getDuration();
 
 		return castTime.add(effectDuration).compareTo(remainingSimulationTime) <= 0;
 	}
 
 	private AnyDuration getRemainingEffectDuration(Unit target) {
-		return target.getEffect(ability.getAbilityId(), player)
+		return target.getEffect(ability.getAbilityId(), caster)
 				.map(EffectInstance::getRemainingDuration)
 				.orElse(Duration.ZERO);
 	}

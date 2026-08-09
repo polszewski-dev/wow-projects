@@ -10,7 +10,7 @@ import static wow.character.model.script.ScriptCommand.CastSpell;
  */
 public class CastSpellExecutor extends ComposableExecutor {
 	private CastSpellExecutor(CastSpell command, ScriptParams params) {
-		super(params, command.condition(), command.getAbility(params.player()), command.target(), command.optional());
+		super(params, command.condition(), command.getAbility(params.caster()), command.target(), command.optional());
 	}
 
 	public static CastSpellExecutor create(CastSpell command, ScriptParams params) {

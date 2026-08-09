@@ -10,7 +10,7 @@ import static wow.character.model.script.ScriptCommand.CastSpellRank;
  */
 public class CastSpellRankExecutor extends ComposableExecutor {
 	private CastSpellRankExecutor(CastSpellRank command, ScriptParams params) {
-		super(params, command.condition(), command.getAbility(params.player()), command.target(), command.optional());
+		super(params, command.condition(), command.getAbility(params.caster()), command.target(), command.optional());
 	}
 
 	public static CastSpellRankExecutor create(CastSpellRank command, ScriptParams params) {
