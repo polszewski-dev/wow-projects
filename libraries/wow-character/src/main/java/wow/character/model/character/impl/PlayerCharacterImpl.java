@@ -16,7 +16,6 @@ import wow.commons.model.pve.Phase;
  */
 @Getter
 public class PlayerCharacterImpl extends CharacterImpl implements PlayerCharacter {
-	private final Race race;
 	private final CharacterProfessions professions;
 	private final ExclusiveFactions exclusiveFactions;
 	private final Buffs buffs;
@@ -36,8 +35,7 @@ public class PlayerCharacterImpl extends CharacterImpl implements PlayerCharacte
 			CharacterProfessions professions,
 			ExclusiveFactions exclusiveFactions
 	) {
-		super(name, phase, characterClass, level, race.getCreatureType(), race.getSide(), baseStatInfo, combatRatingInfo, talents);
-		this.race = race;
+		super(name, phase, characterClass, level, race.getCreatureType(), race, race.getSide(), baseStatInfo, combatRatingInfo, talents);
 		this.professions = professions;
 		this.exclusiveFactions = exclusiveFactions;
 		this.buffs = new Buffs();

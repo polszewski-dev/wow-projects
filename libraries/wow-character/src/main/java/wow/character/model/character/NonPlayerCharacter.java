@@ -1,7 +1,6 @@
 package wow.character.model.character;
 
 import wow.character.model.effect.EffectCollector;
-import wow.commons.model.character.RaceId;
 import wow.commons.model.profession.ProfessionId;
 import wow.commons.model.profession.ProfessionSpecializationId;
 
@@ -10,11 +9,6 @@ import wow.commons.model.profession.ProfessionSpecializationId;
  * Date: 2023-10-31
  */
 public interface NonPlayerCharacter extends Character {
-	@Override
-	default RaceId getRaceId() {
-		return null;
-	}
-
 	@Override
 	default boolean hasProfession(ProfessionId professionId) {
 		return false;

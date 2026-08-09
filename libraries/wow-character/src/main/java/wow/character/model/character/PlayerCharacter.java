@@ -1,8 +1,5 @@
 package wow.character.model.character;
 
-import wow.commons.model.character.Race;
-import wow.commons.model.character.RaceId;
-import wow.commons.model.effect.RacialEffect;
 import wow.commons.model.profession.ProfessionId;
 import wow.commons.model.profession.ProfessionSpecializationId;
 
@@ -19,19 +16,6 @@ public interface PlayerCharacter extends Character {
 
 	default void resetBuffs() {
 		getBuffs().reset();
-	}
-
-	// race
-
-	Race getRace();
-
-	@Override
-	default RaceId getRaceId() {
-		return getRace().getRaceId();
-	}
-
-	default List<RacialEffect> getRacials() {
-		return getRace().getRacials(this);
 	}
 
 	// professions

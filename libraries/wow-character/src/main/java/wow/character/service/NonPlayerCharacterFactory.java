@@ -6,6 +6,7 @@ import wow.character.model.character.NonPlayerCharacter;
 import wow.character.model.talent.Talents;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.CreatureType;
+import wow.commons.model.character.Race;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
 
@@ -21,6 +22,7 @@ public interface NonPlayerCharacterFactory<T extends NonPlayerCharacter> {
 			CharacterClass characterClass,
 			int level,
 			CreatureType creatureType,
+			Race race,
 			Side side,
 			BaseStatInfo baseStatInfo,
 			CombatRatingInfo combatRatingInfo,

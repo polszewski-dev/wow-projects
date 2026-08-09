@@ -121,6 +121,7 @@ public class CharacterServiceImpl implements CharacterService {
 				characterClass,
 				level,
 				creatureType,
+				null,
 				side,
 				baseStatInfo,
 				combatRatingInfo,

@@ -23,7 +23,6 @@ import wow.estimator.model.*;
  */
 @Getter
 public class PlayerImpl extends CharacterImpl implements Player {
-	private final Race race;
 	private final CharacterProfessions professions;
 	private final ExclusiveFactions exclusiveFactions;
 	private final Buffs buffs;
@@ -45,8 +44,7 @@ public class PlayerImpl extends CharacterImpl implements Player {
 			CharacterProfessions professions,
 			ExclusiveFactions exclusiveFactions
 	) {
-		super(name, phase, characterClass, level, race.getCreatureType(), race.getSide(), baseStatInfo, combatRatingInfo, talents);
-		this.race = race;
+		super(name, phase, characterClass, level, race.getCreatureType(), race, race.getSide(), baseStatInfo, combatRatingInfo, talents);
 		this.professions = professions;
 		this.exclusiveFactions = exclusiveFactions;
 		this.buffs = new Buffs();
@@ -72,8 +70,7 @@ public class PlayerImpl extends CharacterImpl implements Player {
 			Assets assets,
 			EffectInstances effectInstances
 	) {
-		super(name, phase, characterClass, level, race.getCreatureType(), race.getSide(), baseStatInfo, combatRatingInfo, talents, spellbook, equipment, consumables);
-		this.race = race;
+		super(name, phase, characterClass, level, race.getCreatureType(), race, race.getSide(), baseStatInfo, combatRatingInfo, talents, spellbook, equipment, consumables);
 		this.professions = professions;
 		this.exclusiveFactions = exclusiveFactions;
 		this.buffs = buffs;

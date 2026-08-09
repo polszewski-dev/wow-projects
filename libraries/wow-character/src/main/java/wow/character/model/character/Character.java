@@ -9,6 +9,7 @@ import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.*;
 import wow.commons.model.config.CharacterInfo;
+import wow.commons.model.effect.RacialEffect;
 import wow.commons.model.item.Item;
 import wow.commons.model.pve.GameVersion;
 import wow.commons.model.pve.GameVersionId;
@@ -19,6 +20,7 @@ import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.ResourceType;
 import wow.commons.model.talent.TalentTree;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -51,9 +53,30 @@ public interface Character extends CharacterInfo, EffectCollection {
 
 	CreatureType getCreatureType();
 
+	// race
+
+	Race getRace();
+
+	@Override
+	default RaceId getRaceId() {
+		var race = getRace();
+
+		return race != null ? race.getRaceId() : null;
+	}
+
+	default List<RacialEffect> getRacials() {
+		var race = getRace();
+
+		return race != null ? race.getRacials(this) : List.of();
+	}
+
+	// target
+
 	Character getTarget();
 
 	void setTarget(Character target);
+
+	// stats
 
 	BaseStatInfo getBaseStatInfo();
 

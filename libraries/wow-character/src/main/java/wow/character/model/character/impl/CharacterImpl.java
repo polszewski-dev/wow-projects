@@ -11,6 +11,7 @@ import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.Pet;
+import wow.commons.model.character.Race;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
 import wow.commons.model.spell.Ability;
@@ -34,6 +35,7 @@ public abstract class CharacterImpl implements Character {
 	private final CharacterClass characterClass;
 	private final int level;
 	private final CreatureType creatureType;
+	private final Race race;
 	private final Side side;
 	private final BaseStatInfo baseStatInfo;
 	private final CombatRatingInfo combatRatingInfo;
@@ -52,6 +54,7 @@ public abstract class CharacterImpl implements Character {
 			CharacterClass characterClass,
 			int level,
 			CreatureType creatureType,
+			Race race,
 			Side side,
 			BaseStatInfo baseStatInfo,
 			CombatRatingInfo combatRatingInfo,
@@ -62,6 +65,7 @@ public abstract class CharacterImpl implements Character {
 		this.characterClass = characterClass;
 		this.level = level;
 		this.creatureType = creatureType;
+		this.race = race;
 		this.side = side;
 		this.baseStatInfo = baseStatInfo;
 		this.combatRatingInfo = combatRatingInfo;

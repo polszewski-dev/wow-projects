@@ -46,7 +46,7 @@ public record CharacterRestriction(
 		if (!characterClassIds.isEmpty() && !characterClassIds.contains(characterInfo.getCharacterClassId())) {
 			return false;
 		}
-		if (!this.raceIds.isEmpty() && !this.raceIds.contains(characterInfo.getRaceId())) {
+		if (characterInfo.getRaceId() != null && !this.raceIds.isEmpty() && !this.raceIds.contains(characterInfo.getRaceId())) {
 			return false;
 		}
 		if (side != null && side != characterInfo.getSide()) {

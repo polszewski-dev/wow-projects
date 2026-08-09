@@ -24,7 +24,6 @@ import static wow.commons.model.spell.ResourceType.MANA;
  */
 @Getter
 public class PlayerImpl extends UnitImpl implements Player, Party.OnAdd<Player> {
-	private final Race race;
 	private final CharacterProfessions professions;
 	private final ExclusiveFactions exclusiveFactions;
 	private final Buffs buffs;
@@ -47,8 +46,7 @@ public class PlayerImpl extends UnitImpl implements Player, Party.OnAdd<Player> 
 			CharacterProfessions professions,
 			ExclusiveFactions exclusiveFactions
 	) {
-		super(name, phase, characterClass, level, race.getCreatureType(), race.getSide(), baseStatInfo, combatRatingInfo, talents);
-		this.race = race;
+		super(name, phase, characterClass, level, race.getCreatureType(), race, race.getSide(), baseStatInfo, combatRatingInfo, talents);
 		this.professions = professions;
 		this.exclusiveFactions = exclusiveFactions;
 		this.buffs = new Buffs();
