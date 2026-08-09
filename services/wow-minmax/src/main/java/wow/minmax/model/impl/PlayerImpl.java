@@ -24,7 +24,6 @@ public class PlayerImpl extends CharacterImpl implements Player {
 	private final PlayerId playerId;
 	private final CharacterProfessions professions;
 	private final ExclusiveFactions exclusiveFactions;
-	private final Buffs buffs;
 	private final Assets assets;
 	@Setter
 	private Percent healthPct = Percent._100;
@@ -46,7 +45,6 @@ public class PlayerImpl extends CharacterImpl implements Player {
 		this.playerId = playerId;
 		this.professions = professions;
 		this.exclusiveFactions = exclusiveFactions;
-		this.buffs = new Buffs();
 		this.assets = new Assets();
 	}
 

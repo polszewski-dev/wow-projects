@@ -58,9 +58,10 @@ public class NonPlayerImpl extends CharacterImpl implements NonPlayer {
 			Spellbook spellbook,
 			Equipment equipment,
 			Consumables consumables,
+			Buffs buffs,
 			EffectInstances effectInstances
 	) {
-		super(name, phase, characterClass, level, creatureType, race, side, baseStatInfo, combatRatingInfo, talents, spellbook, equipment, consumables);
+		super(name, phase, characterClass, level, creatureType, race, side, baseStatInfo, combatRatingInfo, talents, spellbook, equipment, consumables, buffs);
 		this.effectInstances = effectInstances;
 	}
 
@@ -93,6 +94,7 @@ public class NonPlayerImpl extends CharacterImpl implements NonPlayer {
 				getSpellbook().copy(),
 				getEquipment().copy(),
 				getConsumables().copy(),
+				getBuffs().copy(),
 				getEffectInstances().copy()
 		);
 		copy.setTarget(getTarget());

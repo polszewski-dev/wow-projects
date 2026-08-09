@@ -18,7 +18,6 @@ import wow.commons.model.pve.Phase;
 public class PlayerCharacterImpl extends CharacterImpl implements PlayerCharacter {
 	private final CharacterProfessions professions;
 	private final ExclusiveFactions exclusiveFactions;
-	private final Buffs buffs;
 	private final Assets assets;
 	@Setter
 	private Percent healthPct = Percent._100;
@@ -38,7 +37,6 @@ public class PlayerCharacterImpl extends CharacterImpl implements PlayerCharacte
 		super(name, phase, characterClass, level, race.getCreatureType(), race, race.getSide(), baseStatInfo, combatRatingInfo, talents);
 		this.professions = professions;
 		this.exclusiveFactions = exclusiveFactions;
-		this.buffs = new Buffs();
 		this.assets = new Assets();
 	}
 

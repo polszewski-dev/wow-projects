@@ -43,6 +43,7 @@ public abstract class CharacterImpl implements Character {
 	private final Spellbook spellbook;
 	private final Equipment equipment;
 	private final Consumables consumables;
+	private final Buffs buffs;
 	private PveRole role;
 	private String script;
 	private Pet activePet;
@@ -73,6 +74,7 @@ public abstract class CharacterImpl implements Character {
 		this.spellbook = new Spellbook();
 		this.equipment = new Equipment();
 		this.consumables = new Consumables();
+		this.buffs = new Buffs();
 	}
 
 	@Override

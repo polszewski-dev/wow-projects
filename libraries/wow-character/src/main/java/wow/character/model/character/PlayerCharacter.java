@@ -10,14 +10,6 @@ import java.util.List;
  * Date: 2023-10-31
  */
 public interface PlayerCharacter extends Character {
-	// buffs
-
-	Buffs getBuffs();
-
-	default void resetBuffs() {
-		getBuffs().reset();
-	}
-
 	// professions
 
 	CharacterProfessions getProfessions();

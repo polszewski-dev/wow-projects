@@ -25,7 +25,6 @@ import wow.estimator.model.*;
 public class PlayerImpl extends CharacterImpl implements Player {
 	private final CharacterProfessions professions;
 	private final ExclusiveFactions exclusiveFactions;
-	private final Buffs buffs;
 	private final Assets assets;
 	private final EffectInstances effectInstances;
 	private Rotation rotation;
@@ -47,7 +46,6 @@ public class PlayerImpl extends CharacterImpl implements Player {
 		super(name, phase, characterClass, level, race.getCreatureType(), race, race.getSide(), baseStatInfo, combatRatingInfo, talents);
 		this.professions = professions;
 		this.exclusiveFactions = exclusiveFactions;
-		this.buffs = new Buffs();
 		this.assets = new Assets();
 		this.effectInstances = new EffectInstances();
 	}
@@ -60,20 +58,19 @@ public class PlayerImpl extends CharacterImpl implements Player {
 			BaseStatInfo baseStatInfo,
 			CombatRatingInfo combatRatingInfo,
 			Spellbook spellbook,
-			Buffs buffs,
 			Race race,
 			Talents talents,
 			Equipment equipment,
 			CharacterProfessions professions,
 			ExclusiveFactions exclusiveFactions,
 			Consumables consumables,
+			Buffs buffs,
 			Assets assets,
 			EffectInstances effectInstances
 	) {
-		super(name, phase, characterClass, level, race.getCreatureType(), race, race.getSide(), baseStatInfo, combatRatingInfo, talents, spellbook, equipment, consumables);
+		super(name, phase, characterClass, level, race.getCreatureType(), race, race.getSide(), baseStatInfo, combatRatingInfo, talents, spellbook, equipment, consumables, buffs);
 		this.professions = professions;
 		this.exclusiveFactions = exclusiveFactions;
-		this.buffs = buffs;
 		this.assets = assets;
 		this.effectInstances = effectInstances;
 	}
@@ -101,13 +98,13 @@ public class PlayerImpl extends CharacterImpl implements Player {
 				getBaseStatInfo(),
 				getCombatRatingInfo(),
 				getSpellbook().copy(),
-				getBuffs().copy(),
 				getRace(),
 				getTalents().copy(),
 				getEquipment().copy(),
 				getProfessions().copy(),
 				getExclusiveFactions().copy(),
 				getConsumables().copy(),
+				getBuffs().copy(),
 				getAssets().copy(),
 				getEffectInstances().copy()
 		);

@@ -175,6 +175,14 @@ public interface Character extends CharacterInfo, EffectCollection {
 
 	Consumables getConsumables();
 
+	// buffs
+
+	Buffs getBuffs();
+
+	default void resetBuffs() {
+		getBuffs().reset();
+	}
+
 	// pet
 
 	Pet getActivePet();

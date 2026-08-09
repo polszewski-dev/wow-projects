@@ -26,7 +26,6 @@ import static wow.commons.model.spell.ResourceType.MANA;
 public class PlayerImpl extends UnitImpl implements Player, Party.OnAdd<Player> {
 	private final CharacterProfessions professions;
 	private final ExclusiveFactions exclusiveFactions;
-	private final Buffs buffs;
 	private final Assets assets;
 
 	private Time lastTimeManaSpent;
@@ -49,7 +48,6 @@ public class PlayerImpl extends UnitImpl implements Player, Party.OnAdd<Player> 
 		super(name, phase, characterClass, level, race.getCreatureType(), race, race.getSide(), baseStatInfo, combatRatingInfo, talents);
 		this.professions = professions;
 		this.exclusiveFactions = exclusiveFactions;
-		this.buffs = new Buffs();
 		this.assets = new Assets();
 
 		Raid.newRaid(this);
