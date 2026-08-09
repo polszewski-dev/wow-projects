@@ -79,7 +79,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		var clock = new Clock();
 		var gameLog = new GameLog();
 		var scheduler = new Scheduler(clock);
-		return new SimulationContext(clock, gameLog, () -> rng, scheduler, getCharacterCalculationService(), getSpellRepository());
+		return new SimulationContext(clock, gameLog, () -> rng, scheduler, getCharacterService(), getCharacterCalculationService(), getSpellRepository());
 	}
 
 	protected Player getNakedPlayer() {

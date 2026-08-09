@@ -6,6 +6,7 @@ import wow.character.model.asset.AssetExecution;
 import wow.character.model.character.Raid;
 import wow.character.service.AssetService;
 import wow.character.service.CharacterCalculationService;
+import wow.character.service.CharacterService;
 import wow.commons.model.Duration;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.repository.spell.SpellRepository;
@@ -39,6 +40,7 @@ import static wow.character.model.script.ScriptSectionType.PREPARATION;
 @Service
 @AllArgsConstructor
 public class SimulatorServiceImpl implements SimulatorService {
+	private final CharacterService characterService;
 	private final CharacterCalculationService characterCalculationService;
 	private final AssetService assetService;
 	private final SpellRepository spellRepository;
@@ -184,7 +186,7 @@ public class SimulatorServiceImpl implements SimulatorService {
 		var scheduler = new Scheduler(clock);
 
 		return new SimulationContext(
-				clock, gameLog, rngFactory, scheduler, characterCalculationService, spellRepository
+				clock, gameLog, rngFactory, scheduler, characterService, characterCalculationService, spellRepository
 		);
 	}
 

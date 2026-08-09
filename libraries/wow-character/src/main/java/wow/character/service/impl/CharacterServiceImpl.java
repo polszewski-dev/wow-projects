@@ -3,6 +3,7 @@ package wow.character.service.impl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import wow.character.model.asset.Asset;
+import wow.character.model.character.Character;
 import wow.character.model.character.*;
 import wow.character.model.character.impl.NonPlayerCharacterImpl;
 import wow.character.model.character.impl.PlayerCharacterImpl;
@@ -11,13 +12,16 @@ import wow.character.model.talent.Talents;
 import wow.character.repository.*;
 import wow.character.service.CharacterService;
 import wow.character.service.NonPlayerCharacterFactory;
+import wow.character.service.PetCharacterFactory;
 import wow.character.service.PlayerCharacterFactory;
 import wow.commons.model.buff.Buff;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
+import wow.commons.model.character.PetType;
 import wow.commons.model.character.RaceId;
+import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.item.Consumable;
 import wow.commons.model.item.Gem;
 import wow.commons.model.profession.Profession;
@@ -126,6 +130,33 @@ public class CharacterServiceImpl implements CharacterService {
 				baseStatInfo,
 				combatRatingInfo,
 				talents
+		);
+	}
+
+	@Override
+	public <T extends PetCharacter> T createPetCharacter(String name, PetType petType, Character master, CharacterRestriction characterRestriction, PetCharacterFactory<T> factory) {
+		var phase = master.getPhase();
+		var gameVersion = phase.getGameVersion();
+		var characterClassId = CharacterClassId.WARRIOR;
+		var characterClass = gameVersion.getCharacterClass(characterClassId).orElseThrow();
+		var level = master.getLevel();
+		var side = master.getSide();
+		var baseStatInfo = master.getBaseStatInfo();
+		var combatRatingInfo = master.getCombatRatingInfo();
+		var talents = new Talents(characterClassId, phase.getPhaseId(), List.of());
+
+		return factory.newPetCharacter(
+				name,
+				phase,
+				characterClass,
+				level,
+				petType,
+				null,
+				side,
+				baseStatInfo,
+				combatRatingInfo,
+				talents,
+				characterRestriction
 		);
 	}
 

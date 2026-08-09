@@ -3,6 +3,7 @@ package wow.simulator.simulation;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import wow.character.service.CharacterCalculationService;
+import wow.character.service.CharacterService;
 import wow.commons.repository.spell.SpellRepository;
 import wow.simulator.log.GameLog;
 import wow.simulator.model.rng.RngFactory;
@@ -20,6 +21,7 @@ public class SimulationContext implements SimulationContextSource {
 	private final GameLog gameLog;
 	private final RngFactory rngFactory;
 	private final Scheduler scheduler;
+	private final CharacterService characterService;
 	private final CharacterCalculationService characterCalculationService;
 	private final SpellRepository spellRepository;
 	private Simulation simulation;

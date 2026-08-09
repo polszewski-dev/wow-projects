@@ -176,7 +176,13 @@ public interface Unit extends Character, SimulationContextSource {
 
 	void regen(Duration sinceLastRegen);
 
-	void setActivePet(PetType petType);
+	Pet getActivePet();
+
+	void summonPet(PetType petType, Spell sourceSpell);
+
+	Pet dismissPet();
+
+	Pet sacrificePet();
 
 	List<Unit> getPartyMembers();
 

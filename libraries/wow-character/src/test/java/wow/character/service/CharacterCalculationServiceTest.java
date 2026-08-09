@@ -7,15 +7,17 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.character.WowCharacterSpringTest;
 import wow.character.model.character.Character;
+import wow.character.model.character.PetCharacter;
 import wow.character.model.character.PlayerCharacter;
+import wow.character.model.character.impl.PetCharacterImpl;
 import wow.character.model.snapshot.*;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.attribute.AttributeId;
-import wow.commons.model.character.Pet;
 import wow.commons.model.character.PetType;
+import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.spell.ResourceType;
 import wow.commons.model.spell.SpellSchool;
 
@@ -643,8 +645,8 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		};
 	}
 
-	private Pet getPet(PetType petType) {
-		return player.getGameVersion().getPet(petType).orElseThrow();
+	private PetCharacter getPet(PetType petType) {
+		return characterService.createPetCharacter("Pet", petType, player, CharacterRestriction.EMPTY, PetCharacterImpl::new);
 	}
 
 	PlayerCharacter player;

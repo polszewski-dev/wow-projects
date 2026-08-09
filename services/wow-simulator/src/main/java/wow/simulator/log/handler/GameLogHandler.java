@@ -4,6 +4,7 @@ import wow.commons.model.spell.ResourceType;
 import wow.commons.model.spell.Spell;
 import wow.simulator.model.cooldown.CooldownInstance;
 import wow.simulator.model.effect.EffectInstance;
+import wow.simulator.model.unit.Pet;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.unit.action.CastSpellAction;
 import wow.simulator.model.unit.action.ChannelSpellAction;
@@ -67,4 +68,10 @@ public interface GameLogHandler {
 	default void simulationStarted() {}
 
 	default void simulationEnded() {}
+
+	default void petSummoned(Unit master, Pet pet) {}
+
+	default void petDismissed(Unit master, Pet pet) {}
+
+	default void petSacrificed(Unit master, Pet pet) {}
 }

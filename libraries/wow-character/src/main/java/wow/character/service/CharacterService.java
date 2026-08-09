@@ -1,14 +1,15 @@
 package wow.character.service;
 
-import wow.character.model.character.GearSet;
-import wow.character.model.character.NonPlayerCharacter;
-import wow.character.model.character.PlayerCharacter;
+import wow.character.model.character.Character;
+import wow.character.model.character.*;
 import wow.character.model.equipment.EquippableItem;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
+import wow.commons.model.character.PetType;
 import wow.commons.model.character.RaceId;
+import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.pve.PhaseId;
 
 import java.util.List;
@@ -25,6 +26,8 @@ public interface CharacterService {
 	NonPlayerCharacter createNonPlayerCharacter(String name, CreatureType creatureType, int level, PhaseId phaseId);
 
 	<T extends NonPlayerCharacter> T createNonPlayerCharacter(String name, CreatureType creatureType, int level, PhaseId phaseId, NonPlayerCharacterFactory<T> factory);
+
+	<T extends PetCharacter> T createPetCharacter(String name, PetType petType, Character master, CharacterRestriction characterRestriction, PetCharacterFactory<T> factory);
 
 	void applyDefaultCharacterTemplate(PlayerCharacter player);
 

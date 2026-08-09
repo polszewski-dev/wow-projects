@@ -185,9 +185,9 @@ public interface Character extends CharacterInfo, EffectCollection {
 
 	// pet
 
-	Pet getActivePet();
+	PetCharacter getActivePet();
 
-	void setActivePet(Pet pet);
+	void setActivePet(PetCharacter pet);
 
 	default PetType getActivePetType() {
 		return getActivePet() != null ? getActivePet().getPetType() : null;

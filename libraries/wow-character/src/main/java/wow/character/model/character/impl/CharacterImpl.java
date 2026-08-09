@@ -11,7 +11,6 @@ import wow.character.model.talent.Talents;
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.CreatureType;
-import wow.commons.model.character.Pet;
 import wow.commons.model.character.Race;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
@@ -47,7 +46,7 @@ public abstract class CharacterImpl implements Character {
 	private final Buffs buffs;
 	private PveRole role;
 	private String script;
-	private Pet activePet;
+	private PetCharacter activePet;
 	private Character target;
 
 	protected CharacterImpl(
@@ -133,8 +132,17 @@ public abstract class CharacterImpl implements Character {
 	}
 
 	@Override
-	public void setActivePet(Pet activePet) {
+	public void setActivePet(PetCharacter activePet) {
+		if (this instanceof PetCharacter) {
+			throw new IllegalArgumentException("Pets cannnot have pets");
+		}
+		if (this.activePet != null) {
+			this.activePet.setMaster(null);
+		}
 		this.activePet = activePet;
+		if (this.activePet != null) {
+			this.activePet.setMaster(this);
+		}
 	}
 
 	@Override

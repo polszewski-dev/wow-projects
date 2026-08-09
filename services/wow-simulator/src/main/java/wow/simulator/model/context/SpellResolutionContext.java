@@ -4,7 +4,6 @@ import lombok.Setter;
 import wow.character.model.snapshot.RngStrategy;
 import wow.character.util.SpellTargetConditionArgs;
 import wow.character.util.SpellTargetConditionChecker;
-import wow.commons.model.character.Pet;
 import wow.commons.model.character.PetType;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.EffectAugmentations;
@@ -165,13 +164,17 @@ public class SpellResolutionContext extends Context {
 	}
 
 	protected void summonPet(SummonPet command, Unit target) {
-		target.setActivePet(command.petType());
+		target.summonPet(command.petType(), spell);
+		getGameLog().petSummoned(target, target.getActivePet());
 	}
 
 	protected void sacrificePet(Unit target) {
 		this.sacrificedPetType = target.getActivePetType();
 
-		target.setActivePet((Pet) null);//todo dismiss
+		var sacrificedPet = target.sacrificePet();
+
+		getGameLog().petSacrificed(target, sacrificedPet);
+		EventContext.firePetSacrificed(target, sacrificedPet, spell, this);
 	}
 
 	@Override

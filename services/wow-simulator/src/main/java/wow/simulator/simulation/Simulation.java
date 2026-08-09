@@ -46,6 +46,11 @@ public class Simulation implements SimulationContextSource {
 		getScheduler().add(action);
 	}
 
+	public void remove(Unit unit) {
+		this.units.remove(unit);
+		unit.interruptCurrentAction();
+	}
+
 	public void addGroundEffect(PeriodicEffectInstance effect, EffectReplacementMode replacementMode) {
 		groundEffects.addEffect(effect, replacementMode);
 	}

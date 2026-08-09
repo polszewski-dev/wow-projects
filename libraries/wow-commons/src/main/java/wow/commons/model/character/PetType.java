@@ -27,6 +27,10 @@ public enum PetType {
 		return EnumUtil.tryParse(value, values(), x -> x.name);
 	}
 
+	public CreatureType getCreatureType() {
+		return CreatureType.DEMON;
+	}
+
 	@Override
 	public String toString() {
 		return name;

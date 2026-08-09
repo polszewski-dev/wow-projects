@@ -5,6 +5,7 @@ import wow.commons.model.spell.Spell;
 import wow.simulator.log.handler.GameLogHandler;
 import wow.simulator.model.cooldown.CooldownInstance;
 import wow.simulator.model.effect.EffectInstance;
+import wow.simulator.model.unit.Pet;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.unit.action.CastSpellAction;
 import wow.simulator.model.unit.action.ChannelSpellAction;
@@ -171,5 +172,20 @@ public class GameLog implements GameLogHandler {
 	@Override
 	public void simulationEnded() {
 		handlers.forEach(GameLogHandler::simulationEnded);
+	}
+
+	@Override
+	public void petSummoned(Unit master, Pet pet) {
+		handlers.forEach(handler -> handler.petSummoned(master, pet));
+	}
+
+	@Override
+	public void petDismissed(Unit master, Pet pet) {
+		handlers.forEach(handler -> handler.petDismissed(master, pet));
+	}
+
+	@Override
+	public void petSacrificed(Unit master, Pet pet) {
+		handlers.forEach(handler -> handler.petSacrificed(master, pet));
 	}
 }

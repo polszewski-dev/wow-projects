@@ -6,6 +6,7 @@ import wow.commons.model.spell.*;
 import wow.simulator.model.cooldown.CooldownInstance;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.time.Clock;
+import wow.simulator.model.unit.Pet;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.unit.action.CastSpellAction;
 import wow.simulator.model.unit.action.ChannelSpellAction;
@@ -141,6 +142,21 @@ public class ConsoleGameLogHandler implements GameLogHandler, TimeAware {
 	@Override
 	public void simulationEnded() {
 		print("Simulation ended");
+	}
+
+	@Override
+	public void petSummoned(Unit master, Pet pet) {
+		print("%s summoned %s", master, pet);
+	}
+
+	@Override
+	public void petDismissed(Unit master, Pet pet) {
+		print("%s dismissed %s", master, pet);
+	}
+
+	@Override
+	public void petSacrificed(Unit master, Pet pet) {
+		print("%s sacrificed %s", master, pet);
 	}
 
 	private void print(String str, Object... args) {

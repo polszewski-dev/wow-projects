@@ -12,6 +12,7 @@ import wow.commons.model.effect.component.EventType;
 import wow.commons.model.spell.CooldownId;
 import wow.commons.model.spell.Spell;
 import wow.simulator.model.effect.EffectInstance;
+import wow.simulator.model.unit.Pet;
 import wow.simulator.model.unit.TargetResolver;
 import wow.simulator.model.unit.Unit;
 
@@ -101,6 +102,18 @@ public class EventContext {
 		var context = getEffectEventContext(effect, parentContext);
 
 		context.fireEvent(EFFECT_ENDED);
+	}
+
+	public static void firePetDismissed(Unit caster, Pet pet, Spell spell, Context parentContext) {
+		var context = new EventContext(caster, pet, spell, parentContext);
+
+		context.fireEvent(PET_DISMISS);
+	}
+
+	public static void firePetSacrificed(Unit caster, Pet pet, Spell spell, Context parentContext) {
+		var context = new EventContext(caster, pet, spell, parentContext);
+
+		context.fireEvent(PET_SACRIFICED);
 	}
 
 	private static EventContext getEffectEventContext(EffectInstance effect, Context parentContext) {

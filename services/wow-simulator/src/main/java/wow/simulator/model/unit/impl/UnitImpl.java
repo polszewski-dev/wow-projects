@@ -13,6 +13,7 @@ import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.PetType;
 import wow.commons.model.character.Race;
+import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
 import wow.commons.model.spell.*;
@@ -683,11 +684,50 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	private boolean resourcesNeedRefresh = true;
 
 	@Override
-	public void setActivePet(PetType petType) {
-		var pet = (petType != null)
-				? getGameVersion().getPet(petType).orElseThrow()
-				: null;
+	public Pet getActivePet() {
+		return (Pet) super.getActivePet();
+	}
+
+	@Override
+	public void summonPet(PetType petType, Spell sourceSpell) {
+		var characterRestriction = sourceSpell instanceof Ability ability
+				? ability.getCharacterRestriction()
+				: CharacterRestriction.EMPTY;
+
+		var petName = "%s's Pet".formatted(getName());
+		var pet = getCharacterService().createPetCharacter(petName, petType, this, characterRestriction, PetImpl::new);
+
+		// getCharacterService().applyCharacterTemplate(pet);
 
 		this.setActivePet(pet);
+		getSimulation().add(pet);
+	}
+
+	@Override
+	public Pet dismissPet() {
+		var activePet = getActivePet();
+
+		if (activePet == null) {
+			return null;
+		}
+
+		this.setActivePet(null);
+		getSimulation().remove(activePet);
+
+		return activePet;
+	}
+
+	@Override
+	public Pet sacrificePet() {
+		var activePet = getActivePet();
+
+		if (activePet == null) {
+			throw new IllegalStateException("No active pet for the sacrifice");
+		}
+
+		this.setActivePet(null);
+		getSimulation().remove(activePet);
+
+		return activePet;
 	}
 }
