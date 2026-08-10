@@ -38,7 +38,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.attribute.AttributeId.*;
 import static wow.commons.model.character.CharacterClassId.*;
 import static wow.commons.model.character.RaceId.ORC;
-import static wow.commons.model.config.TalentRestriction.TalentIdRestriction;
 import static wow.commons.model.effect.component.EventAction.REMOVE_CHARGE;
 import static wow.commons.model.effect.component.EventAction.TRIGGER_SPELL;
 import static wow.commons.model.effect.component.EventType.SPELL_CAST;
@@ -172,11 +171,10 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 			"Silence, 0, Silence",
 			"Mind Blast, 11, "
 	})
-	void required_talent_is_correct(String name, int rank, String expectedStr) {
+	void required_talent_is_correct(String name, int rank, String expected) {
 		var ability = getClassAbility(name, rank, TBC_P5);
 
-		var actual = ability.getCharacterRestriction().talentRestriction();
-		var expected = expectedStr != null ? new TalentIdRestriction(expectedStr) : null;
+		var actual = ability.getCharacterRestriction().talentName();
 
 		assertThat(actual).isEqualTo(expected);
 	}

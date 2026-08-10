@@ -57,15 +57,7 @@ public class AbilitySheetWriter extends AbstractSpellSheetWriter<ClassAbility> {
 		setValue(ability.getCharacterRestriction().characterClassIds());
 		setValue(ability.getCharacterRestriction().level());
 		setValue(ability.getCharacterRestriction().raceIds());
-
-		var talentRestriction = ability.getCharacterRestriction().talentRestriction();
-
-		if (talentRestriction != null) {
-			setValue(talentRestriction.talentName());
-		} else {
-			setValue((String) null);
-		}
-
+		setValue(ability.getCharacterRestriction().talentName());
 		setValue(ability.getCharacterRestriction().activePet());
 	}
 

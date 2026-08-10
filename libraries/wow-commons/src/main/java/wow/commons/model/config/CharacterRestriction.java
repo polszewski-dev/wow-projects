@@ -25,7 +25,7 @@ public record CharacterRestriction(
 		ProfessionSpecializationId professionSpecId,
 		String exclusiveFaction,
 		List<PetType> activePet,
-		TalentRestriction talentRestriction,
+		String talentName,
 		PveRole role,
 		Integer maxLevel
 ) {
@@ -62,7 +62,7 @@ public record CharacterRestriction(
 		if (!activePet.isEmpty() && activePet.stream().noneMatch(characterInfo::hasActivePet)) {
 			return false;
 		}
-		if (talentRestriction != null && !talentRestriction.isMetBy(characterInfo)) {
+		if (talentName != null && !characterInfo.hasTalent(talentName)) {
 			return false;
 		}
 		return maxLevel == null || characterInfo.getLevel() <= maxLevel;
@@ -95,8 +95,8 @@ public record CharacterRestriction(
 		if (!activePet.isEmpty()) {
 			parts.add("pet: " + activePet);
 		}
-		if (talentRestriction != null) {
-			parts.add("talentRestriction: " + talentRestriction);
+		if (talentName != null) {
+			parts.add("talent: " + talentName);
 		}
 		if (role != null) {
 			parts.add("role: " + role);

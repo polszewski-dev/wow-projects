@@ -10,7 +10,10 @@ import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.PetType;
 import wow.commons.model.character.RaceId;
-import wow.commons.model.config.*;
+import wow.commons.model.config.CharacterRestriction;
+import wow.commons.model.config.Description;
+import wow.commons.model.config.ProfessionRestriction;
+import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.profession.ProfessionId;
 import wow.commons.model.profession.ProfessionSpecializationId;
 import wow.commons.model.pve.GameVersionId;
@@ -153,7 +156,6 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 	private final ExcelColumn colExclusiveFaction = column(REQ_XFACTION, true);
 	private final ExcelColumn colReqPet = column(REQ_PET, true);
 	private final ExcelColumn colReqTalent = column(REQ_TALENT, true);
-	private final ExcelColumn colReqTalentRank = column(REQ_TALENT_RANK, true);
 	private final ExcelColumn colReqRole = column(REQ_ROLE, true);
 	private final ExcelColumn colReqMaxLevel = column(REQ_MAX_LEVEL, true);
 
@@ -168,7 +170,6 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 		var exclusiveFaction = colExclusiveFaction.getString(null);
 		var activePet = colReqPet.getList(PetType::parse);
 		var talentName = colReqTalent.getString(null);
-		var talentRank = colReqTalentRank.getNullableInteger();
 		var role = colReqRole.getEnum(PveRole::parse, null);
 		var maxLevel = colReqMaxLevel.getNullableInteger();
 
@@ -181,7 +182,7 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 				professionSpec,
 				exclusiveFaction,
 				activePet,
-				TalentRestriction.of(talentName, talentRank),
+				talentName,
 				role,
 				maxLevel
 		);

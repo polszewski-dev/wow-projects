@@ -5,7 +5,6 @@ import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
-import wow.commons.model.config.TalentRestriction;
 import wow.commons.model.spell.*;
 import wow.commons.util.parser.Rule;
 import wow.scraper.config.ScraperContext;
@@ -243,7 +242,7 @@ public class AbilityTooltipParser extends AbstractSpellTooltipParser {
 				null,
 				null,
 				List.of(),
-				talent ? TalentRestriction.of(getName()) : null,
+				getName(),
 				null,
 				null
 		);
