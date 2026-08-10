@@ -1,6 +1,7 @@
 package wow.commons.repository.spell;
 
 import wow.commons.model.character.CharacterClassId;
+import wow.commons.model.character.PetType;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.EffectId;
@@ -21,6 +22,8 @@ import java.util.Optional;
  */
 public interface SpellRepository {
 	List<Ability> getAvailableAbilities(CharacterClassId characterClassId, int level, PhaseId phaseId);
+
+	List<Ability> getAvailableAbilities(PetType petType, int level, PhaseId phaseId);
 
 	Optional<Ability> getAbility(AbilityId abilityId, int rank, PhaseId phaseId);
 

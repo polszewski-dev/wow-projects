@@ -41,6 +41,7 @@ public abstract class AbstractSpellSheetParser extends AbstractSpellBaseSheetPar
 
 		return switch (type) {
 			case CLASS_ABILITY -> getClassAbility();
+			case PET_ABILITY -> getPetAbility();
 			case RACIAL_ABILITY -> getRacialAbility();
 			case ACTIVATED_ABILITY -> getActivatedAbility();
 			case TRIGGERED_SPELL -> getTriggeredSpell();
@@ -62,6 +63,20 @@ public abstract class AbstractSpellSheetParser extends AbstractSpellBaseSheetPar
 		classAbility.setCost(cost);
 		classAbility.setNameRank(rank);
 		return classAbility;
+	}
+
+	private PetAbilityImpl getPetAbility() {
+		var petAbility = new PetAbilityImpl();
+		var rank = colRank.getInteger();
+		var talentTree = colTree.getEnum(TalentTree::parse);
+		var cost = getCost();
+
+		initAbility(petAbility);
+		petAbility.setRank(rank);
+		petAbility.setTalentTree(talentTree);
+		petAbility.setCost(cost);
+		petAbility.setNameRank(rank);
+		return petAbility;
 	}
 
 	private RacialAbilityImpl getRacialAbility() {

@@ -6,6 +6,7 @@ package wow.commons.repository.impl.parser.spell;
  */
 public final class SpellBaseExcelSheetNames {
 	public static final String ABILITIES = "abilities";
+	public static final String PET_ABILITIES = "pet_abilities";
 	public static final String ABILITY_SPELLS = "ability_spells";
 	public static final String ABILITY_EFFECTS = "ability_effects";
 	public static final String ITEM_SPELLS = "item_spells";

@@ -1,6 +1,5 @@
 package wow.character.model.character;
 
-import wow.commons.model.character.PetType;
 import wow.commons.model.config.CharacterRestricted;
 import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.profession.ProfessionId;
@@ -16,8 +15,6 @@ public interface PetCharacter extends Character, CharacterRestricted {
 	Character getMaster();
 
 	void setMaster(Character master);
-
-	PetType getPetType();
 
 	Spell getSourceSpell();
 

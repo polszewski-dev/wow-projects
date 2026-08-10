@@ -17,7 +17,7 @@ public interface Player extends Unit, PlayerCharacter {
 		return getParty().getRaid();
 	}
 
-	default List<Unit> getPartyMembers() {
-		return (List<Unit>) (List<?>) getParty().getMembers();
+	default List<Player> getPartyMembers() {
+		return getParty().getMembers();
 	}
 }

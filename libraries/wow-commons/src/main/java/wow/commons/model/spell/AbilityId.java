@@ -15,6 +15,7 @@ import static wow.commons.model.spell.SpellType.*;
 import static wow.commons.repository.impl.parser.excel.CommonColumnNames.NAME;
 import static wow.commons.repository.impl.parser.spell.SpellBaseExcelColumnNames.SPELL_TYPE;
 import static wow.commons.repository.impl.parser.spell.SpellBaseExcelSheetNames.ABILITIES;
+import static wow.commons.repository.impl.parser.spell.SpellBaseExcelSheetNames.PET_ABILITIES;
 
 /**
  * User: POlszewski
@@ -96,7 +97,7 @@ public record AbilityId(String name) implements Comparable<AbilityId> {
 			var name = colName.getString();
 			var type = colType.getEnum(SpellType::parse, TRIGGERED_SPELL);
 
-			if (type == CLASS_ABILITY || type == RACIAL_ABILITY || type == ACTIVATED_ABILITY) {
+			if (type == CLASS_ABILITY || type == PET_ABILITY || type == RACIAL_ABILITY || type == ACTIVATED_ABILITY) {
 				CACHE.computeIfAbsent(name, AbilityId::new);
 			}
 		}
@@ -117,6 +118,7 @@ public record AbilityId(String name) implements Comparable<AbilityId> {
 		protected Stream<ExcelSheetParser> getSheetParsers() {
 			return Stream.of(
 					new AbilityNameSheetParser(ABILITIES),
+					new AbilityNameSheetParser(PET_ABILITIES),
 					new AbilityNameSheetParser(Pattern.compile(".+_spells")),
 					new NullExcelSheetParser(Pattern.compile(".+"))
 			);

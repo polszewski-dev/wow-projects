@@ -1,6 +1,8 @@
 package wow.simulator.model.unit;
 
 import wow.character.model.character.Character;
+import wow.character.model.character.Party;
+import wow.character.model.character.Raid;
 import wow.character.model.effect.EffectCollector;
 import wow.character.model.snapshot.*;
 import wow.commons.model.AnyDuration;
@@ -186,7 +188,15 @@ public interface Unit extends Character, SimulationContextSource {
 
 	Pet sacrificePet();
 
-	List<Unit> getPartyMembers();
+	Party<? extends Unit> getParty();
+
+	default Raid<? extends Unit> getRaid() {
+		return getParty().getRaid();
+	}
+
+	default List<? extends Unit> getPartyMembers() {
+		return getParty().getMembers();
+	}
 
 	void collectAuras(EffectCollector collector);
 
@@ -201,4 +211,6 @@ public interface Unit extends Character, SimulationContextSource {
 	void onAddedToSimulation();
 
 	void onResourcesNeedRefresh();
+
+	void deactivate();
 }

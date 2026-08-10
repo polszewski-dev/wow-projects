@@ -235,7 +235,7 @@ public class AbilityTooltipParser extends AbstractSpellTooltipParser {
 	public CharacterRestriction getCharacterRestriction() {
 		return new CharacterRestriction(
 				getRequiredLevel(),
-				requiredClass,
+				requiredClass != null ? requiredClass : List.of(),
 				List.of(),
 				requiredSide,
 				null,

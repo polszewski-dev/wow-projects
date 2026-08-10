@@ -17,7 +17,7 @@ public interface NonPlayer extends Unit, NonPlayerCharacter {
 		return getParty().getRaid();
 	}
 
-	default List<Unit> getPartyMembers() {
-		return (List<Unit>) (List<?>) getParty().getMembers();
+	default List<NonPlayer> getPartyMembers() {
+		return getParty().getMembers();
 	}
 }

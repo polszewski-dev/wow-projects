@@ -58,8 +58,7 @@ public class NonPlayerImpl extends UnitImpl implements NonPlayer, Party.OnAdd<No
 	@Override
 	public void onAddedToSimulation() {
 		addHiddenEffect("Bonus Stamina", 100_000_000);
-		getResources().setHealthToMax();
-		getResources().setManaToMax();
+		super.onAddedToSimulation();
 	}
 
 	@Override

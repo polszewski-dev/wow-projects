@@ -7,7 +7,6 @@ import wow.commons.model.character.RaceId;
 import wow.commons.model.profession.ProfessionId;
 import wow.commons.model.profession.ProfessionSpecializationId;
 import wow.commons.model.pve.Side;
-import wow.commons.model.spell.AbilityId;
 
 /**
  * User: POlszewski
@@ -24,19 +23,15 @@ public interface CharacterInfo {
 
 	PveRole getRole();
 
+	PetType getPetType();
+
 	boolean hasProfession(ProfessionId professionId);
 
 	boolean hasProfession(ProfessionId professionId, int level);
 
 	boolean hasProfessionSpecialization(ProfessionSpecializationId specializationId);
 
-	boolean hasActivePet(PetType petType);
-
 	boolean hasExclusiveFaction(String exclusiveFaction);
 
-	boolean hasAbility(AbilityId abilityId);
-
 	boolean hasTalent(String name);
-
-	boolean hasTalent(String name, int rank);
 }

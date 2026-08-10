@@ -159,7 +159,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 	void required_pet_is_correct(String name, int rank, String expectedStr) {
 		var ability = getClassAbility(name, rank, TBC_P5);
 
-		var actual = ability.getCharacterRestriction().activePet();
+		var actual = ability.getCharacterRestriction().petTypes();
 		var expected = toList(expectedStr, PetType::parse);
 
 		assertThat(actual).isEqualTo(expected);

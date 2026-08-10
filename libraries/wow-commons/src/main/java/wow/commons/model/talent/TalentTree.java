@@ -33,7 +33,15 @@ public enum TalentTree {
 	ENHANCEMENT("Enhancement"),
 
 	PROTECTION("Protection"),
-	RETRIBUTION("Retribution");
+	RETRIBUTION("Retribution"),
+
+	IMP("ImpTree"),
+	VOIDWALKER("VoidwalkerTree"),
+	SUCCUBUS("SuccubusTree"),
+	FELHUNTER("FelhunterTree"),
+	FELGUARD("FelguardTree"),
+
+	;
 
 	private final String name;
 

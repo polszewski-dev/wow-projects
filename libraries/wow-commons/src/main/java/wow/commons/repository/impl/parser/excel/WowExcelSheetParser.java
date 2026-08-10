@@ -168,7 +168,7 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 		var professionLevel = colReqProfessionLevel.getNullableInteger();
 		var professionSpec = colReqProfessionSpec.getEnum(ProfessionSpecializationId::parse, null);
 		var exclusiveFaction = colExclusiveFaction.getString(null);
-		var activePet = colReqPet.getList(PetType::parse);
+		var petType = colReqPet.getList(PetType::parse);
 		var talentName = colReqTalent.getString(null);
 		var role = colReqRole.getEnum(PveRole::parse, null);
 		var maxLevel = colReqMaxLevel.getNullableInteger();
@@ -181,7 +181,7 @@ public abstract class WowExcelSheetParser extends ExcelSheetParser {
 				ProfessionRestriction.of(profession, professionLevel),
 				professionSpec,
 				exclusiveFaction,
-				activePet,
+				petType,
 				talentName,
 				role,
 				maxLevel

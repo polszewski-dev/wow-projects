@@ -99,11 +99,6 @@ public interface Character extends CharacterInfo, EffectCollection {
 		return getTalents().has(name);
 	}
 
-	@Override
-	default boolean hasTalent(String name, int rank) {
-		return getTalents().has(name, rank);
-	}
-
 	default String getTalentLink() {
 		return getTalents().getTalentLink();
 	}
@@ -136,11 +131,6 @@ public interface Character extends CharacterInfo, EffectCollection {
 
 	default Optional<Ability> getAbility(String abilityName, int rank) {
 		return getSpellbook().getAbility(abilityName, rank);
-	}
-
-	@Override
-	default boolean hasAbility(AbilityId abilityId) {
-		return getAbility(abilityId).isPresent();
 	}
 
 	// equipment
@@ -194,8 +184,12 @@ public interface Character extends CharacterInfo, EffectCollection {
 	}
 
 	@Override
-	default boolean hasActivePet(PetType petType) {
-		return getActivePetType() == petType;
+	default PetType getPetType() {
+		return null;
+	}
+
+	default boolean isPet() {
+		return getPetType() != null;
 	}
 
 	//

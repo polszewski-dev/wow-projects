@@ -78,6 +78,14 @@ public class Party<M extends Character> {
 	}
 
 	public void forEachMemberOrPet(Consumer<? super  M> consumer) {
-		members.forEach(consumer);
+		for (M member : members) {
+			consumer.accept(member);
+
+			var activePet = member.getActivePet();
+
+			if (activePet != null) {
+				consumer.accept((M) activePet);
+			}
+		}
 	}
 }

@@ -28,6 +28,7 @@ import wow.simulator.model.action.Action;
 import wow.simulator.model.time.Clock;
 import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.NonPlayer;
+import wow.simulator.model.unit.Pet;
 import wow.simulator.model.unit.Player;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.unit.impl.NonPlayerImpl;
@@ -415,6 +416,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	protected Simulation simulation;
 	protected Player player;
 	protected Unit target;
+	protected Pet pet;
 	protected TestEventCollectingHandler handler;
 
 	protected CharacterClassId characterClassId = WARLOCK;

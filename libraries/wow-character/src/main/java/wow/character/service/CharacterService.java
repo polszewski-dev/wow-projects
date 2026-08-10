@@ -31,6 +31,8 @@ public interface CharacterService {
 
 	void applyDefaultCharacterTemplate(PlayerCharacter player);
 
+	void applyDefaultCharacterTemplate(PetCharacter pet);
+
 	void applyCharacterTemplate(PlayerCharacter player, String templateName);
 
 	void updateAfterRestrictionChange(PlayerCharacter player);

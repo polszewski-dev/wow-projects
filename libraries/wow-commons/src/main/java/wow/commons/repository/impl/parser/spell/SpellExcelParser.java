@@ -55,6 +55,7 @@ public class SpellExcelParser extends ExcelParser {
 	protected Stream<ExcelSheetParser> getSheetParsers() {
 		return Stream.of(
 				new AbilitySheetParser(ABILITIES, this, ABILITIES_CONFIG),
+				new AbilitySheetParser(PET_ABILITIES, this, PET_ABILITIES_CONFIG),
 				new SpellSheetParser(ABILITY_SPELLS, this, ABILITY_SPELLS_CONFIG),
 				new SpellEffectSheetParser(ABILITY_EFFECTS, this, ABILITY_EFFECTS_CONFIG),
 				new SpellSheetParser(ITEM_SPELLS, this, ITEM_SPELLS_CONFIG),

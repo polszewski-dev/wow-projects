@@ -147,6 +147,7 @@ public enum AttributeId {
 	PARTY_CRIT_RATING("Party.CritRating"),
 	PARTY_CRIT_PCT("Party.Crit%"),
 	PARTY_MP5("Party.Mp5"),
+	PARTY_STAMINA("Party.Stamina"),
 
 	COPY_PCT("Copy%")
 	;

@@ -8,6 +8,7 @@ import wow.commons.util.EnumUtil;
  */
 public enum SpellType {
 	CLASS_ABILITY,
+	PET_ABILITY,
 	RACIAL_ABILITY,
 	ACTIVATED_ABILITY,
 	TRIGGERED_SPELL;

@@ -4,9 +4,11 @@ import wow.character.model.character.BaseStatInfo;
 import wow.character.model.character.Character;
 import wow.character.model.character.CombatRatingInfo;
 import wow.character.model.character.impl.CharacterImpl;
+import wow.character.model.effect.EffectCollector;
 import wow.character.model.script.ScriptPathResolver;
 import wow.character.model.snapshot.*;
 import wow.character.model.talent.Talents;
+import wow.character.util.AbstractEffectCollector;
 import wow.commons.model.AnyDuration;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
@@ -14,6 +16,7 @@ import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.PetType;
 import wow.commons.model.character.Race;
+import wow.commons.model.effect.Effect;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
 import wow.commons.model.spell.*;
@@ -25,6 +28,7 @@ import wow.simulator.model.effect.Effects;
 import wow.simulator.model.effect.impl.NonPeriodicEffectInstance;
 import wow.simulator.model.rng.Rng;
 import wow.simulator.model.time.AnyTime;
+import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.*;
 import wow.simulator.model.unit.action.CastSpellAction;
 import wow.simulator.model.unit.action.IdleAction;
@@ -41,6 +45,7 @@ import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 import static wow.commons.model.spell.GcdCooldownId.GCD;
+import static wow.commons.model.spell.ResourceType.MANA;
 import static wow.commons.model.spell.component.ComponentCommand.*;
 import static wow.simulator.model.time.AnyTime.TIME_IN_INFINITY;
 
@@ -65,6 +70,10 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	private Rng rng;
 
 	private SimulationContext simulationContext;
+
+	private Time lastTimeManaSpent;
+
+	private boolean deactivated;
 
 	protected UnitImpl(
 			String name,
@@ -102,6 +111,10 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 		}
 
 		if (hasActionInProgress() || isOnCooldown(GCD)) {
+			return;
+		}
+
+		if (deactivated) {
 			return;
 		}
 
@@ -322,6 +335,10 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 
 	protected void paySpellCost(Ability ability, Cost cost) {
 		getResources().pay(cost, ability);
+
+		if (cost.resourceType() == MANA && cost.amount() > 0) {
+			this.lastTimeManaSpent = now();
+		}
 	}
 
 	@Override
@@ -627,6 +644,21 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 		cooldowns.triggerCooldown(cooldownId, actualDuration, currentAction);
 	}
 
+	@Override
+	public void regen(Duration sinceLastRegen) {
+		var snapshot = getCharacterCalculationService().getRegenSnapshot(this);
+		var sinceLastManaSpent = getSinceLastManaSpent();
+		var health = snapshot.getHealthToRegen(true, sinceLastRegen);
+		var mana = snapshot.getManaToRegen(sinceLastManaSpent, sinceLastRegen);
+
+		increaseHealth(health, false, null, null);
+		increaseMana(mana, false, null, null);
+	}
+
+	private Duration getSinceLastManaSpent() {
+		return lastTimeManaSpent != null ? now().subtract(lastTimeManaSpent) : null;
+	}
+
 	// character interface
 
 	@Override
@@ -672,6 +704,11 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 		resourcesNeedRefresh = true;
 	}
 
+	@Override
+	public void deactivate() {
+		this.deactivated = true;
+	}
+
 	protected UnitResources getResources() {
 		if (resourcesNeedRefresh) {
 			refreshResources();
@@ -701,10 +738,14 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 
 	@Override
 	public void summonPet(PetType petType, Spell sourceSpell) {
+		dismissPet();
+
 		var petName = "%s's Pet".formatted(getName());
 		var pet = getCharacterService().createPetCharacter(petName, petType, this, sourceSpell, PetImpl::new);
 
-		// getCharacterService().applyCharacterTemplate(pet);
+		getCharacterService().applyDefaultCharacterTemplate(pet);
+
+		pet.setupScript(null);
 
 		this.setActivePet(pet);
 		getSimulation().add(pet);
@@ -719,6 +760,7 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 		}
 
 		this.setActivePet(null);
+		activePet.deactivate();
 		getSimulation().remove(activePet);
 
 		return activePet;
@@ -733,8 +775,69 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 		}
 
 		this.setActivePet(null);
+		activePet.deactivate();
 		getSimulation().remove(activePet);
 
 		return activePet;
+	}
+
+	@Override
+	public void collectEffects(EffectCollector collector) {
+		if (deactivated) {
+			return;
+		}
+
+		super.collectEffects(collector);
+		effects.collectEffects(collector);
+		collectAurasFromOtherPartyMembers(collector);
+	}
+
+	private void collectAurasFromOtherPartyMembers(EffectCollector collector) {
+		var auraCollector = new AuraCollector(this, collector);
+
+		getParty().forEachMemberOrPet(memberOrPet -> {
+			if (memberOrPet != this) {
+				memberOrPet.collectAuras(auraCollector);
+			}
+		});
+	}
+
+	private static class AuraCollector extends AbstractEffectCollector.OnlyEffects {
+		private final EffectCollector collector;
+
+		public AuraCollector(Unit unit, EffectCollector collector) {
+			super(unit);
+			this.collector = collector;
+		}
+
+		@Override
+		public void addEffect(Effect effect, int stackCount) {
+			if (effect.hasAugmentedAbilities() || !effect.isAura()) {
+				return;
+			}
+
+			collector.addEffect(effect, stackCount);
+		}
+	}
+
+	@Override
+	public void collectAuras(EffectCollector collector) {
+		if (deactivated) {
+			return;
+		}
+
+		getEquipment().collectEffects(collector);
+
+		for (var racial : getRacials()) {
+			collector.addEffect(racial);
+		}
+
+		effects.collectEffects(collector);
+	}
+
+	@Override
+	public void onAddedToSimulation() {
+		getResources().setHealthToMax();
+		getResources().setManaToMax();
 	}
 }

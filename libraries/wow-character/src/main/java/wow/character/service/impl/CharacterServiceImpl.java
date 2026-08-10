@@ -168,6 +168,20 @@ public class CharacterServiceImpl implements CharacterService {
 	}
 
 	@Override
+	public void applyDefaultCharacterTemplate(PetCharacter pet) {
+		var script = getDefaultScript(pet);
+
+		pet.setScript(script);
+		refreshSpellbook(pet);
+	}
+
+	private String getDefaultScript(PetCharacter pet) {
+		return pet.getPetType() == PetType.IMP
+				? "pet/imp-firebolt-spam"
+				: "pet/idle";
+	}
+
+	@Override
 	public void applyCharacterTemplate(PlayerCharacter player, String templateName) {
 		var characterTemplate = characterTemplateRepository.getCharacterTemplate(templateName, player).orElseThrow();
 
@@ -212,6 +226,11 @@ public class CharacterServiceImpl implements CharacterService {
 	private void refreshSpellbook(PlayerCharacter player) {
 		player.getSpellbook().reset();
 		player.getSpellbook().addAbilities(getAvailableAbilities(player));
+	}
+
+	private void refreshSpellbook(PetCharacter pet) {
+		pet.getSpellbook().reset();
+		pet.getSpellbook().addAbilities(getAvailableAbilities(pet));
 	}
 
 	private void refreshActivePet(PlayerCharacter player) {
@@ -285,6 +304,12 @@ public class CharacterServiceImpl implements CharacterService {
 	private List<Ability> getAvailableAbilities(PlayerCharacter player) {
 		return spellRepository.getAvailableAbilities(player.getCharacterClassId(), player.getLevel(), player.getPhaseId()).stream()
 				.filter(spell -> spell.isAvailableTo(player))
+				.toList();
+	}
+
+	private List<Ability> getAvailableAbilities(PetCharacter pet) {
+		return spellRepository.getAvailableAbilities(pet.getPetType(), pet.getLevel(), pet.getPhaseId()).stream()
+				.filter(spell -> spell.isAvailableTo(pet))
 				.toList();
 	}
 

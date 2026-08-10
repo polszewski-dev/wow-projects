@@ -4,9 +4,8 @@ import lombok.Getter;
 import wow.character.model.character.BaseStatInfo;
 import wow.character.model.character.Character;
 import wow.character.model.character.CombatRatingInfo;
-import wow.character.model.effect.EffectCollector;
+import wow.character.model.character.Party;
 import wow.character.model.talent.Talents;
-import wow.commons.model.Duration;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.PetType;
 import wow.commons.model.character.Race;
@@ -15,8 +14,6 @@ import wow.commons.model.pve.Side;
 import wow.commons.model.spell.Spell;
 import wow.simulator.model.unit.Pet;
 import wow.simulator.model.unit.Unit;
-
-import java.util.List;
 
 /**
  * User: POlszewski
@@ -52,28 +49,17 @@ public class PetImpl extends UnitImpl implements Pet {
 	}
 
 	@Override
-	public void collectAuras(EffectCollector collector) {
-		// void
+	public Unit getTarget() {
+		return master.getTarget();
 	}
 
 	@Override
-	public void collectEffects(EffectCollector collector) {
-		effects.collectEffects(collector);
+	public void setTarget(Unit target) {
+		throw new UnsupportedOperationException("Pet's always target master's target");
 	}
 
 	@Override
-	public void regen(Duration sinceLastRegen) {
-		// void
-	}
-
-	@Override
-	public List<Unit> getPartyMembers() {
-		return master.getPartyMembers();
-	}
-
-	@Override
-	public void onAddedToSimulation() {
-		getResources().setHealthToMax();
-		getResources().setManaToMax();
+	public Party<? extends Unit> getParty() {
+		return master.getParty();
 	}
 }

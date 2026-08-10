@@ -2,6 +2,7 @@ package wow.commons.repository.impl.spell;
 
 import org.springframework.stereotype.Component;
 import wow.commons.model.character.CharacterClassId;
+import wow.commons.model.character.PetType;
 import wow.commons.model.character.RaceId;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.EffectId;
@@ -29,6 +30,7 @@ import static wow.commons.util.PhaseMap.*;
 @Component
 public class SpellRepositoryImpl implements SpellRepository {
 	private final PhaseMap<CharacterClassId, List<Ability>> abilitiesByClass = new PhaseMap<>();
+	private final PhaseMap<PetType, List<Ability>> abilitiesByPet = new PhaseMap<>();
 	private final PhaseMap<AbilityNameRank, List<Ability>> abilitiesByNameRank = new PhaseMap<>();
 	private final PhaseMap<SpellId, Spell> spellsById = new PhaseMap<>();
 	private final PhaseMap<EffectId, Effect> effectById = new PhaseMap<>();
@@ -40,6 +42,7 @@ public class SpellRepositoryImpl implements SpellRepository {
 		parser.getSpells().forEach(this::addSpell);
 		parser.getEffects().forEach(this::addEffect);
 		compactLists(abilitiesByClass);
+		compactLists(abilitiesByPet);
 		compactLists(abilitiesByNameRank);
 		compactLists(effectByName);
 		compactLists(racialEffects);
@@ -48,6 +51,13 @@ public class SpellRepositoryImpl implements SpellRepository {
 	@Override
 	public List<Ability> getAvailableAbilities(CharacterClassId characterClassId, int level, PhaseId phaseId) {
 		return abilitiesByClass.getOptional(phaseId, characterClassId).orElse(List.of()).stream()
+				.filter(spell -> spell.getRequiredLevel() <= level)
+				.toList();
+	}
+
+	@Override
+	public List<Ability> getAvailableAbilities(PetType petType, int level, PhaseId phaseId) {
+		return abilitiesByPet.getOptional(phaseId, petType).orElse(List.of()).stream()
 				.filter(spell -> spell.getRequiredLevel() <= level)
 				.toList();
 	}
@@ -106,6 +116,10 @@ public class SpellRepositoryImpl implements SpellRepository {
 		if (spell instanceof Ability ability) {
 			for (var characterClassId : ability.getRequiredCharacterClassIds()) {
 				addEntryForEveryPhase(abilitiesByClass, characterClassId, ability);
+			}
+
+			for (var petType : ability.getRequiredPetTypes()) {
+				addEntryForEveryPhase(abilitiesByPet, petType, ability);
 			}
 
 			addEntryForEveryPhase(abilitiesByNameRank, ability.getNameRank(), ability);
