@@ -11,9 +11,9 @@ import wow.commons.model.Percent;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.PetType;
 import wow.commons.model.character.Race;
-import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
+import wow.commons.model.spell.Spell;
 
 /**
  * User: POlszewski
@@ -23,7 +23,7 @@ import wow.commons.model.pve.Side;
 @Setter
 public class PetCharacterImpl extends CharacterImpl implements PetCharacter {
 	private final PetType petType;
-	private final CharacterRestriction characterRestriction;
+	private final Spell sourceSpell;
 	private Character master;
 	private Percent healthPct = Percent._100;
 
@@ -38,10 +38,10 @@ public class PetCharacterImpl extends CharacterImpl implements PetCharacter {
 			BaseStatInfo baseStatInfo,
 			CombatRatingInfo combatRatingInfo,
 			Talents talents,
-			CharacterRestriction characterRestriction
+			Spell sourceSpell
 	) {
 		super(name, phase, characterClass, level, petType.getCreatureType(), race, side, baseStatInfo, combatRatingInfo, talents);
 		this.petType = petType;
-		this.characterRestriction = characterRestriction;
+		this.sourceSpell = sourceSpell;
 	}
 }

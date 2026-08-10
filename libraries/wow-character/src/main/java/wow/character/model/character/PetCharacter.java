@@ -2,8 +2,11 @@ package wow.character.model.character;
 
 import wow.commons.model.character.PetType;
 import wow.commons.model.config.CharacterRestricted;
+import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.profession.ProfessionId;
 import wow.commons.model.profession.ProfessionSpecializationId;
+import wow.commons.model.spell.Ability;
+import wow.commons.model.spell.Spell;
 
 /**
  * User: POlszewski
@@ -15,6 +18,15 @@ public interface PetCharacter extends Character, CharacterRestricted {
 	void setMaster(Character master);
 
 	PetType getPetType();
+
+	Spell getSourceSpell();
+
+	@Override
+	default CharacterRestriction getCharacterRestriction() {
+		return getSourceSpell() instanceof Ability ability
+				? ability.getCharacterRestriction()
+				: CharacterRestriction.EMPTY;
+	}
 
 	@Override
 	default boolean hasProfession(ProfessionId professionId) {

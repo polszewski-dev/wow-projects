@@ -14,7 +14,6 @@ import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.PetType;
 import wow.commons.model.character.Race;
-import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
 import wow.commons.model.spell.*;
@@ -702,12 +701,8 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 
 	@Override
 	public void summonPet(PetType petType, Spell sourceSpell) {
-		var characterRestriction = sourceSpell instanceof Ability ability
-				? ability.getCharacterRestriction()
-				: CharacterRestriction.EMPTY;
-
 		var petName = "%s's Pet".formatted(getName());
-		var pet = getCharacterService().createPetCharacter(petName, petType, this, characterRestriction, PetImpl::new);
+		var pet = getCharacterService().createPetCharacter(petName, petType, this, sourceSpell, PetImpl::new);
 
 		// getCharacterService().applyCharacterTemplate(pet);
 

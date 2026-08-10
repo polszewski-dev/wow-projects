@@ -9,8 +9,8 @@ import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.PetType;
 import wow.commons.model.character.RaceId;
-import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.pve.PhaseId;
+import wow.commons.model.spell.Spell;
 
 import java.util.List;
 
@@ -27,7 +27,7 @@ public interface CharacterService {
 
 	<T extends NonPlayerCharacter> T createNonPlayerCharacter(String name, CreatureType creatureType, int level, PhaseId phaseId, NonPlayerCharacterFactory<T> factory);
 
-	<T extends PetCharacter> T createPetCharacter(String name, PetType petType, Character master, CharacterRestriction characterRestriction, PetCharacterFactory<T> factory);
+	<T extends PetCharacter> T createPetCharacter(String name, PetType petType, Character master, Spell sourceSpell, PetCharacterFactory<T> factory);
 
 	void applyDefaultCharacterTemplate(PlayerCharacter player);
 

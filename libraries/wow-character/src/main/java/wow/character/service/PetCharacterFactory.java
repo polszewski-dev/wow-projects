@@ -7,9 +7,9 @@ import wow.character.model.talent.Talents;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.PetType;
 import wow.commons.model.character.Race;
-import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
+import wow.commons.model.spell.Spell;
 
 /**
  * User: POlszewski
@@ -28,6 +28,6 @@ public interface PetCharacterFactory<T extends PetCharacter> {
 			BaseStatInfo baseStatInfo,
 			CombatRatingInfo combatRatingInfo,
 			Talents talents,
-			CharacterRestriction characterRestriction
+			Spell sourceSpell
 	);
 }

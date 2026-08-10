@@ -17,7 +17,6 @@ import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.character.PetType;
-import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.spell.ResourceType;
 import wow.commons.model.spell.SpellSchool;
 
@@ -646,7 +645,10 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 	}
 
 	private PetCharacter getPet(PetType petType) {
-		return characterService.createPetCharacter("Pet", petType, player, CharacterRestriction.EMPTY, PetCharacterImpl::new);
+		var abilityName = "Summon " + petType.getName();
+		var sourceAbility = player.getAbility(abilityName).orElseThrow();
+
+		return characterService.createPetCharacter("Pet", petType, player, sourceAbility, PetCharacterImpl::new);
 	}
 
 	PlayerCharacter player;

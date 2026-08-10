@@ -21,7 +21,6 @@ import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.PetType;
 import wow.commons.model.character.RaceId;
-import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.item.Consumable;
 import wow.commons.model.item.Gem;
 import wow.commons.model.profession.Profession;
@@ -30,6 +29,7 @@ import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.pve.Side;
 import wow.commons.model.spell.Ability;
+import wow.commons.model.spell.Spell;
 import wow.commons.model.talent.Talent;
 import wow.commons.repository.item.ConsumableRepository;
 import wow.commons.repository.pve.FactionRepository;
@@ -134,7 +134,7 @@ public class CharacterServiceImpl implements CharacterService {
 	}
 
 	@Override
-	public <T extends PetCharacter> T createPetCharacter(String name, PetType petType, Character master, CharacterRestriction characterRestriction, PetCharacterFactory<T> factory) {
+	public <T extends PetCharacter> T createPetCharacter(String name, PetType petType, Character master, Spell sourceSpell, PetCharacterFactory<T> factory) {
 		var phase = master.getPhase();
 		var gameVersion = phase.getGameVersion();
 		var characterClassId = CharacterClassId.WARRIOR;
@@ -156,7 +156,7 @@ public class CharacterServiceImpl implements CharacterService {
 				baseStatInfo,
 				combatRatingInfo,
 				talents,
-				characterRestriction
+				sourceSpell
 		);
 	}
 

@@ -10,9 +10,9 @@ import wow.commons.model.Duration;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.PetType;
 import wow.commons.model.character.Race;
-import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
+import wow.commons.model.spell.Spell;
 import wow.simulator.model.unit.Pet;
 import wow.simulator.model.unit.Unit;
 
@@ -25,7 +25,7 @@ import java.util.List;
 @Getter
 public class PetImpl extends UnitImpl implements Pet {
 	private final PetType petType;
-	private final CharacterRestriction characterRestriction;
+	private final Spell sourceSpell;
 	private Unit master;
 
 	public PetImpl(
@@ -39,12 +39,12 @@ public class PetImpl extends UnitImpl implements Pet {
 			BaseStatInfo baseStatInfo,
 			CombatRatingInfo combatRatingInfo,
 			Talents talents,
-			CharacterRestriction characterRestriction
+			Spell sourceSpell
 
 	) {
 		super(name, phase, characterClass, level, petType.getCreatureType(), race, side, baseStatInfo, combatRatingInfo, talents);
 		this.petType = petType;
-		this.characterRestriction = characterRestriction;
+		this.sourceSpell = sourceSpell;
 	}
 
 	public void setMaster(Character master) {
