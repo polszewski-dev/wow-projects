@@ -26,6 +26,10 @@ public sealed interface SpellTargetCondition extends Condition {
 		return new IsCreatureType(creatureType);
 	}
 
+	static SpellTargetCondition of(PetType petType) {
+		return new HasActivePet(petType);
+	}
+
 	static SpellTargetCondition of(DruidFormType druidFormType) {
 		return new HasDruidForm(druidFormType);
 	}
@@ -116,6 +120,12 @@ public sealed interface SpellTargetCondition extends Condition {
 	record IsCreatureType(CreatureType creatureType) implements SpellTargetCondition {
 		public IsCreatureType {
 			Objects.requireNonNull(creatureType);
+		}
+	}
+
+	record HasActivePet(PetType petType) implements SpellTargetCondition {
+		public HasActivePet {
+			Objects.requireNonNull(petType);
 		}
 	}
 

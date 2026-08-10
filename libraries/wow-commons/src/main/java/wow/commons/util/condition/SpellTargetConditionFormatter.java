@@ -60,6 +60,9 @@ public class SpellTargetConditionFormatter extends ConditionFormatter<SpellTarge
 			case HasPet() ->
 					HAS_PET;
 
+			case HasActivePet(var petType) ->
+					petType.getName();
+
 			case SacrificedPet(var petType) ->
 					formatFunction(SACRIFICED, petType);
 		};

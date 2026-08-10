@@ -153,11 +153,11 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 	@ParameterizedTest
 	@CsvSource({
-			"Soul Link, 0, Imp+Voidwalker+Succubus+Incubus+Felhunter+Felguard+Enslaved",
+			"Firebolt, 1, Imp",
 			"Shadow Bolt, 11, ",
 	})
 	void required_pet_is_correct(String name, int rank, String expectedStr) {
-		var ability = getClassAbility(name, rank, TBC_P5);
+		var ability = getAbility(name, rank, TBC_P5);
 
 		var actual = ability.getCharacterRestriction().petTypes();
 		var expected = toList(expectedStr, PetType::parse);
@@ -893,6 +893,10 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 	private ClassAbility getClassAbility(String name, int rank, PhaseId phaseId) {
 		return (ClassAbility) spellRepository.getAbility(name, rank, phaseId).orElseThrow();
+	}
+
+	private Ability getAbility(String name, int rank, PhaseId phaseId) {
+		return spellRepository.getAbility(name, rank, phaseId).orElseThrow();
 	}
 
 	private Spell getSpell(int spellId, PhaseId phaseId) {

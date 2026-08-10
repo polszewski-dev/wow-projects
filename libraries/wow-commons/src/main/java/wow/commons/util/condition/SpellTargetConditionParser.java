@@ -56,6 +56,12 @@ public class SpellTargetConditionParser extends ConditionParser<SpellTargetCondi
 			return SpellTargetCondition.of(creatureType);
 		}
 
+		var petType = PetType.tryParse(value);
+
+		if (petType != null) {
+			return SpellTargetCondition.of(petType);
+		}
+
 		var hasEffect = tryParseHasEffect(value);
 
 		if (hasEffect != null) {

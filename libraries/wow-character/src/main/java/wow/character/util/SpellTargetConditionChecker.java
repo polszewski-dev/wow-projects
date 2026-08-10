@@ -50,6 +50,9 @@ public final class SpellTargetConditionChecker {
 			case HasPet() ->
 					caster.getActivePetType() != null;
 
+			case HasActivePet(var petType) ->
+					caster.getActivePetType() == petType;
+
 			case SacrificedPet(var petType) ->
 					args.getSacrificedPetType() == petType;
 

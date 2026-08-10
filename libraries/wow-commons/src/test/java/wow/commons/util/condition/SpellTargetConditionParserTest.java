@@ -13,7 +13,7 @@ import static wow.commons.model.character.CharacterClassId.MAGE;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
 import static wow.commons.model.character.CreatureType.DEMON;
 import static wow.commons.model.character.CreatureType.UNDEAD;
-import static wow.commons.model.character.PetType.IMP;
+import static wow.commons.model.character.PetType.*;
 import static wow.commons.model.spell.SpellTargetCondition.*;
 import static wow.commons.util.condition.SpellTargetConditionParser.parseCondition;
 
@@ -93,8 +93,8 @@ class SpellTargetConditionParserTest {
 					HOSTILE
 			),
 			testData(
-					"HasPet",
-					HAS_PET
+					"Imp, Voidwalker, Succubus, Incubus, Felhunter, Felguard",
+					comma(of(IMP), of(VOIDWALKER), of(SUCCUBUS), of(INCUBUS), of(FELHUNTER), of(FELGUARD))
 			),
 			testData(
 					"Sacrificed(Imp)",
