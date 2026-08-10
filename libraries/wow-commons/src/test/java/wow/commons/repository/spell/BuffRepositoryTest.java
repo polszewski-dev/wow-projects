@@ -37,7 +37,6 @@ class BuffRepositoryTest extends WowCommonsSpringTest {
 		assertThat(buff.getRequiredLevel()).isEqualTo(55);
 		assertThat(buff.getType()).isEqualTo(OIL);
 		assertThat(buff.getExclusionGroup()).isEqualTo(BuffExclusionGroup.OIL);
-		assertThat(buff.getSourceSpell()).isNull();
 		assertThat(buff.getPveRoles()).hasSameElementsAs(Set.of(CASTER_DPS));
 		assertThat(buff.getCategories()).hasSameElementsAs(Set.of(CONSUME));
 

@@ -243,7 +243,6 @@ public class AbilityTooltipParser extends AbstractSpellTooltipParser {
 				null,
 				null,
 				List.of(),
-				null,
 				talent ? TalentRestriction.of(getName()) : null,
 				null,
 				null

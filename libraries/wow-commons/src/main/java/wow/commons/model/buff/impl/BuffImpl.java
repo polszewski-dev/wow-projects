@@ -7,7 +7,6 @@ import wow.commons.model.config.CharacterRestriction;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.effect.Effect;
-import wow.commons.model.spell.AbilityId;
 
 import java.util.Set;
 
@@ -45,11 +44,6 @@ public class BuffImpl implements Buff {
 		this.pveRoles = pveRoles;
 		this.categories = categories;
 		this.effect = effect;
-	}
-
-	@Override
-	public AbilityId getSourceSpell() {
-		return getCharacterRestriction().abilityId();
 	}
 
 	@Override
