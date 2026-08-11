@@ -3,6 +3,7 @@ package wow.commons.model.effect.impl;
 import lombok.Getter;
 import lombok.Setter;
 import wow.commons.model.attribute.Attribute;
+import wow.commons.model.character.FormType;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.effect.*;
@@ -30,6 +31,7 @@ public class EffectImpl implements Effect {
 	private int maxCounters;
 	private EffectScope scope;
 	private EffectExclusionGroup exclusionGroup;
+	private FormType formType;
 	private PeriodicComponent periodicComponent;
 	private ModifierComponent modifierComponent;
 	private AbsorptionComponent absorptionComponent;

@@ -11,11 +11,12 @@ import wow.commons.util.EnumUtil;
 @AllArgsConstructor
 @Getter
 public enum FormType {
+	CASTER_FORM("CasterForm"),
 	BEAR_FORM("BearForm"),
 	CAT_FORM("CatForm"),
 	MOONKIN_FORM("MoonkinForm"),
 	TREE_FORM("TreeForm"),
-	CASTER_FORM("CasterForm");
+	SHADOW_FORM("ShadowFormType");
 
 	private final String name;
 

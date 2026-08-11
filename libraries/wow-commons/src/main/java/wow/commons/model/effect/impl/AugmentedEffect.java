@@ -2,6 +2,7 @@ package wow.commons.model.effect.impl;
 
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.Attributes;
+import wow.commons.model.character.FormType;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.effect.*;
@@ -71,6 +72,11 @@ public class AugmentedEffect implements Effect {
 	@Override
 	public EffectExclusionGroup getExclusionGroup() {
 		return effect.getExclusionGroup();
+	}
+
+	@Override
+	public FormType getFormType() {
+		return null;
 	}
 
 	@Override

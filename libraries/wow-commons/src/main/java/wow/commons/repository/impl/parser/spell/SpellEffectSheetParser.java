@@ -1,5 +1,6 @@
 package wow.commons.repository.impl.parser.spell;
 
+import wow.commons.model.character.FormType;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.EffectExclusionGroup;
 import wow.commons.model.effect.EffectId;
@@ -50,6 +51,7 @@ public class SpellEffectSheetParser extends AbstractSpellBaseSheetParser {
 	private final ExcelColumn colMaxCounters = column(COUNTERS_MAX, true);
 	private final ExcelColumn colScope = column(SCOPE);
 	private final ExcelColumn colExclusionGroup = column(EXCLUSION_GROUP);
+	private final ExcelColumn colFormType = column(FORM_TYPE, true);
 	private final ExcelColumn colPreventedSchools = column(PREVENTED_SCHOOLS, true);
 
 	protected Effect getEffect() {
@@ -61,12 +63,17 @@ public class SpellEffectSheetParser extends AbstractSpellBaseSheetParser {
 		var maxCounters = colMaxCounters.getInteger(0);
 		var scope = colScope.getEnum(EffectScope::parse);
 		var exclusionGroup = colExclusionGroup.getEnum(EffectExclusionGroup::parse, null);
+		var formType = colFormType.getEnum(FormType::parse, null);
 		var periodicComponent = getPeriodicComponent();
 		var modifierComponent = getModifierComponent(config.maxModAttributes());
 		var absorptionComponent = getAbsorptionComponent();
 		var preventedSchools = colPreventedSchools.getList(SpellSchool::parse);
 		var statConversions = getStatConversions(config.maxStatConversions());
 		var events = getEvents(config.maxEvents());
+
+		if (exclusionGroup == EffectExclusionGroup.FORM && formType == null) {
+			throw new IllegalArgumentException("No form for " + description.name());
+		}
 
 		effect.setId(effectId);
 		effect.setDescription(description);
@@ -75,6 +82,7 @@ public class SpellEffectSheetParser extends AbstractSpellBaseSheetParser {
 		effect.setMaxCounters(maxCounters);
 		effect.setScope(scope);
 		effect.setExclusionGroup(exclusionGroup);
+		effect.setFormType(formType);
 		effect.setPeriodicComponent(periodicComponent);
 		effect.setModifierComponent(modifierComponent);
 		effect.setPreventedSchools(preventedSchools);

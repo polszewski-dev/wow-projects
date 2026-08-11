@@ -84,6 +84,7 @@ public class TalentSheetParser extends AbstractSpellBaseSheetParser {
 		effect.setMaxCounters(0);
 		effect.setScope(EffectScope.GLOBAL);
 		effect.setExclusionGroup(null);
+		effect.setFormType(null);
 		effect.setModifierComponent(modifierComponent);
 		effect.setPreventedSchools(List.of());
 		effect.setStatConversions(statConversions);

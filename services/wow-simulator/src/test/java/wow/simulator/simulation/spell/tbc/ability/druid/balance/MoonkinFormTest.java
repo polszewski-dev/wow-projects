@@ -2,9 +2,11 @@ package wow.simulator.simulation.spell.tbc.ability.druid.balance;
 
 import org.junit.jupiter.api.Test;
 import wow.commons.model.Duration;
+import wow.commons.model.character.FormType;
 import wow.simulator.simulation.spell.tbc.TbcDruidSpellSimulationTest;
 import wow.test.commons.TalentNames;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.spell.ResourceType.MANA;
 import static wow.test.commons.AbilityNames.MOONKIN_FORM;
 import static wow.test.commons.AbilityNames.SHADOW_BOLT;
@@ -56,6 +58,15 @@ class MoonkinFormTest extends TbcDruidSpellSimulationTest {
 		var baseCritChance = rng.getCritRollData().getRollChances().getFirst();
 
 		assertLastCritChance(baseCritChance + 5);
+	}
+
+	@Test
+	void correct_form_type() {
+		player.cast(MOONKIN_FORM);
+
+		updateUntil(30);
+
+		assertThat(player.getForm()).isEqualTo(FormType.MOONKIN_FORM);
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package wow.commons.model.effect.impl;
 import lombok.Getter;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.Attributes;
+import wow.commons.model.character.FormType;
 import wow.commons.model.config.Description;
 import wow.commons.model.config.TimeRestriction;
 import wow.commons.model.effect.*;
@@ -86,6 +87,11 @@ public class AttributeEffect implements Effect {
 
 	@Override
 	public EffectExclusionGroup getExclusionGroup() {
+		return null;
+	}
+
+	@Override
+	public FormType getFormType() {
 		return null;
 	}
 

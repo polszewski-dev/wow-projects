@@ -3,6 +3,7 @@ package wow.commons.model.effect;
 import wow.commons.model.Duration;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeTarget;
+import wow.commons.model.character.FormType;
 import wow.commons.model.config.Described;
 import wow.commons.model.config.TimeRestricted;
 import wow.commons.model.effect.component.*;
@@ -38,6 +39,8 @@ public interface Effect extends Described, TimeRestricted {
 	EffectScope getScope();
 
 	EffectExclusionGroup getExclusionGroup();
+
+	FormType getFormType();
 
 	PeriodicComponent getPeriodicComponent();
 

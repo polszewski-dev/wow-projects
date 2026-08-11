@@ -12,10 +12,7 @@ import wow.character.util.AbstractEffectCollector;
 import wow.commons.model.AnyDuration;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
-import wow.commons.model.character.CharacterClass;
-import wow.commons.model.character.CreatureType;
-import wow.commons.model.character.PetType;
-import wow.commons.model.character.Race;
+import wow.commons.model.character.*;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
@@ -839,5 +836,10 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	public void onAddedToSimulation() {
 		getResources().setHealthToMax();
 		getResources().setManaToMax();
+	}
+
+	@Override
+	public FormType getForm() {
+		return effects.getForm();
 	}
 }

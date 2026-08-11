@@ -2,6 +2,8 @@ package wow.simulator.model.effect;
 
 import wow.character.model.effect.EffectCollection;
 import wow.character.model.effect.EffectCollector;
+import wow.commons.model.character.FormType;
+import wow.commons.model.effect.Effect;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.EffectReplacementMode;
 import wow.commons.model.talent.TalentTree;
@@ -11,6 +13,7 @@ import wow.simulator.simulation.SimulationContextSource;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -158,5 +161,13 @@ public abstract class Effects implements SimulationContextSource, EffectCollecti
 
 	public void detach(EffectInstance effect) {
 		this.effectsById.remove(effect.getInstanceId());
+	}
+
+	public FormType getForm() {
+		return getStream()
+				.map(Effect::getFormType)
+				.filter(Objects::nonNull)
+				.findAny()
+				.orElse(FormType.CASTER_FORM);
 	}
 }
