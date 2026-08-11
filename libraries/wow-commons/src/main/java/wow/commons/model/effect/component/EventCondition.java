@@ -206,4 +206,6 @@ public sealed interface EventCondition extends Condition {
 	record OwnerHealthPctLessThan(double value) implements EventCondition {}
 
 	record TargetHealthPctLessThan(double value) implements EventCondition {}
+
+	record HasXFaction(String factionName) implements EventCondition {}
 }

@@ -103,6 +103,12 @@ public class EventConditionParser extends ConditionParser<EventCondition, String
 			return ownerIsChanneling;
 		}
 
+		var hasXFaction = tryParseHasXFaction(value);
+
+		if (hasXFaction != null) {
+			return hasXFaction;
+		}
+
 		var miscCondition = MISC_CONDITIONS.get(value);
 
 		if (miscCondition != null) {
@@ -148,11 +154,17 @@ public class EventConditionParser extends ConditionParser<EventCondition, String
 		return parseAbilityIdArgument(value, OWNER_IS_CHANNELING, OwnerIsChannelingCondition::new);
 	}
 
+	private HasXFaction tryParseHasXFaction(String value) {
+		return parseStringArgument(value, HAS_X_FACTION, HasXFaction::new);
+	}
+
 	static final String OWNER_HAS_EFFECT = "Owner.HasEffect";
 	static final String OWNER_IS_CHANNELING = "Owner.IsChanneling";
 
 	static final String OWNER_HEALTH_PCT = "Owner.Health%";
 	static final String TARGET_HEALTH_PCT = "Target.Health%";
+
+	static final String HAS_X_FACTION = "HasXFaction";
 
 	static final Map<String, EventCondition> MISC_CONDITIONS;
 

@@ -96,6 +96,9 @@ public class EventConditionFormatter extends ConditionFormatter<EventCondition> 
 
 			case TargetTypeCondition(var creatureType) ->
 					creatureType.getName();
+
+			case HasXFaction(var factionName) ->
+					formatFunction(HAS_X_FACTION, factionName);
 		};
 	}
 

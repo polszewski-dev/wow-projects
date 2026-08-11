@@ -210,6 +210,18 @@ class EventConditionParserTest {
 			testData(
 					"Multi-Shot, Aimed Shot",
 					comma(of(AbilityId.of(MULTI_SHOT)), of(AbilityId.of(AIMED_SHOT)))
+			),
+			testData(
+					"HasXFaction(The Aldor)",
+					new HasXFaction("The Aldor")
+			),
+			testData(
+					"HasXFaction(The Scryers)",
+					new HasXFaction("The Scryers")
+			),
+			testData(
+					"Healing & HasXFaction(The Aldor)",
+					and(EventConditions.HEALING, new HasXFaction("The Aldor"))
 			)
 	);
 

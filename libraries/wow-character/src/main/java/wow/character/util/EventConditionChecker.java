@@ -52,6 +52,9 @@ public final class EventConditionChecker {
 					a.getCost() != null &&
 					a.getCost().resourceType() == MANA;
 
+			case HasXFaction(var factionName) ->
+					args.getCaster().hasExclusiveFaction(factionName);
+
 			case IsDirect() ->
 					args.isDirect();
 
