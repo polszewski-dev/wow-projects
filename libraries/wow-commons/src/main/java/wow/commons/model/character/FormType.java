@@ -10,7 +10,7 @@ import wow.commons.util.EnumUtil;
  */
 @AllArgsConstructor
 @Getter
-public enum DruidFormType {
+public enum FormType {
 	BEAR_FORM("BearForm"),
 	CAT_FORM("CatForm"),
 	MOONKIN_FORM("MoonkinForm"),
@@ -19,11 +19,11 @@ public enum DruidFormType {
 
 	private final String name;
 
-	public static DruidFormType parse(String value) {
+	public static FormType parse(String value) {
 		return EnumUtil.parse(value, values(), x -> x.name);
 	}
 
-	public static DruidFormType tryParse(String value) {
+	public static FormType tryParse(String value) {
 		return EnumUtil.tryParse(value, values(), x -> x.name);
 	}
 

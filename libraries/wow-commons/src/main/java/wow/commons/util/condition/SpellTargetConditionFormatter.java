@@ -48,8 +48,8 @@ public class SpellTargetConditionFormatter extends ConditionFormatter<SpellTarge
 			case IsClass(var classId) ->
 					CLASS + " = " + classId;
 
-			case HasDruidForm(var druidFormType) ->
-					druidFormType.getName();
+			case HasForm(var formType) ->
+					formType.getName();
 
 			case Friendly() ->
 					FRIENDLY;

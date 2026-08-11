@@ -2,7 +2,7 @@ package wow.commons.util.condition;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import wow.commons.model.character.DruidFormType;
+import wow.commons.model.character.FormType;
 import wow.commons.model.spell.SpellTargetCondition;
 
 import java.util.List;
@@ -82,7 +82,7 @@ class SpellTargetConditionParserTest {
 			),
 			testData(
 					"CatForm",
-					of(DruidFormType.CAT_FORM)
+					of(FormType.CAT_FORM)
 			),
 			testData(
 					"Friendly",

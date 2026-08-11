@@ -38,8 +38,8 @@ public final class SpellTargetConditionChecker {
 			case IsClass(var characterClassId) ->
 					target.getCharacterClassId() == characterClassId;
 
-			case HasDruidForm(var druidFormType) ->
-					target.getDruidForm() == druidFormType;
+			case HasForm(var formType) ->
+					target.getForm() == formType;
 
 			case Friendly() ->
 					caster.isFriendlyWith(target);

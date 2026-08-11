@@ -2,7 +2,7 @@ package wow.commons.util.condition;
 
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
-import wow.commons.model.character.DruidFormType;
+import wow.commons.model.character.FormType;
 import wow.commons.model.character.PetType;
 import wow.commons.model.spell.SpellTargetCondition;
 
@@ -68,10 +68,10 @@ public class SpellTargetConditionParser extends ConditionParser<SpellTargetCondi
 			return hasEffect;
 		}
 
-		var druidFormType = DruidFormType.tryParse(value);
+		var formType = FormType.tryParse(value);
 
-		if (druidFormType != null) {
-			return SpellTargetCondition.of(druidFormType);
+		if (formType != null) {
+			return SpellTargetCondition.of(formType);
 		}
 
 		if (FRIENDLY.equalsIgnoreCase(value)) {

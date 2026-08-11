@@ -206,8 +206,8 @@ public interface Character extends CharacterInfo, EffectCollection {
 		return MovementType.RUNNING;
 	}
 
-	default DruidFormType getDruidForm() {//todo
-		return null;
+	default FormType getForm() {
+		return FormType.CASTER_FORM;
 	}
 
 	default boolean hasEffect(String effectName) {

@@ -3,7 +3,7 @@ package wow.commons.model.spell;
 import wow.commons.model.Condition;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
-import wow.commons.model.character.DruidFormType;
+import wow.commons.model.character.FormType;
 import wow.commons.model.character.PetType;
 
 import java.util.List;
@@ -30,8 +30,8 @@ public sealed interface SpellTargetCondition extends Condition {
 		return new HasActivePet(petType);
 	}
 
-	static SpellTargetCondition of(DruidFormType druidFormType) {
-		return new HasDruidForm(druidFormType);
+	static SpellTargetCondition of(FormType formType) {
+		return new HasForm(formType);
 	}
 
 	static Or or(SpellTargetCondition left, SpellTargetCondition right) {
@@ -135,9 +135,9 @@ public sealed interface SpellTargetCondition extends Condition {
 		}
 	}
 
-	record HasDruidForm(DruidFormType druidFormType) implements SpellTargetCondition {
-		public HasDruidForm {
-			Objects.requireNonNull(druidFormType);
+	record HasForm(FormType formType) implements SpellTargetCondition {
+		public HasForm {
+			Objects.requireNonNull(formType);
 		}
 	}
 
