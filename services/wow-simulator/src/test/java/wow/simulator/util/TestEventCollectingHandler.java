@@ -345,7 +345,7 @@ public class TestEventCollectingHandler implements GameLogHandler, TimeAware {
 				.filter(x -> x.caster() == caster && x.spell().equals(abilityName));
 	}
 
-	public Stream<BeginCast> getBeginCastEvents(String abilityName, Player caster, Unit target) {
+	public Stream<BeginCast> getBeginCastEvents(String abilityName, Unit caster, Unit target) {
 		return getBeginCastEvents()
 				.filter(x -> x.caster() == caster && x.spell().equals(abilityName))
 				.filter(x -> targetIs(x, target));

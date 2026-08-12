@@ -14,11 +14,13 @@ import static java.util.stream.Collectors.groupingBy;
  * Date: 12.08.2026
  */
 public record AssetExecutionPlan<P extends PlayerCharacter>(
+		List<AssetExecution<P>> summonExecutions,
 		List<AssetExecution<P>> personalExecutions,
 		List<AssetExecution<P>> partyExecutions,
 		List<AssetExecution<P>> raidExecutions
 ) {
 	public AssetExecutionPlan {
+		Objects.requireNonNull(summonExecutions);
 		Objects.requireNonNull(personalExecutions);
 		Objects.requireNonNull(partyExecutions);
 		Objects.requireNonNull(partyExecutions);
@@ -32,6 +34,12 @@ public record AssetExecutionPlan<P extends PlayerCharacter>(
 						raidExecutions.stream()
 				)
 		).toList();
+	}
+
+	public Map<P, List<AssetExecution<P>>> summonsByPlayer() {
+		return summonExecutions.stream().collect(groupingBy(
+				AssetExecution::player
+		));
 	}
 
 	public Map<P, List<AssetExecution<P>>> buffsByPlayer() {

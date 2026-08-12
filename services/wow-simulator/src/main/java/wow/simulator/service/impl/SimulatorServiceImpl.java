@@ -89,8 +89,11 @@ public class SimulatorServiceImpl implements SimulatorService {
 		var executionPlan = assetService.getAssetExecutionPlan(raid);
 
 		executeAndThen(
-				executionPlan.buffsByPlayer(),
-				() -> finalizeBuffStage(raid)
+				executionPlan.summonsByPlayer(),
+				() -> executeAndThen(
+						executionPlan.buffsByPlayer(),
+						() -> finalizeBuffStage(raid)
+				)
 		);
 	}
 

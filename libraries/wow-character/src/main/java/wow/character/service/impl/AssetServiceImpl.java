@@ -24,15 +24,26 @@ import static wow.character.model.asset.Asset.Scope.*;
 public class AssetServiceImpl implements AssetService {
 	@Override
 	public <P extends PlayerCharacter> AssetExecutionPlan<P> getAssetExecutionPlan(Raid<P> raid) {
+		var summonExecutions = getSummonExecutions(raid);
 		var personalExecutions = getPersonalExecutions(raid);
 		var partyExecutions = getPartyExecutions(raid);
 		var raidExecutions = getRaidExecutions(raid);
 
 		return new AssetExecutionPlan<>(
+				summonExecutions,
 				personalExecutions,
 				partyExecutions,
 				raidExecutions
 		);
+	}
+
+	private <P extends PlayerCharacter> List<AssetExecution<P>> getSummonExecutions(Raid<P> raid) {
+		var execFactory = new ExecutionFactory<P>();
+
+		return raid.getMembers().stream()
+				.map(member -> execFactory.getExecutions(List.of(member), PERSONAL_SUMMON))
+				.flatMap(List::stream)
+				.toList();
 	}
 
 	private <P extends PlayerCharacter> List<AssetExecution<P>> getPersonalExecutions(Raid<P> raid) {

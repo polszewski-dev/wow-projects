@@ -59,6 +59,7 @@ public class PlayerServiceImpl implements PlayerService {
 
 	private boolean affectsPlayer(AssetExecution<Player> execution, Raid<Player> raid) {
 		return switch (execution.scope()) {
+			case PERSONAL_SUMMON -> false;
 			case PERSONAL -> execution.player() == raid.getFirstMember();
 			case PARTY -> raid.getFirstParty().has(execution.player());
 			case RAID -> true;

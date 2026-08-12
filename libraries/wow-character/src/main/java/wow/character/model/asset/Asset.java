@@ -42,6 +42,7 @@ public record Asset(
 	}
 
 	public enum Scope {
+		PERSONAL_SUMMON,
 		PERSONAL,
 		PARTY,
 		RAID,

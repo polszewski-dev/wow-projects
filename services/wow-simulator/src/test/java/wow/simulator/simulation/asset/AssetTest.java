@@ -75,7 +75,11 @@ public abstract class AssetTest extends WowSimulatorSpringTest {
 	protected void afterSetUp() {}
 
 	protected void assertSpellCast(double time, String abilityName, Unit target) {
-		var event = handler.getBeginCastEvents(abilityName, partyAsset, target)
+		assertSpellCast(time, abilityName, partyAsset, target);
+	}
+
+	protected void assertSpellCast(double time, String abilityName, Unit caster, Unit target) {
+		var event = handler.getBeginCastEvents(abilityName, caster, target)
 				.filter(x -> x.time().secondsSinceZero() == time)
 				.findFirst();
 
