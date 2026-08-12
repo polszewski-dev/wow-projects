@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import wow.character.model.asset.Asset;
 import wow.character.model.asset.AssetExecution;
+import wow.character.model.asset.AssetExecutionPlan;
 import wow.character.model.character.PlayerCharacter;
 import wow.character.model.character.Raid;
 import wow.character.service.AssetService;
@@ -22,18 +23,16 @@ import static wow.character.model.asset.Asset.Scope.*;
 @AllArgsConstructor
 public class AssetServiceImpl implements AssetService {
 	@Override
-	public <P extends PlayerCharacter> List<AssetExecution<P>> getAssetExecutionPlan(Raid<P> raid) {
+	public <P extends PlayerCharacter> AssetExecutionPlan<P> getAssetExecutionPlan(Raid<P> raid) {
 		var personalExecutions = getPersonalExecutions(raid);
 		var partyExecutions = getPartyExecutions(raid);
 		var raidExecutions = getRaidExecutions(raid);
 
-		var result = new ArrayList<AssetExecution<P>>();
-
-		result.addAll(personalExecutions);
-		result.addAll(partyExecutions);
-		result.addAll(raidExecutions);
-
-		return result;
+		return new AssetExecutionPlan<>(
+				personalExecutions,
+				partyExecutions,
+				raidExecutions
+		);
 	}
 
 	private <P extends PlayerCharacter> List<AssetExecution<P>> getPersonalExecutions(Raid<P> raid) {

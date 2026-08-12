@@ -8,7 +8,6 @@ import wow.character.service.AssetService;
 import wow.character.service.CharacterCalculationService;
 import wow.character.service.CharacterService;
 import wow.commons.model.Duration;
-import wow.commons.model.spell.AbilityId;
 import wow.commons.repository.spell.SpellRepository;
 import wow.simulator.client.dto.RngType;
 import wow.simulator.log.GameLog;
@@ -22,15 +21,13 @@ import wow.simulator.model.unit.Player;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.update.Scheduler;
 import wow.simulator.script.ScriptParams;
-import wow.simulator.script.SinglePassScriptExecutor;
 import wow.simulator.service.SimulatorService;
 import wow.simulator.simulation.Simulation;
 import wow.simulator.simulation.SimulationContext;
+import wow.simulator.util.CountdownCounter;
 
 import java.util.List;
-
-import static wow.character.model.asset.Asset.*;
-import static wow.character.model.script.ScriptSectionType.PREPARATION;
+import java.util.Map;
 
 /**
  * User: POlszewski
@@ -45,6 +42,7 @@ public class SimulatorServiceImpl implements SimulatorService {
 	private final SpellRepository spellRepository;
 
 	private static final Duration PREP_PHASE_DURATION = Duration.seconds(60);
+	private static final Time PREP_PHASE_END_TIME = Time.ZERO.add(PREP_PHASE_DURATION);
 
 	private static final String BONUS_HP5 = "Bonus Hp5";
 	private static final String BONUS_MP5 = "Bonus Mp5";
@@ -64,116 +62,84 @@ public class SimulatorServiceImpl implements SimulatorService {
 
 		simulation.addHandlers(handlers);
 
-		buffRaid(raid, target);
+		executeAssets(raid);
 
 		simulation.updateFor(PREP_PHASE_DURATION.add(duration));
 		simulation.finish();
 	}
 
 	private Simulation createSimulation(Raid<Player> raid, Unit target, SimulationContext simulationContext) {
-		var mainPlayer = raid.getFirstMember();
 		var simulation = new Simulation(simulationContext);
-
-		mainPlayer.setupScript(mainPlayer);
-
-		target.whenNoActionIdleForever();
 
 		simulation.add(target);
 
+		target.whenNoActionIdleForever();
+
 		raid.forEach(raidMember -> {
-			raidMember.setTarget(target);
 			simulation.add(raidMember);
-			raidMember.addHiddenEffect(BONUS_HP5, 5000);
-			raidMember.addHiddenEffect(BONUS_MP5, 5000);
+			raidMember.setTarget(target);
 		});
 
 		return simulation;
 	}
 
-	private void buffRaid(Raid<Player> raid, Unit targetEnemy) {
-		applyHiddenEffects(raid);
+	private void executeAssets(Raid<Player> raid) {
+		applyTemporaryEffects(raid);
 
 		var executionPlan = assetService.getAssetExecutionPlan(raid);
 
-		for (var command : executionPlan) {
-			executeBuffCommand(command, targetEnemy);
-		}
-
-		idleUntilPrepEnd(raid);
+		executeAndThen(
+				executionPlan.buffsByPlayer(),
+				() -> finalizeBuffStage(raid)
+		);
 	}
 
-	private void applyHiddenEffects(Raid<Player> raid) {
-		var prepPhaseBuffDuration = PREP_PHASE_DURATION.subtract(Duration.millis(1));
-
-		raid.forEach(raidMember -> {
-			raidMember.addHiddenEffect(INFINITE_RESOURCES, 1, prepPhaseBuffDuration);
-			raidMember.addHiddenEffect(INFINITE_BUFFS, 1, prepPhaseBuffDuration);
+	private void applyTemporaryEffects(Raid<Player> raid) {
+		raid.forEachMemberOrPet((Unit memberOrPet) -> {
+			memberOrPet.addHiddenEffect(INFINITE_RESOURCES, 1);
+			memberOrPet.addHiddenEffect(INFINITE_BUFFS, 1);
 		});
 	}
 
-	private void idleUntilPrepEnd(Raid<Player> raid) {
-		var prepPhaseEndTime = Time.ZERO.add(PREP_PHASE_DURATION);
+	private void finalizeBuffStage(Raid<Player> raid) {
+		raid.forEachMemberOrPet((Unit memberOrPet) -> {
+			memberOrPet.removeEffect(INFINITE_RESOURCES);
+			memberOrPet.removeEffect(INFINITE_BUFFS);
 
-		raid.forEach(raidMember -> {
-			raidMember.idleUntil(prepPhaseEndTime);
-			raidMember.immediateAction(this::cleanUp);
+			memberOrPet.addHiddenEffect(BONUS_HP5, 5000);
+			memberOrPet.addHiddenEffect(BONUS_MP5, 5000);
+
+			memberOrPet.setHealthToMax();
+			memberOrPet.setManaToMax();
+
+			var mainPlayer = raid.getFirstMember();
+
+			if (memberOrPet == mainPlayer || memberOrPet == mainPlayer.getActivePet()) {
+				memberOrPet.setupScript(null);
+			} else {
+				memberOrPet.whenNoActionIdleForever();
+			}
+
+			memberOrPet.idleUntil(PREP_PHASE_END_TIME);
 		});
 	}
 
-	private void executeBuffCommand(AssetExecution<Player> command, Unit targetEnemy) {
-		var player = command.player();
-		var asset = command.asset();
-
-		if (asset.buffCommand() == null) {
+	private void executeAndThen(Map<Player, List<AssetExecution<Player>>> executionsByPlayer, Runnable finalAction) {
+		if (executionsByPlayer.isEmpty()) {
+			finalAction.run();
 			return;
 		}
 
-		switch (asset.buffCommand()) {
-			case CastAbility(var target, var abilityId) ->
-					execCastAbility(player, abilityId, target, targetEnemy);
+		var counter = new CountdownCounter(executionsByPlayer.size(), finalAction);
 
-			case ExecuteScript(var target, var scriptName) ->
-					executeScript(player, scriptName, target);
+		for (var entry : executionsByPlayer.entrySet()) {
+			var player = entry.getKey();
+			var params = new ScriptParams(player, null);
+			var executions = entry.getValue();
+			var executor = new AssetExecutor(params, executions, counter);
+
+			executor.execute();
 		}
-	}
-
-	private void execCastAbility(Player player, AbilityId abilityId, BuffTarget target, Unit targetEnemy) {
-		switch (target) {
-			case EACH_RAID_MEMBER ->
-					player.getRaid().forEach(member -> player.cast(abilityId, member));
-
-			case EACH_PARTY_FIRST_MEMBER ->
-					player.getRaid().getParties().forEach(party -> {
-						var firstMember = party.getFirstMember();
-
-						if (firstMember != null) {
-							player.cast(abilityId, firstMember);
-						}
-					});
-
-			case SELF ->
-					player.cast(abilityId, player);
-
-			case TARGET_ENEMY ->
-					player.cast(abilityId, targetEnemy);
-		}
-	}
-
-	private void executeScript(Player player, String scriptName, BuffTarget target) {
-		if (target != BuffTarget.SELF) {
-			throw new IllegalArgumentException();
-		}
-
-		var params = new ScriptParams(player, player);
-		var scriptExecutor = new SinglePassScriptExecutor(scriptName, PREPARATION, params);
-
-		scriptExecutor.setupPlayer();
-		scriptExecutor.execute();
-	}
-
-	private void cleanUp(Unit unit) {
-		unit.setHealthToMax();
-		unit.setManaToMax();
 	}
 
 	private SimulationContext createSimulationContext(RngType rngType) {

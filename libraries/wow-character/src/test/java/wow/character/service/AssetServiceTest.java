@@ -36,7 +36,7 @@ class AssetServiceTest extends WowCharacterSpringTest {
 
 		var executionPlan = assetService.getAssetExecutionPlan(raid);
 
-		var actual = executionPlan.stream()
+		var actual = executionPlan.buffs().stream()
 				.map(x -> new Cast(x.player().getName(), x.name()))
 				.toList();
 

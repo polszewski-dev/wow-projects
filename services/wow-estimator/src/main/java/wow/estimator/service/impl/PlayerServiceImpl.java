@@ -3,6 +3,7 @@ package wow.estimator.service.impl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.character.model.asset.AssetExecution;
+import wow.character.model.asset.AssetExecutionPlan;
 import wow.character.model.character.Raid;
 import wow.character.service.AssetService;
 import wow.character.service.CharacterCalculationService;
@@ -44,10 +45,10 @@ public class PlayerServiceImpl implements PlayerService {
 		return player;
 	}
 
-	private List<AssetExecution<Player>> getExecutionsAffectingPlayer(List<AssetExecution<Player>> executionPlan, Raid<Player> raid) {
+	private List<AssetExecution<Player>> getExecutionsAffectingPlayer(AssetExecutionPlan<Player> executionPlan, Raid<Player> raid) {
 		var result = new ArrayList<AssetExecution<Player>>();
 
-		for (var execution : executionPlan) {
+		for (var execution : executionPlan.buffs()) {
 			if (affectsPlayer(execution, raid)) {
 				result.add(execution);
 			}
