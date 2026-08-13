@@ -171,9 +171,9 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	}
 
 	@Override
-	public void setupScript(Player mainPlayer) {
+	public void setupScript() {
 		var scriptPath = ScriptPathResolver.getScriptPath(this);
-		var params = new ScriptParams(this, mainPlayer);
+		var params = new ScriptParams(this);
 		var scriptExecutor = new ScriptExecutor(scriptPath, params);
 
 		setOnPendingActionQueueEmpty(x -> scriptExecutor.execute());

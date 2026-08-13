@@ -40,7 +40,7 @@ class AssetExecutor {
 				.flatMap(this::executeBuffCommand)
 				.toList();
 
-		var params = new ScriptParams(player, null);
+		var params = new ScriptParams(player);
 		var scriptExecutor = new SinglePassScriptExecutor(params, commands);
 
 		scriptExecutor.setFinalAction(finalAction);

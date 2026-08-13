@@ -40,7 +40,7 @@ public interface Unit extends Character, SimulationContextSource {
 
 	void setOnPendingActionQueueEmpty(Consumer<Unit> onPendingActionQueueEmpty);
 
-	void setupScript(Player mainPlayer);
+	void setupScript();
 
 	void whenNoActionIdleForever();
 

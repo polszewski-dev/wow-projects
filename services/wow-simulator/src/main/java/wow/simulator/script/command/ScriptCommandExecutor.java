@@ -2,7 +2,6 @@ package wow.simulator.script.command;
 
 import wow.character.model.script.ScriptCommand;
 import wow.character.model.script.ScriptCommandTarget;
-import wow.simulator.model.unit.Player;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.script.ScriptParams;
 
@@ -15,11 +14,9 @@ import static wow.character.model.script.ScriptCommand.ComposableCommand;
  */
 public abstract class ScriptCommandExecutor {
 	protected final Unit caster;
-	protected final Player mainPlayer;
 
 	protected ScriptCommandExecutor(ScriptParams params) {
 		this.caster = params.caster();
-		this.mainPlayer = params.mainPlayer();
 	}
 
 	public static ScriptCommandExecutor create(ScriptCommand command, ScriptParams params) {
@@ -44,7 +41,6 @@ public abstract class ScriptCommandExecutor {
 			case DEFAULT -> null;
 			case SELF -> getActualCaster();
 			case TARGET -> getActualCaster().getTarget();
-			case MAIN -> mainPlayer;
 		};
 	}
 }

@@ -140,7 +140,7 @@ public class SimulatorServiceImpl implements SimulatorService {
 		if (summonExecutions == null) {
 			endStep.run();
 		} else {
-			var params = new ScriptParams(player, null);
+			var params = new ScriptParams(player);
 			var executor = new AssetExecutor(params, summonExecutions, endStep);
 
 			executor.execute();
@@ -165,7 +165,7 @@ public class SimulatorServiceImpl implements SimulatorService {
 		memberOrPet.setManaToMax();
 
 		if (memberOrPet.getScript() != null) {
-			memberOrPet.setupScript(null);
+			memberOrPet.setupScript();
 		} else {
 			memberOrPet.whenNoActionIdleForever();
 		}

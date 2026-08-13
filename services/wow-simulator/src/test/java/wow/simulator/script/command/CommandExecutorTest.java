@@ -28,7 +28,7 @@ abstract class CommandExecutorTest extends TbcWarlockSpellSimulationTest {
 
 	CastSpellExecutor getCastSpellExecutor(String abilityName) {
 		var command = castSpell(abilityName);
-		var params = new ScriptParams(player, player);
+		var params = new ScriptParams(player);
 
 		return CastSpellExecutor.create(command, params);
 	}
@@ -45,14 +45,14 @@ abstract class CommandExecutorTest extends TbcWarlockSpellSimulationTest {
 
 	CastSpellRankExecutor getCastSpellRankExecutor(String abilityName, int rank) {
 		var command = castSpellRank(abilityName, rank);
-		var params = new ScriptParams(player, player);
+		var params = new ScriptParams(player);
 
 		return CastSpellRankExecutor.create(command, params);
 	}
 
 	UseItemExecutor getUseItemExecutor(ItemSlot itemSlot) {
 		var command = useItem(itemSlot);
-		var params = new ScriptParams(player, player);
+		var params = new ScriptParams(player);
 
 		return UseItemExecutor.create(command, params);
 	}
@@ -68,7 +68,7 @@ abstract class CommandExecutorTest extends TbcWarlockSpellSimulationTest {
 
 	CastSequenceExecutor getCastSequenceExecutor(ComposableCommand... commands) {
 		var castSequence = new CastSequence(List.of(commands));
-		var params = new ScriptParams(player, player);
+		var params = new ScriptParams(player);
 
 		return CastSequenceExecutor.create(castSequence, params);
 	}
