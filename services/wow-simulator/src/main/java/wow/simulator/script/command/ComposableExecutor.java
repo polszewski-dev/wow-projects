@@ -19,20 +19,17 @@ import static wow.character.model.script.ScriptCommand.*;
 public abstract class ComposableExecutor extends ScriptCommandExecutor {
 	protected final ScriptCommandCondition commandCondition;
 	protected final ScriptCommandTarget commandTarget;
-	protected final Ability ability;
 	@Getter
 	protected final boolean optional;
 
 	protected ComposableExecutor(
 			ScriptParams params,
 			ScriptCommandCondition commandCondition,
-			Ability ability,
 			ScriptCommandTarget commandTarget,
 			boolean optional
 	) {
 		super(params);
 		this.commandCondition = commandCondition;
-		this.ability = ability;
 		this.commandTarget = commandTarget;
 		this.optional = optional;
 	}
@@ -41,21 +38,19 @@ public abstract class ComposableExecutor extends ScriptCommandExecutor {
 		return switch (command) {
 			case CastSpell castSpell -> CastSpellExecutor.create(castSpell, params);
 			case CastSpellRank castSpellRank -> CastSpellRankExecutor.create(castSpellRank, params);
+			case CastPetSpell castPetSpell -> CastPetSpellExecutor.create(castPetSpell, params);
 			case UseItem useItem -> UseItemExecutor.create(useItem, params);
 		};
 	}
 
-	@Override
-	public boolean isValid() {
-		return ability != null;
-	}
+	protected abstract Ability getAbility();
 
 	@Override
 	public boolean allConditionsAreMet() {
 		var target = getTarget(commandTarget);
 
 		return isConditionMet(commandCondition, target) &&
-				caster.canCast(ability, target) &&
+				getActualCaster().canCast(getAbility(), target) &&
 				shouldCast(target);
 	}
 
@@ -63,7 +58,7 @@ public abstract class ComposableExecutor extends ScriptCommandExecutor {
 	public void execute() {
 		var target = getTarget(commandTarget);
 
-		caster.cast(ability.getAbilityId(), target);
+		getActualCaster().cast(getAbility().getAbilityId(), target);
 	}
 
 	private boolean isConditionMet(ScriptCommandCondition condition, Unit target) {
@@ -71,15 +66,19 @@ public abstract class ComposableExecutor extends ScriptCommandExecutor {
 			return true;
 		}
 
-		var primaryTarget = caster.getPrimaryTarget(ability, target);
-		var conditionChecker = new ScriptConditionChecker(caster, ability, primaryTarget.requireSingleTarget());
+		var actualCaster = getActualCaster();
+		var ability = getAbility();
+		var primaryTarget = actualCaster.getPrimaryTarget(ability, target);
+		var conditionChecker = new ScriptConditionChecker(actualCaster, ability, primaryTarget.requireSingleTarget());
 
 		return conditionChecker.check(condition);
 	}
 
 	private boolean shouldCast(Unit target) {
-		var remainingSimulationTime = caster.getSimulation().getRemainingTime();
-		var castTime = Duration.seconds(caster.getSpellCastSnapshot(ability).getCastTime());
+		var actualCaster = getActualCaster();
+		var ability = getAbility();
+		var remainingSimulationTime = actualCaster.getSimulation().getRemainingTime();
+		var castTime = Duration.seconds(actualCaster.getSpellCastSnapshot(ability).getCastTime());
 
 		if (castTime.compareTo(remainingSimulationTime) > 0) {
 			return false;
@@ -89,7 +88,7 @@ public abstract class ComposableExecutor extends ScriptCommandExecutor {
 			return true;
 		}
 
-		var primaryTarget = caster.getPrimaryTarget(ability, target);
+		var primaryTarget = actualCaster.getPrimaryTarget(ability, target);
 
 		target = primaryTarget.requireSingleTarget();
 
@@ -99,13 +98,16 @@ public abstract class ComposableExecutor extends ScriptCommandExecutor {
 			return false;
 		}
 
-		var effectDuration = caster.getEffectDurationSnapshot(ability, target).getDuration();
+		var effectDuration = actualCaster.getEffectDurationSnapshot(ability, target).getDuration();
 
 		return castTime.add(effectDuration).compareTo(remainingSimulationTime) <= 0;
 	}
 
 	private AnyDuration getRemainingEffectDuration(Unit target) {
-		return target.getEffect(ability.getAbilityId(), caster)
+		var actualCaster = getActualCaster();
+		var ability = getAbility();
+
+		return target.getEffect(ability.getAbilityId(), actualCaster)
 				.map(EffectInstance::getRemainingDuration)
 				.orElse(Duration.ZERO);
 	}

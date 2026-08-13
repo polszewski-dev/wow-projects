@@ -54,6 +54,9 @@ public class RotationTemplate {
 				abilityIds.add(castSpell.abilityId());
 			case CastSpellRank castSpellRank ->
 				abilityIds.add(AbilityId.of(castSpellRank.abilityName()));
+			case CastPetSpell ignored -> {
+				// ignore
+			}
 			case UseItem ignored -> {
 				// ignore
 			}

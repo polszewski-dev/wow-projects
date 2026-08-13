@@ -160,6 +160,15 @@ public class ScriptCompiler {
 			);
 		}
 
+		if (abilityId.isPetAbility()) {
+			return new CastPetSpell(
+					condition,
+					abilityId,
+					target,
+					optional
+			);
+		}
+
 		return new CastSpell(
 				condition,
 				abilityId,

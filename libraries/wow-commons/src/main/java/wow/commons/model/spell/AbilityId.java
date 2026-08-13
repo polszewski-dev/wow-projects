@@ -46,6 +46,10 @@ public record AbilityId(String name) implements Comparable<AbilityId> {
 		return CACHE.get(value);
 	}
 
+	public boolean isPetAbility() {
+		return PET_ABILITY_IDS.contains(this);
+	}
+
 	@Override
 	public int compareTo(AbilityId other) {
 		return this.name.compareTo(other.name);
@@ -61,6 +65,7 @@ public record AbilityId(String name) implements Comparable<AbilityId> {
 	}
 
 	private static final Map<String, AbilityId> CACHE = new HashMap<>();
+	private static final Set<AbilityId> PET_ABILITY_IDS = new HashSet<>();
 
 	static {
 		populateCache();
@@ -99,6 +104,9 @@ public record AbilityId(String name) implements Comparable<AbilityId> {
 
 			if (type == CLASS_ABILITY || type == PET_ABILITY || type == RACIAL_ABILITY || type == ACTIVATED_ABILITY) {
 				CACHE.computeIfAbsent(name, AbilityId::new);
+				if (type == PET_ABILITY) {
+					PET_ABILITY_IDS.add(CACHE.get(name));
+				}
 			}
 		}
 

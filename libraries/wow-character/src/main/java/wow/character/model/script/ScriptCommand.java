@@ -14,7 +14,7 @@ import java.util.Objects;
  * Date: 2025-09-17
  */
 public sealed interface ScriptCommand {
-	sealed interface ComposableCommand extends ScriptCommand permits CastSpell, CastSpellRank, UseItem {
+	sealed interface ComposableCommand extends ScriptCommand permits CastSpell, CastSpellRank, CastPetSpell, UseItem {
 		boolean optional();
 	}
 
@@ -39,6 +39,14 @@ public sealed interface ScriptCommand {
 
 		public Ability getAbility(Character character) {
 			return character.getAbility(abilityName, rank).orElse(null);
+		}
+	}
+
+	record CastPetSpell(ScriptCommandCondition condition, AbilityId abilityId, ScriptCommandTarget target, boolean optional) implements ComposableCommand {
+		public CastPetSpell {
+			Objects.requireNonNull(condition);
+			Objects.requireNonNull(abilityId);
+			Objects.requireNonNull(target);
 		}
 	}
 

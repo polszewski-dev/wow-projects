@@ -35,11 +35,15 @@ public abstract class ScriptCommandExecutor {
 
 	public abstract void execute();
 
+	protected Unit getActualCaster() {
+		return caster;
+	}
+
 	protected Unit getTarget(ScriptCommandTarget target) {
 		return switch (target) {
 			case DEFAULT -> null;
-			case SELF -> caster;
-			case TARGET -> caster.getTarget();
+			case SELF -> getActualCaster();
+			case TARGET -> getActualCaster().getTarget();
 			case MAIN -> mainPlayer;
 		};
 	}

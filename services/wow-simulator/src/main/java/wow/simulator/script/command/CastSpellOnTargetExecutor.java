@@ -10,7 +10,7 @@ import static wow.character.model.script.ScriptCommand.CastSpell;
  * User: POlszewski
  * Date: 2025-09-18
  */
-public class CastSpellOnTargetExecutor extends ComposableExecutor {
+public class CastSpellOnTargetExecutor extends StaticExecutor {
 	private final Unit actualTarget;
 
 	private CastSpellOnTargetExecutor(CastSpell command, Unit actualTarget, ScriptParams params) {
