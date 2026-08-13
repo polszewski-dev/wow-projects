@@ -1,7 +1,6 @@
 package wow.simulator.service.impl;
 
 import wow.character.model.asset.AssetExecution;
-import wow.character.model.character.Party;
 import wow.character.model.script.ScriptCommand;
 import wow.character.model.script.ScriptCommandCondition;
 import wow.character.model.script.ScriptCommandTarget;
@@ -14,9 +13,8 @@ import wow.simulator.script.command.CastSpellOnTargetExecutor;
 import wow.simulator.script.command.ScriptCommandExecutor;
 import wow.simulator.util.CountdownCounter;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.stream.Stream;
 
 import static wow.character.model.asset.Asset.*;
 import static wow.character.model.script.ScriptSectionType.PREPARATION;
@@ -39,11 +37,9 @@ class AssetExecutor {
 	}
 
 	void execute() {
-		var commands = new ArrayList<ScriptCommandExecutor>();
-
-		for (var execution : executions) {
-			commands.addAll(executeBuffCommand(execution));
-		}
+		var commands = executions.stream()
+				.flatMap(this::executeBuffCommand)
+				.toList();
 
 		var params = new ScriptParams(player, null);
 		var scriptExecutor = new SinglePassScriptExecutor(params, commands);
@@ -52,11 +48,11 @@ class AssetExecutor {
 		scriptExecutor.execute();
 	}
 
-	private List<ScriptCommandExecutor> executeBuffCommand(AssetExecution<Player> command) {
+	private Stream<ScriptCommandExecutor> executeBuffCommand(AssetExecution<Player> command) {
 		var asset = command.asset();
 
 		if (asset.buffCommand() == null) {
-			return List.of();
+			return Stream.of();
 		}
 
 		return switch (asset.buffCommand()) {
@@ -68,32 +64,21 @@ class AssetExecutor {
 		};
 	}
 
-	private List<ScriptCommandExecutor> execCastAbility(AbilityId abilityId, BuffTarget target) {
+	private Stream<ScriptCommandExecutor> execCastAbility(AbilityId abilityId, BuffTarget target) {
 		return switch (target) {
-			case EACH_RAID_MEMBER -> {
-				var result = new ArrayList<ScriptCommandExecutor>();
-
-				player.getRaid().forEachMemberAndPet((Unit memberOrPet) -> {
-					var executor = castExecutor(abilityId, memberOrPet);
-
-					result.add(executor);
-				});
-
-				yield result;
-			}
+			case EACH_RAID_MEMBER ->
+					player.getRaid().<Unit>getEachMemberAndPetStream()
+							.map(memberOrPet -> castExecutor(abilityId, memberOrPet));
 
 			case EACH_PARTY_FIRST_MEMBER ->
-					player.getRaid().getParties().stream()
-							.map(Party::getFirstMember)
-							.filter(Objects::nonNull)
-							.map(firstMember -> castExecutor(abilityId, firstMember))
-							.toList();
+					player.getRaid().getEachPartyFirsMemberStream()
+							.map(firstMember -> castExecutor(abilityId, firstMember));
 
 			case SELF ->
-					List.of(castExecutor(abilityId, player));
+					Stream.of(castExecutor(abilityId, player));
 
 			case TARGET_ENEMY ->
-					List.of(castExecutor(abilityId, player.getTarget()));
+					Stream.of(castExecutor(abilityId, player.getTarget()));
 		};
 	}
 
@@ -105,13 +90,13 @@ class AssetExecutor {
 		return CastSpellOnTargetExecutor.create(command, target, params);
 	}
 
-	private List<ScriptCommandExecutor> executeScript(String scriptName, BuffTarget target) {
+	private Stream<ScriptCommandExecutor> executeScript(String scriptName, BuffTarget target) {
 		if (target != BuffTarget.SELF) {
 			throw new IllegalArgumentException();
 		}
 
 		var scriptExecutor = SinglePassScriptExecutor.compileScript(scriptName, PREPARATION, params);
 
-		return scriptExecutor.getCommands();
+		return scriptExecutor.getCommands().stream();
 	}
 }

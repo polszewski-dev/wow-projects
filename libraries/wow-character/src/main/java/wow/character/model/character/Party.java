@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 /**
  * User: POlszewski
@@ -87,5 +88,15 @@ public class Party<M extends Character> {
 				consumer.accept((M) activePet);
 			}
 		}
+	}
+
+	public <T extends Character> Stream<T> getEachMemberAndPetStream() {
+		return members.stream()
+				.map(member -> member.getActivePet() != null
+						? List.of(member, member.getActivePet())
+						: List.of(member)
+				)
+				.flatMap(List::stream)
+				.map(memberOrPet -> (T) memberOrPet);
 	}
 }
