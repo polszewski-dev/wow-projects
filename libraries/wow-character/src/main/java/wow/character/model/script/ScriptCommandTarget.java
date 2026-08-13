@@ -8,4 +8,5 @@ public enum ScriptCommandTarget {
 	DEFAULT,
 	SELF,
 	TARGET,
+	MASTER
 }
