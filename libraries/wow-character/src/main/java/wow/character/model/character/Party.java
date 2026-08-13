@@ -77,7 +77,7 @@ public class Party<M extends Character> {
 		members.forEach(consumer);
 	}
 
-	public void forEachMemberOrPet(Consumer<? super  M> consumer) {
+	public void forEachMemberAndPet(Consumer<? super  M> consumer) {
 		for (M member : members) {
 			consumer.accept(member);
 

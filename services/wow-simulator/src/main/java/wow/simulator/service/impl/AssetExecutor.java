@@ -73,7 +73,7 @@ class AssetExecutor {
 			case EACH_RAID_MEMBER -> {
 				var result = new ArrayList<ScriptCommandExecutor>();
 
-				player.getRaid().forEachMemberOrPet((Unit memberOrPet) -> {
+				player.getRaid().forEachMemberAndPet((Unit memberOrPet) -> {
 					var executor = castExecutor(abilityId, memberOrPet);
 
 					result.add(executor);

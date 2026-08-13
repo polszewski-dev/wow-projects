@@ -107,7 +107,7 @@ public class EventContext {
 	public static void firePetDismissed(Unit caster, Pet pet, Spell spell, Context parentContext) {
 		var context = new EventContext(caster, pet, spell, parentContext);
 
-		context.fireEvent(PET_DISMISS);
+		context.fireEvent(PET_DISMISSED);
 	}
 
 	public static void firePetSacrificed(Unit caster, Pet pet, Spell spell, Context parentContext) {

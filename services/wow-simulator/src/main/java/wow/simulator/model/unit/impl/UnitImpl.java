@@ -742,7 +742,7 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	public void summonPet(PetType petType, Spell sourceSpell) {
 		dismissPet();
 
-		var petName = "%s's Pet".formatted(getName());
+		var petName = "%s's %s".formatted(getName(), petType.getName());
 		var pet = getCharacterService().createPetCharacter(petName, petType, this, sourceSpell, PetImpl::new);
 
 		getCharacterService().applyDefaultCharacterTemplate(pet);
@@ -797,7 +797,7 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	private void collectAurasFromOtherPartyMembers(EffectCollector collector) {
 		var auraCollector = new AuraCollector(this, collector);
 
-		getParty().forEachMemberOrPet(memberOrPet -> {
+		getParty().forEachMemberAndPet(memberOrPet -> {
 			if (memberOrPet != this) {
 				memberOrPet.collectAuras(auraCollector);
 			}

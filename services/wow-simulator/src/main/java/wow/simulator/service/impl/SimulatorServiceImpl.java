@@ -98,14 +98,14 @@ public class SimulatorServiceImpl implements SimulatorService {
 	}
 
 	private void applyTemporaryEffects(Raid<Player> raid) {
-		raid.forEachMemberOrPet((Unit memberOrPet) -> {
+		raid.forEachMemberAndPet((Unit memberOrPet) -> {
 			memberOrPet.addHiddenEffect(INFINITE_RESOURCES, 1);
 			memberOrPet.addHiddenEffect(INFINITE_BUFFS, 1);
 		});
 	}
 
 	private void finalizeBuffStage(Raid<Player> raid) {
-		raid.forEachMemberOrPet((Unit memberOrPet) -> {
+		raid.forEachMemberAndPet((Unit memberOrPet) -> {
 			memberOrPet.removeEffect(INFINITE_RESOURCES);
 			memberOrPet.removeEffect(INFINITE_BUFFS);
 

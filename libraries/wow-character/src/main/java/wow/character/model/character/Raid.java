@@ -83,9 +83,9 @@ public class Raid<M extends Character> {
 		}
 	}
 
-	public void forEachMemberOrPet(Consumer<? super M> consumer) {
+	public void forEachMemberAndPet(Consumer<? super M> consumer) {
 		for (var party : parties) {
-			party.forEachMemberOrPet(consumer);
+			party.forEachMemberAndPet(consumer);
 		}
 	}
 }
