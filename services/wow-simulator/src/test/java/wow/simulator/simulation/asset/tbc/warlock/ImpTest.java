@@ -3,8 +3,7 @@ package wow.simulator.simulation.asset.tbc.warlock;
 import org.junit.jupiter.api.Test;
 import wow.simulator.simulation.asset.tbc.TbcAssetTest;
 
-import static wow.test.commons.AbilityNames.BLOOD_PACT;
-import static wow.test.commons.AbilityNames.SUMMON_IMP;
+import static wow.test.commons.AbilityNames.*;
 import static wow.test.commons.AssetNames.IMP;
 
 /**
@@ -16,6 +15,9 @@ class ImpTest extends TbcAssetTest {
 	void ability_is_cast() {
 		assertSpellCast(0, SUMMON_IMP, partyAsset);
 		assertSpellCast(6, BLOOD_PACT, partyAsset.getActivePet(), partyAsset.getActivePet());
+		assertSpellCast(60, FIREBOLT, partyAsset.getActivePet(), target);
+		assertSpellCast(62, FIREBOLT, partyAsset.getActivePet(), target);
+		assertSpellCast(64, FIREBOLT, partyAsset.getActivePet(), target);
 	}
 
 	@Test

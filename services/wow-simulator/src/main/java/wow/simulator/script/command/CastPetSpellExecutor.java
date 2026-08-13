@@ -35,6 +35,10 @@ public class CastPetSpellExecutor extends DynamicExecutor {
 
 	@Override
 	protected Unit getActualCaster() {
+		if (caster.isPet()) {
+			return caster;
+		}
+
 		return caster.getActivePet();
 	}
 

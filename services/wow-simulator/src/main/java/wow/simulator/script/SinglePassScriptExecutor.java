@@ -47,7 +47,7 @@ public class SinglePassScriptExecutor {
 			commands.get(idx).execute();
 		}
 		if (idx + 1 < commands.size()) {
-			params.caster().immediateAction(x -> executeNext(idx + 1));
+			params.caster().immediateAction(() -> executeNext(idx + 1));
 		} else if (idx + 1 == commands.size() && finalAction != null) {
 			params.caster().immediateAction(finalAction);
 		}

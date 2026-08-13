@@ -747,8 +747,6 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 
 		getCharacterService().applyDefaultCharacterTemplate(pet);
 
-		pet.setupScript(null);
-
 		this.setActivePet(pet);
 		getSimulation().add(pet);
 	}

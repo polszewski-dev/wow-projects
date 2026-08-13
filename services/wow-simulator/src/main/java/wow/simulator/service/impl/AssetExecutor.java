@@ -11,7 +11,6 @@ import wow.simulator.script.ScriptParams;
 import wow.simulator.script.SinglePassScriptExecutor;
 import wow.simulator.script.command.CastSpellOnTargetExecutor;
 import wow.simulator.script.command.ScriptCommandExecutor;
-import wow.simulator.util.CountdownCounter;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -27,13 +26,13 @@ class AssetExecutor {
 	private final Unit player;
 	private final ScriptParams params;
 	private final List<AssetExecution<Player>> executions;
-	private final CountdownCounter counter;
+	private final Runnable finalAction;
 
-	AssetExecutor(ScriptParams params, List<AssetExecution<Player>> executions, CountdownCounter counter) {
+	AssetExecutor(ScriptParams params, List<AssetExecution<Player>> executions, Runnable finalAction) {
 		this.player = params.caster();
 		this.params = params;
 		this.executions = executions;
-		this.counter = counter;
+		this.finalAction = finalAction;
 	}
 
 	void execute() {
@@ -44,7 +43,7 @@ class AssetExecutor {
 		var params = new ScriptParams(player, null);
 		var scriptExecutor = new SinglePassScriptExecutor(params, commands);
 
-		scriptExecutor.setFinalAction(counter::decrease);
+		scriptExecutor.setFinalAction(finalAction);
 		scriptExecutor.execute();
 	}
 

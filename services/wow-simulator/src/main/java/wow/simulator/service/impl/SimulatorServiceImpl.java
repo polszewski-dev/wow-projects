@@ -3,6 +3,7 @@ package wow.simulator.service.impl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import wow.character.model.asset.AssetExecution;
+import wow.character.model.asset.AssetExecutionPlan;
 import wow.character.model.character.Raid;
 import wow.character.service.AssetService;
 import wow.character.service.CharacterCalculationService;
@@ -24,10 +25,8 @@ import wow.simulator.script.ScriptParams;
 import wow.simulator.service.SimulatorService;
 import wow.simulator.simulation.Simulation;
 import wow.simulator.simulation.SimulationContext;
-import wow.simulator.util.CountdownCounter;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * User: POlszewski
@@ -41,8 +40,9 @@ public class SimulatorServiceImpl implements SimulatorService {
 	private final AssetService assetService;
 	private final SpellRepository spellRepository;
 
-	private static final Duration PREP_PHASE_DURATION = Duration.seconds(60);
-	private static final Time PREP_PHASE_END_TIME = Time.ZERO.add(PREP_PHASE_DURATION);
+	private static final Time SUMMON_PHASE_END_TIME = Time.at(10);
+	private static final Time BUFF_PHASE_END_TIME = Time.at(60);
+	private static final Duration PREP_PHASE_DURATION = BUFF_PHASE_END_TIME.subtract(Time.ZERO);
 
 	private static final String BONUS_HP5 = "Bonus Hp5";
 	private static final String BONUS_MP5 = "Bonus Mp5";
@@ -88,13 +88,63 @@ public class SimulatorServiceImpl implements SimulatorService {
 
 		var executionPlan = assetService.getAssetExecutionPlan(raid);
 
-		executeAndThen(
-				executionPlan.summonsByPlayer(),
-				() -> executeAndThen(
-						executionPlan.buffsByPlayer(),
-						() -> finalizeBuffStage(raid)
-				)
-		);
+		for (var member : raid.getMembers()) {
+			executeSummonPhase(
+					member,
+					executionPlan,
+					() -> {
+						if (executionPlan.hasSummonPhase()) {
+							member.idleUntil(SUMMON_PHASE_END_TIME);
+
+							var activePet = member.getActivePet();
+
+							if (activePet != null) {
+								activePet.idleUntil(BUFF_PHASE_END_TIME);
+								activePet.immediateAction(this::finalizeBuffStage);
+							}
+						}
+
+						executeBuffPhase(
+								member,
+								executionPlan,
+								() -> {
+									member.idleUntil(BUFF_PHASE_END_TIME);
+									member.immediateAction(this::finalizeBuffStage);
+								}
+						);
+					}
+			);
+		}
+	}
+
+	private void executeSummonPhase(Player player, AssetExecutionPlan<Player> executionPlan, Runnable endStep) {
+		if (!executionPlan.hasSummonPhase()) {
+			endStep.run();
+			return;
+		}
+
+		var summonsByPlayer = executionPlan.summonsByPlayer();
+		var summonExecutions = summonsByPlayer.get(player);
+
+		execute(player, summonExecutions, endStep);
+	}
+
+	private void executeBuffPhase(Player player, AssetExecutionPlan<Player> executionPlan, Runnable endStep) {
+		var buffsByPlayer = executionPlan.buffsByPlayer();
+		var buffExecutions = buffsByPlayer.get(player);
+
+		execute(player, buffExecutions, endStep);
+	}
+
+	private void execute(Player player, List<AssetExecution<Player>> summonExecutions, Runnable endStep) {
+		if (summonExecutions == null) {
+			endStep.run();
+		} else {
+			var params = new ScriptParams(player, null);
+			var executor = new AssetExecutor(params, summonExecutions, endStep);
+
+			executor.execute();
+		}
 	}
 
 	private void applyTemporaryEffects(Raid<Player> raid) {
@@ -104,44 +154,20 @@ public class SimulatorServiceImpl implements SimulatorService {
 		});
 	}
 
-	private void finalizeBuffStage(Raid<Player> raid) {
-		raid.forEachMemberAndPet((Unit memberOrPet) -> {
-			memberOrPet.removeEffect(INFINITE_RESOURCES);
-			memberOrPet.removeEffect(INFINITE_BUFFS);
+	private void finalizeBuffStage(Unit memberOrPet) {
+		memberOrPet.removeEffect(INFINITE_RESOURCES);
+		memberOrPet.removeEffect(INFINITE_BUFFS);
 
-			memberOrPet.addHiddenEffect(BONUS_HP5, 5000);
-			memberOrPet.addHiddenEffect(BONUS_MP5, 5000);
+		memberOrPet.addHiddenEffect(BONUS_HP5, 5000);
+		memberOrPet.addHiddenEffect(BONUS_MP5, 5000);
 
-			memberOrPet.setHealthToMax();
-			memberOrPet.setManaToMax();
+		memberOrPet.setHealthToMax();
+		memberOrPet.setManaToMax();
 
-			var mainPlayer = raid.getFirstMember();
-
-			if (memberOrPet == mainPlayer || memberOrPet == mainPlayer.getActivePet()) {
-				memberOrPet.setupScript(null);
-			} else {
-				memberOrPet.whenNoActionIdleForever();
-			}
-
-			memberOrPet.idleUntil(PREP_PHASE_END_TIME);
-		});
-	}
-
-	private void executeAndThen(Map<Player, List<AssetExecution<Player>>> executionsByPlayer, Runnable finalAction) {
-		if (executionsByPlayer.isEmpty()) {
-			finalAction.run();
-			return;
-		}
-
-		var counter = new CountdownCounter(executionsByPlayer.size(), finalAction);
-
-		for (var entry : executionsByPlayer.entrySet()) {
-			var player = entry.getKey();
-			var params = new ScriptParams(player, null);
-			var executions = entry.getValue();
-			var executor = new AssetExecutor(params, executions, counter);
-
-			executor.execute();
+		if (memberOrPet.getScript() != null) {
+			memberOrPet.setupScript(null);
+		} else {
+			memberOrPet.whenNoActionIdleForever();
 		}
 	}
 

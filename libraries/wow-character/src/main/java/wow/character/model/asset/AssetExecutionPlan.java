@@ -36,6 +36,10 @@ public record AssetExecutionPlan<P extends PlayerCharacter>(
 		).toList();
 	}
 
+	public boolean hasSummonPhase() {
+		return !summonExecutions.isEmpty();
+	}
+
 	public Map<P, List<AssetExecution<P>>> summonsByPlayer() {
 		return summonExecutions.stream().collect(groupingBy(
 				AssetExecution::player
