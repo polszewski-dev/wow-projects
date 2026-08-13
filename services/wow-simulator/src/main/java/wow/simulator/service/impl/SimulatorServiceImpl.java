@@ -165,7 +165,7 @@ public class SimulatorServiceImpl implements SimulatorService {
 		memberOrPet.setManaToMax();
 
 		if (memberOrPet.getScript() != null) {
-			memberOrPet.setupScript();
+			memberOrPet.whenNoActionRunScript();
 		} else {
 			memberOrPet.whenNoActionIdleForever();
 		}
