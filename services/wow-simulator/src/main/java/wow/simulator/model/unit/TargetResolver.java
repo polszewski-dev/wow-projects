@@ -77,6 +77,11 @@ public class TargetResolver implements SimulationContextSource {
 		return targetResolver;
 	}
 
+	public static TargetResolver ofActivePet(Unit self) {
+		Objects.requireNonNull(self.getActivePet());
+		return new TargetResolver(self);
+	}
+
 	public boolean hasValidTarget(SpellTarget spellTarget) {
 		if (spellTarget.isAoE()) {
 			return true;

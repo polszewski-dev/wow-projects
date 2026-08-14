@@ -53,7 +53,7 @@ public class PrimaryTargetResolver {
 			case SELF ->
 					getSelf();
 			case PET ->
-					throw new UnsupportedOperationException("No pets atm");
+					getActivePet();
 			case FRIEND, FRIENDS_PARTY ->
 					getFriendlyTarget();
 			case ENEMY ->
@@ -68,6 +68,14 @@ public class PrimaryTargetResolver {
 	private PrimaryTarget getSelf() {
 		if (explicitTarget == self || explicitTarget == null) {
 			return PrimaryTarget.ofSelf(self);
+		}
+
+		return PrimaryTarget.INVALID;
+	}
+
+	private PrimaryTarget getActivePet() {
+		if (explicitTarget == self || explicitTarget == null) {
+			return PrimaryTarget.ofActivePet(self.getActivePet());
 		}
 
 		return PrimaryTarget.INVALID;

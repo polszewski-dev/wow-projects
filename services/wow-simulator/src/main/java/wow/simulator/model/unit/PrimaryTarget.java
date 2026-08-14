@@ -17,6 +17,8 @@ public sealed interface PrimaryTarget {
 
 	record Self(Unit unit) implements Specified {}
 
+	record ActivePet(Unit unit) implements Specified {}
+
 	record Friend(Unit unit) implements Specified {}
 
 	record Enemy(Unit unit) implements Specified {}
@@ -29,6 +31,10 @@ public sealed interface PrimaryTarget {
 
 	static Self ofSelf(Unit unit) {
 		return new Self(unit);
+	}
+
+	static ActivePet ofActivePet(Unit unit) {
+		return new ActivePet(unit);
 	}
 
 	static Friend ofFriend(Unit unit) {
@@ -59,6 +65,8 @@ public sealed interface PrimaryTarget {
 					TargetResolver.ofSelf(caster);
 			case Self(var ignored) ->
 					TargetResolver.ofSelf(caster);
+			case ActivePet(var ignored) ->
+					TargetResolver.ofActivePet(caster);
 			case Friend(var unit) ->
 					TargetResolver.ofFriend(caster, unit);
 			case Enemy(var unit) ->
