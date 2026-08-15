@@ -89,32 +89,36 @@ public class SimulatorServiceImpl implements SimulatorService {
 		var executionPlan = assetService.getAssetExecutionPlan(raid);
 
 		for (var member : raid.getMembers()) {
-			executeSummonPhase(
-					member,
-					executionPlan,
-					() -> {
-						if (executionPlan.hasSummonPhase()) {
-							member.idleUntil(SUMMON_PHASE_END_TIME);
-
-							var activePet = member.getActivePet();
-
-							if (activePet != null) {
-								activePet.idleUntil(BUFF_PHASE_END_TIME);
-								activePet.immediateAction(this::finalizeBuffStage);
-							}
-						}
-
-						executeBuffPhase(
-								member,
-								executionPlan,
-								() -> {
-									member.idleUntil(BUFF_PHASE_END_TIME);
-									member.immediateAction(this::finalizeBuffStage);
-								}
-						);
-					}
-			);
+			executeAssets(member, executionPlan);
 		}
+	}
+
+	private void executeAssets(Player member, AssetExecutionPlan<Player> executionPlan) {
+		executeSummonPhase(
+				member,
+				executionPlan,
+				() -> {
+					if (executionPlan.hasSummonPhase()) {
+						member.idleUntil(SUMMON_PHASE_END_TIME);
+
+						var activePet = member.getActivePet();
+
+						if (activePet != null) {
+							activePet.idleUntil(BUFF_PHASE_END_TIME);
+							activePet.immediateAction(this::finalizeBuffStage);
+						}
+					}
+
+					executeBuffPhase(
+							member,
+							executionPlan,
+							() -> {
+								member.idleUntil(BUFF_PHASE_END_TIME);
+								member.immediateAction(this::finalizeBuffStage);
+							}
+					);
+				}
+		);
 	}
 
 	private void executeSummonPhase(Player player, AssetExecutionPlan<Player> executionPlan, Runnable endStep) {

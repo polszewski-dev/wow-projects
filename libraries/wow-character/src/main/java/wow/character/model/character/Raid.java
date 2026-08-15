@@ -96,7 +96,7 @@ public class Raid<M extends Character> {
 				.flatMap(Party::getEachMemberAndPetStream);
 	}
 
-	public Stream<M> getEachPartyFirsMemberStream() {
+	public Stream<M> getEachPartyFirstMemberStream() {
 		return getParties().stream()
 				.map(Party::getFirstMember)
 				.filter(Objects::nonNull);

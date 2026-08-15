@@ -122,11 +122,17 @@ public class SpellResolutionContext extends Context {
 	}
 
 	private boolean checkSecondaryCondition(HasSecondaryTargetCondition command, Unit target) {
+		var condition = command.condition();
+
+		if (condition.isEmpty()) {
+			return true;
+		}
+
 		var args = new SpellTargetConditionArgs(caster, target);
 
 		args.setSacrificedPetType(sacrificedPetType);
 
-		return SpellTargetConditionChecker.check(command.condition(), args);
+		return SpellTargetConditionChecker.check(condition, args);
 	}
 
 	private void dealDirectDamage(DealDamageDirectly command, Unit target) {
@@ -312,10 +318,6 @@ public class SpellResolutionContext extends Context {
 	private boolean shouldAddBonus(ChangeHealthDirectly command, Unit target) {
 		var bonus = command.bonus();
 
-		if (bonus == null) {
-			return false;
-		}
-
-		return bonus.requiredEffect() == null || target.hasEffect(bonus.requiredEffect(), caster);
+		return bonus != null && target.hasEffect(bonus.requiredEffect(), caster);
 	}
 }

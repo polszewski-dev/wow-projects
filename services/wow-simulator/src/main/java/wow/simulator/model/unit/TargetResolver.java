@@ -108,9 +108,15 @@ public class TargetResolver implements SimulationContextSource {
 	}
 
 	private boolean checkSpellTargetCondition(SpellTarget spellTarget, Unit uncheckedTarget) {
+		var condition = spellTarget.condition();
+
+		if (condition.isEmpty()) {
+			return true;
+		}
+
 		var args = new SpellTargetConditionArgs(self, uncheckedTarget);
 
-		return SpellTargetConditionChecker.check(spellTarget.condition(), args);
+		return SpellTargetConditionChecker.check(condition, args);
 	}
 
 	private List<Unit> getTargetsUnchecked(SpellTarget spellTarget) {

@@ -1,7 +1,6 @@
 package wow.simulator.service.impl;
 
 import wow.character.model.asset.AssetExecution;
-import wow.character.model.script.ScriptCommand;
 import wow.character.model.script.ScriptCommandCondition;
 import wow.character.model.script.ScriptCommandTarget;
 import wow.commons.model.spell.AbilityId;
@@ -16,6 +15,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static wow.character.model.asset.Asset.*;
+import static wow.character.model.script.ScriptCommand.CastSpell;
 import static wow.character.model.script.ScriptSectionType.PREPARATION;
 
 /**
@@ -40,7 +40,6 @@ class AssetExecutor {
 				.flatMap(this::executeBuffCommand)
 				.toList();
 
-		var params = new ScriptParams(player);
 		var scriptExecutor = new SinglePassScriptExecutor(params, commands);
 
 		scriptExecutor.setFinalAction(finalAction);
@@ -70,7 +69,7 @@ class AssetExecutor {
 							.map(memberOrPet -> castExecutor(abilityId, memberOrPet));
 
 			case EACH_PARTY_FIRST_MEMBER ->
-					player.getRaid().getEachPartyFirsMemberStream()
+					player.getRaid().getEachPartyFirstMemberStream()
 							.map(firstMember -> castExecutor(abilityId, firstMember));
 
 			case SELF ->
@@ -82,7 +81,7 @@ class AssetExecutor {
 	}
 
 	private ScriptCommandExecutor castExecutor(AbilityId abilityId, Unit target) {
-		var command = new ScriptCommand.CastSpell(
+		var command = new CastSpell(
 				ScriptCommandCondition.EMPTY, abilityId, ScriptCommandTarget.DEFAULT, false
 		);
 
