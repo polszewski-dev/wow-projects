@@ -74,4 +74,6 @@ public interface GameLogHandler {
 	default void petDismissed(Unit master, Pet pet) {}
 
 	default void petSacrificed(Unit master, Pet pet) {}
+
+	default void targetDied(Unit target, Unit caster) {}
 }

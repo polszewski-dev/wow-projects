@@ -89,7 +89,8 @@ public class TargetResolver implements SimulationContextSource {
 		if (spellTarget.hasType(FRIENDS_PARTY)) {
 			return hasValidTarget(SpellTargets.FRIEND);
 		}
-		return getTargets(spellTarget).size() == 1;
+		var targets = getTargets(spellTarget);
+		return targets.size() == 1 && targets.getFirst().isAlive();
 	}
 
 	public boolean hasAllValidTargets(Collection<SpellTarget> spellTargets) {

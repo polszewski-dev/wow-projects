@@ -159,6 +159,11 @@ public class ConsoleGameLogHandler implements GameLogHandler, TimeAware {
 		print("%s sacrificed %s", master, pet);
 	}
 
+	@Override
+	public void targetDied(Unit target, Unit caster) {
+		print("%s died", target);
+	}
+
 	private void print(String str, Object... args) {
 		log.info("%7s> %s".formatted(clock.now(), str.formatted(args)));
 	}

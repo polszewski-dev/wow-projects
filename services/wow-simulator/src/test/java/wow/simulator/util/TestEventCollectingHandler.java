@@ -215,6 +215,11 @@ public class TestEventCollectingHandler implements GameLogHandler, TimeAware {
 		addEvent(new CooldownExpired(now(), cooldown.getOwner(), cooldown.getCooldownId()));
 	}
 
+	@Override
+	public void targetDied(Unit target, Unit caster) {
+		addEvent(new TargetDied(now(), target, caster));
+	}
+
 	private TestEvent addEvent(TestEvent event) {
 		events.add(event);
 		return event;

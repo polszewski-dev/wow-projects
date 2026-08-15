@@ -215,4 +215,12 @@ public interface Unit extends Character, SimulationContextSource {
 	void onResourcesNeedRefresh();
 
 	void deactivate();
+
+	boolean isAlive();
+
+	boolean isDead();
+
+	void triggerDeath(Unit caster);
+
+	void setOnDeath(Consumer<Unit> onDeath);
 }

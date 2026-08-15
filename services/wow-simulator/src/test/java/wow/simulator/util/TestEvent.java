@@ -137,4 +137,6 @@ public sealed interface TestEvent {
 	record CooldownStarted(Time time, Unit caster, CooldownId cooldownId, Duration duration) implements TestEvent {}
 
 	record CooldownExpired(Time time, Unit caster, CooldownId cooldownId) implements TestEvent {}
+
+	record TargetDied(Time time, Unit target, Unit caster) implements TestEvent {}
 }

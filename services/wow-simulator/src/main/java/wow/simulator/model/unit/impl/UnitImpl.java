@@ -71,6 +71,7 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	private Time lastTimeManaSpent;
 
 	private boolean deactivated;
+	private Consumer<Unit> onDeath;
 
 	protected UnitImpl(
 			String name,
@@ -709,6 +710,30 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	@Override
 	public void deactivate() {
 		this.deactivated = true;
+	}
+
+	@Override
+	public boolean isAlive() {
+		return getCurrentHealth() > 0;
+	}
+
+	@Override
+	public boolean isDead() {
+		return !isAlive();
+	}
+
+	@Override
+	public void triggerDeath(Unit caster) {
+		deactivate();
+		effects.removeAllEffects();
+		if (onDeath != null) {
+			onDeath.accept(this);
+		}
+	}
+
+	@Override
+	public void setOnDeath(Consumer<Unit> onDeath) {
+		this.onDeath = onDeath;
 	}
 
 	protected UnitResources getResources() {

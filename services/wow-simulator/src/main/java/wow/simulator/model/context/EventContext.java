@@ -120,6 +120,12 @@ public class EventContext {
 		return new EventContext(effect.getOwner(), effect.getTarget(), effect.getSourceSpell(), parentContext);
 	}
 
+	public static void fireTargetDied(Unit caster, Unit target, Spell spell, Context parentContext) {
+		var context = new EventContext(caster, target, spell, parentContext);
+
+		context.fireEvent(TARGET_DIED);
+	}
+
 	private void fireEvent(EventType eventType, EffectInstance effect) {
 		for (var event : effect.getEvents()) {
 			if (event.types().contains(eventType)) {

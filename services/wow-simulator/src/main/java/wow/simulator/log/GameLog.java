@@ -188,4 +188,9 @@ public class GameLog implements GameLogHandler {
 	public void petSacrificed(Unit master, Pet pet) {
 		handlers.forEach(handler -> handler.petSacrificed(master, pet));
 	}
+
+	@Override
+	public void targetDied(Unit target, Unit caster) {
+		handlers.forEach(handler -> handler.targetDied(target, caster));
+	}
 }

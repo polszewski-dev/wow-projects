@@ -11,6 +11,7 @@ import wow.simulator.simulation.SimulationContextSource;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
+import static wow.commons.model.spell.ResourceType.HEALTH;
 
 /**
  * User: POlszewski
@@ -68,6 +69,11 @@ public class UnitResource implements SimulationContextSource {
 
 		if (actualAmount > 0) {
 			getGameLog().decreasedResource(type, spell, owner, actualAmount, current, previous, crit, caster);
+
+			if (current == 0 && type == HEALTH) {
+				getGameLog().targetDied(owner, caster);
+				owner.triggerDeath(caster);
+			}
 		}
 
 		return actualAmount;
@@ -89,7 +95,7 @@ public class UnitResource implements SimulationContextSource {
 	}
 
 	private boolean canSpendAll(ResourceType type) {
-		return type != ResourceType.HEALTH;
+		return type != HEALTH;
 	}
 
 	private static void assertNonNegative(int amount) {

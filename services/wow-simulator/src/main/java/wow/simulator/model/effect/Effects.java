@@ -106,6 +106,12 @@ public abstract class Effects implements SimulationContextSource, EffectCollecti
 		getEffect(effectName).ifPresent(this::removeEffect);
 	}
 
+	public void removeAllEffects() {
+		for (var effect : effectsById.values()) {
+			 ((EffectInstanceImpl) effect).interrupt();
+		}
+	}
+
 	public boolean isUnderEffect(AbilityId abilityId, Unit owner) {
 		return getStream()
 				.anyMatch(x -> x.matches(abilityId, owner));

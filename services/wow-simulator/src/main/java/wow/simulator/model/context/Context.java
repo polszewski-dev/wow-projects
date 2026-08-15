@@ -65,6 +65,10 @@ public abstract class Context implements SimulationContextSource {
 		this.lastDamageDone = target.decreaseHealth(amount, critRoll, getSourceSpell(), caster);
 
 		EventContext.fireSpellDamageEvent(caster, target, spell, directDamage, critRoll, this);
+
+		if (lastDamageDone > 0 && target.isDead()) {
+			EventContext.fireTargetDied(caster, target, spell, this);
+		}
 	}
 
 	protected void increaseHealth(Unit target, int amount, boolean directHeal, boolean critRoll) {

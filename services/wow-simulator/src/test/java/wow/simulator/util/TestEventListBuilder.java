@@ -8,6 +8,7 @@ import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.CooldownId;
 import wow.commons.model.spell.ResourceType;
 import wow.simulator.model.time.Time;
+import wow.simulator.model.unit.Player;
 import wow.simulator.model.unit.Unit;
 
 import java.util.ArrayList;
@@ -178,6 +179,10 @@ public class TestEventListBuilder {
 
 	public TestEventListBuilder cooldownExpired(Unit caster, CooldownId cooldownId) {
 		return addEvent(new CooldownExpired(time, caster, cooldownId));
+	}
+
+	public TestEventListBuilder targetDied(Unit target, Player caster) {
+		return addEvent(new TargetDied(time, target, caster));
 	}
 
 	private TestEventListBuilder addEvent(TestEvent event) {
