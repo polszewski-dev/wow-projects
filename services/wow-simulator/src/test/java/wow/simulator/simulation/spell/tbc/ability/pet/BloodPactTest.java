@@ -20,7 +20,7 @@ class BloodPactTest extends TbcWarlockSpellSimulationTest {
 	@Test
 	void success() {
 		player.cast(SUMMON_IMP);
-		summonedPetCasts(BLOOD_PACT);
+		summonedPetCasts(player, BLOOD_PACT);
 
 		updateUntil(30);
 
@@ -45,7 +45,7 @@ class BloodPactTest extends TbcWarlockSpellSimulationTest {
 	@Test
 	void stamina_is_increased() {
 		player.cast(SUMMON_IMP);
-		summonedPetCasts(BLOOD_PACT);
+		summonedPetCasts(player, BLOOD_PACT);
 
 		updateUntil(30);
 

@@ -1,19 +1,21 @@
 package wow.simulator.model.unit.impl;
 
+import lombok.RequiredArgsConstructor;
 import wow.character.model.character.BaseStatInfo;
 import wow.character.model.character.Character;
 import wow.character.model.character.CombatRatingInfo;
 import wow.character.model.character.impl.CharacterImpl;
 import wow.character.model.effect.EffectCollector;
+import wow.character.model.equipment.ItemSockets;
 import wow.character.model.script.ScriptPathResolver;
 import wow.character.model.snapshot.*;
 import wow.character.model.talent.Talents;
-import wow.character.util.AbstractEffectCollector;
 import wow.commons.model.AnyDuration;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.character.*;
 import wow.commons.model.effect.Effect;
+import wow.commons.model.item.ItemSet;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
 import wow.commons.model.spell.*;
@@ -86,6 +88,7 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 			Talents talents
 	) {
 		super(name, phase, characterClass, level, creatureType, race, side, baseStatInfo, combatRatingInfo, talents);
+		getEquipment().setOnEquipmentChanged(this::onEquipmentChanged);
 		this.resources.setHealth(10_000, 10_000);
 		this.resources.setMana(10_000, 10_000);
 	}
@@ -703,13 +706,13 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	}
 
 	@Override
-	public void onResourcesNeedRefresh() {
-		resourcesNeedRefresh = true;
-	}
-
-	@Override
 	public void deactivate() {
+		if (deactivated) {
+			return;
+		}
+
 		this.deactivated = true;
+		invalidateAuras();
 	}
 
 	@Override
@@ -812,37 +815,11 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 			return;
 		}
 
-		super.collectEffects(collector);
-		effects.collectEffects(collector);
-		collectAurasFromOtherPartyMembers(collector);
-	}
+		var auraExcludingCollector = new AuraExcludingCollector(collector);
 
-	private void collectAurasFromOtherPartyMembers(EffectCollector collector) {
-		var auraCollector = new AuraCollector(this, collector);
-
-		getParty().forEachMemberAndPet(memberOrPet -> {
-			if (memberOrPet != this) {
-				memberOrPet.collectAuras(auraCollector);
-			}
-		});
-	}
-
-	private static class AuraCollector extends AbstractEffectCollector.OnlyEffects {
-		private final EffectCollector collector;
-
-		public AuraCollector(Unit unit, EffectCollector collector) {
-			super(unit);
-			this.collector = collector;
-		}
-
-		@Override
-		public void addEffect(Effect effect, int stackCount) {
-			if (effect.hasAugmentedAbilities() || !effect.isAura()) {
-				return;
-			}
-
-			collector.addEffect(effect, stackCount);
-		}
+		super.collectEffects(auraExcludingCollector);
+		effects.collectEffects(auraExcludingCollector);
+		getParty().getAuras().collectEffects(collector);
 	}
 
 	@Override
@@ -867,7 +844,59 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	}
 
 	@Override
+	public void onEffectListChanged(EffectInstance effectInstance) {
+		if (effectInstance.hasResourceModifier()) {
+			resourcesNeedRefresh = true;
+		}
+
+		if (effectInstance.isAura()) {
+			invalidateAuras();
+		}
+	}
+
+	private void onEquipmentChanged() {
+		resourcesNeedRefresh = true;
+		invalidateAuras();
+	}
+
+	private void invalidateAuras() {
+		var party = getParty();
+
+		if (party != null) {
+			party.invalidateAuras();
+		}
+	}
+
+	@Override
 	public FormType getForm() {
 		return effects.getForm();
+	}
+
+	@RequiredArgsConstructor
+	private static class AuraExcludingCollector implements EffectCollector {
+		private final EffectCollector collector;
+
+		@Override
+		public void addEffect(Effect effect, int stackCount) {
+			if (effect.isAura() && !effect.hasAugmentedAbilities()) {
+				return;
+			}
+			collector.addEffect(effect, stackCount);
+		}
+
+		@Override
+		public void addActivatedAbility(ActivatedAbility activatedAbility) {
+			collector.addActivatedAbility(activatedAbility);
+		}
+
+		@Override
+		public void addItemSockets(ItemSockets itemSockets) {
+			collector.addItemSockets(itemSockets);
+		}
+
+		@Override
+		public void addItemSet(ItemSet itemSet) {
+			collector.addItemSet(itemSet);
+		}
 	}
 }

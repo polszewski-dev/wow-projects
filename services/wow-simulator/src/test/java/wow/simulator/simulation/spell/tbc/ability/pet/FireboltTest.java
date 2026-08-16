@@ -20,7 +20,7 @@ class FireboltTest extends TbcWarlockSpellSimulationTest {
 	@Test
 	void success() {
 		player.cast(SUMMON_IMP);
-		summonedPetCasts(FIREBOLT);
+		summonedPetCasts(player, FIREBOLT);
 
 		updateUntil(30);
 

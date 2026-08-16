@@ -451,12 +451,13 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	}
 
 	private void effectListChanged() {
-		if (hasResourceModifier()) {
-			target.onResourcesNeedRefresh();
+		if (target != null) {
+			target.onEffectListChanged(this);
 		}
 	}
 
-	private boolean hasResourceModifier() {
+	@Override
+	public boolean hasResourceModifier() {
 		if (getModifierAttributeList() == null) {
 			return false;
 		}

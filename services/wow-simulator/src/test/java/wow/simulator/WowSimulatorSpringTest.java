@@ -321,7 +321,11 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	}
 
 	protected void equip(int itemId, ItemSlot itemSlot) {
-		Item item = getItemRepository().getItem(ItemId.of(itemId), player.getPhaseId()).orElseThrow();
+		equip(player, itemId, itemSlot);
+	}
+
+	protected void equip(Player player, int itemId, ItemSlot itemSlot) {
+		var item = getItemRepository().getItem(ItemId.of(itemId), player.getPhaseId()).orElseThrow();
 		player.equip(new EquippableItem(item), itemSlot);
 	}
 
@@ -661,5 +665,19 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 
 	protected StatSummary statsAt(double time) {
 		return statsAt(player, time);
+	}
+
+	protected void addToSimulation(Unit... units) {
+		for (var unit : units) {
+			simulation.add(unit);
+		}
+	}
+
+	protected void summonedPetCasts(Unit unit, String abilityName) {
+		unit.immediateAction(self -> {
+			pet = self.getActivePet();
+			pet.whenNoActionIdleForever();
+			pet.cast(abilityName);
+		});
 	}
 }

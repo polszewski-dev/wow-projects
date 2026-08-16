@@ -65,4 +65,6 @@ public interface EffectInstance extends Effect, Updateable, SimulationContextSou
 	boolean isTerminated();
 
 	boolean isHidden();
+
+	boolean hasResourceModifier();
 }

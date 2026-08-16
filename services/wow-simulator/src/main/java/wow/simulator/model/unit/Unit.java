@@ -211,7 +211,7 @@ public interface Unit extends Character, SimulationContextSource {
 
 	void onAddedToSimulation();
 
-	void onResourcesNeedRefresh();
+	void onEffectListChanged(EffectInstance effectInstance);
 
 	void deactivate();
 

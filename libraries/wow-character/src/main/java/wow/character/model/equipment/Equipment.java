@@ -1,5 +1,6 @@
 package wow.character.model.equipment;
 
+import lombok.Setter;
 import wow.character.model.Copyable;
 import wow.character.model.effect.EffectCollection;
 import wow.character.model.effect.EffectCollector;
@@ -20,6 +21,8 @@ import static wow.commons.model.categorization.ItemSlot.*;
  */
 public class Equipment implements EffectCollection, Copyable<Equipment> {
 	private final Map<ItemSlot, EquippableItem> itemsBySlot = new EnumMap<>(ItemSlot.class);
+	@Setter
+	private Runnable onEquipmentChanged;
 
 	@Override
 	public Equipment copy() {
@@ -126,13 +129,13 @@ public class Equipment implements EffectCollection, Copyable<Equipment> {
 		switch (slot) {
 			case MAIN_HAND -> {
 				putOrRemove(MAIN_HAND, item);
-				EquippableItem mainHand = getMainHand();
+				var mainHand = getMainHand();
 				if (mainHand != null && mainHand.getItemType() == ItemType.TWO_HAND) {
 					putOrRemove(OFF_HAND, null);
 				}
 			}
 			case OFF_HAND -> {
-				EquippableItem mainHand = getMainHand();
+				var mainHand = getMainHand();
 				if (mainHand != null && mainHand.getItemType() == ItemType.TWO_HAND && item != null) {
 					throw new IllegalArgumentException("Can't equip offhand while having 2-hander");
 				}
@@ -140,6 +143,8 @@ public class Equipment implements EffectCollection, Copyable<Equipment> {
 			}
 			default -> putOrRemove(slot, item);
 		}
+
+		equipmentChanged();
 	}
 
 	private void putOrRemove(ItemSlot slot, EquippableItem item) {
@@ -172,13 +177,14 @@ public class Equipment implements EffectCollection, Copyable<Equipment> {
 	}
 
 	public void setEquipment(Equipment equipment) {
-		for (ItemSlot itemSlot : values()) {
-			this.equip(equipment.get(itemSlot), itemSlot);
+		for (var itemSlot : values()) {
+			equip(equipment.get(itemSlot), itemSlot);
 		}
 	}
 
 	public void reset() {
 		itemsBySlot.clear();
+		equipmentChanged();
 	}
 
 	public List<EquippableItem> toList() {
@@ -203,7 +209,7 @@ public class Equipment implements EffectCollection, Copyable<Equipment> {
 
 	private int getGemCount(SocketType socketType) {
 		int result = 0;
-		for (EquippableItem equippableItem : itemsBySlot.values()) {
+		for (var equippableItem : itemsBySlot.values()) {
 			result += equippableItem.getGemCount(socketType);
 		}
 		return result;
@@ -242,6 +248,12 @@ public class Equipment implements EffectCollection, Copyable<Equipment> {
 		}
 
 		return result;
+	}
+
+	private void equipmentChanged() {
+		if (onEquipmentChanged != null) {
+			onEquipmentChanged.run();
+		}
 	}
 
 	@Override

@@ -109,14 +109,6 @@ public abstract class SpellSimulationTest extends WowSimulatorSpringTest impleme
 		updateUntil(60);
 	}
 
-	protected void summonedPetCasts(String abilityName) {
-		player.immediateAction(self -> {
-			pet = self.getActivePet();
-			pet.whenNoActionIdleForever();
-			pet.cast(abilityName);
-		});
-	}
-
 	protected void assertHealthGained(SpellInfo spellInfo, int sp) {
 		assertHealthGained(spellInfo, player2, sp);
 	}
