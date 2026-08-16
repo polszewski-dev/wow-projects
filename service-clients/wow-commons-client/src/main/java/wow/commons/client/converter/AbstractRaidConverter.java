@@ -27,7 +27,7 @@ public abstract class AbstractRaidConverter<P extends PlayerCharacter> implement
 
 	@Override
 	public Raid<P> doConvertBack(RaidDTO source) {
-		var raid = new Raid<P>();
+		var raid = newRaid();
 		var partyDTOs = source.parties();
 
 		for (int partyIdx = 0; partyIdx < partyDTOs.size(); partyIdx++) {
@@ -38,6 +38,10 @@ public abstract class AbstractRaidConverter<P extends PlayerCharacter> implement
 		}
 
 		return raid;
+	}
+
+	protected Raid<P> newRaid() {
+		return new Raid<>();
 	}
 
 	private PartyDTO getParty(Party<P> party) {

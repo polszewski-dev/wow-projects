@@ -7,19 +7,21 @@ import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.Race;
 import wow.commons.model.pve.Phase;
 import wow.simulator.model.unit.Player;
+import wow.simulator.model.unit.UnitParty;
+import wow.simulator.model.unit.UnitRaid;
 
 /**
  * User: POlszewski
  * Date: 2023-08-07
  */
 @Getter
-public class PlayerImpl extends UnitImpl implements Player, Party.OnAdd<Player> {
+public class PlayerImpl extends UnitImpl implements Player, UnitParty.OnAdd<Player> {
 	private final CharacterProfessions professions;
 	private final ExclusiveFactions exclusiveFactions;
 	private final Assets assets;
 
 	@Getter
-	private Party<Player> party;
+	private UnitParty<Player> party;
 
 	public PlayerImpl(
 			String name,
@@ -38,11 +40,11 @@ public class PlayerImpl extends UnitImpl implements Player, Party.OnAdd<Player> 
 		this.exclusiveFactions = exclusiveFactions;
 		this.assets = new Assets();
 
-		Raid.newRaid(this);
+		UnitRaid.newUnitRaid(this);
 	}
 
 	@Override
-	public void onAdd(Party<Player> party) {
+	public void onAdd(UnitParty<Player> party) {
 		if (this.party != null) {
 			this.party.remove(this);
 		}

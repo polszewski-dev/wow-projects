@@ -1,7 +1,6 @@
 package wow.simulator.model.unit;
 
 import wow.character.model.character.Character;
-import wow.character.model.character.Party;
 import wow.character.model.character.Raid;
 import wow.character.model.effect.EffectCollector;
 import wow.character.model.snapshot.*;
@@ -190,7 +189,7 @@ public interface Unit extends Character, SimulationContextSource {
 
 	Pet sacrificePet();
 
-	Party<? extends Unit> getParty();
+	UnitParty<? extends Unit> getParty();
 
 	default Raid<? extends Unit> getRaid() {
 		return getParty().getRaid();

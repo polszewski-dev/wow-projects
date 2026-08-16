@@ -3,8 +3,6 @@ package wow.simulator.model.unit.impl;
 import lombok.Getter;
 import wow.character.model.character.BaseStatInfo;
 import wow.character.model.character.CombatRatingInfo;
-import wow.character.model.character.Party;
-import wow.character.model.character.Raid;
 import wow.character.model.effect.EffectCollector;
 import wow.character.model.talent.Talents;
 import wow.commons.model.Duration;
@@ -14,14 +12,16 @@ import wow.commons.model.character.Race;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
 import wow.simulator.model.unit.NonPlayer;
+import wow.simulator.model.unit.UnitParty;
+import wow.simulator.model.unit.UnitRaid;
 
 /**
  * User: POlszewski
  * Date: 2023-08-07
  */
 @Getter
-public class NonPlayerImpl extends UnitImpl implements NonPlayer, Party.OnAdd<NonPlayer> {
-	private Party<NonPlayer> party;
+public class NonPlayerImpl extends UnitImpl implements NonPlayer, UnitParty.OnAdd<NonPlayer> {
+	private UnitParty<NonPlayer> party;
 
 	public NonPlayerImpl(
 			String name,
@@ -37,7 +37,7 @@ public class NonPlayerImpl extends UnitImpl implements NonPlayer, Party.OnAdd<No
 	) {
 		super(name, phase, characterClass, level, creatureType, race, side, baseStatInfo, combatRatingInfo, talents);
 
-		Raid.newRaid(this);
+		UnitRaid.newUnitRaid(this);
 	}
 
 	@Override
@@ -62,7 +62,7 @@ public class NonPlayerImpl extends UnitImpl implements NonPlayer, Party.OnAdd<No
 	}
 
 	@Override
-	public void onAdd(Party<NonPlayer> party) {
+	public void onAdd(UnitParty<NonPlayer> party) {
 		if (this.party != null) {
 			this.party.remove(this);
 		}

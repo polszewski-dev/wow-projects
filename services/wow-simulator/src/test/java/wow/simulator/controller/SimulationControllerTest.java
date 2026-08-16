@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import wow.character.model.character.Raid;
 import wow.commons.client.dto.RaidDTO;
 import wow.simulator.WowSimulatorSpringTest;
 import wow.simulator.client.dto.RngType;
@@ -16,6 +15,7 @@ import wow.simulator.converter.NonPlayerConverter;
 import wow.simulator.converter.RaidConverter;
 import wow.simulator.model.unit.NonPlayer;
 import wow.simulator.model.unit.Player;
+import wow.simulator.model.unit.UnitRaid;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -63,7 +63,7 @@ class SimulationControllerTest extends WowSimulatorSpringTest {
 	}
 
 	RaidDTO getRaidDTO(Player player) {
-		var raid = Raid.newRaid(player);
+		var raid = UnitRaid.newUnitRaid(player);
 
 		return raidConverter.convert(raid);
 	}

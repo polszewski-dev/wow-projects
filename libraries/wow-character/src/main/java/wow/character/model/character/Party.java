@@ -32,13 +32,7 @@ public class Party<M extends Character> {
 
 		members.add(member);
 
-		if (member instanceof Party.OnAdd<?> handler) {
-			handler.onAdd((Party) this);
-		}
-	}
-
-	public interface OnAdd<M extends Character> {
-		void onAdd(Party<M> party);
+		onMemberAdded(member);
 	}
 
 	@SafeVarargs
@@ -56,6 +50,16 @@ public class Party<M extends Character> {
 
 	public void remove(M member) {
 		members.remove(member);
+
+		onMemberRemoved(member);
+	}
+
+	protected void onMemberAdded(M member) {
+		// void
+	}
+
+	protected void onMemberRemoved(M member) {
+		// void
 	}
 
 	public boolean canAddAnotherMember() {

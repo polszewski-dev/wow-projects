@@ -18,8 +18,12 @@ public class Raid<M extends Character> {
 
 	public Raid() {
 		for (int i = 0; i < MAX_PARTIES; ++i) {
-			parties.add(new Party<>(this));
+			parties.add(newParty());
 		}
+	}
+
+	protected Party<M> newParty() {
+		return new Party<>(this);
 	}
 
 	public static <M extends Character> Raid<M> newRaid(M member) {
@@ -50,7 +54,7 @@ public class Raid<M extends Character> {
 		}
 	}
 
-	public List<Party<M>> getParties() {
+	public List<? extends Party<M>> getParties() {
 		return List.copyOf(parties);
 	}
 

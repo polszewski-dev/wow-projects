@@ -4,7 +4,6 @@ import lombok.Getter;
 import wow.character.model.character.BaseStatInfo;
 import wow.character.model.character.Character;
 import wow.character.model.character.CombatRatingInfo;
-import wow.character.model.character.Party;
 import wow.character.model.talent.Talents;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.PetType;
@@ -14,6 +13,7 @@ import wow.commons.model.pve.Side;
 import wow.commons.model.spell.Spell;
 import wow.simulator.model.unit.Pet;
 import wow.simulator.model.unit.Unit;
+import wow.simulator.model.unit.UnitParty;
 
 /**
  * User: POlszewski
@@ -59,7 +59,7 @@ public class PetImpl extends UnitImpl implements Pet {
 	}
 
 	@Override
-	public Party<? extends Unit> getParty() {
-		return master.getParty();
+	public UnitParty<? extends Unit> getParty() {
+		return master != null ? master.getParty() : null;
 	}
 }
