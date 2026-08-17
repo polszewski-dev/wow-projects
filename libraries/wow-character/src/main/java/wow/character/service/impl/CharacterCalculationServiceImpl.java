@@ -624,6 +624,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 		snapshot.setSpellPower((int) spellStats.getPower());
 		snapshot.setSpellDamage(getSpellDamage(character, baseStatsSnapshot));
 		snapshot.setSpellDamageBySchool(getSpellDamageBySchool(character, baseStatsSnapshot));
+		snapshot.setSpellDamagePctBySchool(getSpellDamagePctBySchool(character, baseStatsSnapshot));
 		snapshot.setSpellHealing(getSpellHealing(character, baseStatsSnapshot));
 		snapshot.setSpellHitPctBonus(getSpellHitPctBonus(character, hitStats));
 		snapshot.setSpellHitPct(getSpellHitPct(character, hitStats, levelDifference));
@@ -707,6 +708,25 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 				Function.identity(),
 				school -> getSpellDamage(character, school, baseStats)
 		));
+	}
+
+	private Map<SpellSchool, Double> getSpellDamagePctBySchool(Character character, BaseStatsSnapshot baseStats) {
+		return Stream.of(SpellSchool.values()).collect(Collectors.toMap(
+				Function.identity(),
+				school -> getSpellDamagePct(character, school, baseStats)
+		));
+	}
+
+	private double getSpellDamagePct(Character character, SpellSchool school, BaseStatsSnapshot baseStats) {
+		return getSpellPctAmount(character, baseStats, SPELL_DAMAGE, school);
+	}
+
+	private double getSpellPctAmount(Character character, BaseStatsSnapshot baseStats, PowerType powerType, SpellSchool school) {
+		var conditionArgs = AttributeConditionArgs.forAnySpell(character, powerType, school);
+		var spellStats = new AccumulatedSpellStats(conditionArgs);
+
+		accumulateEffects(character, spellStats, baseStats);
+		return spellStats.getAmountPct();
 	}
 
 	private int getSpellDamage(Character character, BaseStatsSnapshot baseStats) {

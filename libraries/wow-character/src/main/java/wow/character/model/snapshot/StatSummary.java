@@ -8,6 +8,8 @@ import wow.commons.model.spell.SpellSchool;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
 
 /**
  * User: POlszewski
@@ -22,6 +24,7 @@ public class StatSummary {
 	private int spellPower;
 	private int spellDamage;
 	private Map<SpellSchool, Integer> spellDamageBySchool;
+	private Map<SpellSchool, Double> spellDamagePctBySchool;
 	private int spellHealing;
 	private double spellHitPctBonus;
 	private double spellHitPct;
@@ -67,12 +70,17 @@ public class StatSummary {
 		return spellDamageBySchool.getOrDefault(school, 0);
 	}
 
+	public Double getSpellDamagePct(SpellSchool school) {
+		return spellDamagePctBySchool.getOrDefault(school, 0.0);
+	}
+
 	public StatSummary difference(StatSummary other) {
 		return new StatSummary(
 				baseStatsSnapshot.difference(other.baseStatsSnapshot),
 				spellPower - other.spellPower,
 				spellDamage - other.spellDamage,
 				getDamageBySchoolDifference(other),
+				getDamagePctBySchoolDifference(other),
 				spellHealing - other.spellHealing,
 				spellHitPctBonus - other.spellHitPctBonus,
 				spellHitPct - other.spellHitPct,
@@ -89,14 +97,22 @@ public class StatSummary {
 	}
 
 	private Map<SpellSchool, Integer> getDamageBySchoolDifference(StatSummary other) {
-		var result = new EnumMap<SpellSchool, Integer>(SpellSchool.class);
+		return getDiff(other, StatSummary::getSpellDamageBySchool, (x, y) -> x - y);
+	}
 
-		for (var entry : spellDamageBySchool.entrySet()) {
+	private Map<SpellSchool, Double> getDamagePctBySchoolDifference(StatSummary other) {
+		return getDiff(other, StatSummary::getSpellDamagePctBySchool, (x, y) -> x - y);
+	}
+
+	private <T> Map<SpellSchool, T> getDiff(StatSummary other, Function<StatSummary, Map<SpellSchool, T>> getter, BinaryOperator<T> operator) {
+		var result = new EnumMap<SpellSchool, T>(SpellSchool.class);
+
+		for (var entry : getter.apply(this).entrySet()) {
 			var school = entry.getKey();
 			var value = entry.getValue();
-			var otherValue = other.spellDamageBySchool.get(school);
+			var otherValue = getter.apply(other).get(school);
 
-			result.put(school, value - otherValue);
+			result.put(school, operator.apply(value, otherValue));
 		}
 
 		return result;
