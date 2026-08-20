@@ -729,6 +729,7 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	public void triggerDeath(Unit caster) {
 		deactivate();
 		effects.removeAllEffects();
+		dismissPet();
 		if (onDeath != null) {
 			onDeath.accept(this);
 		}
@@ -787,8 +788,8 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 			return null;
 		}
 
-		this.setActivePet(null);
 		activePet.deactivate();
+		this.setActivePet(null);
 		getSimulation().remove(activePet);
 
 		return activePet;
@@ -802,8 +803,8 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 			throw new IllegalStateException("No active pet for the sacrifice");
 		}
 
-		this.setActivePet(null);
 		activePet.deactivate();
+		this.setActivePet(null);
 		getSimulation().remove(activePet);
 
 		return activePet;

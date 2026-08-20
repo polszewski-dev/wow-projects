@@ -1,6 +1,8 @@
 package wow.simulator.simulation;
 
 import org.junit.jupiter.api.Test;
+import wow.simulator.model.time.Time;
+import wow.simulator.model.unit.Unit;
 import wow.simulator.simulation.spell.SpellSimulationTest;
 
 import static wow.commons.model.categorization.ItemSlot.MAIN_HAND;
@@ -130,6 +132,59 @@ class AuraTest extends SpellSimulationTest {
 
 		assertStaminaIsIncreasedBy(player, 70);
 		assertStaminaIsIncreasedBy(player.getActivePet(), baseline.getActivePet(), 70);
+	}
+
+	@Test
+	void aura_disappears_after_pet_is_unsummoned() {
+		setPlayerConfig(WARLOCK, UNDEAD);
+		setPlayer2Config(WARLOCK, UNDEAD);
+
+		createDefaultUnits();
+
+		player2.cast(SUMMON_IMP);
+		summonedPetCasts(player2, BLOOD_PACT);
+		player2.idleUntil(Time.at(20));
+		player2.immediateAction(Unit::dismissPet);
+
+		updateUntil(30);
+
+		assertStaminaIsIncreasedBy(player, 0);
+	}
+
+	@Test
+	void aura_disappears_after_pet_is_sacrificed() {
+		setPlayerConfig(WARLOCK, UNDEAD);
+		setPlayer2Config(WARLOCK, UNDEAD);
+
+		createDefaultUnits();
+
+		enableTalent(player2, DEMONIC_SACRIFICE, 1);
+
+		player2.cast(SUMMON_IMP);
+		summonedPetCasts(player2, BLOOD_PACT);
+		player2.idleUntil(Time.at(20));
+		player2.cast(DEMONIC_SACRIFICE);
+
+		updateUntil(30);
+
+		assertStaminaIsIncreasedBy(player, 0);
+	}
+
+	@Test
+	void aura_disappears_after_masters_death() {
+		setPlayerConfig(WARLOCK, UNDEAD);
+		setPlayer2Config(WARLOCK, UNDEAD);
+
+		createDefaultUnits();
+
+		player2.cast(SUMMON_IMP);
+		summonedPetCasts(player2, BLOOD_PACT);
+		player2.idleUntil(Time.at(20));
+		player2.immediateAction(self -> self.decreaseHealth(100_000, false, null, null));
+
+		updateUntil(30);
+
+		assertStaminaIsIncreasedBy(player, 0);
 	}
 
 	@Override
