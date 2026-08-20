@@ -15,7 +15,7 @@ import wow.simulator.model.unit.UnitRaid;
  * Date: 2023-08-07
  */
 @Getter
-public class PlayerImpl extends UnitImpl implements Player, UnitParty.OnAdd<Player> {
+public class PlayerImpl extends UnitImpl implements Player, UnitParty.OnAddRemove<Player> {
 	private final CharacterProfessions professions;
 	private final ExclusiveFactions exclusiveFactions;
 	private final Assets assets;
@@ -44,10 +44,15 @@ public class PlayerImpl extends UnitImpl implements Player, UnitParty.OnAdd<Play
 	}
 
 	@Override
-	public void onAdd(UnitParty<Player> party) {
+	public void onAddedToParty(UnitParty<Player> party) {
 		if (this.party != null) {
 			this.party.remove(this);
 		}
 		this.party = party;
+	}
+
+	@Override
+	public void onRemovedFromParty() {
+		UnitRaid.newUnitRaid(this);
 	}
 }

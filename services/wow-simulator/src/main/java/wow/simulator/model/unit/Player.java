@@ -19,4 +19,8 @@ public interface Player extends Unit, PlayerCharacter {
 	default List<Player> getPartyMembers() {
 		return getParty().getMembers();
 	}
+
+	default void invite(Player... players) {
+		getParty().add(players);
+	}
 }

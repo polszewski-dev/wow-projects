@@ -80,7 +80,5 @@ class TotemOfWrathTest extends TbcShamanSpellSimulationTest {
 	@Override
 	protected void afterSetUp() {
 		enableTalent(TalentNames.TOTEM_OF_WRATH, 1);
-
-		player.getParty().add(player2);
 	}
 }

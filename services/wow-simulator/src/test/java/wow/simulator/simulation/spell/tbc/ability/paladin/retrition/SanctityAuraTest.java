@@ -56,7 +56,5 @@ class SanctityAuraTest extends TbcPaladinSpellSimulationTest {
 	@Override
 	protected void afterSetUp() {
 		enableTalent(TalentNames.SANCTITY_AURA, 1);
-
-		player.getParty().add(player2);
 	}
 }

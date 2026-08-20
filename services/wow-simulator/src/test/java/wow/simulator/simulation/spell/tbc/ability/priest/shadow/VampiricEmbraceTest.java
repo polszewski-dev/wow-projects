@@ -129,6 +129,7 @@ class VampiricEmbraceTest extends TbcPriestSpellSimulationTest {
 		setHealth(player3, 1000);
 		setHealth(player4, 1000);
 
-		player.getParty().add(player2);
+		player.disbandParty();
+		player.invite(player2);
 	}
 }

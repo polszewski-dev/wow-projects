@@ -32,14 +32,16 @@ class BloodlustTest extends TbcShamanSpellSimulationTest {
 						.effectApplied(BLOODLUST, player, 40)
 						.effectApplied(BLOODLUST, player2, 40)
 						.effectApplied(BLOODLUST, player3, 40)
-						.effectApplied(BLOODLUST, player4, 40),
+						.effectApplied(BLOODLUST, player4, 40)
+						.effectApplied(BLOODLUST, player5, 40),
 				at(1.5)
 						.endGcd(player),
 				at(40)
 						.effectExpired(BLOODLUST, player)
 						.effectExpired(BLOODLUST, player2)
 						.effectExpired(BLOODLUST, player3)
-						.effectExpired(BLOODLUST, player4),
+						.effectExpired(BLOODLUST, player4)
+						.effectExpired(BLOODLUST, player5),
 				at(600)
 						.cooldownExpired(player, BLOODLUST)
 		);
@@ -53,10 +55,5 @@ class BloodlustTest extends TbcShamanSpellSimulationTest {
 		updateUntil(30);
 
 		assertCastTime(LIGHTNING_BOLT, 2.5 / 1.3);
-	}
-
-	@Override
-	protected void afterSetUp() {
-		player.getParty().add(player2, player3, player4);
 	}
 }

@@ -199,6 +199,10 @@ public interface Unit extends Character, SimulationContextSource {
 		return getParty().getMembers();
 	}
 
+	default void disbandParty() {
+		getParty().disband();
+	}
+
 	void collectAuras(EffectCollector collector);
 
 	static boolean areFriendly(Unit first, Unit second) {

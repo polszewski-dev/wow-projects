@@ -159,6 +159,7 @@ class VampiricTouchTest extends TbcPriestSpellSimulationTest {
 		setMana(player3, 0);
 		setMana(player4, 0);
 
-		player.getParty().add(player2);
+		player.disbandParty();
+		player.invite(player2);
 	}
 }

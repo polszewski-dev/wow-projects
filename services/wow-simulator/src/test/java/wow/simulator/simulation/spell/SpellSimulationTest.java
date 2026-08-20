@@ -73,7 +73,7 @@ public abstract class SpellSimulationTest extends WowSimulatorSpringTest impleme
 		simulation.add(target4);
 		simulation.add(target5);
 
-		//player.getParty().add(player2, player3, player4);
+		player.invite(player2, player3, player4, player5);
 	}
 
 	protected boolean createUnitsOnSetUp = true;

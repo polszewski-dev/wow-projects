@@ -55,7 +55,7 @@ public abstract class AssetTest extends WowSimulatorSpringTest {
 
 		partyAsset.getAssets().setNames(enabledAssets);
 
-		player.getParty().add(partyAsset);
+		player.invite(partyAsset);
 
 		handler = new TestEventCollectingHandler();
 

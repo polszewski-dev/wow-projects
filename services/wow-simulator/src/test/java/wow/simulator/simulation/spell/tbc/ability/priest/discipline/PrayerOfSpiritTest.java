@@ -51,6 +51,7 @@ class PrayerOfSpiritTest extends TbcPriestSpellSimulationTest {
 	protected void afterSetUp() {
 		enableTalent(TalentNames.DIVINE_SPIRIT, 1);
 
-		player2.getParty().add(player3, player4);
+		player2.disbandParty();
+		player2.invite(player3, player4);
 	}
 }

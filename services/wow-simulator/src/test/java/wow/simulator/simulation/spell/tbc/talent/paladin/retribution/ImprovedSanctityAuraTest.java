@@ -28,4 +28,9 @@ class ImprovedSanctityAuraTest extends TbcPaladinTalentSimulationTest {
 
 		assertDamageIsIncreasedByPct(10 + rank);
 	}
+
+	@Override
+	protected void afterSetUp() {
+		player.disbandParty();
+	}
 }

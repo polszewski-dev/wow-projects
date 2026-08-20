@@ -65,4 +65,9 @@ class ImprovedMarkOfTheWildTest extends TbcDruidTalentSimulationTest {
 
 		assertStatBonusIsIncreasedByPct(StatSummary::getSpirit, 7 * rank);
 	}
+
+	@Override
+	protected void afterSetUp() {
+		player.disbandParty();
+	}
 }

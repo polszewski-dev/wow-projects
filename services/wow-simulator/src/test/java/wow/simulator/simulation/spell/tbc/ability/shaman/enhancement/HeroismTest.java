@@ -32,14 +32,16 @@ class HeroismTest extends TbcShamanSpellSimulationTest {
 						.effectApplied(HEROISM, player, 40)
 						.effectApplied(HEROISM, player2, 40)
 						.effectApplied(HEROISM, player3, 40)
-						.effectApplied(HEROISM, player4, 40),
+						.effectApplied(HEROISM, player4, 40)
+						.effectApplied(HEROISM, player5, 40),
 				at(1.5)
 						.endGcd(player),
 				at(40)
 						.effectExpired(HEROISM, player)
 						.effectExpired(HEROISM, player2)
 						.effectExpired(HEROISM, player3)
-						.effectExpired(HEROISM, player4),
+						.effectExpired(HEROISM, player4)
+						.effectExpired(HEROISM, player5),
 				at(600)
 						.cooldownExpired(player, HEROISM)
 		);
@@ -53,10 +55,5 @@ class HeroismTest extends TbcShamanSpellSimulationTest {
 		updateUntil(30);
 
 		assertCastTime(LIGHTNING_BOLT, 2.5 / 1.3);
-	}
-
-	@Override
-	protected void afterSetUp() {
-		player.getParty().add(player2, player3, player4);
 	}
 }

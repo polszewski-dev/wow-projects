@@ -25,8 +25,6 @@ class AuraTest extends SpellSimulationTest {
 
 		createDefaultUnits();
 
-		player.getParty().add(player2, player3, player4, player5);
-
 		equip(player2, 22630, MAIN_HAND);
 		equip(player3, 22589, MAIN_HAND);
 		equip(player4, 22631, MAIN_HAND);
@@ -48,8 +46,6 @@ class AuraTest extends SpellSimulationTest {
 
 		createDefaultUnits();
 
-		player.getParty().add(player2, player3, player4, player5);
-
 		equip(player2, 22630, MAIN_HAND);
 		equip(player3, 22589, MAIN_HAND);
 		equip(player4, 22630, MAIN_HAND);
@@ -67,8 +63,6 @@ class AuraTest extends SpellSimulationTest {
 
 		createDefaultUnits();
 
-		player.getParty().add(player2, player3);
-
 		assertSpellHitPctIncreasedBy(player, 1);
 		assertSpellHitPctIncreasedBy(player2, 1);
 		assertSpellHitPctIncreasedBy(player3, 1);
@@ -84,8 +78,6 @@ class AuraTest extends SpellSimulationTest {
 
 		enableTalent(player2, MOONKIN_FORM, 1);
 		enableTalent(player3, MOONKIN_FORM, 1);
-
-		player.getParty().add(player2, player3);
 
 		player2.cast(MOONKIN_FORM);
 		player3.cast(MOONKIN_FORM);
@@ -111,8 +103,6 @@ class AuraTest extends SpellSimulationTest {
 		enableTalent(player2, IMPROVED_SANCTITY_AURA, 2);
 		enableTalent(player3, IMPROVED_SANCTITY_AURA, 1);
 
-		player.getParty().add(player2, player3, player4);
-
 		player2.cast(SANCTITY_AURA);
 		player3.cast(SANCTITY_AURA);
 		player4.cast(SANCTITY_AURA);
@@ -128,8 +118,6 @@ class AuraTest extends SpellSimulationTest {
 		setPlayer2Config(WARLOCK, UNDEAD);
 
 		createDefaultUnits();
-
-		player.getParty().add(player2);
 
 		player.cast(SUMMON_IMP);
 		player2.cast(SUMMON_IMP);

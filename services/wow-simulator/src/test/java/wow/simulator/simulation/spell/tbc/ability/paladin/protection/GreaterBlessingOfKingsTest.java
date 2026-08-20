@@ -52,6 +52,7 @@ class GreaterBlessingOfKingsTest extends TbcPaladinSpellSimulationTest {
 	protected void afterSetUp() {
 		enableTalent(BLESSING_OF_KINGS, 1);
 
-		player2.getParty().add(player3, player4);
+		player2.disbandParty();
+		player2.invite(player3, player4);
 	}
 }

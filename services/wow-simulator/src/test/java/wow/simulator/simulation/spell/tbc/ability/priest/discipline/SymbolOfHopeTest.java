@@ -61,7 +61,8 @@ class SymbolOfHopeTest extends TbcPriestSpellSimulationTest {
 
 	@Override
 	protected void afterSetUp() {
-		player.getParty().add(player2);
-		player3.getParty().add(player4);
+		player.disbandParty();
+		player.invite(player2);
+		player3.invite(player4);
 	}
 }

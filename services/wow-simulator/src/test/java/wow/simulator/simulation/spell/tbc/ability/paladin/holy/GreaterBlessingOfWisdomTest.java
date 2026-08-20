@@ -49,6 +49,7 @@ class GreaterBlessingOfWisdomTest extends TbcPaladinSpellSimulationTest {
 
 	@Override
 	protected void afterSetUp() {
-		player2.getParty().add(player3, player4);
+		player2.disbandParty();
+		player2.invite(player3, player4);
 	}
 }

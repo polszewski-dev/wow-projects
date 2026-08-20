@@ -57,9 +57,4 @@ class ManaSpringTotemTest extends TbcShamanSpellSimulationTest {
 						.increasedResource(20, MANA, player4, MANA_SPRING_TOTEM)
 		);
 	}
-
-	@Override
-	protected void afterSetUp() {
-		player.getParty().add(player2, player3, player4);
-	}
 }

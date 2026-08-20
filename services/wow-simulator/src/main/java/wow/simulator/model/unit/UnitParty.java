@@ -4,6 +4,8 @@ import lombok.Getter;
 import wow.character.model.character.Party;
 import wow.simulator.model.effect.Auras;
 
+import java.util.List;
+
 /**
  * User: POlszewski
  * Date: 2026-08-16
@@ -24,8 +26,8 @@ public class UnitParty<M extends Unit> extends Party<M> {
 
 	@Override
 	protected void onMemberAdded(M member) {
-		if (member instanceof OnAdd<?> handler) {
-			handler.onAdd((UnitParty) this);
+		if (member instanceof OnAddRemove<?> handler) {
+			handler.onAddedToParty((UnitParty) this);
 		}
 		invalidateAuras();
 	}
@@ -39,7 +41,20 @@ public class UnitParty<M extends Unit> extends Party<M> {
 		auras.invalidate();
 	}
 
-	public interface OnAdd<M extends Unit> {
-		void onAdd(UnitParty<M> party);
+	public void disband() {
+		var membersCopy = List.copyOf(getMembers());
+
+		for (M member : membersCopy) {
+			remove(member);
+			if (member instanceof OnAddRemove<?> handler) {
+				handler.onRemovedFromParty();
+			}
+		}
+	}
+
+	public interface OnAddRemove<M extends Unit> {
+		void onAddedToParty(UnitParty<M> party);
+
+		void onRemovedFromParty();
 	}
 }

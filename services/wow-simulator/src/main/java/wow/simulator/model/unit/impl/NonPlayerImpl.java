@@ -20,7 +20,7 @@ import wow.simulator.model.unit.UnitRaid;
  * Date: 2023-08-07
  */
 @Getter
-public class NonPlayerImpl extends UnitImpl implements NonPlayer, UnitParty.OnAdd<NonPlayer> {
+public class NonPlayerImpl extends UnitImpl implements NonPlayer, UnitParty.OnAddRemove<NonPlayer> {
 	private UnitParty<NonPlayer> party;
 
 	public NonPlayerImpl(
@@ -62,10 +62,15 @@ public class NonPlayerImpl extends UnitImpl implements NonPlayer, UnitParty.OnAd
 	}
 
 	@Override
-	public void onAdd(UnitParty<NonPlayer> party) {
+	public void onAddedToParty(UnitParty<NonPlayer> party) {
 		if (this.party != null) {
 			this.party.remove(this);
 		}
 		this.party = party;
+	}
+
+	@Override
+	public void onRemovedFromParty() {
+		UnitRaid.newUnitRaid(this);
 	}
 }
