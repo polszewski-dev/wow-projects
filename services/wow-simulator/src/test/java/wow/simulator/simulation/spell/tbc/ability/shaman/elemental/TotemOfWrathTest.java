@@ -5,6 +5,8 @@ import wow.commons.model.Duration;
 import wow.simulator.simulation.spell.tbc.TbcShamanSpellSimulationTest;
 import wow.test.commons.TalentNames;
 
+import static wow.commons.model.character.CharacterClassId.WARLOCK;
+import static wow.commons.model.character.RaceId.UNDEAD;
 import static wow.commons.model.spell.ResourceType.MANA;
 import static wow.test.commons.AbilityNames.SHADOW_BOLT;
 import static wow.test.commons.AbilityNames.TOTEM_OF_WRATH;
@@ -67,6 +69,12 @@ class TotemOfWrathTest extends TbcShamanSpellSimulationTest {
 		var baseRollChance = rng.getCritRollData().getRollChances().getFirst();
 
 		assertLastCritChance(baseRollChance + 3);
+	}
+
+	@Override
+	protected void beforeSetUp() {
+		super.beforeSetUp();
+		setOtherPartyMemberConfig(WARLOCK, UNDEAD);
 	}
 
 	@Override

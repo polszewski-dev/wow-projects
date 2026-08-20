@@ -44,7 +44,7 @@ class GreaterBlessingOfWisdomTest extends TbcPaladinSpellSimulationTest {
 	void mp5_is_increased() {
 		simulateBuffSpell(GREATER_BLESSING_OF_WISDOM);
 
-		assertMp5IncreasedBy(41);
+		assertMp5IsIncreasedBy(player, 41);
 	}
 
 	@Override

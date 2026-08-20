@@ -35,7 +35,8 @@ class BlastWaveTest extends TbcMageSpellSimulationTest {
 						.decreasedResource(670, HEALTH, target, BLAST_WAVE)
 						.decreasedResource(670, HEALTH, target2, BLAST_WAVE)
 						.decreasedResource(670, HEALTH, target3, BLAST_WAVE)
-						.decreasedResource(670, HEALTH, target4, BLAST_WAVE),
+						.decreasedResource(670, HEALTH, target4, BLAST_WAVE)
+						.decreasedResource(670, HEALTH, target5, BLAST_WAVE),
 				at(1.5)
 						.endGcd(player),
 				at(30)

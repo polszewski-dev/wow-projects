@@ -4,6 +4,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import wow.simulator.simulation.spell.tbc.TbcPriestSpellSimulationTest;
 
+import static wow.commons.model.character.CharacterClassId.MAGE;
 import static wow.commons.model.character.CharacterClassId.PRIEST;
 import static wow.commons.model.character.RaceId.DRANEI;
 import static wow.commons.model.character.RaceId.HUMAN;
@@ -54,9 +55,8 @@ class SymbolOfHopeTest extends TbcPriestSpellSimulationTest {
 
 	@Override
 	protected void beforeSetUp() {
-		characterClassId = PRIEST;
-		raceId = DRANEI;
-		partyMemberRaceId = HUMAN;
+		setPlayerConfig(PRIEST, DRANEI);
+		setOtherPartyMemberConfig(MAGE, HUMAN);
 	}
 
 	@Override

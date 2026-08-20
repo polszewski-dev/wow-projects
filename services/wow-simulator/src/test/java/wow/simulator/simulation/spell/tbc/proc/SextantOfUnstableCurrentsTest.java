@@ -5,7 +5,6 @@ import wow.commons.model.spell.CooldownId;
 import wow.commons.model.spell.SpellId;
 import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.categorization.ItemSlot.TRINKET_1;
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
@@ -58,10 +57,7 @@ class SextantOfUnstableCurrentsTest extends TbcWarlockSpellSimulationTest {
 
 		updateUntil(10);
 
-		var spBefore = statsAt(0).getSpellPower();
-		var spAfter = statsAt(10).getSpellPower();
-
-		assertThat(spAfter).isEqualTo(spBefore + 190);
+		assertSpellPowerIsIncreasedBy(player, 190);
 	}
 
 	CooldownId cooldownId = CooldownId.of(SpellId.of(38347));

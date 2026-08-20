@@ -13,8 +13,7 @@ import static wow.commons.model.pve.PhaseId.TBC_P5;
 public abstract class TbcPaladinSpellSimulationTest extends SpellSimulationTest implements TbcSpellInfos {
 	@Override
 	protected void beforeSetUp() {
-		characterClassId = PALADIN;
-		raceId = BLOOD_ELF;
+		setPlayerConfig(PALADIN, BLOOD_ELF);
 		phaseId = TBC_P5;
 	}
 }

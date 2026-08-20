@@ -7,6 +7,8 @@ import wow.simulator.simulation.spell.tbc.TbcDruidSpellSimulationTest;
 import wow.test.commons.TalentNames;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static wow.commons.model.character.CharacterClassId.WARLOCK;
+import static wow.commons.model.character.RaceId.UNDEAD;
 import static wow.commons.model.spell.ResourceType.MANA;
 import static wow.test.commons.AbilityNames.MOONKIN_FORM;
 import static wow.test.commons.AbilityNames.SHADOW_BOLT;
@@ -67,6 +69,12 @@ class MoonkinFormTest extends TbcDruidSpellSimulationTest {
 		updateUntil(30);
 
 		assertThat(player.getForm()).isEqualTo(FormType.MOONKIN_FORM);
+	}
+
+	@Override
+	protected void beforeSetUp() {
+		super.beforeSetUp();
+		setOtherPartyMemberConfig(WARLOCK, UNDEAD);
 	}
 
 	@Override

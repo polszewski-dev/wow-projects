@@ -40,6 +40,6 @@ class WrathOfAirTotemTest extends TbcShamanSpellSimulationTest {
 	void sp_is_increased() {
 		simulateBuffSpell(WRATH_OF_AIR_TOTEM);
 
-		assertSpellPowerIncreasedBy(101);
+		assertSpellPowerIsIncreasedBy(player, 101);
 	}
 }

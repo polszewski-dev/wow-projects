@@ -13,8 +13,7 @@ import static wow.commons.model.pve.PhaseId.VANILLA_P6;
 public abstract class VanillaPriestSpellSimulationTest extends SpellSimulationTest implements VanillaSpellInfos {
 	@Override
 	protected void beforeSetUp() {
-		characterClassId = PRIEST;
-		raceId = UNDEAD;
+		setPlayerConfig(PRIEST, UNDEAD);
 		phaseId = VANILLA_P6;
 	}
 }

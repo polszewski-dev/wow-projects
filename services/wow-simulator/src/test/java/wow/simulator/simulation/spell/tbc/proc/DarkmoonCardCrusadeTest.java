@@ -6,7 +6,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
 import wow.simulator.util.TestEvent;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.categorization.ItemSlot.TRINKET_1;
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
@@ -93,10 +92,7 @@ class DarkmoonCardCrusadeTest extends TbcWarlockSpellSimulationTest {
 
 		updateUntil(numCasts * 3 + 1);
 
-		var dmgBefore = statsAt(0).getSpellDamage();
-		var dmgAfter = statsAt(numCasts * 3 + 1).getSpellDamage();
-
-		assertThat(dmgAfter).isEqualTo(dmgBefore + numCasts * 8);
+		assertSpellDamageIsIncreasedBy(player, numCasts * 8);
 	}
 
 	@Override

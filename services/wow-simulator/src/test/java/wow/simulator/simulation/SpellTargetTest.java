@@ -13,6 +13,7 @@ import wow.simulator.util.TestEventCollectingHandler;
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.character.CharacterClassId.PRIEST;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
+import static wow.commons.model.character.RaceId.UNDEAD;
 import static wow.test.commons.AbilityNames.*;
 
 /**
@@ -147,15 +148,16 @@ class SpellTargetTest extends WowSimulatorSpringTest {
 
 	@BeforeEach
 	public void setUp() {
-		characterClassId = PRIEST;
+		setPlayerConfig(PRIEST, UNDEAD);
 
-		setupTestObjects();
+		createSimulation();
+		createDefaultUnits();
 
 		handler = new TestEventCollectingHandler();
 		simulation.addHandler(handler);
 
-		friend = getNakedPlayer(WARLOCK, "Friend");
-		otherFriend = getNakedPlayer(WARLOCK, "OtherFriend");
+		friend = getNakedPlayer(WARLOCK, UNDEAD, "Friend");
+		otherFriend = getNakedPlayer(WARLOCK, UNDEAD, "OtherFriend");
 		enemy = getEnemy("Enemy");
 		otherEnemy = getEnemy("OtherEnemy");
 

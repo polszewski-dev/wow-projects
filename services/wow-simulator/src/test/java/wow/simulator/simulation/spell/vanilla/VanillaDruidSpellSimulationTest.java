@@ -13,8 +13,7 @@ import static wow.commons.model.pve.PhaseId.VANILLA_P6;
 public abstract class VanillaDruidSpellSimulationTest extends SpellSimulationTest implements VanillaSpellInfos {
 	@Override
 	protected void beforeSetUp() {
-		characterClassId = DRUID;
-		raceId = TAUREN;
+		setPlayerConfig(DRUID, TAUREN);
 		phaseId = VANILLA_P6;
 	}
 }

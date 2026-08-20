@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 import wow.simulator.simulation.spell.tbc.TbcMageSpellSimulationTest;
 
 import static wow.commons.model.spell.ResourceType.MANA;
-import static wow.test.commons.AbilityNames.FIREBALL;
 import static wow.test.commons.AbilityNames.MOLTEN_ARMOR;
 
 /**
@@ -37,14 +36,9 @@ class MoltenArmorTest extends TbcMageSpellSimulationTest {
 	}
 
 	@Test
-	void intellect_is_increased() {
-		player.cast(MOLTEN_ARMOR);
-		player.cast(FIREBALL);
+	void spell_crit_pct_is_increased() {
+		simulateBuffSpell(MOLTEN_ARMOR);
 
-		updateUntil(30);
-
-		var spellCritPctBefore = statsAt(0).getSpellCritPct();
-
-		assertLastCritChance(spellCritPctBefore + 3);
+		assertSpellCritPctIsIncreasedBy(player, 3);
 	}
 }

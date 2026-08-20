@@ -5,6 +5,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import wow.simulator.simulation.spell.tbc.TbcPriestSpellSimulationTest;
 
+import static wow.commons.model.character.CharacterClassId.PRIEST;
 import static wow.commons.model.character.RaceId.NIGHT_ELF;
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.test.commons.AbilityNames.STARSHARDS;
@@ -60,6 +61,6 @@ class StarshardsTest extends TbcPriestSpellSimulationTest {
 	@Override
 	protected void beforeSetUp() {
 		super.beforeSetUp();
-		raceId = NIGHT_ELF;
+		setPlayerConfig(PRIEST, NIGHT_ELF);
 	}
 }

@@ -39,9 +39,9 @@ class IcyVeinsTest extends TbcMageSpellSimulationTest {
 
 	@Test
 	void haste_is_increased() {
-		simulateBuffSpell(ICY_VEINS);
+		simulateBuffSpell(ICY_VEINS, 10);
 
-		assertSpellHastePctIncreasedBy(20);
+		assertSpellHastePctIsIncreasedBy(player, 20);
 	}
 
 	@Test

@@ -9,16 +9,13 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import wow.character.model.equipment.EquippableItem;
-import wow.character.model.snapshot.StatSummary;
 import wow.commons.model.Duration;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.RaceId;
-import wow.commons.model.item.Item;
 import wow.commons.model.item.ItemId;
 import wow.commons.model.pve.PhaseId;
-import wow.commons.model.spell.SpellSchool;
 import wow.commons.repository.pve.PhaseRepository;
 import wow.commons.repository.spell.SpellRepository;
 import wow.simulator.config.SimulatorContext;
@@ -48,7 +45,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
 import static wow.commons.model.character.CreatureType.BEAST;
 import static wow.commons.model.character.RaceId.ORC;
-import static wow.commons.model.character.RaceId.UNDEAD;
 import static wow.commons.model.pve.PhaseId.TBC_P5;
 import static wow.simulator.util.CalcUtils.getPercentOf;
 import static wow.simulator.util.CalcUtils.increaseByPct;
@@ -83,13 +79,8 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		return new SimulationContext(clock, gameLog, () -> rng, scheduler, getCharacterService(), getCharacterCalculationService(), getSpellRepository());
 	}
 
-	protected Player getNakedPlayer() {
-		return getNakedPlayer(characterClassId, "Player");
-	}
-
-	protected Player getNakedPlayer(CharacterClassId characterClassId, String name) {
-		var raceId = getRaceId(characterClassId);
-		return getNakedPlayer(characterClassId, raceId, name);
+	protected PlayerImpl getNakedPlayer(PlayerConfig playerConfig, String name) {
+		return getNakedPlayer(playerConfig.characterClassId, playerConfig.raceId, name);
 	}
 
 	protected PlayerImpl getNakedPlayer(CharacterClassId characterClassId, RaceId raceId, String name) {
@@ -107,26 +98,11 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		return player;
 	}
 
-	private RaceId getRaceId(CharacterClassId characterClassId) {
-		if (raceId != null) {
-			return raceId;
-		}
-		return switch (characterClassId) {
-			case PRIEST -> UNDEAD;
-			case WARLOCK -> ORC;
-			default -> throw new IllegalArgumentException();
-		};
-	}
-
 	private int getLevel() {
 		if (level != null) {
 			return level;
 		}
 		return phaseRepository.getPhase(phaseId).orElseThrow().getMaxLevel();
-	}
-
-	protected NonPlayer getEnemy() {
-		return getEnemy("Target");
 	}
 
 	protected NonPlayer getEnemy(String name) {
@@ -272,16 +248,6 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		assertThat(actualCastTime).isEqualTo(expectedCastTime, PRECISION);
 	}
 
-	protected void assertCastTime(String abilityName, double expectedBaseCastTime, int pctIncrease) {
-		assertCastTime(abilityName, increaseByPct(expectedBaseCastTime, pctIncrease));
-	}
-
-	protected void assertCooldown(String abilityName, double duration) {
-		var actualCooldown = handler.getCooldown(abilityName, player);
-
-		assertThat(actualCooldown).isEqualTo(duration);
-	}
-
 	protected void assertEffectDuration(String abilityName, Unit target, double duration) {
 		var actualEffectDuration = handler.getEffectDuration(abilityName, target);
 
@@ -310,23 +276,27 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		equip(player, itemName);
 	}
 
-	protected void equip(Player player, String itemName) {
-		Item item = getItemRepository().getItem(itemName, player.getPhaseId()).orElseThrow();
-		player.equip(new EquippableItem(item));
+	protected void equip(Unit unit, String itemName) {
+		var item = getItemRepository().getItem(itemName, unit.getPhaseId()).orElseThrow();
+		unit.equip(new EquippableItem(item));
 	}
 
 	protected void equip(String itemName, ItemSlot itemSlot) {
-		Item item = getItemRepository().getItem(itemName, player.getPhaseId()).orElseThrow();
-		player.equip(new EquippableItem(item), itemSlot);
+		equip(player, itemName, itemSlot);
+	}
+
+	protected void equip(Unit unit, String itemName, ItemSlot itemSlot) {
+		var item = getItemRepository().getItem(itemName, unit.getPhaseId()).orElseThrow();
+		unit.equip(new EquippableItem(item), itemSlot);
 	}
 
 	protected void equip(int itemId, ItemSlot itemSlot) {
 		equip(player, itemId, itemSlot);
 	}
 
-	protected void equip(Player player, int itemId, ItemSlot itemSlot) {
-		var item = getItemRepository().getItem(ItemId.of(itemId), player.getPhaseId()).orElseThrow();
-		player.equip(new EquippableItem(item), itemSlot);
+	protected void equip(Unit unit, int itemId, ItemSlot itemSlot) {
+		var item = getItemRepository().getItem(ItemId.of(itemId), unit.getPhaseId()).orElseThrow();
+		unit.equip(new EquippableItem(item), itemSlot);
 	}
 
 	protected void enableTalent(String name, int rank) {
@@ -423,38 +393,35 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	protected Pet pet;
 	protected TestEventCollectingHandler handler;
 
-	protected CharacterClassId characterClassId = WARLOCK;
-	protected RaceId raceId;
+	public record PlayerConfig(CharacterClassId characterClassId, RaceId raceId) {}
+
+	protected PlayerConfig playerConfig = new PlayerConfig(WARLOCK, ORC);
 	protected Integer level;
 	protected PhaseId phaseId = TBC_P5;
 	protected CreatureType enemyType = BEAST;
 	protected int enemyLevelDiff = 3;
 
-	protected int totalSpellDamage;
-	protected int totalShadowSpellDamage;
-	protected int totalFireSpellDamage;
-
 	protected TestRng rng = new TestRng();
 
-	protected void setupTestObjects() {
+	protected void setPlayerConfig(CharacterClassId characterClassId, RaceId raceId) {
+		playerConfig = new PlayerConfig(characterClassId, raceId);
+	}
+
+	protected void createSimulation() {
 		simulationContext = getSimulationContext();
 		clock = simulationContext.getClock();
 
 		simulation = new Simulation(simulationContext);
+	}
 
-		player = getNakedPlayer();
-		target = getEnemy();
+	protected void createDefaultUnits() {
+		player = getNakedPlayer(playerConfig, "Player");
+		target = getEnemy("Target");
 
 		player.setTarget(target);
-
-		makeSnapshotsUntil(180);
 	}
 
 	protected void updateUntil(double time) {
-		this.totalSpellDamage = player.getStats().getSpellDamage();
-		this.totalShadowSpellDamage = player.getStats().getSpellDamage(SpellSchool.SHADOW);
-		this.totalFireSpellDamage = player.getStats().getSpellDamage(SpellSchool.FIRE);
-
 		simulation.updateUntil(Time.at(time));
 	}
 
@@ -472,12 +439,6 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 
 	protected void assertLastHitChance(double value) {
 		var lastHitChance = rng.getHitRollData().getRollChances().getLast();
-
-		assertThat(lastHitChance).isEqualTo(value, PRECISION);
-	}
-
-	protected void assertHitChanceNo(int rollChanceIdx, double value) {
-		var lastHitChance = rng.getHitRollData().getRollChances().get(rollChanceIdx);
 
 		assertThat(lastHitChance).isEqualTo(value, PRECISION);
 	}
@@ -520,94 +481,6 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		simulation.getScheduler().add(Time.at(time), runnable);
 	}
 
-	protected double timeBefore = 0;
-	protected double timeAfter = 5;
-
-	protected void assertStaminaIncreasedBy(int amount) {
-		var staminaBefore = statsAt(timeBefore).getStamina();
-		var staminaAfter = statsAt(timeAfter).getStamina();
-
-		assertThat(staminaAfter).isEqualTo(staminaBefore + amount);
-	}
-
-	protected void assertStaminaIncreasedByPct(int pctIncrease) {
-		var staminaBefore = statsAt(timeBefore).getStamina();
-		var staminaAfter = statsAt(timeAfter).getStamina();
-
-		assertThat(staminaAfter).isEqualTo(increaseByPct(staminaBefore, pctIncrease));
-	}
-
-	protected void assertIntellectIncreasedBy(int amount) {
-		var intellectBefore = statsAt(timeBefore).getIntellect();
-		var intellectAfter = statsAt(timeAfter).getIntellect();
-
-		assertThat(intellectAfter).isEqualTo(intellectBefore + amount);
-	}
-
-	protected void assertIntellectIncreasedByPct(int pctIncrease) {
-		var intellectBefore = statsAt(timeBefore).getIntellect();
-		var intellectAfter = statsAt(timeAfter).getIntellect();
-
-		assertThat(intellectAfter).isEqualTo(increaseByPct(intellectBefore, pctIncrease));
-	}
-
-	protected void assertSpiritIncreasedBy(int amount) {
-		var spiritBefore = statsAt(timeBefore).getSpirit();
-		var spiritAfter = statsAt(timeAfter).getSpirit();
-
-		assertThat(spiritAfter).isEqualTo(spiritBefore + amount);
-	}
-
-	protected void assertSpiritIncreasedByPct(int pctIncrease) {
-		var spiritBefore = statsAt(timeBefore).getSpirit();
-		var spiritAfter = statsAt(timeAfter).getSpirit();
-
-		assertThat(spiritAfter).isEqualTo(increaseByPct(spiritBefore, pctIncrease));
-	}
-
-	protected void assertBaseStatsIncreasedBy(int amount) {
-		assertStaminaIncreasedBy(amount);
-		assertIntellectIncreasedBy(amount);
-		assertSpiritIncreasedBy(amount);
-	}
-
-	protected void assertBaseStatsIncreasedByPct(int pctIncrease) {
-		assertStaminaIncreasedByPct(pctIncrease);
-		assertIntellectIncreasedByPct(pctIncrease);
-		assertSpiritIncreasedByPct(pctIncrease);
-	}
-
-	protected void assertSpellPowerIncreasedBy(int amount) {
-		var spBefore = statsAt(timeBefore).getSpellPower();
-		var spAfter = statsAt(timeAfter).getSpellPower();
-
-		assertThat(spAfter).isEqualTo(spBefore + amount);
-	}
-
-	protected void assertSpellHastePctIncreasedBy(int amount) {
-		var hasteBefore = statsAt(timeBefore).getSpellHastePct();
-		var hasteAfter = statsAt(timeAfter).getSpellHastePct();
-
-		assertThat(hasteAfter).isEqualTo(hasteBefore + amount);
-	}
-
-	protected void assertMp5IncreasedBy(int amount) {
-		var mp5Before = statsAt(timeBefore).getInterruptedManaRegen();
-		var mp5After = statsAt(timeAfter).getInterruptedManaRegen();
-
-		assertThat(mp5After).isEqualTo(mp5Before + amount);
-	}
-
-	protected void makeSnapshotsUntil(double timeUntil) {
-		for (var time = 0; time <= timeUntil; ++time) {
-			runAt(time, this::snapshotAllSimulationUnitStats);
-		}
-	}
-
-	private void snapshotAllSimulationUnitStats() {
-		simulation.forEachUnit(unit -> getContext(unit).makeSnapshot());
-	}
-
 	public class TestSnapshots<T> {
 		private final Map<Double, T> snapshotsByTime = new TreeMap<>();
 
@@ -627,18 +500,6 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		public final Unit unit;
 		public int regeneratedHealth;
 		public int regeneratedMana;
-		public final Map<Time, StatSummary> statSnapshotsByTime = new TreeMap<>();
-
-		public void makeSnapshot() {
-			var stats = unit.getStats();
-			var time = unit.now();
-
-			statSnapshotsByTime.put(time, stats);
-		}
-
-		public StatSummary statsAt(double time) {
-			return statSnapshotsByTime.get(Time.at(time));
-		}
 	}
 
 	private final Map<Unit, UnitTestContext> contextMap = new HashMap<>();
@@ -647,30 +508,12 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		return contextMap.computeIfAbsent(unit, UnitTestContext::new);
 	}
 
-	protected int getRegeneratedHealth(Unit unit) {
-		return getContext(unit).regeneratedHealth;
-	}
-
 	protected int getRegeneratedMana(Unit unit) {
 		return getContext(unit).regeneratedMana;
 	}
 
 	protected int getManaDifference(Player unit) {
 		return unit.getCurrentMana() - getRegeneratedMana(unit);
-	}
-
-	protected StatSummary statsAt(Unit unit, double time) {
-		return getContext(unit).statsAt(time);
-	}
-
-	protected StatSummary statsAt(double time) {
-		return statsAt(player, time);
-	}
-
-	protected void addToSimulation(Unit... units) {
-		for (var unit : units) {
-			simulation.add(unit);
-		}
 	}
 
 	protected void summonedPetCasts(Unit unit, String abilityName) {

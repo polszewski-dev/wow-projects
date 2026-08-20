@@ -20,6 +20,8 @@ class T3P4BonusTest extends TbcWarlockSpellSimulationTest {
 
 		updateUntil(30);
 
+		var totalSpellDamage = baseline.getStats().getSpellDamage();
+
 		assertDamageDone(CORRUPTION, CORRUPTION_INFO.damage(totalSpellDamage), 12);
 	}
 

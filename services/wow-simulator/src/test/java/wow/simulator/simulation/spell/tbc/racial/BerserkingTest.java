@@ -5,6 +5,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import wow.simulator.simulation.spell.tbc.TbcMageSpellSimulationTest;
 
+import static wow.commons.model.character.CharacterClassId.MAGE;
 import static wow.commons.model.character.RaceId.TROLL;
 import static wow.commons.model.spell.ResourceType.MANA;
 import static wow.test.commons.AbilityNames.BERSERKING;
@@ -53,14 +54,14 @@ class BerserkingTest extends TbcMageSpellSimulationTest {
 
 		player.cast(BERSERKING);
 
-		updateUntil(10);
+		updateUntil(5);
 
-		assertSpellHastePctIncreasedBy(expectedHastePct);
+		assertSpellHastePctIsIncreasedBy(player, expectedHastePct);
 	}
 
 	@Override
 	protected void beforeSetUp() {
 		super.beforeSetUp();
-		raceId = TROLL;
+		setPlayerConfig(MAGE, TROLL);
 	}
 }

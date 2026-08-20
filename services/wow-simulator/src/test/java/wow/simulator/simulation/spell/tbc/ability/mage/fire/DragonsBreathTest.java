@@ -35,7 +35,8 @@ class DragonsBreathTest extends TbcMageSpellSimulationTest {
 						.decreasedResource(735, HEALTH, target, DRAGONS_BREATH)
 						.decreasedResource(735, HEALTH, target2, DRAGONS_BREATH)
 						.decreasedResource(735, HEALTH, target3, DRAGONS_BREATH)
-						.decreasedResource(735, HEALTH, target4, DRAGONS_BREATH),
+						.decreasedResource(735, HEALTH, target4, DRAGONS_BREATH)
+						.decreasedResource(735, HEALTH, target5, DRAGONS_BREATH),
 				at(1.5)
 						.endGcd(player),
 				at(20)

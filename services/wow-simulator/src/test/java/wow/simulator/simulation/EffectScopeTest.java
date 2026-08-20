@@ -17,6 +17,7 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
+import static wow.commons.model.character.RaceId.UNDEAD;
 
 /**
  * User: POlszewski
@@ -83,14 +84,15 @@ class EffectScopeTest extends WowSimulatorSpringTest {
 
 	@BeforeEach
 	void setUp() {
-		characterClassId = WARLOCK;
+		setPlayerConfig(WARLOCK, UNDEAD);
 
-		setupTestObjects();
+		createSimulation();
+		createDefaultUnits();
 
 		handler = new TestEventCollectingHandler();
 		simulation.addHandler(handler);
 
-		anotherPlayer = getNakedPlayer(characterClassId, "AnotherPlayer");
+		anotherPlayer = getNakedPlayer(WARLOCK, UNDEAD, "AnotherPlayer");
 		anotherPlayer.setTarget(target);
 
 		simulation.add(player);

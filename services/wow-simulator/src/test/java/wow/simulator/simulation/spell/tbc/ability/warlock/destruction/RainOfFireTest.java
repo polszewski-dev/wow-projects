@@ -36,22 +36,26 @@ class RainOfFireTest extends TbcWarlockSpellSimulationTest {
 						.decreasedResource(304, HEALTH, target, RAIN_OF_FIRE)
 						.decreasedResource(304, HEALTH, target2, RAIN_OF_FIRE)
 						.decreasedResource(304, HEALTH, target3, RAIN_OF_FIRE)
-						.decreasedResource(304, HEALTH, target4, RAIN_OF_FIRE),
+						.decreasedResource(304, HEALTH, target4, RAIN_OF_FIRE)
+						.decreasedResource(304, HEALTH, target5, RAIN_OF_FIRE),
 				at(4)
 						.decreasedResource(304, HEALTH, target, RAIN_OF_FIRE)
 						.decreasedResource(304, HEALTH, target2, RAIN_OF_FIRE)
 						.decreasedResource(304, HEALTH, target3, RAIN_OF_FIRE)
-						.decreasedResource(304, HEALTH, target4, RAIN_OF_FIRE),
+						.decreasedResource(304, HEALTH, target4, RAIN_OF_FIRE)
+						.decreasedResource(304, HEALTH, target5, RAIN_OF_FIRE),
 				at(6)
 						.decreasedResource(304, HEALTH, target, RAIN_OF_FIRE)
 						.decreasedResource(304, HEALTH, target2, RAIN_OF_FIRE)
 						.decreasedResource(304, HEALTH, target3, RAIN_OF_FIRE)
-						.decreasedResource(304, HEALTH, target4, RAIN_OF_FIRE),
+						.decreasedResource(304, HEALTH, target4, RAIN_OF_FIRE)
+						.decreasedResource(304, HEALTH, target5, RAIN_OF_FIRE),
 				at(8)
 						.decreasedResource(304, HEALTH, target, RAIN_OF_FIRE)
 						.decreasedResource(304, HEALTH, target2, RAIN_OF_FIRE)
 						.decreasedResource(304, HEALTH, target3, RAIN_OF_FIRE)
 						.decreasedResource(304, HEALTH, target4, RAIN_OF_FIRE)
+						.decreasedResource(304, HEALTH, target5, RAIN_OF_FIRE)
 						.effectExpired(RAIN_OF_FIRE, null)
 						.endChannel(player, RAIN_OF_FIRE)
 		);

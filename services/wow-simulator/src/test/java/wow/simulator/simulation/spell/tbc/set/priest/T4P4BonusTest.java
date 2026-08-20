@@ -24,6 +24,8 @@ class T4P4BonusTest extends TbcPriestSpellSimulationTest {
 
 		updateUntil(30);
 
+		var totalSpellDamage = baseline.getStats().getSpellDamage();
+
 		assertDamageDone(MIND_FLAY, MIND_FLAY_INFO.damage(totalSpellDamage), 5);
 	}
 
@@ -32,6 +34,8 @@ class T4P4BonusTest extends TbcPriestSpellSimulationTest {
 		player.cast(SMITE);
 
 		updateUntil(30);
+
+		var totalSpellDamage = baseline.getStats().getSpellDamage();
 
 		assertDamageDone(SMITE, SMITE_INFO.damage(totalSpellDamage), 5);
 	}

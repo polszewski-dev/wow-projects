@@ -35,6 +35,7 @@ class IdleActionTest extends WowSimulatorSpringTest {
 
 	@BeforeEach
 	void setup() {
-		setupTestObjects();
+		createSimulation();
+		createDefaultUnits();
 	}
 }

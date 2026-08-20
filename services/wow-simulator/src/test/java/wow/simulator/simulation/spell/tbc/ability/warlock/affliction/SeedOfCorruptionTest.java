@@ -51,6 +51,7 @@ class SeedOfCorruptionTest extends TbcWarlockSpellSimulationTest {
 						.decreasedResource(1200, HEALTH, target2, SEED_OF_CORRUPTION)
 						.decreasedResource(1200, HEALTH, target3, SEED_OF_CORRUPTION)
 						.decreasedResource(1200, HEALTH, target4, SEED_OF_CORRUPTION)
+						.decreasedResource(1200, HEALTH, target5, SEED_OF_CORRUPTION)
 		);
 	}
 
@@ -82,6 +83,7 @@ class SeedOfCorruptionTest extends TbcWarlockSpellSimulationTest {
 						.decreasedResource(1420, HEALTH, target2, SEED_OF_CORRUPTION)
 						.decreasedResource(1420, HEALTH, target3, SEED_OF_CORRUPTION)
 						.decreasedResource(1420, HEALTH, target4, SEED_OF_CORRUPTION)
+						.decreasedResource(1420, HEALTH, target5, SEED_OF_CORRUPTION)
 		);
 	}
 
@@ -119,6 +121,7 @@ class SeedOfCorruptionTest extends TbcWarlockSpellSimulationTest {
 						.decreasedResource(1200, HEALTH, target2, SEED_OF_CORRUPTION)
 						.decreasedResource(1200, HEALTH, target3, SEED_OF_CORRUPTION)
 						.decreasedResource(1200, HEALTH, target4, SEED_OF_CORRUPTION)
+						.decreasedResource(1200, HEALTH, target5, SEED_OF_CORRUPTION)
 		);
 	}
 
@@ -164,6 +167,7 @@ class SeedOfCorruptionTest extends TbcWarlockSpellSimulationTest {
 						.decreasedResource(1200, HEALTH, target2, SEED_OF_CORRUPTION)
 						.decreasedResource(1200, HEALTH, target3, SEED_OF_CORRUPTION)
 						.decreasedResource(1200, HEALTH, target4, SEED_OF_CORRUPTION)
+						.decreasedResource(1200, HEALTH, target5, SEED_OF_CORRUPTION)
 		);
 	}
 }

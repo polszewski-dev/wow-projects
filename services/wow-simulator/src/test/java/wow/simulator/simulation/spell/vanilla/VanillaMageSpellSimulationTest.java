@@ -3,7 +3,7 @@ package wow.simulator.simulation.spell.vanilla;
 import wow.simulator.simulation.spell.SpellSimulationTest;
 
 import static wow.commons.model.character.CharacterClassId.MAGE;
-import static wow.commons.model.character.RaceId.TROLL;
+import static wow.commons.model.character.RaceId.UNDEAD;
 import static wow.commons.model.pve.PhaseId.VANILLA_P6;
 
 /**
@@ -13,8 +13,7 @@ import static wow.commons.model.pve.PhaseId.VANILLA_P6;
 public abstract class VanillaMageSpellSimulationTest extends SpellSimulationTest implements VanillaSpellInfos {
 	@Override
 	protected void beforeSetUp() {
-		characterClassId = MAGE;
-		raceId = TROLL;
+		setPlayerConfig(MAGE, UNDEAD);
 		phaseId = VANILLA_P6;
 	}
 }

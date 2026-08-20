@@ -43,7 +43,7 @@ class ArcaneBrillianceTest extends TbcMageSpellSimulationTest {
 	void intellect_is_increased() {
 		simulateBuffSpell(ARCANE_BRILLIANCE);
 
-		assertIntellectIncreasedBy(40);
+		assertIntellectIsIncreasedBy(player, 40);
 	}
 
 	@Override

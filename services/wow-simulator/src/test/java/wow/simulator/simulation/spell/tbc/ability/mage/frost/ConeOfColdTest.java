@@ -34,7 +34,8 @@ class ConeOfColdTest extends TbcMageSpellSimulationTest {
 						.decreasedResource(437, HEALTH, target, CONE_OF_COLD)
 						.decreasedResource(437, HEALTH, target2, CONE_OF_COLD)
 						.decreasedResource(437, HEALTH, target3, CONE_OF_COLD)
-						.decreasedResource(437, HEALTH, target4, CONE_OF_COLD),
+						.decreasedResource(437, HEALTH, target4, CONE_OF_COLD)
+						.decreasedResource(437, HEALTH, target5, CONE_OF_COLD),
 				at(1.5)
 						.endGcd(player),
 				at(10)

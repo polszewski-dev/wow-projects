@@ -48,10 +48,7 @@ abstract class ResourceTest extends TbcPriestSpellSimulationTest {
 		return resourceStatusSnapshots.get(time).regeneratedMana;
 	}
 
-	@Override
-	protected void makeSnapshotsUntil(double timeUntil) {
-		super.makeSnapshotsUntil(timeUntil);
-
+	void makeSnapshotsUntil(double timeUntil) {
 		for (var time = 0; time <= timeUntil; ++time) {
 			snapshotAt(time);
 		}
@@ -74,5 +71,11 @@ abstract class ResourceTest extends TbcPriestSpellSimulationTest {
 				unit.getMaxMana(),
 				getRegeneratedMana(unit)
 		);
+	}
+
+	@Override
+	protected void afterSetUp() {
+		super.afterSetUp();
+		makeSnapshotsUntil(180);
 	}
 }

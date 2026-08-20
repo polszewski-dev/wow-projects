@@ -6,7 +6,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
 import wow.simulator.util.TestEvent;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.categorization.ItemSlot.TRINKET_1;
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
@@ -93,10 +92,7 @@ class DarkmoonCardWrathTest extends TbcWarlockSpellSimulationTest {
 
 		updateUntil(numCasts * 3 + 1);
 
-		var critRatingBefore = statsAt(0).getSpellCritRating();
-		var critRatingAfter = statsAt(numCasts * 3 + 1).getSpellCritRating();
-
-		assertThat(critRatingAfter).isEqualTo(critRatingBefore + numCasts * 17);
+		assertSpellCritRatingIsIncreasedBy(player, numCasts * 17);
 	}
 
 	@Override

@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test;
 import wow.simulator.simulation.spell.tbc.TbcShamanSpellSimulationTest;
 import wow.test.commons.TalentNames;
 
+import static wow.commons.model.character.CharacterClassId.WARLOCK;
+import static wow.commons.model.character.RaceId.UNDEAD;
 import static wow.commons.model.spell.ResourceType.MANA;
 import static wow.test.commons.AbilityNames.MANA_TIDE_TOTEM;
 
@@ -59,6 +61,12 @@ class ManaTideTotemTest extends TbcShamanSpellSimulationTest {
 						.increasedResource(608, MANA, player4, MANA_TIDE_TOTEM)
 						.effectExpired(MANA_TIDE_TOTEM, player)
 		);
+	}
+
+	@Override
+	protected void beforeSetUp() {
+		super.beforeSetUp();
+		setOtherPartyMemberConfig(WARLOCK, UNDEAD);
 	}
 
 	@Override

@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 import wow.commons.model.spell.GroupCooldownId;
 import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static wow.test.commons.AbilityNames.DESTRUCTION_POTION;
 import static wow.test.commons.EffectNames.DESTRUCTION;
 
@@ -48,12 +47,7 @@ class DestructionPotionTest extends TbcWarlockSpellSimulationTest {
 
 		updateUntil(10);
 
-		var dmgBefore = statsAt(0).getSpellDamage();
-		var dmgAfter = statsAt(1).getSpellDamage();
-		var critPctBefore = statsAt(0).getSpellCritPct();
-		var critPctAfter = statsAt(1).getSpellCritPct();
-
-		assertThat(dmgAfter).isEqualTo(dmgBefore + 120);
-		assertThat(critPctAfter).isEqualTo(critPctBefore + 2);
+		assertSpellDamageIsIncreasedBy(player, 120);
+		assertSpellCritPctIsIncreasedBy(player, 2);
 	}
 }

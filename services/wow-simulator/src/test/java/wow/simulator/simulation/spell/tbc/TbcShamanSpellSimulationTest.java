@@ -13,8 +13,7 @@ import static wow.commons.model.pve.PhaseId.TBC_P5;
 public abstract class TbcShamanSpellSimulationTest extends SpellSimulationTest implements TbcSpellInfos {
 	@Override
 	protected void beforeSetUp() {
-		characterClassId = SHAMAN;
-		raceId = ORC;
+		setPlayerConfig(SHAMAN, ORC);
 		phaseId = TBC_P5;
 	}
 }

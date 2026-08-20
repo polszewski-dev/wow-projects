@@ -472,6 +472,6 @@ class ActionTest extends WowSimulatorSpringTest {
 
 	@BeforeEach
 	void setup() {
-		setupTestObjects();
+		createSimulation();
 	}
 }

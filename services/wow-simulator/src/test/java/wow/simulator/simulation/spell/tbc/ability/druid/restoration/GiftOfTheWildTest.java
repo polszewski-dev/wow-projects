@@ -43,7 +43,7 @@ class GiftOfTheWildTest extends TbcDruidSpellSimulationTest {
 	void attributes_are_increased() {
 		simulateBuffSpell(GIFT_OF_THE_WILD);
 
-		assertBaseStatsIncreasedBy(14);
+		assertStatsAreIncreasedBy(player, 14);
 	}
 
 	@Override

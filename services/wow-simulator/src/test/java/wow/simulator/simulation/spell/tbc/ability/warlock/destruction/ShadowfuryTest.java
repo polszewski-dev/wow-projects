@@ -34,7 +34,8 @@ class ShadowfuryTest extends TbcWarlockSpellSimulationTest {
 						.decreasedResource(670, HEALTH, target, SHADOWFURY)
 						.decreasedResource(670, HEALTH, target2, SHADOWFURY)
 						.decreasedResource(670, HEALTH, target3, SHADOWFURY)
-						.decreasedResource(670, HEALTH, target4, SHADOWFURY),
+						.decreasedResource(670, HEALTH, target4, SHADOWFURY)
+						.decreasedResource(670, HEALTH, target5, SHADOWFURY),
 				at(1.5)
 						.endGcd(player),
 				at(20.5)

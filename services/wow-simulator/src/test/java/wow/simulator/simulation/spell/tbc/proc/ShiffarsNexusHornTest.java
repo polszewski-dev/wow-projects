@@ -5,7 +5,6 @@ import wow.commons.model.spell.CooldownId;
 import wow.commons.model.spell.SpellId;
 import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.categorization.ItemSlot.TRINKET_1;
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
@@ -57,10 +56,7 @@ class ShiffarsNexusHornTest extends TbcWarlockSpellSimulationTest {
 		player.cast(SHADOW_BOLT);
 		updateUntil(10);
 
-		var spBefore = statsAt(0).getSpellPower();
-		var spAfter = statsAt(10).getSpellPower();
-
-		assertThat(spAfter).isEqualTo(spBefore + 225);
+		assertSpellDamageIsIncreasedBy(player, 225);
 	}
 
 	CooldownId cooldownId = CooldownId.of(SpellId.of(100128418));

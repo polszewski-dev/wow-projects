@@ -39,7 +39,8 @@ public abstract class AssetTest extends WowSimulatorSpringTest {
 		setDefaults();
 		beforeSetUp();
 
-		setupTestObjects();
+		createSimulation();
+		createDefaultUnits();
 
 		player.setScript("warlock-shadow-bolt-spam");
 		player.setOnPendingActionQueueEmpty(null);

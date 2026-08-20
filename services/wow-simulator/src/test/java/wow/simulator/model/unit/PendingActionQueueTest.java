@@ -65,7 +65,7 @@ class PendingActionQueueTest extends WowSimulatorSpringTest {
 
 	@BeforeEach
 	void setup() {
-		setupTestObjects();
+		createSimulation();
 		queue = new PendingActionQueue<>();
 	}
 }

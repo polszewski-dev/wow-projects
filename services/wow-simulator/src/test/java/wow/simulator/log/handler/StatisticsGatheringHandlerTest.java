@@ -249,7 +249,8 @@ class StatisticsGatheringHandlerTest extends WowSimulatorSpringTest {
 
 	@BeforeEach
 	void setUp() {
-		setupTestObjects();
+		createSimulation();
+		createDefaultUnits();
 
 		handler = new StatisticsGatheringHandler(player, stats);
 

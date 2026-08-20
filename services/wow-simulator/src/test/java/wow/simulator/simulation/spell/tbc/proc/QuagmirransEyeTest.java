@@ -5,7 +5,6 @@ import wow.commons.model.spell.CooldownId;
 import wow.commons.model.spell.SpellId;
 import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.categorization.ItemSlot.TRINKET_1;
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
@@ -56,10 +55,7 @@ class QuagmirransEyeTest extends TbcWarlockSpellSimulationTest {
 
 		updateUntil(5);
 
-		var hasteBefore = statsAt(0).getSpellHasteRating();
-		var hasteAfter = statsAt(5).getSpellHasteRating();
-
-		assertThat(hasteAfter).isEqualTo(hasteBefore + 320);
+		assertSpellHasteRatingIsIncreasedBy(player, 320);
 	}
 
 	CooldownId cooldownId = CooldownId.of(SpellId.of(33297));

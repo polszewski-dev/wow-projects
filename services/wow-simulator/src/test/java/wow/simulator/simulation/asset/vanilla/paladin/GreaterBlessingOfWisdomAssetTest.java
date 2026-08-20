@@ -3,6 +3,7 @@ package wow.simulator.simulation.asset.vanilla.paladin;
 import org.junit.jupiter.api.Test;
 import wow.simulator.simulation.asset.vanilla.VanillaAssetTest;
 
+import static wow.commons.model.character.CharacterClassId.PALADIN;
 import static wow.commons.model.character.RaceId.HUMAN;
 import static wow.test.commons.AbilityNames.GREATER_BLESSING_OF_WISDOM;
 
@@ -28,7 +29,7 @@ class GreaterBlessingOfWisdomAssetTest extends VanillaAssetTest {
 
 	@Override
 	protected void beforeSetUp() {
-		raceId = HUMAN;
+		setPlayerConfig(PALADIN, HUMAN);
 		setUpHolyPaladin(GREATER_BLESSING_OF_WISDOM);
 	}
 }

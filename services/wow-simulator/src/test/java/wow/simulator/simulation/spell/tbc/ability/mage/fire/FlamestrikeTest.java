@@ -37,27 +37,32 @@ class FlamestrikeTest extends TbcMageSpellSimulationTest {
 						.decreasedResource(532, HEALTH, target2, FLAMESTRIKE)
 						.decreasedResource(532, HEALTH, target3, FLAMESTRIKE)
 						.decreasedResource(532, HEALTH, target4, FLAMESTRIKE)
+						.decreasedResource(532, HEALTH, target5, FLAMESTRIKE)
 						.effectApplied(FLAMESTRIKE, null, 8),
 				at(5)
 						.decreasedResource(106, HEALTH, target, FLAMESTRIKE)
 						.decreasedResource(106, HEALTH, target2, FLAMESTRIKE)
 						.decreasedResource(106, HEALTH, target3, FLAMESTRIKE)
-						.decreasedResource(106, HEALTH, target4, FLAMESTRIKE),
+						.decreasedResource(106, HEALTH, target4, FLAMESTRIKE)
+						.decreasedResource(106, HEALTH, target5, FLAMESTRIKE),
 				at(7)
 						.decreasedResource(106, HEALTH, target, FLAMESTRIKE)
 						.decreasedResource(106, HEALTH, target2, FLAMESTRIKE)
 						.decreasedResource(106, HEALTH, target3, FLAMESTRIKE)
-						.decreasedResource(106, HEALTH, target4, FLAMESTRIKE),
+						.decreasedResource(106, HEALTH, target4, FLAMESTRIKE)
+						.decreasedResource(106, HEALTH, target5, FLAMESTRIKE),
 				at(9)
 						.decreasedResource(106, HEALTH, target, FLAMESTRIKE)
 						.decreasedResource(106, HEALTH, target2, FLAMESTRIKE)
 						.decreasedResource(106, HEALTH, target3, FLAMESTRIKE)
-						.decreasedResource(106, HEALTH, target4, FLAMESTRIKE),
+						.decreasedResource(106, HEALTH, target4, FLAMESTRIKE)
+						.decreasedResource(106, HEALTH, target5, FLAMESTRIKE),
 				at(11)
 						.decreasedResource(106, HEALTH, target, FLAMESTRIKE)
 						.decreasedResource(106, HEALTH, target2, FLAMESTRIKE)
 						.decreasedResource(106, HEALTH, target3, FLAMESTRIKE)
 						.decreasedResource(106, HEALTH, target4, FLAMESTRIKE)
+						.decreasedResource(106, HEALTH, target5, FLAMESTRIKE)
 						.effectExpired(FLAMESTRIKE, null)
 		);
 	}

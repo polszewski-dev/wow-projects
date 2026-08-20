@@ -111,7 +111,8 @@ class UnitResourceTest extends WowSimulatorSpringTest {
 
 	@BeforeEach
 	void setUp() {
-		setupTestObjects();
+		createSimulation();
+		createDefaultUnits();
 		resource = new UnitResource(HEALTH, player);
 	}
 }

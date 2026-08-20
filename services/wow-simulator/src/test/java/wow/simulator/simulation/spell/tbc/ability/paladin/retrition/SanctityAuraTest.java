@@ -2,11 +2,11 @@ package wow.simulator.simulation.spell.tbc.ability.paladin.retrition;
 
 import org.junit.jupiter.api.Test;
 import wow.commons.model.Duration;
-import wow.commons.model.character.CharacterClassId;
-import wow.commons.model.character.RaceId;
 import wow.simulator.simulation.spell.tbc.TbcPaladinSpellSimulationTest;
 import wow.test.commons.TalentNames;
 
+import static wow.commons.model.character.CharacterClassId.PRIEST;
+import static wow.commons.model.character.RaceId.UNDEAD;
 import static wow.test.commons.AbilityNames.SANCTITY_AURA;
 import static wow.test.commons.AbilityNames.SMITE;
 
@@ -50,8 +50,7 @@ class SanctityAuraTest extends TbcPaladinSpellSimulationTest {
 	@Override
 	protected void beforeSetUp() {
 		super.beforeSetUp();
-		partyMemberClassId = CharacterClassId.PRIEST;
-		partyMemberRaceId = RaceId.UNDEAD;
+		setOtherPartyMemberConfig(PRIEST, UNDEAD);
 	}
 
 	@Override

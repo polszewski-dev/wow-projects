@@ -13,8 +13,7 @@ import static wow.commons.model.pve.PhaseId.TBC_P5;
 public abstract class TbcPriestSpellSimulationTest extends SpellSimulationTest implements TbcSpellInfos {
 	@Override
 	protected void beforeSetUp() {
-		characterClassId = PRIEST;
-		raceId = UNDEAD;
+		setPlayerConfig(PRIEST, UNDEAD);
 		phaseId = TBC_P5;
 	}
 }

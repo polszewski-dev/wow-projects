@@ -5,6 +5,8 @@ import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
 
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
+import static wow.commons.model.spell.SpellSchool.FIRE;
+import static wow.commons.model.spell.SpellSchool.SHADOW;
 import static wow.simulator.util.EffectType.ITEM_SET;
 import static wow.test.commons.AbilityNames.INCINERATE;
 import static wow.test.commons.AbilityNames.SHADOW_BOLT;
@@ -80,6 +82,9 @@ class T4P2BonusTest extends TbcWarlockSpellSimulationTest {
 
 		updateUntil(30);
 
+		var totalShadowSpellDamage = baseline.getStats().getSpellDamage(SHADOW);
+		var totalFireSpellDamage = baseline.getStats().getSpellDamage(FIRE);
+
 		assertDamageDone(0, SHADOW_BOLT, SHADOW_BOLT_INFO.damage(totalShadowSpellDamage + 135));
 		assertDamageDone(0, INCINERATE, INCINERATE_INFO.damage(totalFireSpellDamage));
 		assertDamageDone(1, SHADOW_BOLT, SHADOW_BOLT_INFO.damage(totalShadowSpellDamage + 135));
@@ -96,6 +101,9 @@ class T4P2BonusTest extends TbcWarlockSpellSimulationTest {
 		player.cast(INCINERATE);
 
 		updateUntil(30);
+
+		var totalShadowSpellDamage = baseline.getStats().getSpellDamage(SHADOW);
+		var totalFireSpellDamage = baseline.getStats().getSpellDamage(FIRE);
 
 		assertDamageDone(0, SHADOW_BOLT, SHADOW_BOLT_INFO.damage(totalShadowSpellDamage));
 		assertDamageDone(0, INCINERATE, INCINERATE_INFO.damage(totalFireSpellDamage + 135));

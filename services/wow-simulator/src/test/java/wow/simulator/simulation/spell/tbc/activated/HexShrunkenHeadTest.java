@@ -46,11 +46,7 @@ class HexShrunkenHeadTest extends TbcWarlockSpellSimulationTest {
 
 		updateUntil(10);
 
-		var dmgBefore = statsAt(0).getSpellPower();
-		var dmgAfter = statsAt(1).getSpellPower();
-
-		assertThat(dmgBefore).isEqualTo(53);
-		assertThat(dmgAfter).isEqualTo(53 + 211);
+		assertSpellDamageIsIncreasedBy(player, 211);
 	}
 
 	@Test

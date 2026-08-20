@@ -13,8 +13,7 @@ import static wow.commons.model.pve.PhaseId.VANILLA_P6;
 public abstract class VanillaWarlockSpellSimulationTest extends SpellSimulationTest implements VanillaSpellInfos {
 	@Override
 	protected void beforeSetUp() {
-		characterClassId = WARLOCK;
-		raceId = ORC;
+		setPlayerConfig(WARLOCK, ORC);
 		phaseId = VANILLA_P6;
 	}
 }

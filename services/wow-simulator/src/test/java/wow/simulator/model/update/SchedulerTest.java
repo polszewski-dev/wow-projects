@@ -184,7 +184,7 @@ class SchedulerTest extends WowSimulatorSpringTest {
 
 	@BeforeEach
 	void setup() {
-		setupTestObjects();
+		createSimulation();
 		scheduler = new Scheduler(clock);
 	}
 }

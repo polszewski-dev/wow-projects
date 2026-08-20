@@ -3,6 +3,7 @@ package wow.simulator.simulation.spell.tbc.racial;
 import org.junit.jupiter.api.Test;
 import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
 
+import static wow.commons.model.character.CharacterClassId.WARLOCK;
 import static wow.commons.model.character.RaceId.ORC;
 import static wow.test.commons.AbilityNames.BLOOD_FURY;
 
@@ -40,12 +41,12 @@ class BloodFuryTest extends TbcWarlockSpellSimulationTest {
 
 		updateUntil(10);
 
-		assertSpellPowerIncreasedBy(143);
+		assertSpellPowerIsIncreasedBy(player, 143);
 	}
 
 	@Override
 	protected void beforeSetUp() {
 		super.beforeSetUp();
-		raceId = ORC;
+		setPlayerConfig(WARLOCK, ORC);
 	}
 }

@@ -3,7 +3,6 @@ package wow.simulator.simulation.spell.tbc.ability.warlock.demonology;
 import org.junit.jupiter.api.Test;
 import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.spell.ResourceType.MANA;
 import static wow.simulator.util.CalcUtils.increaseByPct;
 import static wow.test.commons.AbilityNames.*;
@@ -44,10 +43,7 @@ class FelArmorTest extends TbcWarlockSpellSimulationTest {
 
 		updateUntil(30);
 
-		var spellDamageBefore = statsAt(0).getSpellDamage();
-		var spellDamageAfter = statsAt(1).getSpellDamage();
-
-		assertThat(spellDamageAfter).isEqualTo(spellDamageBefore + 100);
+		assertSpellDamageIsIncreasedBy(player, 100);
 	}
 
 	@Test

@@ -13,8 +13,7 @@ import static wow.commons.model.pve.PhaseId.TBC_P5;
 public abstract class TbcDruidSpellSimulationTest extends SpellSimulationTest implements TbcSpellInfos {
 	@Override
 	protected void beforeSetUp() {
-		characterClassId = DRUID;
-		raceId = TAUREN;
+		setPlayerConfig(DRUID, TAUREN);
 		phaseId = TBC_P5;
 	}
 }

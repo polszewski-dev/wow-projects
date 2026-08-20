@@ -38,54 +38,64 @@ class HurricaneTest extends TbcDruidSpellSimulationTest {
 						.decreasedResource(206, HEALTH, target, HURRICANE)
 						.decreasedResource(206, HEALTH, target2, HURRICANE)
 						.decreasedResource(206, HEALTH, target3, HURRICANE)
-						.decreasedResource(206, HEALTH, target4, HURRICANE),
+						.decreasedResource(206, HEALTH, target4, HURRICANE)
+						.decreasedResource(206, HEALTH, target5, HURRICANE),
 				at(1.5)
 						.endGcd(player),
 				at(2)
 						.decreasedResource(206, HEALTH, target, HURRICANE)
 						.decreasedResource(206, HEALTH, target2, HURRICANE)
 						.decreasedResource(206, HEALTH, target3, HURRICANE)
-						.decreasedResource(206, HEALTH, target4, HURRICANE),
+						.decreasedResource(206, HEALTH, target4, HURRICANE)
+						.decreasedResource(206, HEALTH, target5, HURRICANE),
 				at(3)
 						.decreasedResource(206, HEALTH, target, HURRICANE)
 						.decreasedResource(206, HEALTH, target2, HURRICANE)
 						.decreasedResource(206, HEALTH, target3, HURRICANE)
-						.decreasedResource(206, HEALTH, target4, HURRICANE),
+						.decreasedResource(206, HEALTH, target4, HURRICANE)
+						.decreasedResource(206, HEALTH, target5, HURRICANE),
 				at(4)
 						.decreasedResource(206, HEALTH, target, HURRICANE)
 						.decreasedResource(206, HEALTH, target2, HURRICANE)
 						.decreasedResource(206, HEALTH, target3, HURRICANE)
-						.decreasedResource(206, HEALTH, target4, HURRICANE),
+						.decreasedResource(206, HEALTH, target4, HURRICANE)
+						.decreasedResource(206, HEALTH, target5, HURRICANE),
 				at(5)
 						.decreasedResource(206, HEALTH, target, HURRICANE)
 						.decreasedResource(206, HEALTH, target2, HURRICANE)
 						.decreasedResource(206, HEALTH, target3, HURRICANE)
-						.decreasedResource(206, HEALTH, target4, HURRICANE),
+						.decreasedResource(206, HEALTH, target4, HURRICANE)
+						.decreasedResource(206, HEALTH, target5, HURRICANE),
 				at(6)
 						.decreasedResource(206, HEALTH, target, HURRICANE)
 						.decreasedResource(206, HEALTH, target2, HURRICANE)
 						.decreasedResource(206, HEALTH, target3, HURRICANE)
-						.decreasedResource(206, HEALTH, target4, HURRICANE),
+						.decreasedResource(206, HEALTH, target4, HURRICANE)
+						.decreasedResource(206, HEALTH, target5, HURRICANE),
 				at(7)
 						.decreasedResource(206, HEALTH, target, HURRICANE)
 						.decreasedResource(206, HEALTH, target2, HURRICANE)
 						.decreasedResource(206, HEALTH, target3, HURRICANE)
-						.decreasedResource(206, HEALTH, target4, HURRICANE),
+						.decreasedResource(206, HEALTH, target4, HURRICANE)
+						.decreasedResource(206, HEALTH, target5, HURRICANE),
 				at(8)
 						.decreasedResource(206, HEALTH, target, HURRICANE)
 						.decreasedResource(206, HEALTH, target2, HURRICANE)
 						.decreasedResource(206, HEALTH, target3, HURRICANE)
-						.decreasedResource(206, HEALTH, target4, HURRICANE),
+						.decreasedResource(206, HEALTH, target4, HURRICANE)
+						.decreasedResource(206, HEALTH, target5, HURRICANE),
 				at(9)
 						.decreasedResource(206, HEALTH, target, HURRICANE)
 						.decreasedResource(206, HEALTH, target2, HURRICANE)
 						.decreasedResource(206, HEALTH, target3, HURRICANE)
-						.decreasedResource(206, HEALTH, target4, HURRICANE),
+						.decreasedResource(206, HEALTH, target4, HURRICANE)
+						.decreasedResource(206, HEALTH, target5, HURRICANE),
 				at(10)
 						.decreasedResource(206, HEALTH, target, HURRICANE)
 						.decreasedResource(206, HEALTH, target2, HURRICANE)
 						.decreasedResource(206, HEALTH, target3, HURRICANE)
 						.decreasedResource(206, HEALTH, target4, HURRICANE)
+						.decreasedResource(206, HEALTH, target5, HURRICANE)
 						.effectExpired(HURRICANE, null)
 						.endChannel(player, HURRICANE),
 				at(60)

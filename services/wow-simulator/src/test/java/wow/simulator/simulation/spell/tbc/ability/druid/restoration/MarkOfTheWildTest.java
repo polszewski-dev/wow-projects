@@ -39,6 +39,6 @@ class MarkOfTheWildTest extends TbcDruidSpellSimulationTest {
 	void attributes_are_increased() {
 		simulateBuffSpell(MARK_OF_THE_WILD);
 
-		assertBaseStatsIncreasedBy(14);
+		assertStatsAreIncreasedBy(player, 14);
 	}
 }

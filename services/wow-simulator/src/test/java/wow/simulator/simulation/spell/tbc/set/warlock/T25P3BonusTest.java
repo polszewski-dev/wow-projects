@@ -20,6 +20,8 @@ class T25P3BonusTest extends TbcWarlockSpellSimulationTest {
 
 		updateUntil(30);
 
+		var totalSpellDamage = baseline.getStats().getSpellDamage();
+
 		assertDamageDone(IMMOLATE, IMMOLATE_INFO.damage(totalSpellDamage), 5);
 	}
 

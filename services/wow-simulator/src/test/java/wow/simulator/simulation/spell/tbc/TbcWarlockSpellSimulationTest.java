@@ -13,8 +13,7 @@ import static wow.commons.model.pve.PhaseId.TBC_P5;
 public abstract class TbcWarlockSpellSimulationTest extends SpellSimulationTest implements TbcSpellInfos {
 	@Override
 	protected void beforeSetUp() {
-		characterClassId = WARLOCK;
-		raceId = ORC;
+		setPlayerConfig(WARLOCK, ORC);
 		phaseId = TBC_P5;
 	}
 }

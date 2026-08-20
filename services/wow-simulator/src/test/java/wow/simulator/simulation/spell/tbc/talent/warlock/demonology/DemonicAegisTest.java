@@ -20,6 +20,8 @@ class DemonicAegisTest extends TbcWarlockTalentSimulationTest {
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2, 3 })
 	void fel_armor_spell_damage_bonus_is_increased(int rank) {
+		baseline.cast(FEL_ARMOR);
+
 		simulateTalent(DEMONIC_AEGIS, rank, FEL_ARMOR);
 
 		assertStatBonusIsIncreasedByPct(StatSummary::getSpellDamage, 10 * rank);

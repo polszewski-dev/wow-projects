@@ -134,7 +134,8 @@ class CastSpellActionTest extends WowSimulatorSpringTest {
 
 	@BeforeEach
 	void setup() {
-		setupTestObjects();
+		createSimulation();
+		createDefaultUnits();
 
 		simulation.add(player);
 		simulation.add(target);

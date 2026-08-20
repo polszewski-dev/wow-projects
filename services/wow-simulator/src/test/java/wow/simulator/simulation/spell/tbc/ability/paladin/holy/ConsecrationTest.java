@@ -36,45 +36,53 @@ class ConsecrationTest extends TbcPaladinSpellSimulationTest {
 						.decreasedResource(64, HEALTH, target, CONSECRATION)
 						.decreasedResource(64, HEALTH, target2, CONSECRATION)
 						.decreasedResource(64, HEALTH, target3, CONSECRATION)
-						.decreasedResource(64, HEALTH, target4, CONSECRATION),
+						.decreasedResource(64, HEALTH, target4, CONSECRATION)
+						.decreasedResource(64, HEALTH, target5, CONSECRATION),
 				at(1.5)
 						.endGcd(player),
 				at(2)
 						.decreasedResource(64, HEALTH, target, CONSECRATION)
 						.decreasedResource(64, HEALTH, target2, CONSECRATION)
 						.decreasedResource(64, HEALTH, target3, CONSECRATION)
-						.decreasedResource(64, HEALTH, target4, CONSECRATION),
+						.decreasedResource(64, HEALTH, target4, CONSECRATION)
+						.decreasedResource(64, HEALTH, target5, CONSECRATION),
 				at(3)
 						.decreasedResource(64, HEALTH, target, CONSECRATION)
 						.decreasedResource(64, HEALTH, target2, CONSECRATION)
 						.decreasedResource(64, HEALTH, target3, CONSECRATION)
-						.decreasedResource(64, HEALTH, target4, CONSECRATION),
+						.decreasedResource(64, HEALTH, target4, CONSECRATION)
+						.decreasedResource(64, HEALTH, target5, CONSECRATION),
 				at(4)
 						.decreasedResource(64, HEALTH, target, CONSECRATION)
 						.decreasedResource(64, HEALTH, target2, CONSECRATION)
 						.decreasedResource(64, HEALTH, target3, CONSECRATION)
-						.decreasedResource(64, HEALTH, target4, CONSECRATION),
+						.decreasedResource(64, HEALTH, target4, CONSECRATION)
+						.decreasedResource(64, HEALTH, target5, CONSECRATION),
 				at(5)
 						.decreasedResource(64, HEALTH, target, CONSECRATION)
 						.decreasedResource(64, HEALTH, target2, CONSECRATION)
 						.decreasedResource(64, HEALTH, target3, CONSECRATION)
-						.decreasedResource(64, HEALTH, target4, CONSECRATION),
+						.decreasedResource(64, HEALTH, target4, CONSECRATION)
+						.decreasedResource(64, HEALTH, target5, CONSECRATION),
 				at(6)
 						.decreasedResource(64, HEALTH, target, CONSECRATION)
 						.decreasedResource(64, HEALTH, target2, CONSECRATION)
 						.decreasedResource(64, HEALTH, target3, CONSECRATION)
-						.decreasedResource(64, HEALTH, target4, CONSECRATION),
+						.decreasedResource(64, HEALTH, target4, CONSECRATION)
+						.decreasedResource(64, HEALTH, target5, CONSECRATION),
 				at(7)
 						.decreasedResource(64, HEALTH, target, CONSECRATION)
 						.decreasedResource(64, HEALTH, target2, CONSECRATION)
 						.decreasedResource(64, HEALTH, target3, CONSECRATION)
-						.decreasedResource(64, HEALTH, target4, CONSECRATION),
+						.decreasedResource(64, HEALTH, target4, CONSECRATION)
+						.decreasedResource(64, HEALTH, target5, CONSECRATION),
 				at(8)
 						.cooldownExpired(player, CONSECRATION)
 						.decreasedResource(64, HEALTH, target, CONSECRATION)
 						.decreasedResource(64, HEALTH, target2, CONSECRATION)
 						.decreasedResource(64, HEALTH, target3, CONSECRATION)
 						.decreasedResource(64, HEALTH, target4, CONSECRATION)
+						.decreasedResource(64, HEALTH, target5, CONSECRATION)
 						.effectExpired(CONSECRATION, null)
 		);
 	}

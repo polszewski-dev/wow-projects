@@ -38,7 +38,8 @@ class HolyWrathTest extends TbcPaladinSpellSimulationTest {
 						.decreasedResource(692, HEALTH, target, HOLY_WRATH)
 						.decreasedResource(692, HEALTH, target2, HOLY_WRATH)
 						.decreasedResource(692, HEALTH, target3, HOLY_WRATH)
-						.decreasedResource(692, HEALTH, target4, HOLY_WRATH),
+						.decreasedResource(692, HEALTH, target4, HOLY_WRATH)
+						.decreasedResource(692, HEALTH, target5, HOLY_WRATH),
 				at(62)
 						.cooldownExpired(player, HOLY_WRATH)
 		);

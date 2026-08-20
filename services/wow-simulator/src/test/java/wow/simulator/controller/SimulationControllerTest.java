@@ -58,7 +58,8 @@ class SimulationControllerTest extends WowSimulatorSpringTest {
 
 	@BeforeEach
 	public void setUp() {
-		setupTestObjects();
+		createSimulation();
+		createDefaultUnits();
 		getCharacterService().applyDefaultCharacterTemplate(player);
 	}
 

@@ -45,7 +45,7 @@ class GreaterBlessingOfKingsTest extends TbcPaladinSpellSimulationTest {
 	void attributes_are_increased() {
 		simulateBuffSpell(GREATER_BLESSING_OF_KINGS);
 
-		assertBaseStatsIncreasedByPct(10);
+		assertStatsAreIncreasedByPct(player, 10);
 	}
 
 	@Override

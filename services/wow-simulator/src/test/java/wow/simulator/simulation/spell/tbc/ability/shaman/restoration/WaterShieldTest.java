@@ -43,6 +43,6 @@ class WaterShieldTest extends TbcShamanSpellSimulationTest {
 	void mp5_is_increased() {
 		simulateBuffSpell(WATER_SHIELD);
 
-		assertMp5IncreasedBy(50);
+		assertMp5IsIncreasedBy(player, 50);
 	}
 }

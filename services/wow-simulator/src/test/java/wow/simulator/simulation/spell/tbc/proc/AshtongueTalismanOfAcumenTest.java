@@ -3,7 +3,6 @@ package wow.simulator.simulation.spell.tbc.proc;
 import org.junit.jupiter.api.Test;
 import wow.simulator.simulation.spell.tbc.TbcPriestSpellSimulationTest;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.categorization.ItemSlot.TRINKET_1;
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
@@ -74,10 +73,7 @@ class AshtongueTalismanOfAcumenTest extends TbcPriestSpellSimulationTest {
 
 		updateUntil(10);
 
-		var dmgBefore = statsAt(0).getSpellDamage();
-		var dmgAfter = statsAt(10).getSpellDamage();
-
-		assertThat(dmgAfter).isEqualTo(dmgBefore + 220);
+		assertSpellDamageIsIncreasedBy(player, 220);
 	}
 
 	@Override

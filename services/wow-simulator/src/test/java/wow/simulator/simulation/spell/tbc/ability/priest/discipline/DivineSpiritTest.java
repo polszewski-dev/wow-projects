@@ -40,7 +40,7 @@ class DivineSpiritTest extends TbcPriestSpellSimulationTest {
 	void spirit_is_increased() {
 		simulateBuffSpell(DIVINE_SPIRIT);
 
-		assertSpiritIncreasedBy(50);
+		assertSpiritIsIncreasedBy(player, 50);
 	}
 
 	@Override

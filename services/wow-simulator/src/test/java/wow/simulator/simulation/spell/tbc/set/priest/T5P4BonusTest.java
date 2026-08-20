@@ -72,6 +72,8 @@ class T5P4BonusTest extends TbcPriestSpellSimulationTest {
 
 		updateUntil(30);
 
+		var totalSpellDamage = baseline.getStats().getSpellDamage();
+
 		assertDamageDone(MIND_BLAST, MIND_BLAST_INFO.damage(totalSpellDamage + 100));
 	}
 

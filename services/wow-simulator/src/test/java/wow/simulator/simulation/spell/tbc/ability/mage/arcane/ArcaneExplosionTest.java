@@ -33,7 +33,8 @@ class ArcaneExplosionTest extends TbcMageSpellSimulationTest {
 						.decreasedResource(392, HEALTH, target, ARCANE_EXPLOSION)
 						.decreasedResource(392, HEALTH, target2, ARCANE_EXPLOSION)
 						.decreasedResource(392, HEALTH, target3, ARCANE_EXPLOSION)
-						.decreasedResource(392, HEALTH, target4, ARCANE_EXPLOSION),
+						.decreasedResource(392, HEALTH, target4, ARCANE_EXPLOSION)
+						.decreasedResource(392, HEALTH, target5, ARCANE_EXPLOSION),
 				at(1.5)
 						.endGcd(player)
 		);

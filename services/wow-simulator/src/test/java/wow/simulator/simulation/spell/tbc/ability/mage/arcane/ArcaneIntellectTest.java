@@ -39,6 +39,6 @@ class ArcaneIntellectTest extends TbcMageSpellSimulationTest {
 	void intellect_is_increased() {
 		simulateBuffSpell(ARCANE_INTELLECT);
 
-		assertIntellectIncreasedBy(40);
+		assertIntellectIsIncreasedBy(player, 40);
 	}
 }

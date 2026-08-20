@@ -39,6 +39,6 @@ class PowerWordFortitudeTest extends TbcPriestSpellSimulationTest {
 	void stamina_is_increased() {
 		simulateBuffSpell(POWER_WORD_FORTITUDE);
 
-		assertStaminaIncreasedBy(79);
+		assertStaminaIsIncreasedBy(player, 79);
 	}
 }

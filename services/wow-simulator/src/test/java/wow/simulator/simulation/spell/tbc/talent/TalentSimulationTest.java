@@ -290,7 +290,7 @@ public abstract class TalentSimulationTest extends SpellSimulationTest {
 	}
 
 	protected void assertStatBonusIsIncreasedByPct(ToIntFunction<StatSummary> stat, int pctIncrease) {
-		var base = stat.applyAsInt(statsAt(player, 0));
+		var base = stat.applyAsInt(baseline.getStats());
 		var modifiedBonus = stat.applyAsInt(player.getStats()) - base;
 		var baseBonus = stat.applyAsInt(player2.getStats()) - base;
 
@@ -298,7 +298,7 @@ public abstract class TalentSimulationTest extends SpellSimulationTest {
 	}
 
 	protected void assertBonusStatConversion(ToIntFunction<StatSummary> sourceStat, ToIntFunction<StatSummary> targetStat, int ratio) {
-		var base = targetStat.applyAsInt(statsAt(player, 0));
+		var base = targetStat.applyAsInt(baseline.getStats());
 		var modifiedBonus = targetStat.applyAsInt(player.getStats()) - base;
 		var baseBonus = targetStat.applyAsInt(player2.getStats()) - base;
 		var modifiedSourceStat = sourceStat.applyAsInt(player.getStats());
@@ -314,11 +314,9 @@ public abstract class TalentSimulationTest extends SpellSimulationTest {
 	}
 
 	protected void setSimulationParams(CharacterClassId characterClassId, RaceId raceId, PhaseId phaseId) {
-		this.characterClassId = characterClassId;
-		this.raceId = raceId;
+		setPlayerConfig(characterClassId, raceId);
+		setOtherPartyMemberConfig(characterClassId, raceId);
 		this.phaseId = phaseId;
-		this.partyMemberClassId = characterClassId;
-		this.partyMemberRaceId = raceId;
 	}
 
 	protected void testingAoeAbility() {

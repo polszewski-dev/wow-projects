@@ -34,7 +34,8 @@ class FrostNovaTest extends TbcMageSpellSimulationTest {
 						.decreasedResource(106, HEALTH, target, FROST_NOVA)
 						.decreasedResource(106, HEALTH, target2, FROST_NOVA)
 						.decreasedResource(106, HEALTH, target3, FROST_NOVA)
-						.decreasedResource(106, HEALTH, target4, FROST_NOVA),
+						.decreasedResource(106, HEALTH, target4, FROST_NOVA)
+						.decreasedResource(106, HEALTH, target5, FROST_NOVA),
 				at(1.5)
 						.endGcd(player),
 				at(25)

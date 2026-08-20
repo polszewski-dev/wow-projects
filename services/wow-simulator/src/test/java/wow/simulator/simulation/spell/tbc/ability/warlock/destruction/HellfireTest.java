@@ -34,79 +34,94 @@ class HellfireTest extends TbcWarlockSpellSimulationTest {
 						.decreasedResource(308, HEALTH, target, HELLFIRE)
 						.decreasedResource(308, HEALTH, target2, HELLFIRE)
 						.decreasedResource(308, HEALTH, target3, HELLFIRE)
-						.decreasedResource(308, HEALTH, target4, HELLFIRE),
+						.decreasedResource(308, HEALTH, target4, HELLFIRE)
+						.decreasedResource(308, HEALTH, target5, HELLFIRE),
 				at(1.5)
 						.endGcd(player),
 				at(2)
 						.decreasedResource(308, HEALTH, target, HELLFIRE)
 						.decreasedResource(308, HEALTH, target2, HELLFIRE)
 						.decreasedResource(308, HEALTH, target3, HELLFIRE)
-						.decreasedResource(308, HEALTH, target4, HELLFIRE),
+						.decreasedResource(308, HEALTH, target4, HELLFIRE)
+						.decreasedResource(308, HEALTH, target5, HELLFIRE),
 				at(3)
 						.decreasedResource(308, HEALTH, target, HELLFIRE)
 						.decreasedResource(308, HEALTH, target2, HELLFIRE)
 						.decreasedResource(308, HEALTH, target3, HELLFIRE)
-						.decreasedResource(308, HEALTH, target4, HELLFIRE),
+						.decreasedResource(308, HEALTH, target4, HELLFIRE)
+						.decreasedResource(308, HEALTH, target5, HELLFIRE),
 				at(4)
 						.decreasedResource(308, HEALTH, target, HELLFIRE)
 						.decreasedResource(308, HEALTH, target2, HELLFIRE)
 						.decreasedResource(308, HEALTH, target3, HELLFIRE)
-						.decreasedResource(308, HEALTH, target4, HELLFIRE),
+						.decreasedResource(308, HEALTH, target4, HELLFIRE)
+						.decreasedResource(308, HEALTH, target5, HELLFIRE),
 				at(5)
 						.decreasedResource(308, HEALTH, target, HELLFIRE)
 						.decreasedResource(308, HEALTH, target2, HELLFIRE)
 						.decreasedResource(308, HEALTH, target3, HELLFIRE)
-						.decreasedResource(308, HEALTH, target4, HELLFIRE),
+						.decreasedResource(308, HEALTH, target4, HELLFIRE)
+						.decreasedResource(308, HEALTH, target5, HELLFIRE),
 				at(6)
 						.decreasedResource(308, HEALTH, target, HELLFIRE)
 						.decreasedResource(308, HEALTH, target2, HELLFIRE)
 						.decreasedResource(308, HEALTH, target3, HELLFIRE)
-						.decreasedResource(308, HEALTH, target4, HELLFIRE),
+						.decreasedResource(308, HEALTH, target4, HELLFIRE)
+						.decreasedResource(308, HEALTH, target5, HELLFIRE),
 				at(7)
 						.decreasedResource(308, HEALTH, target, HELLFIRE)
 						.decreasedResource(308, HEALTH, target2, HELLFIRE)
 						.decreasedResource(308, HEALTH, target3, HELLFIRE)
-						.decreasedResource(308, HEALTH, target4, HELLFIRE),
+						.decreasedResource(308, HEALTH, target4, HELLFIRE)
+						.decreasedResource(308, HEALTH, target5, HELLFIRE),
 				at(8)
 						.decreasedResource(308, HEALTH, target, HELLFIRE)
 						.decreasedResource(308, HEALTH, target2, HELLFIRE)
 						.decreasedResource(308, HEALTH, target3, HELLFIRE)
-						.decreasedResource(308, HEALTH, target4, HELLFIRE),
+						.decreasedResource(308, HEALTH, target4, HELLFIRE)
+						.decreasedResource(308, HEALTH, target5, HELLFIRE),
 				at(9)
 						.decreasedResource(308, HEALTH, target, HELLFIRE)
 						.decreasedResource(308, HEALTH, target2, HELLFIRE)
 						.decreasedResource(308, HEALTH, target3, HELLFIRE)
-						.decreasedResource(308, HEALTH, target4, HELLFIRE),
+						.decreasedResource(308, HEALTH, target4, HELLFIRE)
+						.decreasedResource(308, HEALTH, target5, HELLFIRE),
 				at(10)
 						.decreasedResource(308, HEALTH, target, HELLFIRE)
 						.decreasedResource(308, HEALTH, target2, HELLFIRE)
 						.decreasedResource(308, HEALTH, target3, HELLFIRE)
-						.decreasedResource(308, HEALTH, target4, HELLFIRE),
+						.decreasedResource(308, HEALTH, target4, HELLFIRE)
+						.decreasedResource(308, HEALTH, target5, HELLFIRE),
 				at(11)
 						.decreasedResource(308, HEALTH, target, HELLFIRE)
 						.decreasedResource(308, HEALTH, target2, HELLFIRE)
 						.decreasedResource(308, HEALTH, target3, HELLFIRE)
-						.decreasedResource(308, HEALTH, target4, HELLFIRE),
+						.decreasedResource(308, HEALTH, target4, HELLFIRE)
+						.decreasedResource(308, HEALTH, target5, HELLFIRE),
 				at(12)
 						.decreasedResource(308, HEALTH, target, HELLFIRE)
 						.decreasedResource(308, HEALTH, target2, HELLFIRE)
 						.decreasedResource(308, HEALTH, target3, HELLFIRE)
-						.decreasedResource(308, HEALTH, target4, HELLFIRE),
+						.decreasedResource(308, HEALTH, target4, HELLFIRE)
+						.decreasedResource(308, HEALTH, target5, HELLFIRE),
 				at(13)
 						.decreasedResource(308, HEALTH, target, HELLFIRE)
 						.decreasedResource(308, HEALTH, target2, HELLFIRE)
 						.decreasedResource(308, HEALTH, target3, HELLFIRE)
-						.decreasedResource(308, HEALTH, target4, HELLFIRE),
+						.decreasedResource(308, HEALTH, target4, HELLFIRE)
+						.decreasedResource(308, HEALTH, target5, HELLFIRE),
 				at(14)
 						.decreasedResource(308, HEALTH, target, HELLFIRE)
 						.decreasedResource(308, HEALTH, target2, HELLFIRE)
 						.decreasedResource(308, HEALTH, target3, HELLFIRE)
-						.decreasedResource(308, HEALTH, target4, HELLFIRE),
+						.decreasedResource(308, HEALTH, target4, HELLFIRE)
+						.decreasedResource(308, HEALTH, target5, HELLFIRE),
 				at(15)
 						.decreasedResource(308, HEALTH, target, HELLFIRE)
 						.decreasedResource(308, HEALTH, target2, HELLFIRE)
 						.decreasedResource(308, HEALTH, target3, HELLFIRE)
 						.decreasedResource(308, HEALTH, target4, HELLFIRE)
+						.decreasedResource(308, HEALTH, target5, HELLFIRE)
 						.effectExpired(HELLFIRE, player)
 						.endChannel(player, HELLFIRE)
 		);

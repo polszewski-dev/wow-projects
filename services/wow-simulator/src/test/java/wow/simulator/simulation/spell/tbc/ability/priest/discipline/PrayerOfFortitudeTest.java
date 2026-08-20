@@ -43,7 +43,7 @@ class PrayerOfFortitudeTest extends TbcPriestSpellSimulationTest {
 	void stamina_is_increased() {
 		simulateBuffSpell(PRAYER_OF_FORTITUDE);
 
-		assertStaminaIncreasedBy(79);
+		assertStaminaIsIncreasedBy(player, 79);
 	}
 
 	@Override

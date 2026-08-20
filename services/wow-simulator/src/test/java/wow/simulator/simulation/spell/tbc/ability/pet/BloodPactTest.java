@@ -49,9 +49,6 @@ class BloodPactTest extends TbcWarlockSpellSimulationTest {
 
 		updateUntil(30);
 
-		timeBefore = 0;
-		timeAfter = 15;
-
-		assertStaminaIncreasedBy(70);
+		assertStaminaIsIncreasedBy(player, 70);
 	}
 }

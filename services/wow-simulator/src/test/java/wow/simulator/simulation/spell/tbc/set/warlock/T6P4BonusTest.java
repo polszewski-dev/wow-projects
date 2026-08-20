@@ -21,6 +21,8 @@ class T6P4BonusTest extends TbcWarlockSpellSimulationTest {
 
 		updateUntil(30);
 
+		var totalSpellDamage = baseline.getStats().getSpellDamage();
+
 		assertDamageDone(SHADOW_BOLT, SHADOW_BOLT_INFO.damage(totalSpellDamage), 6);
 	}
 
@@ -29,6 +31,8 @@ class T6P4BonusTest extends TbcWarlockSpellSimulationTest {
 		player.cast(INCINERATE);
 
 		updateUntil(30);
+
+		var totalSpellDamage = baseline.getStats().getSpellDamage();
 
 		assertDamageDone(INCINERATE, INCINERATE_INFO.damage(totalSpellDamage), 6);
 	}

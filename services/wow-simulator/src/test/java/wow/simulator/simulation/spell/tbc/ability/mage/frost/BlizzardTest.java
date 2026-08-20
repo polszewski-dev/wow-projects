@@ -36,44 +36,52 @@ class BlizzardTest extends TbcMageSpellSimulationTest {
 						.decreasedResource(185, HEALTH, target, BLIZZARD)
 						.decreasedResource(185, HEALTH, target2, BLIZZARD)
 						.decreasedResource(185, HEALTH, target3, BLIZZARD)
-						.decreasedResource(185, HEALTH, target4, BLIZZARD),
+						.decreasedResource(185, HEALTH, target4, BLIZZARD)
+						.decreasedResource(185, HEALTH, target5, BLIZZARD),
 				at(1.5)
 						.endGcd(player),
 				at(2)
 						.decreasedResource(185, HEALTH, target, BLIZZARD)
 						.decreasedResource(185, HEALTH, target2, BLIZZARD)
 						.decreasedResource(185, HEALTH, target3, BLIZZARD)
-						.decreasedResource(185, HEALTH, target4, BLIZZARD),
+						.decreasedResource(185, HEALTH, target4, BLIZZARD)
+						.decreasedResource(185, HEALTH, target5, BLIZZARD),
 				at(3)
 						.decreasedResource(185, HEALTH, target, BLIZZARD)
 						.decreasedResource(185, HEALTH, target2, BLIZZARD)
 						.decreasedResource(185, HEALTH, target3, BLIZZARD)
-						.decreasedResource(185, HEALTH, target4, BLIZZARD),
+						.decreasedResource(185, HEALTH, target4, BLIZZARD)
+						.decreasedResource(185, HEALTH, target5, BLIZZARD),
 				at(4)
 						.decreasedResource(185, HEALTH, target, BLIZZARD)
 						.decreasedResource(185, HEALTH, target2, BLIZZARD)
 						.decreasedResource(185, HEALTH, target3, BLIZZARD)
-						.decreasedResource(185, HEALTH, target4, BLIZZARD),
+						.decreasedResource(185, HEALTH, target4, BLIZZARD)
+						.decreasedResource(185, HEALTH, target5, BLIZZARD),
 				at(5)
 						.decreasedResource(185, HEALTH, target, BLIZZARD)
 						.decreasedResource(185, HEALTH, target2, BLIZZARD)
 						.decreasedResource(185, HEALTH, target3, BLIZZARD)
-						.decreasedResource(185, HEALTH, target4, BLIZZARD),
+						.decreasedResource(185, HEALTH, target4, BLIZZARD)
+						.decreasedResource(185, HEALTH, target5, BLIZZARD),
 				at(6)
 						.decreasedResource(185, HEALTH, target, BLIZZARD)
 						.decreasedResource(185, HEALTH, target2, BLIZZARD)
 						.decreasedResource(185, HEALTH, target3, BLIZZARD)
-						.decreasedResource(185, HEALTH, target4, BLIZZARD),
+						.decreasedResource(185, HEALTH, target4, BLIZZARD)
+						.decreasedResource(185, HEALTH, target5, BLIZZARD),
 				at(7)
 						.decreasedResource(185, HEALTH, target, BLIZZARD)
 						.decreasedResource(185, HEALTH, target2, BLIZZARD)
 						.decreasedResource(185, HEALTH, target3, BLIZZARD)
-						.decreasedResource(185, HEALTH, target4, BLIZZARD),
+						.decreasedResource(185, HEALTH, target4, BLIZZARD)
+						.decreasedResource(185, HEALTH, target5, BLIZZARD),
 				at(8)
 						.decreasedResource(185, HEALTH, target, BLIZZARD)
 						.decreasedResource(185, HEALTH, target2, BLIZZARD)
 						.decreasedResource(185, HEALTH, target3, BLIZZARD)
 						.decreasedResource(185, HEALTH, target4, BLIZZARD)
+						.decreasedResource(185, HEALTH, target5, BLIZZARD)
 						.effectExpired(BLIZZARD, null)
 						.endChannel(player, BLIZZARD)
 		);

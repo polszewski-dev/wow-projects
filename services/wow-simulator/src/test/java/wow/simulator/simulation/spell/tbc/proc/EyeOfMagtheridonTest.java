@@ -3,7 +3,6 @@ package wow.simulator.simulation.spell.tbc.proc;
 import org.junit.jupiter.api.Test;
 import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.model.categorization.ItemSlot.TRINKET_1;
 import static wow.commons.model.spell.ResourceType.MANA;
 import static wow.simulator.util.EffectType.ITEM;
@@ -50,10 +49,7 @@ class EyeOfMagtheridonTest extends TbcWarlockSpellSimulationTest {
 
 		updateUntil(10);
 
-		var dmgBefore = statsAt(0).getSpellDamage();
-		var dmgAfter = statsAt(10).getSpellDamage();
-
-		assertThat(dmgAfter).isEqualTo(dmgBefore + 170);
+		assertSpellDamageIsIncreasedBy(player, 170);
 	}
 
 	@Override

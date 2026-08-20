@@ -20,6 +20,8 @@ class T1P3BonusTest extends TbcWarlockSpellSimulationTest {
 
 		updateUntil(30);
 
+		var totalSpellDamage = baseline.getStats().getSpellDamage();
+
 		assertHealthGained(DRAIN_LIFE, player, DRAIN_LIFE_INFO.damage(totalSpellDamage), 15);
 	}
 
