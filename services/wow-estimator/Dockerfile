@@ -21,9 +21,6 @@ COPY services/wow-estimator/pom.xml services/wow-estimator/pom.xml
 COPY services/wow-simulator/pom.xml services/wow-simulator/pom.xml
 COPY services/pom.xml               services/pom.xml
 
-COPY tools/wow-scraper/pom.xml tools/wow-scraper/pom.xml
-COPY tools/pom.xml             tools/pom.xml
-
 COPY pom.xml pom.xml
 
 RUN mvn dependency:go-offline -DexcludeGroupIds=polszewski

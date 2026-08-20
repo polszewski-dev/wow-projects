@@ -5,7 +5,6 @@
 * wow-minmax - web UI to combine and analyze different gear choices
 * wow-estimator - dps estimatror
 * wow-simulator - dps simulator
-* wow-scraper - dev tools to scrape info from Wowhead.com and to generate excel input for wow-commons
 
 ### Start: 
 
