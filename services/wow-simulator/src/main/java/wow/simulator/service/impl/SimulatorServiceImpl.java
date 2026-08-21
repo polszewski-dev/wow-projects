@@ -1,6 +1,7 @@
 package wow.simulator.service.impl;
 
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import wow.character.model.asset.AssetExecution;
 import wow.character.model.asset.AssetExecutionPlan;
@@ -9,6 +10,7 @@ import wow.character.service.AssetService;
 import wow.character.service.CharacterCalculationService;
 import wow.character.service.CharacterService;
 import wow.commons.model.Duration;
+import wow.commons.model.categorization.ItemSlot;
 import wow.commons.repository.spell.SpellRepository;
 import wow.simulator.client.dto.RngType;
 import wow.simulator.log.GameLog;
@@ -27,6 +29,7 @@ import wow.simulator.simulation.Simulation;
 import wow.simulator.simulation.SimulationContext;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * User: POlszewski
@@ -39,6 +42,9 @@ public class SimulatorServiceImpl implements SimulatorService {
 	private final CharacterCalculationService characterCalculationService;
 	private final AssetService assetService;
 	private final SpellRepository spellRepository;
+
+	@Value("#{${buff.items.by.slot}}")
+	private final Map<ItemSlot, List<String>> buffItemsBySlot;
 
 	private static final Time SUMMON_PHASE_END_TIME = Time.at(10);
 	private static final Time BUFF_PHASE_END_TIME = Time.at(60);
@@ -113,6 +119,7 @@ public class SimulatorServiceImpl implements SimulatorService {
 							member,
 							executionPlan,
 							() -> {
+								activateBuffItems(member);
 								member.idleUntil(BUFF_PHASE_END_TIME);
 								member.immediateAction(this::finalizeBuffStage);
 							}
@@ -148,6 +155,18 @@ public class SimulatorServiceImpl implements SimulatorService {
 			var executor = new AssetExecutor(params, summonExecutions, endStep);
 
 			executor.execute();
+		}
+	}
+
+	private void activateBuffItems(Player member) {
+		for (var entry : buffItemsBySlot.entrySet()) {
+			var slot = entry.getKey();
+			var itemNames = entry.getValue();
+			var equippedItemName = member.getEquippedItemName(slot);
+
+			if (itemNames.contains(equippedItemName)) {
+				member.cast(equippedItemName);
+			}
 		}
 	}
 

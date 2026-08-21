@@ -161,6 +161,11 @@ public interface Character extends CharacterInfo, EffectCollection {
 		getEquipment().reset();
 	}
 
+	default String getEquippedItemName(ItemSlot slot) {
+		var item = getEquipment().get(slot);
+		return item != null ? item.getName() : null;
+	}
+
 	// consumables
 
 	Consumables getConsumables();

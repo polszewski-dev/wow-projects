@@ -6,6 +6,7 @@ import wow.simulator.model.unit.Unit;
 import wow.simulator.simulation.spell.SpellSimulationTest;
 
 import static wow.commons.model.categorization.ItemSlot.MAIN_HAND;
+import static wow.commons.model.categorization.ItemSlot.NECK;
 import static wow.commons.model.character.CharacterClassId.*;
 import static wow.commons.model.character.RaceId.*;
 import static wow.commons.model.spell.SpellSchool.HOLY;
@@ -185,6 +186,31 @@ class AuraTest extends SpellSimulationTest {
 		updateUntil(30);
 
 		assertStaminaIsIncreasedBy(player, 0);
+	}
+
+	@Test
+	void auras_from_necklaces_stack_correctly() {
+		setPlayerConfig(WARLOCK, UNDEAD);
+
+		createDefaultUnits();
+
+		equip(player2, EYE_OF_THE_NIGHT, NECK);
+		equip(player3, CHAIN_OF_THE_TWILIGHT_OWL, NECK);
+		equip(player4, THICK_FELSTEEL_NECKLACE, NECK);
+		equip(player5, EMBRACE_OF_THE_DAWN, NECK);
+
+		player2.cast(EYE_OF_THE_NIGHT);
+		player3.cast(CHAIN_OF_THE_TWILIGHT_OWL);
+		player4.cast(THICK_FELSTEEL_NECKLACE);
+		player5.cast(EMBRACE_OF_THE_DAWN);
+
+		updateUntil(30);
+
+		assertSpellDamageIsIncreasedBy(player, 34);
+		assertSpellCritPctIsIncreasedBy(player, 2 + 0.125);// 2% + crit from +10 int
+		assertStaminaIsIncreasedBy(player, 30);
+		assertIntellectIsIncreasedBy(player, 10);
+		assertSpiritIsIncreasedBy(player, 10);
 	}
 
 	@Override

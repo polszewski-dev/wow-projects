@@ -65,7 +65,6 @@ class SimulationControllerTest extends WowSimulatorSpringTest {
 
 	RaidDTO getRaidDTO(Player player) {
 		var raid = UnitRaid.newUnitRaid(player);
-
 		return raidConverter.convert(raid);
 	}
 }
