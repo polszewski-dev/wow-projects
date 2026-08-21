@@ -22,6 +22,7 @@ public enum AttributeType {
 	SPIRIT("Spirit", pointsAndPercents()),
 
 	BASE_STATS("BaseStats", pointsAndPercents()),
+	STATS("Stats", pointsAndPercents()),
 
 	MAX_HEALTH("MaxHealth", pointsAndPercents()),
 	MAX_MANA("MaxMana", pointsAndPercents()),

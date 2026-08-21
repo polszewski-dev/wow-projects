@@ -24,6 +24,8 @@ public enum AttributeId {
 
 	BASE_STATS("BaseStats"),
 	BASE_STATS_PCT("BaseStats%"),
+	STATS("Stats"),
+	STATS_PCT("Stats%"),
 
 	MAX_HEALTH("MaxHealth"),
 	MAX_HEALTH_PCT("MaxHealth%"),
@@ -147,6 +149,8 @@ public enum AttributeId {
 	PARTY_CRIT_RATING("Party.CritRating"),
 	PARTY_CRIT_PCT("Party.Crit%"),
 	PARTY_MP5("Party.Mp5"),
+	PARTY_HP5("Party.Hp5"),
+	PARTY_STATS("Party.Stats"),
 	PARTY_STAMINA("Party.Stamina"),
 
 	COPY_PCT("Copy%")
@@ -177,6 +181,15 @@ public enum AttributeId {
 
 	public static AttributeId tryParse(String value) {
 		return EnumUtil.tryParse(value, values(), x -> x.key);
+	}
+
+	public boolean isResourceModifier() {
+		return switch (this) {
+			case STAMINA, PARTY_STAMINA, STAMINA_PCT, INTELLECT, INTELLECT_PCT, BASE_STATS, BASE_STATS_PCT, STATS, PARTY_STATS, STATS_PCT, MAX_HEALTH, MAX_HEALTH_PCT, MAX_MANA, MAX_MANA_PCT ->
+					true;
+			default ->
+					false;
+		};
 	}
 
 	@Override

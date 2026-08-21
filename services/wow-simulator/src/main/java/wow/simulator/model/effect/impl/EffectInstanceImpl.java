@@ -462,15 +462,6 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 			return false;
 		}
 
-		return getModifierAttributeList().stream().anyMatch(this::isResourceModifier);
-	}
-
-	private boolean isResourceModifier(Attribute attribute) {
-		return switch (attribute.id()) {
-			case STAMINA, PARTY_STAMINA, STAMINA_PCT, INTELLECT, INTELLECT_PCT, BASE_STATS, BASE_STATS_PCT, MAX_HEALTH, MAX_HEALTH_PCT, MAX_MANA, MAX_MANA_PCT ->
-					true;
-			default ->
-					false;
-		};
+		return getModifierAttributeList().stream().anyMatch(x -> x.id().isResourceModifier());
 	}
 }

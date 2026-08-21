@@ -11,6 +11,11 @@ import wow.commons.model.attribute.AttributeId;
  */
 @Getter
 public class AccumulatedBaseStats extends AccumulatedPartialStats {
+	private double baseStrength;
+	private double baseAgility;
+	private double baseStamina;
+	private double baseIntellect;
+	private double baseSpirit;
 	private double strength;
 	private double strengthPct;
 	private double agility;
@@ -23,6 +28,8 @@ public class AccumulatedBaseStats extends AccumulatedPartialStats {
 	private double spiritPct;
 	private double baseStats;
 	private double baseStatsPct;
+	private double stats;
+	private double statsPct;
 	private double maxHealth;
 	private double maxHealthPct;
 	private double maxMana;
@@ -34,6 +41,11 @@ public class AccumulatedBaseStats extends AccumulatedPartialStats {
 
 	private AccumulatedBaseStats(AccumulatedBaseStats stats) {
 		super(stats);
+		this.baseStrength = stats.baseStrength;
+		this.baseAgility = stats.baseAgility;
+		this.baseStamina = stats.baseStamina;
+		this.baseIntellect = stats.baseIntellect;
+		this.baseSpirit = stats.baseSpirit;
 		this.strength = stats.strength;
 		this.strengthPct = stats.strengthPct;
 		this.agility = stats.agility;
@@ -46,6 +58,8 @@ public class AccumulatedBaseStats extends AccumulatedPartialStats {
 		this.spiritPct = stats.spiritPct;
 		this.baseStats = stats.baseStats;
 		this.baseStatsPct = stats.baseStatsPct;
+		this.stats = stats.stats;
+		this.statsPct = stats.statsPct;
 		this.maxHealth = stats.maxHealth;
 		this.maxHealthPct = stats.maxHealthPct;
 		this.maxMana = stats.maxMana;
@@ -53,11 +67,11 @@ public class AccumulatedBaseStats extends AccumulatedPartialStats {
 	}
 
 	public void accumulateBaseStatInfo(BaseStatInfo baseStatInfo) {
-		strength += baseStatInfo.getBaseStrength();
-		agility += baseStatInfo.getBaseAgility();
-		stamina += baseStatInfo.getBaseStamina();
-		intellect += baseStatInfo.getBaseIntellect();
-		spirit += baseStatInfo.getBaseSpirit();
+		baseStrength += baseStatInfo.getBaseStrength();
+		baseAgility += baseStatInfo.getBaseAgility();
+		baseStamina += baseStatInfo.getBaseStamina();
+		baseIntellect += baseStatInfo.getBaseIntellect();
+		baseSpirit += baseStatInfo.getBaseSpirit();
 		maxHealth += baseStatInfo.getBaseHealth();
 		maxMana += baseStatInfo.getBaseMana();
 	}
@@ -100,6 +114,12 @@ public class AccumulatedBaseStats extends AccumulatedPartialStats {
 				break;
 			case BASE_STATS_PCT:
 				this.baseStatsPct += value;
+				break;
+			case STATS, PARTY_STATS:
+				this.stats += value;
+				break;
+			case STATS_PCT:
+				this.statsPct += value;
 				break;
 			case MAX_HEALTH:
 				this.maxHealth += value;
