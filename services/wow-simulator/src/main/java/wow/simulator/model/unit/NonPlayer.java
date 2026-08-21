@@ -12,10 +12,12 @@ import java.util.List;
 public interface NonPlayer extends Unit, NonPlayerCharacter {
 	UnitParty<NonPlayer> getParty();
 
+	@Override
 	default Raid<NonPlayer> getRaid() {
 		return getParty().getRaid();
 	}
 
+	@Override
 	default List<NonPlayer> getPartyMembers() {
 		return getParty().getMembers();
 	}

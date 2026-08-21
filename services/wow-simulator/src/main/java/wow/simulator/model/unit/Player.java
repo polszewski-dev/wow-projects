@@ -12,10 +12,12 @@ import java.util.List;
 public interface Player extends Unit, PlayerCharacter {
 	UnitParty<Player> getParty();
 
+	@Override
 	default Raid<Player> getRaid() {
 		return getParty().getRaid();
 	}
 
+	@Override
 	default List<Player> getPartyMembers() {
 		return getParty().getMembers();
 	}

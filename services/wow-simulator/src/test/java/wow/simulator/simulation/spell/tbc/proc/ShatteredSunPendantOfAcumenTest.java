@@ -14,7 +14,7 @@ import static wow.test.commons.AbilityNames.SEARING_PAIN;
  * User: POlszewski
  * Date: 11.08.2026
  */
-public class ShatteredSunPendantOfAcumenTest extends TbcWarlockSpellSimulationTest {
+class ShatteredSunPendantOfAcumenTest extends TbcWarlockSpellSimulationTest {
 	/*
 	Equip: Your spells have a chance to call on the power of the Arcane if you're exalted with the Scryers, or the Light if you're exalted with the Aldor. (Proc chance: 15%, 45s cooldown)
 	 */

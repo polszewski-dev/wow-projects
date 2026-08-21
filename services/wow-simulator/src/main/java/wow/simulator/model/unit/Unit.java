@@ -185,6 +185,7 @@ public interface Unit extends Character, SimulationContextSource {
 
 	void summonPet(PetType petType, Spell sourceSpell);
 
+	@Override
 	Pet dismissPet();
 
 	Pet sacrificePet();

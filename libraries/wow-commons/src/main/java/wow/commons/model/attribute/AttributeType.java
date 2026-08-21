@@ -111,10 +111,6 @@ public enum AttributeType {
 		return EnumUtil.tryParse(value, values(), x -> x.key);
 	}
 
-	public String getKey() {
-		return key;
-	}
-
 	@Override
 	public String toString() {
 		return key;

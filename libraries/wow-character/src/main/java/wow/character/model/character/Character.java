@@ -225,4 +225,10 @@ public interface Character extends CharacterInfo, EffectCollection {
 	default boolean isHostileWith(Character target) {
 		return !isFriendlyWith(target);
 	}
+
+	default PetCharacter dismissPet() {
+		var activePet = getActivePet();
+		setActivePet(null);
+		return activePet;
+	}
 }
