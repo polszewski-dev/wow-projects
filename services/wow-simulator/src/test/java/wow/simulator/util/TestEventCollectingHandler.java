@@ -12,6 +12,7 @@ import wow.simulator.model.cooldown.CooldownInstance;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.time.Clock;
 import wow.simulator.model.time.Time;
+import wow.simulator.model.unit.Pet;
 import wow.simulator.model.unit.Player;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.unit.action.CastSpellAction;
@@ -218,6 +219,26 @@ public class TestEventCollectingHandler implements GameLogHandler, TimeAware {
 	@Override
 	public void targetDied(Unit target, Unit caster) {
 		addEvent(new TargetDied(now(), target, caster));
+	}
+
+	@Override
+	public void petSummoned(Unit master, Pet pet) {
+		addEvent(new PetSummoned(now(), master, pet.getPetType()));
+	}
+
+	@Override
+	public void petUnsummoned(Unit master, Pet pet) {
+		addEvent(new PetUnsummoned(now(), master, pet.getPetType()));
+	}
+
+	@Override
+	public void petDismissed(Unit master, Pet pet) {
+		addEvent(new PetDismissed(now(), master, pet.getPetType()));
+	}
+
+	@Override
+	public void petSacrificed(Unit master, Pet pet) {
+		addEvent(new PetSacrificed(now(), master, pet.getPetType()));
 	}
 
 	private TestEvent addEvent(TestEvent event) {

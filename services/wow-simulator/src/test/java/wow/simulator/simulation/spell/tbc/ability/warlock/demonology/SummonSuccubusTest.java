@@ -32,6 +32,7 @@ class SummonSuccubusTest extends TbcWarlockSpellSimulationTest {
 				at(10)
 						.endCast(player, SUMMON_SUCCUBUS)
 						.decreasedResource(3428, MANA, player, SUMMON_SUCCUBUS)
+						.petSummoned(player, SUCCUBUS)
 		);
 	}
 

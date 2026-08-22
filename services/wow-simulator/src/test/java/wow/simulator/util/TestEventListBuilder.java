@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import wow.commons.model.AnyDuration;
 import wow.commons.model.Duration;
+import wow.commons.model.character.PetType;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.CooldownId;
 import wow.commons.model.spell.ResourceType;
@@ -183,6 +184,22 @@ public class TestEventListBuilder {
 
 	public TestEventListBuilder targetDied(Unit target, Player caster) {
 		return addEvent(new TargetDied(time, target, caster));
+	}
+
+	public TestEventListBuilder petSummoned(Unit caster, PetType petType) {
+		return addEvent(new PetSummoned(time, caster, petType));
+	}
+
+	public TestEventListBuilder petUnsummoned(Unit caster, PetType petType) {
+		return addEvent(new PetUnsummoned(time, caster, petType));
+	}
+
+	public TestEventListBuilder petDismissed(Unit caster, PetType petType) {
+		return addEvent(new PetDismissed(time, caster, petType));
+	}
+
+	public TestEventListBuilder petSacrificed(Unit caster, PetType petType) {
+		return addEvent(new PetSacrificed(time, caster, petType));
 	}
 
 	private TestEventListBuilder addEvent(TestEvent event) {

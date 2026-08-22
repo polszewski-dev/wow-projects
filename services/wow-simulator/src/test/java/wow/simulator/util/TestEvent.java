@@ -2,6 +2,7 @@ package wow.simulator.util;
 
 import wow.commons.model.AnyDuration;
 import wow.commons.model.Duration;
+import wow.commons.model.character.PetType;
 import wow.commons.model.spell.CooldownId;
 import wow.commons.model.spell.ResourceType;
 import wow.simulator.model.time.Time;
@@ -139,4 +140,12 @@ public sealed interface TestEvent {
 	record CooldownExpired(Time time, Unit caster, CooldownId cooldownId) implements TestEvent {}
 
 	record TargetDied(Time time, Unit target, Unit caster) implements TestEvent {}
+
+	record PetSummoned(Time time, Unit caster, PetType petType) implements TestEvent {}
+
+	record PetUnsummoned(Time time, Unit caster, PetType petType) implements TestEvent {}
+
+	record PetDismissed(Time time, Unit caster, PetType petType) implements TestEvent {}
+
+	record PetSacrificed(Time time, Unit caster, PetType petType) implements TestEvent {}
 }

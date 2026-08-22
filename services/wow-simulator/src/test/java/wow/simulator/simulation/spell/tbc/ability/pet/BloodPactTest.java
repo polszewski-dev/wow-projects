@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import wow.commons.model.Duration;
 import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
 
+import static wow.commons.model.character.PetType.IMP;
 import static wow.commons.model.spell.ResourceType.MANA;
 import static wow.test.commons.AbilityNames.BLOOD_PACT;
 import static wow.test.commons.AbilityNames.SUMMON_IMP;
@@ -33,6 +34,7 @@ class BloodPactTest extends TbcWarlockSpellSimulationTest {
 				at(10)
 						.endCast(player, SUMMON_IMP)
 						.decreasedResource(2742, MANA, player, SUMMON_IMP)
+						.petSummoned(player, IMP)
 						.beginCast(pet, BLOOD_PACT)
 						.beginGcd(pet)
 						.endCast(pet, BLOOD_PACT)

@@ -3,6 +3,7 @@ package wow.simulator.simulation.spell.tbc.ability.pet;
 import org.junit.jupiter.api.Test;
 import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
 
+import static wow.commons.model.character.PetType.IMP;
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
 import static wow.test.commons.AbilityNames.FIREBOLT;
@@ -33,6 +34,7 @@ class FireboltTest extends TbcWarlockSpellSimulationTest {
 				at(10)
 						.endCast(player, SUMMON_IMP)
 						.decreasedResource(2742, MANA, player, SUMMON_IMP)
+						.petSummoned(player, IMP)
 						.beginCast(pet, FIREBOLT, 2)
 						.beginGcd(pet),
 				at(11.5)

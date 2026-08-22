@@ -3,6 +3,8 @@ package wow.simulator.simulation.spell.tbc.ability.warlock.demonology;
 import org.junit.jupiter.api.Test;
 import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
 
+import static wow.commons.model.character.PetType.IMP;
+import static wow.commons.model.character.PetType.SUCCUBUS;
 import static wow.commons.model.spell.ResourceType.MANA;
 import static wow.simulator.util.EffectType.ABILITY;
 import static wow.test.commons.AbilityNames.*;
@@ -34,8 +36,10 @@ class DemonicSacrificeTest extends TbcWarlockSpellSimulationTest {
 				at(10)
 						.endCast(player, SUMMON_IMP)
 						.decreasedResource(2742, MANA, player, SUMMON_IMP)
+						.petSummoned(player, IMP)
 						.beginCast(player, DEMONIC_SACRIFICE)
 						.endCast(player, DEMONIC_SACRIFICE)
+						.petSacrificed(player, IMP)
 						.effectApplied(BURNING_WISH, ABILITY, player, 1800),
 				at(1810)
 						.effectExpired(BURNING_WISH, ABILITY, player)
@@ -58,8 +62,10 @@ class DemonicSacrificeTest extends TbcWarlockSpellSimulationTest {
 				at(10)
 						.endCast(player, SUMMON_SUCCUBUS)
 						.decreasedResource(3428, MANA, player, SUMMON_SUCCUBUS)
+						.petSummoned(player, SUCCUBUS)
 						.beginCast(player, DEMONIC_SACRIFICE)
 						.endCast(player, DEMONIC_SACRIFICE)
+						.petSacrificed(player, SUCCUBUS)
 						.effectApplied(TOUCH_OF_SHADOW, ABILITY, player, 1800),
 				at(1810)
 						.effectExpired(TOUCH_OF_SHADOW, ABILITY, player)
