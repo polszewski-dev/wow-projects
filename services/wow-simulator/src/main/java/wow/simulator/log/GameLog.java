@@ -180,6 +180,11 @@ public class GameLog implements GameLogHandler {
 	}
 
 	@Override
+	public void petUnsummoned(Unit master, Pet pet) {
+		handlers.forEach(handler -> handler.petUnsummoned(master, pet));
+	}
+
+	@Override
 	public void petDismissed(Unit master, Pet pet) {
 		handlers.forEach(handler -> handler.petDismissed(master, pet));
 	}

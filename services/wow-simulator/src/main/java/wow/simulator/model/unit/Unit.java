@@ -149,6 +149,8 @@ public interface Unit extends Character, SimulationContextSource {
 
 	void addHiddenEffect(String effectName, int numStacks, AnyDuration duration);
 
+	void addHiddenEffect(String effectName, int numStacks, AnyDuration duration, Spell sourceSpell);
+
 	void removeEffect(EffectInstance effect);
 
 	void removeEffect(AbilityId abilityId, Unit owner);
@@ -187,6 +189,8 @@ public interface Unit extends Character, SimulationContextSource {
 
 	@Override
 	Pet dismissPet();
+
+	Pet unsummonPet();
 
 	Pet sacrificePet();
 

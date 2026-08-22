@@ -150,6 +150,11 @@ public class ConsoleGameLogHandler implements GameLogHandler, TimeAware {
 	}
 
 	@Override
+	public void petUnsummoned(Unit master, Pet pet) {
+		print("%s unsummoned", pet);
+	}
+
+	@Override
 	public void petDismissed(Unit master, Pet pet) {
 		print("%s dismissed %s", master, pet);
 	}

@@ -7,4 +7,6 @@ import wow.character.model.character.PetCharacter;
  * Date: 09.08.2026
  */
 public interface Pet extends Unit, PetCharacter {
+	@Override
+	Unit getMaster();
 }

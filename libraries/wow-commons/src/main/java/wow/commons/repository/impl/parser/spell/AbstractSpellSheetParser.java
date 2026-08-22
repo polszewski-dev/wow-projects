@@ -239,6 +239,9 @@ public abstract class AbstractSpellSheetParser extends AbstractSpellBaseSheetPar
 			case SUMMON ->
 					getSummonPet(prefix);
 
+			case UNSUMMON ->
+					getUnsummonPet(prefix);
+
 			case SACRIFICE ->
 					getSacrificePet(prefix);
 
@@ -354,13 +357,22 @@ public abstract class AbstractSpellSheetParser extends AbstractSpellBaseSheetPar
 	}
 
 	private final ExcelColumn colPetType = column(DIRECT_PET_TYPE);
+	private final ExcelColumn colSummonDuration = column(DIRECT_SUMMON_DURATION);
 
 	private SummonPet getSummonPet(String prefix) {
 		var target = getTarget(prefix);
 		var condition = getTargetCondition(prefix);
 		var petType = colPetType.prefixed(prefix).getEnum(PetType::parse);
+		var duration = colSummonDuration.prefixed(prefix).getAnyDuration(Duration.INFINITE);
 
-		return new SummonPet(target, condition, petType);
+		return new SummonPet(target, condition, petType, duration);
+	}
+
+	private UnsummonPet getUnsummonPet(String prefix) {
+		var target = getTarget(prefix);
+		var condition = getTargetCondition(prefix);
+
+		return new UnsummonPet(target, condition);
 	}
 
 	private SacrificePet getSacrificePet(String prefix) {

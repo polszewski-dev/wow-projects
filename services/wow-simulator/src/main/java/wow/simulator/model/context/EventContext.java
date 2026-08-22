@@ -104,6 +104,12 @@ public class EventContext {
 		context.fireEvent(EFFECT_ENDED);
 	}
 
+	public static void firePetUnsummoned(Unit caster, Pet pet, Spell spell, Context parentContext) {
+		var context = new EventContext(caster, pet, spell, parentContext);
+
+		context.fireEvent(PET_GONE);
+	}
+
 	public static void firePetDismissed(Unit caster, Pet pet, Spell spell, Context parentContext) {
 		var context = new EventContext(caster, pet, spell, parentContext);
 
@@ -292,7 +298,7 @@ public class EventContext {
 			case AbilitySource(var ability) -> ability;
 			case TalentSource ignored -> triggeredSpell;
 			case ItemSource ignored -> triggeredSpell;
-			default -> null;
+			case null, default -> null;
 		};
 	}
 

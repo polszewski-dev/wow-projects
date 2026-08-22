@@ -71,6 +71,8 @@ public interface GameLogHandler {
 
 	default void petSummoned(Unit master, Pet pet) {}
 
+	default void petUnsummoned(Unit master, Pet pet) {}
+
 	default void petDismissed(Unit master, Pet pet) {}
 
 	default void petSacrificed(Unit master, Pet pet) {}

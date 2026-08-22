@@ -22,6 +22,7 @@ public enum ComponentType {
 	ADD_STACK,
 	REDUCE_THREAT,
 	SUMMON,
+	UNSUMMON,
 	SACRIFICE,
 	COUNTER_DAMAGE;
 

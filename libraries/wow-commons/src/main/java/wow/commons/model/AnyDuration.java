@@ -24,4 +24,8 @@ public sealed interface AnyDuration extends Comparable<AnyDuration> permits Dura
 	boolean isPositive();
 
 	boolean isInfinite();
+
+	default boolean isFinite() {
+		return !isInfinite();
+	}
 }

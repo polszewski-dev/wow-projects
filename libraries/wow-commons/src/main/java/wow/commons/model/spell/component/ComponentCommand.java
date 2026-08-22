@@ -213,12 +213,23 @@ public sealed interface ComponentCommand {
 	record SummonPet(
 			SpellTarget target,
 			SpellTargetCondition condition,
-			PetType petType
+			PetType petType,
+			AnyDuration duration
 	) implements DirectCommand {
 		public SummonPet {
 			Objects.requireNonNull(target);
 			Objects.requireNonNull(condition);
 			Objects.requireNonNull(petType);
+		}
+	}
+
+	record UnsummonPet(
+			SpellTarget target,
+			SpellTargetCondition condition
+	) implements DirectCommand {
+		public UnsummonPet {
+			Objects.requireNonNull(target);
+			Objects.requireNonNull(condition);
 		}
 	}
 

@@ -533,11 +533,16 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 
 	@Override
 	public void addHiddenEffect(String effectName, int numStacks) {
-		addHiddenEffect(effectName, numStacks, Duration.INFINITE);
+		addHiddenEffect(effectName, numStacks, Duration.INFINITE, null);
 	}
 
 	@Override
 	public void addHiddenEffect(String effectName, int numStacks, AnyDuration duration) {
+		addHiddenEffect(effectName, numStacks, duration, null);
+	}
+
+	@Override
+	public void addHiddenEffect(String effectName, int numStacks, AnyDuration duration, Spell sourceSpell) {
 		var effect = getSpellRepository().getEffect(effectName, getPhaseId()).orElseThrow();
 		var effectInstance = new NonPeriodicEffectInstance(
 				this,
@@ -548,7 +553,7 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 				1,
 				0,
 				null,
-				null,
+				sourceSpell,
 				null
 		);
 
@@ -782,25 +787,28 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 
 	@Override
 	public Pet dismissPet() {
-		var activePet = getActivePet();
+		return cleanUpAfterPetIsGone();
+	}
 
-		if (activePet == null) {
-			return null;
-		}
-
-		activePet.deactivate();
-		this.setActivePet(null);
-		getSimulation().remove(activePet);
-
-		return activePet;
+	@Override
+	public Pet unsummonPet() {
+		return cleanUpAfterPetIsGone();
 	}
 
 	@Override
 	public Pet sacrificePet() {
+		if (getActivePet() == null) {
+			throw new IllegalStateException("No active pet for the sacrifice");
+		}
+
+		return cleanUpAfterPetIsGone();
+	}
+
+	private Pet cleanUpAfterPetIsGone() {
 		var activePet = getActivePet();
 
 		if (activePet == null) {
-			throw new IllegalStateException("No active pet for the sacrifice");
+			return null;
 		}
 
 		activePet.deactivate();

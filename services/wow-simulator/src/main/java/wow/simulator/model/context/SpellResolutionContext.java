@@ -12,6 +12,7 @@ import wow.commons.model.spell.Spell;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.effect.impl.NonPeriodicEffectInstance;
 import wow.simulator.model.effect.impl.PeriodicEffectInstance;
+import wow.simulator.model.unit.Pet;
 import wow.simulator.model.unit.TargetResolver;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.unit.action.CastSpellAction;
@@ -113,7 +114,10 @@ public class SpellResolutionContext extends Context {
 			case SummonPet command ->
 					summonPet(command, target);
 
-			case SacrificePet command ->
+			case UnsummonPet ignored ->
+					unsummonPet(target);
+
+			case SacrificePet ignored ->
 					sacrificePet(target);
 
 			default ->
@@ -171,7 +175,20 @@ public class SpellResolutionContext extends Context {
 
 	protected void summonPet(SummonPet command, Unit target) {
 		target.summonPet(command.petType(), spell);
+
+		if (command.duration().isFinite()) {
+			target.getActivePet().addHiddenEffect("Unsummon Pet", 1, command.duration(), spell);
+		}
+
 		getGameLog().petSummoned(target, target.getActivePet());
+	}
+
+	protected void unsummonPet(Unit target) {
+		var master = ((Pet) target).getMaster();
+		var unsummonedPet = master.unsummonPet();
+
+		getGameLog().petUnsummoned(master, unsummonedPet);
+		EventContext.firePetUnsummoned(master, unsummonedPet, spell, this);
 	}
 
 	protected void sacrificePet(Unit target) {
