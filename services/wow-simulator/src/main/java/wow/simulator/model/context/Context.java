@@ -5,6 +5,7 @@ import lombok.Setter;
 import wow.character.model.snapshot.SpellCostSnapshot;
 import wow.commons.model.spell.Spell;
 import wow.commons.model.spell.TriggeredSpell;
+import wow.simulator.model.unit.Pet;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.simulation.SimulationContext;
 import wow.simulator.simulation.SimulationContextSource;
@@ -68,6 +69,10 @@ public abstract class Context implements SimulationContextSource {
 
 		if (lastDamageDone > 0 && target.isDead()) {
 			EventContext.fireTargetDied(caster, target, spell, this);
+
+			if (target.isPet()) {
+				EventContext.firePetDied(caster, (Pet) target, spell, this);
+			}
 		}
 	}
 

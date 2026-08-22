@@ -107,13 +107,19 @@ public class EventContext {
 	public static void firePetDismissed(Unit caster, Pet pet, Spell spell, Context parentContext) {
 		var context = new EventContext(caster, pet, spell, parentContext);
 
-		context.fireEvent(PET_DISMISSED);
+		context.fireEvent(PET_GONE);
 	}
 
 	public static void firePetSacrificed(Unit caster, Pet pet, Spell spell, Context parentContext) {
 		var context = new EventContext(caster, pet, spell, parentContext);
 
-		context.fireEvent(PET_SACRIFICED);
+		context.fireEvent(PET_GONE);
+	}
+
+	public static void firePetDied(Unit caster, Pet pet, Spell spell, Context parentContext) {
+		var context = new EventContext(caster, pet, spell, parentContext);
+
+		context.fireEvent(PET_GONE);
 	}
 
 	private static EventContext getEffectEventContext(EffectInstance effect, Context parentContext) {

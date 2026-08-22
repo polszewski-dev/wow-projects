@@ -3,7 +3,6 @@ package wow.simulator.simulation;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.commons.model.Duration;
-import wow.simulator.log.handler.ConsoleGameLogHandler;
 import wow.simulator.service.SimulatorService;
 import wow.simulator.simulation.spell.SpellSimulationTest;
 
@@ -26,7 +25,7 @@ public class NecklaceTest extends SpellSimulationTest {
 		equip(player2, "Chain of the Twilight Owl");
 		equip(player3, "Eye of the Night");
 
-		simulationService.simulate(player.getRaid(), target, Duration.seconds(120), simulationContext, List.of(new ConsoleGameLogHandler()));
+		simulationService.simulate(player.getRaid(), target, Duration.seconds(120), simulationContext, List.of());
 
 		assertEvents(
 				event -> event.isBeginCast() || event.isEffect(),
