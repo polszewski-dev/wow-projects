@@ -43,7 +43,7 @@ public abstract class AssetTest extends WowSimulatorSpringTest {
 		createDefaultUnits();
 
 		player.setScript("warlock-shadow-bolt-spam");
-		player.setOnPendingActionQueueEmpty(null);
+		player.setPassive();
 
 		partyAsset = getNakedPlayer(assetPlayerClassId, assetPlayerRaceId, "Asset");
 		partyAsset.setTarget(player.getTarget());

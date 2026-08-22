@@ -92,7 +92,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 
 		getCharacterService().updateAfterRestrictionChange(player);
 
-		player.whenNoActionIdleForever();
+		player.setPassive();
 		simulationContext.shareSimulationContext(player);
 
 		return player;
@@ -116,7 +116,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 				name, enemyType, level + enemyLevelDiff, phaseId, NonPlayerImpl::new
 		);
 
-		enemy.whenNoActionIdleForever();
+		enemy.setPassive();
 		simulationContext.shareSimulationContext(enemy);
 
 		return enemy;
@@ -519,7 +519,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	protected void summonedPetCasts(Unit unit, String abilityName) {
 		unit.immediateAction(self -> {
 			pet = self.getActivePet();
-			pet.whenNoActionIdleForever();
+			pet.setPassive();
 			pet.cast(abilityName);
 		});
 	}

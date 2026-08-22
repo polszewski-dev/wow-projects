@@ -170,12 +170,26 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	}
 
 	@Override
-	public void setOnPendingActionQueueEmpty(Consumer<Unit> onPendingActionQueueEmpty) {
-		this.onPendingActionQueueEmpty = onPendingActionQueueEmpty;
+	public void setActive() {
+		if (getScript() != null) {
+			whenNoActionRunScript();
+		} else {
+			whenNoActionIdleForever();
+		}
+		interruptCurrentAction();
 	}
 
 	@Override
-	public void whenNoActionRunScript() {
+	public void setPassive() {
+		whenNoActionIdleForever();
+		interruptCurrentAction();
+	}
+
+	private void setOnPendingActionQueueEmpty(Consumer<Unit> onPendingActionQueueEmpty) {
+		this.onPendingActionQueueEmpty = onPendingActionQueueEmpty;
+	}
+
+	private void whenNoActionRunScript() {
 		var scriptPath = ScriptPathResolver.getScriptPath(this);
 		var params = new ScriptParams(this);
 		var scriptExecutor = new ScriptExecutor(scriptPath, params);
@@ -183,7 +197,7 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 		setOnPendingActionQueueEmpty(x -> scriptExecutor.execute());
 	}
 
-	public void whenNoActionIdleForever() {
+	private void whenNoActionIdleForever() {
 		setOnPendingActionQueueEmpty(x -> x.idleUntil(TIME_IN_INFINITY));
 	}
 
@@ -782,6 +796,7 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 		getCharacterService().applyDefaultCharacterTemplate(pet);
 
 		this.setActivePet(pet);
+		pet.setPassive();
 		getSimulation().add(pet);
 	}
 

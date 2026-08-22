@@ -134,10 +134,10 @@ class ScriptExecutorTest extends TbcWarlockSpellSimulationTest {
 
 	void simulate(String script, int time) {
 		player.setScript(script);
+		player.setActive();
+
 		player.addHiddenEffect("Bonus Hp5", 5000);
 		player.addHiddenEffect("Bonus Mp5", 5000);
-
-		player.whenNoActionRunScript();
 
 		updateUntil(time);
 	}

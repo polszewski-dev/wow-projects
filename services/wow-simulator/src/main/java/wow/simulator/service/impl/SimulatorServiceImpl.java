@@ -79,7 +79,7 @@ public class SimulatorServiceImpl implements SimulatorService {
 
 		simulation.add(target);
 
-		target.whenNoActionIdleForever();
+		target.setPassive();
 
 		raid.forEach(raidMember -> {
 			simulation.add(raidMember);
@@ -187,11 +187,7 @@ public class SimulatorServiceImpl implements SimulatorService {
 		memberOrPet.setHealthToMax();
 		memberOrPet.setManaToMax();
 
-		if (memberOrPet.getScript() != null) {
-			memberOrPet.whenNoActionRunScript();
-		} else {
-			memberOrPet.whenNoActionIdleForever();
-		}
+		memberOrPet.setActive();
 	}
 
 	private SimulationContext createSimulationContext(RngType rngType) {

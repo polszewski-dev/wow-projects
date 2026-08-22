@@ -37,11 +37,9 @@ public interface Unit extends Character, SimulationContextSource {
 
 	StatSummary getStats();
 
-	void setOnPendingActionQueueEmpty(Consumer<Unit> onPendingActionQueueEmpty);
+	void setActive();
 
-	void whenNoActionRunScript();
-
-	void whenNoActionIdleForever();
+	void setPassive();
 
 	void ensureAction();
 

@@ -42,7 +42,7 @@ class DarkPactTest extends TbcWarlockSpellSimulationTest {
 
 		player.summonPet(PetType.IMP, null);
 		pet = player.getActivePet();
-		pet.whenNoActionIdleForever();
+		pet.setPassive();
 
 		setMana(player, 3000);
 	}
