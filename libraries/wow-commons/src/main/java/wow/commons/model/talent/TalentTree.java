@@ -35,11 +35,11 @@ public enum TalentTree {
 	PROTECTION("Protection"),
 	RETRIBUTION("Retribution"),
 
-	IMP("ImpTree"),
-	VOIDWALKER("VoidwalkerTree"),
-	SUCCUBUS("SuccubusTree"),
-	FELHUNTER("FelhunterTree"),
-	FELGUARD("FelguardTree"),
+	IMP("Imp Tree"),
+	VOIDWALKER("Voidwalker Tree"),
+	SUCCUBUS("Succubus Tree"),
+	FELHUNTER("Felhunter Tree"),
+	FELGUARD("Felguard Tree"),
 
 	;
 
