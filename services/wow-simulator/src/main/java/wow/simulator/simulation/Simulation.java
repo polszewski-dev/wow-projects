@@ -88,7 +88,6 @@ public class Simulation implements SimulationContextSource {
 		started = true;
 		getGameLog().simulationStarted();
 		startRegenAction();
-		ensureUnitsHaveActions();
 	}
 
 	public void finish() {
@@ -103,14 +102,6 @@ public class Simulation implements SimulationContextSource {
 
 	private void startRegenAction() {
 		add(new RegenAction(this));
-	}
-
-	private void ensureUnitsHaveActions() {
-		getScheduler().add(Duration.ZERO, () -> {
-			for (var unit : units) {
-				unit.ensureAction();
-			}
-		});
 	}
 
 	public void addHandlers(List<GameLogHandler> handlers) {

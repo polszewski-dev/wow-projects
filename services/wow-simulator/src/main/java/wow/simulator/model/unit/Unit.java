@@ -42,8 +42,6 @@ public interface Unit extends Character, SimulationContextSource {
 
 	void setPassive();
 
-	void ensureAction();
-
 	void cast(AbilityId abilityId);
 
 	void cast(AbilityId abilityId, Unit target);

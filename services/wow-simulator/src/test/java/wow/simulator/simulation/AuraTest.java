@@ -181,7 +181,7 @@ class AuraTest extends SpellSimulationTest {
 		player2.cast(SUMMON_IMP);
 		summonedPetCasts(player2, BLOOD_PACT);
 		player2.idleUntil(Time.at(20));
-		player2.immediateAction(self -> self.decreaseHealth(100_000, false, null, null));
+		player2.immediateAction(self -> self.decreaseHealth(100_000, false, null, self));
 
 		updateUntil(30);
 

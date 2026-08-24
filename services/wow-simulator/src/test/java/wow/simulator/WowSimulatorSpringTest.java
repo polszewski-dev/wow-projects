@@ -92,7 +92,6 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 
 		getCharacterService().updateAfterRestrictionChange(player);
 
-		player.setPassive();
 		simulationContext.shareSimulationContext(player);
 
 		return player;
@@ -116,7 +115,6 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 				name, enemyType, level + enemyLevelDiff, phaseId, NonPlayerImpl::new
 		);
 
-		enemy.setPassive();
 		simulationContext.shareSimulationContext(enemy);
 
 		return enemy;

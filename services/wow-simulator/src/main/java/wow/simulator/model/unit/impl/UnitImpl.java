@@ -61,10 +61,10 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	protected final Effects effects = new UnitEffects(this);
 	private final Cooldowns cooldowns = new Cooldowns(this);
 
+	private UnitState state;
+
 	private final PendingActionQueue<UnitAction> pendingActionQueue = new PendingActionQueue<>();
 	private UnitAction currentAction;
-
-	private Consumer<Unit> onPendingActionQueueEmpty;
 
 	private Rng rng;
 
@@ -91,6 +91,7 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	) {
 		super(name, phase, characterClass, level, creatureType, race, side, baseStatInfo, combatRatingInfo, talents);
 		getEquipment().setOnEquipmentChanged(this::onEquipmentChanged);
+		this.state = new PassiveState();
 		this.resources.setHealth(10_000, 10_000);
 		this.resources.setMana(10_000, 10_000);
 	}
@@ -107,8 +108,7 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 		shareClock(cooldowns);
 	}
 
-	@Override
-	public void ensureAction() {
+	private void ensureAction() {
 		if (getSimulation().isFinished()) {
 			return;
 		}
@@ -122,7 +122,7 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 		}
 
 		if (pendingActionQueue.isEmpty()) {
-			onPendingActionQueueEmpty.accept(this);
+			state.onPendingActionQueueEmpty();
 
 			if (hasActionInProgress()) {
 				return;
@@ -148,6 +148,7 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 			startAction(action);
 		} else {
 			pendingActionQueue.add(action);
+			state.onActionEnqueued();
 		}
 	}
 
@@ -173,34 +174,12 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 
 	@Override
 	public void setActive() {
-		if (getScript() != null) {
-			whenNoActionRunScript();
-		} else {
-			whenNoActionIdleForever();
-		}
-		interruptCurrentAction();
+		state.setActive();
 	}
 
 	@Override
 	public void setPassive() {
-		whenNoActionIdleForever();
-		interruptCurrentAction();
-	}
-
-	private void setOnPendingActionQueueEmpty(Consumer<Unit> onPendingActionQueueEmpty) {
-		this.onPendingActionQueueEmpty = onPendingActionQueueEmpty;
-	}
-
-	private void whenNoActionRunScript() {
-		var scriptPath = ScriptPathResolver.getScriptPath(this);
-		var params = new ScriptParams(this);
-		var scriptExecutor = new ScriptExecutor(scriptPath, params);
-
-		setOnPendingActionQueueEmpty(x -> scriptExecutor.execute());
-	}
-
-	private void whenNoActionIdleForever() {
-		setOnPendingActionQueueEmpty(x -> x.idleUntil(TIME_IN_INFINITY));
+		state.setPassive();
 	}
 
 	@Override
@@ -274,6 +253,12 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 
 		if (triggersGcd) {
 			cooldowns.interruptGcd();
+		}
+	}
+
+	private void interruptCurrentActionIfIdle() {
+		if (currentAction instanceof IdleAction idleAction && idleAction.endIsInInfinity()) {
+			interruptCurrentAction();
 		}
 	}
 
@@ -885,6 +870,7 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	public void onAddedToSimulation() {
 		getResources().setHealthToMax();
 		getResources().setManaToMax();
+		getScheduler().add(Duration.ZERO, this::ensureAction);
 	}
 
 	@Override
@@ -941,6 +927,71 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 		@Override
 		public void addItemSet(ItemSet itemSet) {
 			collector.addItemSet(itemSet);
+		}
+	}
+
+	private interface UnitState {
+		void onPendingActionQueueEmpty();
+
+		void onActionEnqueued();
+
+		void setActive();
+
+		void setPassive();
+	}
+
+	private class ActiveState implements UnitState {
+		private final ScriptExecutor scriptExecutor;
+
+		ActiveState() {
+			var scriptPath = ScriptPathResolver.getScriptPath(UnitImpl.this);
+			var params = new ScriptParams(UnitImpl.this);
+
+			this.scriptExecutor = new ScriptExecutor(scriptPath, params);
+		}
+
+		@Override
+		public void onPendingActionQueueEmpty() {
+			scriptExecutor.execute();
+		}
+
+		@Override
+		public void onActionEnqueued() {
+			// void
+		}
+
+		@Override
+		public void setActive() {
+			// void
+		}
+
+		@Override
+		public void setPassive() {
+			UnitImpl.this.state = new PassiveState();
+			interruptCurrentAction();
+		}
+	}
+
+	private class PassiveState implements UnitState {
+		@Override
+		public void onPendingActionQueueEmpty() {
+			idleUntil(TIME_IN_INFINITY);
+		}
+
+		@Override
+		public void onActionEnqueued() {
+			interruptCurrentActionIfIdle();
+		}
+
+		@Override
+		public void setActive() {
+			UnitImpl.this.state = new ActiveState();
+			interruptCurrentAction();
+		}
+
+		@Override
+		public void setPassive() {
+			// void
 		}
 	}
 }

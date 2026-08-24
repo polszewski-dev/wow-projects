@@ -24,4 +24,8 @@ public class IdleAction extends UnitAction {
 	public boolean triggersGcd() {
 		return false;
 	}
+
+	public boolean endIsInInfinity() {
+		return end.isInInfinity();
+	}
 }

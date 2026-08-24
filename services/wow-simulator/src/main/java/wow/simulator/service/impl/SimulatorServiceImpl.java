@@ -79,8 +79,6 @@ public class SimulatorServiceImpl implements SimulatorService {
 
 		simulation.add(target);
 
-		target.setPassive();
-
 		raid.forEach(raidMember -> {
 			simulation.add(raidMember);
 			raidMember.setTarget(target);
