@@ -7,6 +7,7 @@ import wow.commons.model.AnyDuration;
 import wow.commons.model.Duration;
 import wow.commons.model.spell.Ability;
 import wow.simulator.model.effect.EffectInstance;
+import wow.simulator.model.unit.Pet;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.script.ScriptParams;
 
@@ -81,6 +82,10 @@ public abstract class ComposableExecutor extends ScriptCommandExecutor {
 		var castTime = Duration.seconds(actualCaster.getSpellCastSnapshot(ability).getCastTime());
 
 		if (castTime.compareTo(remainingSimulationTime) > 0) {
+			return false;
+		}
+
+		if (actualCaster instanceof Pet pet && castTime.compareTo(pet.getRemainingDuration()) > 0) {
 			return false;
 		}
 

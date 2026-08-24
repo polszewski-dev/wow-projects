@@ -1,6 +1,7 @@
 package wow.simulator.model.unit;
 
 import wow.character.model.character.PetCharacter;
+import wow.commons.model.AnyDuration;
 
 /**
  * User: POlszewski
@@ -9,4 +10,8 @@ import wow.character.model.character.PetCharacter;
 public interface Pet extends Unit, PetCharacter {
 	@Override
 	Unit getMaster();
+
+	AnyDuration getRemainingDuration();
+
+	String UNSUMMON_PET = "Unsummon Pet";
 }

@@ -5,12 +5,15 @@ import wow.character.model.character.BaseStatInfo;
 import wow.character.model.character.Character;
 import wow.character.model.character.CombatRatingInfo;
 import wow.character.model.talent.Talents;
+import wow.commons.model.AnyDuration;
+import wow.commons.model.Duration;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.PetType;
 import wow.commons.model.character.Race;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
 import wow.commons.model.spell.Spell;
+import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.unit.Pet;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.unit.UnitParty;
@@ -62,5 +65,12 @@ public class PetImpl extends UnitImpl implements Pet {
 	@Override
 	public UnitParty<? extends Unit> getParty() {
 		return master != null ? master.getParty() : null;
+	}
+
+	@Override
+	public AnyDuration getRemainingDuration() {
+		return getEffect(UNSUMMON_PET)
+				.map(EffectInstance::getRemainingDuration)
+				.orElse(Duration.INFINITE);
 	}
 }

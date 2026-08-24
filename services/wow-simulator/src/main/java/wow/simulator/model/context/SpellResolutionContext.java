@@ -4,6 +4,7 @@ import lombok.Setter;
 import wow.character.model.snapshot.RngStrategy;
 import wow.character.util.SpellTargetConditionArgs;
 import wow.character.util.SpellTargetConditionChecker;
+import wow.commons.model.Duration;
 import wow.commons.model.character.PetType;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.EffectAugmentations;
@@ -25,6 +26,7 @@ import java.util.Map;
 import static wow.commons.model.effect.EffectSource.AbilitySource;
 import static wow.commons.model.spell.SpellTargetType.GROUND;
 import static wow.commons.model.spell.component.ComponentCommand.*;
+import static wow.simulator.model.unit.Pet.UNSUMMON_PET;
 
 /**
  * User: POlszewski
@@ -176,8 +178,13 @@ public class SpellResolutionContext extends Context {
 	protected void summonPet(SummonPet command, Unit target) {
 		target.summonPet(command.petType(), spell);
 
-		if (command.duration().isFinite()) {
-			target.getActivePet().addHiddenEffect("Unsummon Pet", 1, command.duration(), spell);
+		var duration = command.duration();
+
+		if (duration.isFinite()) {
+			var tinyDelay = Duration.millis(1);
+			var actualSummonDuration = tinyDelay.add(duration);
+
+			target.getActivePet().addHiddenEffect(UNSUMMON_PET, 1, actualSummonDuration, spell);
 		}
 
 		getGameLog().petSummoned(target, target.getActivePet());
