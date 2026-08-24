@@ -870,7 +870,7 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	public void onAddedToSimulation() {
 		getResources().setHealthToMax();
 		getResources().setManaToMax();
-		getScheduler().add(Duration.ZERO, this::ensureAction);
+		getSimulation().delayedAction(Duration.ZERO, this::ensureAction);
 	}
 
 	@Override

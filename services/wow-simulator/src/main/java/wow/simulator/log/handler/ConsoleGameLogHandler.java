@@ -65,8 +65,6 @@ public class ConsoleGameLogHandler implements GameLogHandler, TimeAware {
 	public void increasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit, Unit caster) {
 		if (spell != null) {
 			print("%s increased %s %s by %s%s", spell, target, type.toString().toLowerCase(), amount, crit ? " (crit)" : "");
-		} else {
-			print("%s's %s increased by %s%s", target, type.toString().toLowerCase(), amount, crit ? " (crit)" : "");
 		}
 	}
 

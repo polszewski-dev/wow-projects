@@ -114,11 +114,7 @@ public class Simulation implements SimulationContextSource {
 	}
 
 	public void delayedAction(Duration delay, Runnable runnable) {
-		if (delay.isZero()) {
-			runnable.run();
-		} else {
-			getScheduler().add(delay, runnable);
-		}
+		getScheduler().add(delay, runnable);
 	}
 
 	public Duration getRemainingTime() {
