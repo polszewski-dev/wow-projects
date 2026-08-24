@@ -8,6 +8,7 @@ import wow.commons.model.spell.component.DirectComponent;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import static wow.commons.model.spell.component.ComponentCommand.ApplyEffect;
 import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
@@ -44,14 +45,22 @@ public interface Spell extends Described, TimeRestricted {
 	}
 
 	default Set<SpellTarget> getTargets() {
+		return getTargets(x -> true, x -> true);
+	}
+
+	default Set<SpellTarget> getTargets(Predicate<DirectCommand> directCommandPredicate, Predicate<ApplyEffect> applyEffectPredicate) {
 		var result = new HashSet<SpellTarget>();
 
 		for (var command : getDirectCommands()) {
-			result.add(command.target());
+			if (directCommandPredicate.test(command)) {
+				result.add(command.target());
+			}
 		}
 
 		for (var command : getApplyEffectCommands()) {
-			result.add(command.target());
+			if (applyEffectPredicate.test(command)) {
+				result.add(command.target());
+			}
 		}
 
 		return result;

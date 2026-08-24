@@ -11,6 +11,7 @@ import wow.commons.util.EnumUtil;
 public enum SpellTargetType {
 	SELF,
 	PET,
+	MASTER,
 
 	FRIEND,
 	FRIEND_AOE,
@@ -37,7 +38,7 @@ public enum SpellTargetType {
 
 	public boolean isSingle() {
 		return switch (this) {
-			case SELF, PET, FRIEND, FRIENDS_PARTY, ENEMY, ANY, TARGET, ATTACKER -> true;
+			case SELF, PET, MASTER, FRIEND, FRIENDS_PARTY, ENEMY, ANY, TARGET, ATTACKER -> true;
 			default -> false;
 		};
 	}

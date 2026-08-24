@@ -82,6 +82,11 @@ public class TargetResolver implements SimulationContextSource {
 		return new TargetResolver(self);
 	}
 
+	public static TargetResolver ofMaster(Unit self) {
+		Objects.requireNonNull(((Pet) self).getMaster());
+		return new TargetResolver(self);
+	}
+
 	public boolean hasValidTarget(SpellTarget spellTarget) {
 		if (spellTarget.isAoE()) {
 			return true;
@@ -125,6 +130,8 @@ public class TargetResolver implements SimulationContextSource {
 					List.of(self);
 			case PET ->
 					self.getActivePet() != null ? List.of(self.getActivePet()) : List.of();
+			case MASTER ->
+					self instanceof Pet pet && pet.getMaster() != null ? List.of(pet.getMaster()) : List.of();
 			case FRIEND ->
 					List.of(friend);
 			case ENEMY ->

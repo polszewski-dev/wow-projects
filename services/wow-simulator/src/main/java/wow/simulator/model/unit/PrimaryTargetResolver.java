@@ -4,7 +4,10 @@ import lombok.AllArgsConstructor;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.SpellTarget;
 
-import static wow.commons.model.spell.SpellTargetType.SELF;
+import java.util.List;
+
+import static wow.commons.model.spell.SpellTargetType.*;
+import static wow.commons.model.spell.component.ComponentCommand.Copy;
 import static wow.simulator.model.unit.Unit.areFriendly;
 import static wow.simulator.model.unit.Unit.areHostile;
 
@@ -20,10 +23,7 @@ public class PrimaryTargetResolver {
 	private final Unit explicitTarget;
 
 	public PrimaryTarget getPrimaryTarget() {
-		var targets = ability.getTargets();
-		var singleTargets = targets.stream()
-				.filter(SpellTarget::isSingle)
-				.toList();
+		var singleTargets = getSingleTargets();
 
 		if (singleTargets.isEmpty()) {
 			if (explicitTarget != null) {
@@ -33,12 +33,10 @@ public class PrimaryTargetResolver {
 			}
 		}
 
-		var singleTargetsExceptSelf = singleTargets.stream()
-				.filter(x -> !x.hasType(SELF))
-				.toList();
+		var nonIgnorableSingleTargets = getNonIgnorableSingleTargets();
 
-		if (singleTargetsExceptSelf.size() == 1) {
-			return resolveTarget(singleTargetsExceptSelf.getFirst());
+		if (nonIgnorableSingleTargets.size() == 1) {
+			return resolveTarget(nonIgnorableSingleTargets.getFirst());
 		}
 
 		if (singleTargets.size() == 1) {
@@ -48,12 +46,37 @@ public class PrimaryTargetResolver {
 		return PrimaryTarget.INVALID;
 	}
 
+	private List<SpellTarget> getSingleTargets() {
+		var targets = ability.getTargets();
+
+		return targets.stream()
+				.filter(SpellTarget::isSingle)
+				.toList();
+	}
+
+	private List<SpellTarget> getNonIgnorableSingleTargets() {
+		var targets = ability.getTargets(
+				command -> !(
+						command instanceof Copy &&
+						(command.target().hasType(MASTER) || command.target().hasType(PET))
+				),
+				command -> true
+		);
+
+		return targets.stream()
+				.filter(SpellTarget::isSingle)
+				.filter(x -> !x.hasType(SELF))
+				.toList();
+	}
+
 	private PrimaryTarget resolveTarget(SpellTarget spellTarget) {
 		return switch (spellTarget.type()) {
 			case SELF ->
 					getSelf();
 			case PET ->
 					getActivePet();
+			case MASTER ->
+					getMaster();
 			case FRIEND, FRIENDS_PARTY ->
 					getFriendlyTarget();
 			case ENEMY ->
@@ -76,6 +99,14 @@ public class PrimaryTargetResolver {
 	private PrimaryTarget getActivePet() {
 		if (explicitTarget == self || explicitTarget == null) {
 			return PrimaryTarget.ofActivePet(self.getActivePet());
+		}
+
+		return PrimaryTarget.INVALID;
+	}
+
+	private PrimaryTarget getMaster() {
+		if (explicitTarget == self || explicitTarget == null) {
+			return PrimaryTarget.ofMaster(((Pet) self).getMaster());
 		}
 
 		return PrimaryTarget.INVALID;
