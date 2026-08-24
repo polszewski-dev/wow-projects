@@ -515,12 +515,4 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	protected int getManaDifference(Player unit) {
 		return unit.getCurrentMana() - getRegeneratedMana(unit);
 	}
-
-	protected void summonedPetCasts(Unit unit, String abilityName) {
-		unit.immediateAction(self -> {
-			pet = self.getActivePet();
-			pet.setPassive();
-			pet.cast(abilityName);
-		});
-	}
 }

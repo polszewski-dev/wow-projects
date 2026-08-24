@@ -9,6 +9,7 @@ import wow.commons.model.spell.Spell;
 import wow.commons.model.spell.SpellSchool;
 import wow.simulator.WowSimulatorSpringTest;
 import wow.simulator.log.handler.GameLogHandler;
+import wow.simulator.model.unit.Pet;
 import wow.simulator.model.unit.Player;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.util.SpellInfo;
@@ -93,6 +94,8 @@ public abstract class SpellSimulationTest extends WowSimulatorSpringTest impleme
 	protected Unit target4;
 	protected Unit target5;
 
+	protected Pet pet2;
+
 	private PlayerConfig partyMemberConfig;
 	private final PlayerConfig[] partyMemberConfigs = new PlayerConfig[4];
 
@@ -142,6 +145,50 @@ public abstract class SpellSimulationTest extends WowSimulatorSpringTest impleme
 			case HEALTH -> ctx.regeneratedHealth += amount;
 			case MANA -> ctx.regeneratedMana += amount;
 		}
+	}
+
+	@Override
+	public void petSummoned(Unit master, Pet pet) {
+		if (master == player) {
+			this.pet = pet;
+		} else if (master == player2) {
+			this.pet2 = pet;
+		}
+	}
+
+	@Override
+	public void petUnsummoned(Unit master, Pet pet) {
+		if (master == player) {
+			this.pet = null;
+		} else if (master == player2) {
+			this.pet2 = null;
+		}
+	}
+
+	@Override
+	public void petDismissed(Unit master, Pet pet) {
+		petUnsummoned(master, pet);
+	}
+
+	@Override
+	public void petSacrificed(Unit master, Pet pet) {
+		petUnsummoned(master, pet);
+	}
+
+	protected void summonedPetCasts(Unit unit, String abilityName) {
+		unit.immediateAction(self -> {
+			Pet summonedPet;
+
+			if (unit == player) {
+				summonedPet = pet;
+			} else if (unit == player2) {
+				summonedPet = pet2;
+			} else {
+				throw new IllegalArgumentException();
+			}
+
+			summonedPet.cast(abilityName);
+		});
 	}
 
 	protected void simulateDamagingSpell(String abilityName, int spellDamage) {
