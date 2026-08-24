@@ -176,9 +176,7 @@ public class CharacterServiceImpl implements CharacterService {
 	}
 
 	private String getDefaultScript(PetCharacter pet) {
-		return pet.getPetType() == PetType.IMP
-				? "pet/imp-firebolt-spam"
-				: "pet/idle";
+		return "pet/" + pet.getPetType().getName().toLowerCase();
 	}
 
 	@Override
