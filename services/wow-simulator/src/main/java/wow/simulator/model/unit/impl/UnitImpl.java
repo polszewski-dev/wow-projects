@@ -75,6 +75,8 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	private boolean deactivated;
 	private Consumer<Unit> onDeath;
 
+	private boolean inCombat;
+
 	protected UnitImpl(
 			String name,
 			Phase phase,
@@ -527,6 +529,7 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 
 	@Override
 	public int decreaseHealth(int amount, boolean crit, Spell spell, Unit caster) {
+		putInCombat((UnitImpl) caster, this);
 		return getResources().decreaseHealth(amount, crit, spell, caster);
 	}
 
@@ -537,11 +540,13 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 
 	@Override
 	public int decreaseMana(int amount, boolean crit, Spell spell, Unit caster) {
+		putInCombat((UnitImpl) caster, this);
 		return getResources().decreaseMana(amount, crit, spell, caster);
 	}
 
 	@Override
 	public void addEffect(EffectInstance effect, EffectReplacementMode replacementMode) {
+		putInCombat((UnitImpl) effect.getOwner(), this);
 		effects.addEffect(effect, replacementMode);
 	}
 
@@ -796,7 +801,11 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 		getCharacterService().applyDefaultCharacterTemplate(pet);
 
 		this.setActivePet(pet);
-		pet.setPassive();
+
+		if (inCombat) {
+			pet.setActive();
+		}
+
 		getSimulation().add(pet);
 	}
 
@@ -831,6 +840,17 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 		getSimulation().remove(activePet);
 
 		return activePet;
+	}
+
+	private static void putInCombat(UnitImpl caster, UnitImpl target) {
+		if (target.inCombat || caster.isHostileWith(target)) {
+			caster.putInCombat();
+			target.putInCombat();
+		}
+	}
+
+	private void putInCombat() {
+		this.inCombat = true;
 	}
 
 	@Override
