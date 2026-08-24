@@ -42,7 +42,7 @@ public abstract class ScriptCommandExecutor {
 			case DEFAULT -> null;
 			case SELF -> getActualCaster();
 			case TARGET -> getActualCaster().getTarget();
-			case MASTER -> (Unit) ((Pet) getActualCaster()).getMaster();
+			case MASTER -> ((Pet) getActualCaster()).getMaster();
 		};
 	}
 }

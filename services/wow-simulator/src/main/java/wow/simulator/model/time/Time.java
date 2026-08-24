@@ -31,10 +31,12 @@ public record Time(long timestamp) implements AnyTime {
 		return timestamp / 1000.0;
 	}
 
+	@Override
 	public boolean isInInfinity() {
 		return false;
 	}
 
+	@Override
 	public Time add(Duration duration) {
 		return new Time(this.timestamp + duration.millis());
 	}

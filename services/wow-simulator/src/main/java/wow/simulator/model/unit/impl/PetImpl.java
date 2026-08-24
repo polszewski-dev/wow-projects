@@ -44,6 +44,7 @@ public class PetImpl extends UnitImpl implements Pet {
 		this.sourceSpell = sourceSpell;
 	}
 
+	@Override
 	public void setMaster(Character master) {
 		this.master = (Unit) master;
 	}

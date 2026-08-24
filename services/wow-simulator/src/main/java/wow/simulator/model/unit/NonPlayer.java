@@ -10,6 +10,7 @@ import java.util.List;
  * Date: 2023-08-07
  */
 public interface NonPlayer extends Unit, NonPlayerCharacter {
+	@Override
 	UnitParty<NonPlayer> getParty();
 
 	@Override

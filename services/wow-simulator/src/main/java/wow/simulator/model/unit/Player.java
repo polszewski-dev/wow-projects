@@ -10,6 +10,7 @@ import java.util.List;
  * Date: 2023-08-07
  */
 public interface Player extends Unit, PlayerCharacter {
+	@Override
 	UnitParty<Player> getParty();
 
 	@Override

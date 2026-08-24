@@ -28,6 +28,7 @@ import static wow.commons.model.spell.component.ComponentCommand.*;
 public interface Unit extends Character, SimulationContextSource {
 	UnitId getId();
 
+	@Override
 	String getName();
 
 	@Override
@@ -181,6 +182,7 @@ public interface Unit extends Character, SimulationContextSource {
 
 	void regen(Duration sinceLastRegen);
 
+	@Override
 	Pet getActivePet();
 
 	void summonPet(PetType petType, Spell sourceSpell);
