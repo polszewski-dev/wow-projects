@@ -598,5 +598,7 @@ public interface AbilityNames {
 	String MAJOR_HEALTHSTONE = "Major Healthstone";
 	String MASTER_HEALTHSTONE = "Master Healthstone";
 
+	String ATTACK = "Attack";
+
 	void doNotImplementThis();
 }

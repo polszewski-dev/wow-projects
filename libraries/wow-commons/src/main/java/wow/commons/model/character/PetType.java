@@ -17,6 +17,7 @@ public enum PetType {
 	INCUBUS("Incubus"),
 	FELHUNTER("Felhunter"),
 	FELGUARD("Felguard"),
+	SHADOWFIEND("Shadowfiend"),
 	ENSLAVED("Enslaved");
 
 	private final String name;
