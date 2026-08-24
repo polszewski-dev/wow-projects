@@ -17,6 +17,7 @@ import wow.commons.model.pve.Side;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.AbilityId;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import static java.util.function.Function.identity;
@@ -49,6 +50,8 @@ public abstract class CharacterImpl implements Character {
 	private PetCharacter activePet;
 	private Character target;
 
+	private static final String IDLE_SCRIPT = "idle";
+
 	protected CharacterImpl(
 			String name,
 			Phase phase,
@@ -75,6 +78,7 @@ public abstract class CharacterImpl implements Character {
 		this.equipment = new Equipment();
 		this.consumables = new Consumables();
 		this.buffs = new Buffs();
+		this.script = IDLE_SCRIPT;
 	}
 
 	@Override
@@ -115,6 +119,7 @@ public abstract class CharacterImpl implements Character {
 
 	@Override
 	public void setScript(String script) {
+		Objects.requireNonNull(script);
 		this.script = script;
 	}
 
