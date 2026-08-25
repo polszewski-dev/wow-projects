@@ -508,6 +508,11 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	}
 
 	@Override
+	public void setAllResourcesToMax() {
+		getResources().setAllToMax();
+	}
+
+	@Override
 	public int increaseHealth(int amount, boolean crit, Spell spell, Unit caster) {
 		return getResources().increaseHealth(amount, crit, spell, caster);
 	}
@@ -868,8 +873,7 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 
 	@Override
 	public void onAddedToSimulation() {
-		getResources().setHealthToMax();
-		getResources().setManaToMax();
+		setAllResourcesToMax();
 		getSimulation().delayedAction(Duration.ZERO, this::ensureAction);
 	}
 

@@ -132,6 +132,8 @@ public interface Unit extends Character, SimulationContextSource {
 
 	void setManaToMax();
 
+	void setAllResourcesToMax();
+
 	int increaseHealth(int amount, boolean crit, Spell spell, Unit caster);
 
 	int decreaseHealth(int amount, boolean crit, Spell spell, Unit caster);

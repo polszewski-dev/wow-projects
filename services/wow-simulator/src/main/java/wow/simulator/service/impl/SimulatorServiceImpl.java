@@ -182,8 +182,7 @@ public class SimulatorServiceImpl implements SimulatorService {
 		memberOrPet.addHiddenEffect(BONUS_HP5, 5000);
 		memberOrPet.addHiddenEffect(BONUS_MP5, 5000);
 
-		memberOrPet.setHealthToMax();
-		memberOrPet.setManaToMax();
+		memberOrPet.setAllResourcesToMax();
 
 		memberOrPet.setActive();
 	}

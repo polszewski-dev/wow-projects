@@ -69,6 +69,11 @@ public class UnitResources implements SimulationContextSource {
 		setMana(getMaxMana(), getMaxMana());
 	}
 
+	public void setAllToMax() {
+		setHealthToMax();
+		setManaToMax();
+	}
+
 	public int increaseHealth(int amount, boolean crit, Spell spell, Unit caster) {
 		return get(HEALTH).increase(amount, crit, spell, caster);
 	}
