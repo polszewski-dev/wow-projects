@@ -91,7 +91,7 @@ public class AccumulatedBaseStats extends AccumulatedPartialStats {
 			case AGILITY_PCT:
 				this.agilityPct += value;
 				break;
-			case STAMINA, PARTY_STAMINA:
+			case STAMINA:
 				this.stamina += value;
 				break;
 			case STAMINA_PCT:
@@ -115,7 +115,7 @@ public class AccumulatedBaseStats extends AccumulatedPartialStats {
 			case BASE_STATS_PCT:
 				this.baseStatsPct += value;
 				break;
-			case STATS, PARTY_STATS:
+			case STATS:
 				this.stats += value;
 				break;
 			case STATS_PCT:

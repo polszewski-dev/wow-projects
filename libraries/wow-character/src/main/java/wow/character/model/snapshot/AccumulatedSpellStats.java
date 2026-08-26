@@ -54,7 +54,7 @@ public class AccumulatedSpellStats extends AccumulatedPartialStats {
 					this.amount += value;
 				}
 				break;
-			case DAMAGE_PCT, PARTY_DAMAGE_PCT:
+			case DAMAGE_PCT:
 				if (isDamage) {
 					this.amountPct += value;
 				}
@@ -72,7 +72,7 @@ public class AccumulatedSpellStats extends AccumulatedPartialStats {
 			case EFFECT_PCT:
 				this.effectPct += value;
 				break;
-			case POWER, PARTY_POWER:
+			case POWER:
 				this.power += value;
 				break;
 			case POWER_PCT:
@@ -81,10 +81,10 @@ public class AccumulatedSpellStats extends AccumulatedPartialStats {
 			case POWER_COEFFICIENT_PCT:
 				this.powerCoeffPct += value;
 				break;
-			case CRIT_RATING, PARTY_CRIT_RATING:
+			case CRIT_RATING:
 				this.critRating += value;
 				break;
-			case CRIT_PCT, PARTY_CRIT_PCT:
+			case CRIT_PCT:
 				this.critPct += value;
 				break;
 			case CRIT_EFFECT_PCT:

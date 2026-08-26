@@ -25,6 +25,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.constant.AbilityIds.DIVINE_SPIRIT;
 import static wow.commons.constant.AbilityIds.PRAYER_OF_SPIRIT;
 import static wow.commons.model.attribute.AttributeId.*;
+import static wow.commons.model.attribute.AttributeTarget.OWNER;
+import static wow.commons.model.attribute.AttributeTarget.PET;
 import static wow.commons.model.character.CharacterClassId.PRIEST;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
 import static wow.commons.model.effect.component.EventAction.TRIGGER_SPELL;
@@ -78,7 +80,7 @@ class TalentRepositoryTest extends WowCommonsSpringTest {
 		Talent talent = getTalent(WARLOCK, FEL_INTELLECT, 3, TBC_P5);
 
 		assertModifier(talent.getEffect(), List.of(
-				Attribute.of(PET_INTELLECT_PCT, 15),
+				Attribute.of(PET, INTELLECT_PCT, 15),
 				Attribute.of(MAX_MANA_PCT, 3)
 		));
 	}
@@ -148,7 +150,7 @@ class TalentRepositoryTest extends WowCommonsSpringTest {
 		var effect = talent.getEffect();
 
 		assertThat(effect.getAugmentedAbilities()).isEqualTo(List.of(DIVINE_SPIRIT, PRAYER_OF_SPIRIT));
-		assertStatConversion(effect, 0, SPIRIT, POWER, 10, StatConversionConditions.SPELL);
+		assertStatConversion(effect, 0, OWNER, SPIRIT, POWER, 10, StatConversionConditions.SPELL);
 	}
 
 	@Test
@@ -156,8 +158,8 @@ class TalentRepositoryTest extends WowCommonsSpringTest {
 		var talent = getTalent(WARLOCK, DEMONIC_KNOWLEDGE, 3, TBC_P5);
 		var effect = talent.getEffect();
 
-		assertStatConversion(effect, 0, PET_STAMINA, POWER, 12, StatConversionConditions.SPELL_DAMAGE);
-		assertStatConversion(effect, 1, PET_INTELLECT, POWER, 12, StatConversionConditions.SPELL_DAMAGE);
+		assertStatConversion(effect, 0, PET, STAMINA, POWER, 12, StatConversionConditions.SPELL_DAMAGE);
+		assertStatConversion(effect, 1, PET, INTELLECT, POWER, 12, StatConversionConditions.SPELL_DAMAGE);
 	}
 
 	@Test

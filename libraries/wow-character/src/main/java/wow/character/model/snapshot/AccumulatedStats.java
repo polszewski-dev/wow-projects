@@ -3,10 +3,11 @@ package wow.character.model.snapshot;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.AttributeScalingParams;
-import wow.commons.model.attribute.AttributeTarget;
 import wow.commons.model.effect.component.StatConversion;
 
 import java.util.List;
+
+import static wow.commons.model.attribute.AttributeTarget.PET;
 
 /**
  * User: POlszewski
@@ -28,7 +29,7 @@ public abstract class AccumulatedStats {
 	}
 
 	private static boolean isMatchingTarget(Attribute attribute) {
-		return attribute.id().getTarget() != AttributeTarget.PET;
+		return attribute.target() != PET;
 	}
 
 	protected abstract void accumulateAttribute(Attribute attribute, double scaleFactor);
@@ -43,9 +44,9 @@ public abstract class AccumulatedStats {
 
 	protected double getAccumulatedValue(AttributeId attributeId, BaseStatsSnapshot baseStats) {
 		return switch (attributeId) {
+			case STAMINA -> baseStats.getStamina();
 			case INTELLECT -> baseStats.getIntellect();
 			case SPIRIT -> baseStats.getSpirit();
-			case PET_STAMINA, PET_INTELLECT -> 0; // pets not supported at this moment
 			default -> throw new IllegalArgumentException();
 		};
 	}

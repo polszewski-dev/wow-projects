@@ -2,6 +2,7 @@ package wow.commons.util;
 
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeScaling;
+import wow.commons.model.attribute.AttributeTarget;
 import wow.commons.model.attribute.Attributes;
 
 import static java.util.stream.Collectors.joining;
@@ -41,13 +42,15 @@ public class AttributesFormater {
 	}
 
 	private static String formatWithPlaceholder(Attribute attribute) {
+		var target = attribute.target();
 		var id = attribute.id();
+		var targetIdStr = target != AttributeTarget.OWNER ? target + "." + id : id;
 		var scaledValue = getScaledValue(attribute.scaling());
 
 		if (attribute.hasCondition()) {
-			return "%s %s [%s]".formatted(scaledValue, id, formatCondition(attribute.condition()));
+			return "%s %s [%s]".formatted(scaledValue, targetIdStr, formatCondition(attribute.condition()));
 		} else {
-			return "%s %s".formatted(scaledValue, id);
+			return "%s %s".formatted(scaledValue, targetIdStr);
 		}
 	}
 

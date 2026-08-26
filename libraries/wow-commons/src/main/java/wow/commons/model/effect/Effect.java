@@ -117,7 +117,7 @@ public interface Effect extends Described, TimeRestricted {
 
 	default boolean isAura() {
 		return hasModifierComponent() && getModifierAttributeList().stream()
-				.anyMatch(x -> x.id().getTarget() == AttributeTarget.PARTY);
+				.anyMatch(x -> x.target() == AttributeTarget.PARTY);
 	}
 
 	default Effect augment(EffectAugmentations augmentations) {

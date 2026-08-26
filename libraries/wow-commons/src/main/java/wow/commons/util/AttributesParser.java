@@ -1,6 +1,7 @@
 package wow.commons.util;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.util.StringUtils;
 import wow.commons.model.Percent;
 import wow.commons.model.attribute.*;
 import wow.commons.model.talent.TalentTree;
@@ -24,6 +25,7 @@ public class AttributesParser {
 
 	private String scaledValueStr;
 	private String conditionStr;
+	private String targetStr;
 	private String idStr;
 	private double attributeValue;
 	private AttributeScaling attributeScaling;
@@ -65,10 +67,11 @@ public class AttributesParser {
 		splitIntoParts();
 		parseScaledValue();
 
+		var target = targetStr != null ? AttributeTarget.parse(targetStr) : AttributeTarget.OWNER;
 		var id = AttributeId.parse(idStr);
 		var condition = cache(AttributeCondition.parse(conditionStr));
 
-		var attribute = Attribute.of(id, attributeValue, condition, attributeScaling);
+		var attribute = Attribute.of(target, id, attributeValue, condition, attributeScaling);
 
 		return cache(attribute);
 	}
@@ -82,6 +85,14 @@ public class AttributesParser {
 
 		this.scaledValueStr = matcher.group(1);
 		this.idStr = matcher.group(2);
+
+		int dotIdx = idStr.indexOf('.');
+
+		if (dotIdx >= 0) {
+			this.targetStr = idStr.substring(0, dotIdx);
+			this.idStr = idStr.substring(dotIdx + 1);
+		}
+
 		this.conditionStr = matcher.group(4);
 	}
 

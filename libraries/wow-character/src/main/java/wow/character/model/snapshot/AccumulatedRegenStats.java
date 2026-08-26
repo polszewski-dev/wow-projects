@@ -36,10 +36,10 @@ public class AccumulatedRegenStats extends AccumulatedPartialStats {
 	@Override
 	public void accumulateAttribute(AttributeId id, double value) {
 		switch (id) {
-			case HP5, PARTY_HP5:
+			case HP5:
 				this.hp5 += value;
 				break;
-			case MP5, PARTY_MP5:
+			case MP5:
 				this.mp5 += value;
 				break;
 			case HEALING_TAKEN_PCT:

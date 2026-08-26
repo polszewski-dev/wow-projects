@@ -5,10 +5,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
-import wow.commons.model.attribute.Attribute;
-import wow.commons.model.attribute.AttributeCondition;
-import wow.commons.model.attribute.AttributeId;
-import wow.commons.model.attribute.Attributes;
+import wow.commons.model.attribute.*;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.EffectSource;
 import wow.commons.model.effect.component.*;
@@ -57,11 +54,12 @@ public abstract class WowCommonsSpringTest {
 		assertThat(effect.getModifierAttributeList()).isEqualTo(attributes);
 	}
 
-	protected static void assertStatConversion(Effect effect, int idx, AttributeId from, AttributeId to, int ratio, StatConversionCondition toCondition) {
+	protected static void assertStatConversion(Effect effect, int idx, AttributeTarget fromTarget, AttributeId from, AttributeId to, int ratio, StatConversionCondition toCondition) {
 		assertThat(effect.getStatConversions()).hasSizeGreaterThan(idx);
 
 		var statConversion = effect.getStatConversions().get(idx);
 
+		//todo assertThat(statConversion.fromTarget()).isEqualTo(fromTarget);
 		assertThat(statConversion.from()).isEqualTo(from);
 		assertThat(statConversion.to()).isEqualTo(to);
 		assertThat(statConversion.toCondition()).isEqualTo(toCondition);

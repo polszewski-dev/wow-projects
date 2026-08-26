@@ -14,8 +14,10 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.constant.AttributeConditions.PHYSICAL;
 import static wow.commons.constant.AttributeConditions.SPELL;
-import static wow.commons.model.attribute.AttributeId.*;
+import static wow.commons.model.attribute.AttributeId.POWER;
+import static wow.commons.model.attribute.AttributeId.POWER_PCT;
 import static wow.commons.model.attribute.AttributeScaling.*;
+import static wow.commons.model.attribute.AttributeTarget.PARTY;
 
 /**
  * User: POlszewski
@@ -72,7 +74,7 @@ class AttributesParserTest {
 			new TestData("0.5 Power", Attribute.of(POWER, 0.5)),
 			new TestData("-0.5 Power", Attribute.of(POWER, -0.5)),
 			new TestData("10 Power%", Attribute.of(POWER_PCT, 10)),
-			new TestData("10 Party.Power", Attribute.of(PARTY_POWER, 10)),
+			new TestData("10 Party.Power", Attribute.of(PARTY, POWER, 10)),
 			new TestData("10 Power [Spell]", Attribute.of(POWER, 10, SPELL)),
 			new TestData("10 Power [Spell | Physical]", Attribute.of(POWER, 10, AttributeCondition.or(SPELL, PHYSICAL))),
 			new TestData("10 * level Power [Spell]", Attribute.of(POWER, 10, SPELL, LEVEL)),

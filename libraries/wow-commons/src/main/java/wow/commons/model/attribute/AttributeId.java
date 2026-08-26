@@ -129,37 +129,12 @@ public enum AttributeId {
 	SPELL_REFLECT_PCT("SpellReflect%"),
 	CHAIN_MULTIPLIER("ChainMultiplier%"),
 
-
-	PET_STAMINA("Pet.Stamina"),
-	PET_STAMINA_PCT("Pet.Stamina%"),
-	PET_INTELLECT("Pet.Intellect"),
-	PET_INTELLECT_PCT("Pet.Intellect%"),
-	PET_MAX_MANA_PCT("Pet.MaxMana%"),
-
-	PET_DAMAGE_PCT("Pet.Damage%"),
-	PET_POWER("Pet.Power"),
-	PET_CRIT_PCT("Pet.Crit%"),
-	PET_MP5("Pet.Mp5"),
-	PET_RESISTANCE("Pet.Resistance"),
-	PET_DAMAGETAKEN_PCT("Pet.DamageTaken%"),
-
-	PARTY_DAMAGE_PCT("Party.Damage%"),
-	PARTY_POWER("Party.Power"),
-	PARTY_HIT_PCT("Party.Hit%"),
-	PARTY_CRIT_RATING("Party.CritRating"),
-	PARTY_CRIT_PCT("Party.Crit%"),
-	PARTY_MP5("Party.Mp5"),
-	PARTY_HP5("Party.Hp5"),
-	PARTY_STATS("Party.Stats"),
-	PARTY_STAMINA("Party.Stamina"),
-
 	COPY_PCT("Copy%")
 	;
 
 	private final String key;
 	private final AttributeType type;
 	private final ValueType valueType;
-	private final AttributeTarget target;
 
 	AttributeId(String key) {
 		Parser parser = new Parser(key);
@@ -167,12 +142,10 @@ public enum AttributeId {
 		this.key = key;
 		this.type = parser.type;
 		this.valueType = parser.valueType;
-		this.target = parser.target;
 
 		Objects.requireNonNull(this.key);
 		Objects.requireNonNull(this.type);
 		Objects.requireNonNull(this.valueType);
-		Objects.requireNonNull(this.target);
 	}
 
 	public static AttributeId parse(String value) {
@@ -185,7 +158,7 @@ public enum AttributeId {
 
 	public boolean isResourceModifier() {
 		return switch (this) {
-			case STAMINA, PARTY_STAMINA, STAMINA_PCT, INTELLECT, INTELLECT_PCT, BASE_STATS, BASE_STATS_PCT, STATS, PARTY_STATS, STATS_PCT, MAX_HEALTH, MAX_HEALTH_PCT, MAX_MANA, MAX_MANA_PCT ->
+			case STAMINA, STAMINA_PCT, INTELLECT, INTELLECT_PCT, BASE_STATS, BASE_STATS_PCT, STATS, STATS_PCT, MAX_HEALTH, MAX_HEALTH_PCT, MAX_MANA, MAX_MANA_PCT ->
 					true;
 			default ->
 					false;
@@ -202,7 +175,6 @@ public enum AttributeId {
 
 		private AttributeType type;
 		private ValueType valueType;
-		private AttributeTarget target;
 
 		public Parser(String line) {
 			this.line = line;
@@ -211,7 +183,6 @@ public enum AttributeId {
 
 		private void parse() {
 			this.valueType = parseValueType();
-			this.target = parseTarget();
 			this.type = AttributeType.parse(line);
 
 			ensureCorrectDefaults();
@@ -231,21 +202,6 @@ public enum AttributeId {
 			} else {
 				return null;
 			}
-		}
-
-		private AttributeTarget parseTarget() {
-			final var pet = "Pet.";
-			final var party = "Party.";
-
-			if (line.startsWith(pet)) {
-				replace(pet);
-				return AttributeTarget.PET;
-			}
-			if (line.startsWith(party)) {
-				replace(party);
-				return AttributeTarget.PARTY;
-			}
-			return AttributeTarget.OWNER;
 		}
 
 		private void replace(String textToReplace) {
