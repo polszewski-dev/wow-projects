@@ -57,6 +57,7 @@ public final class SpellBaseExcelColumnNames {
 	public static final String ABSORB_CONDITION = "condition";
 	public static final String ABSORB_MIN = "min";
 	public static final String ABSORB_MAX = "max";
+	public static final String STAT_CONVERSION_FROM_TARGET = "from target";
 	public static final String STAT_CONVERSION_FROM = "from";
 	public static final String STAT_CONVERSION_TO = "to";
 	public static final String STAT_CONVERSION_TO_CONDITION = "to condition";

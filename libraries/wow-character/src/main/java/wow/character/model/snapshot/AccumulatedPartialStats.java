@@ -63,7 +63,7 @@ public abstract class AccumulatedPartialStats extends AccumulatedStats {
 			return;
 		}
 
-		var valueFrom = getAccumulatedValue(statConversion.from(), baseStats);
+		var valueFrom = getAccumulatedValue(statConversion.fromTarget(), statConversion.from(), baseStats);
 		var ratio = statConversion.ratioPct().value() / 100;
 		var valueTo = valueFrom * ratio;
 

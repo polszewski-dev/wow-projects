@@ -68,7 +68,7 @@ public class AccumulatedDamagingAbilityStats extends AccumulatedStats {
 
 	@Override
 	protected void accumulateConvertedStat(StatConversion statConversion, BaseStatsSnapshot baseStats) {
-		var valueFrom = getAccumulatedValue(statConversion.from(), baseStats);
+		var valueFrom = getAccumulatedValue(statConversion.fromTarget(), statConversion.from(), baseStats);
 		var ratio = statConversion.ratioPct().value() / 100;
 		var valueTo = valueFrom * ratio;
 		var condition = statConversion.toCondition();

@@ -59,7 +59,7 @@ public abstract class WowCommonsSpringTest {
 
 		var statConversion = effect.getStatConversions().get(idx);
 
-		//todo assertThat(statConversion.fromTarget()).isEqualTo(fromTarget);
+		assertThat(statConversion.fromTarget()).isEqualTo(fromTarget);
 		assertThat(statConversion.from()).isEqualTo(from);
 		assertThat(statConversion.to()).isEqualTo(to);
 		assertThat(statConversion.toCondition()).isEqualTo(toCondition);

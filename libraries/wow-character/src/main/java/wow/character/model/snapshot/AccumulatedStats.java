@@ -3,10 +3,12 @@ package wow.character.model.snapshot;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.AttributeScalingParams;
+import wow.commons.model.attribute.AttributeTarget;
 import wow.commons.model.effect.component.StatConversion;
 
 import java.util.List;
 
+import static wow.commons.model.attribute.AttributeTarget.OWNER;
 import static wow.commons.model.attribute.AttributeTarget.PET;
 
 /**
@@ -42,7 +44,11 @@ public abstract class AccumulatedStats {
 
 	protected abstract void accumulateConvertedStat(StatConversion statConversion, BaseStatsSnapshot baseStats);
 
-	protected double getAccumulatedValue(AttributeId attributeId, BaseStatsSnapshot baseStats) {
+	protected double getAccumulatedValue(AttributeTarget attributeTarget, AttributeId attributeId, BaseStatsSnapshot baseStats) {
+		if (attributeTarget != OWNER) {
+			return 0;
+		}
+
 		return switch (attributeId) {
 			case STAMINA -> baseStats.getStamina();
 			case INTELLECT -> baseStats.getIntellect();
