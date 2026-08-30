@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static wow.character.model.snapshot.AttributePredicates.OWNER_OR_AURAS;
+
 /**
  * User: POlszewski
  * Date: 2023-11-09
@@ -125,7 +127,7 @@ public class EffectList extends AbstractEffectCollector {
 
 			if (effect.hasModifierComponent()) {
 				var modifierAttributeList = effect.getModifierAttributeList();
-				result.accumulateAttributes(modifierAttributeList, stackCount);
+				result.accumulateAttributes(modifierAttributeList, stackCount, OWNER_OR_AURAS);
 			} else if (nonModifierHandler != null) {
 				nonModifierHandler.handleNonModifier(effect, stackCount);
 			}

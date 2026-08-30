@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.function.ToDoubleBiFunction;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static wow.character.model.snapshot.AttributePredicates.OWNER_OR_AURAS;
 import static wow.commons.model.attribute.PowerType.SPELL_DAMAGE;
 import static wow.commons.model.character.CharacterClassId.PRIEST;
 import static wow.commons.model.character.RaceId.UNDEAD;
@@ -292,7 +293,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 
 		var initialValue = valueAccessor.applyAsDouble(stats, id);
 
-		stats.accumulateAttributes(List.of(attribute), 1);
+		stats.accumulateAttributes(List.of(attribute), 1, OWNER_OR_AURAS);
 
 		var actualValue = valueAccessor.applyAsDouble(stats, id);
 

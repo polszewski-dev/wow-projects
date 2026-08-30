@@ -12,6 +12,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.character.constant.AttributeConditions.PHYSICAL;
 import static wow.character.constant.AttributeConditions.SPELL;
+import static wow.character.model.snapshot.AttributePredicates.OWNER_OR_AURAS;
 import static wow.commons.model.attribute.AttributeId.*;
 import static wow.test.commons.AbilityNames.SHADOW_BOLT;
 
@@ -125,7 +126,7 @@ class AccumulatedCostStatsTest extends WowCharacterSpringTest {
 				Attribute.of(attributeId, 40)
 		);
 
-		costStats.accumulateAttributes(list, 2);
+		costStats.accumulateAttributes(list, 2, OWNER_OR_AURAS);
 	}
 
 	AccumulatedCostStats costStats;

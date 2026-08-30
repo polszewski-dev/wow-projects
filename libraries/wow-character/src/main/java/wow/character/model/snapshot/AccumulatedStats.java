@@ -7,9 +7,9 @@ import wow.commons.model.attribute.AttributeTarget;
 import wow.commons.model.effect.component.StatConversion;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 import static wow.commons.model.attribute.AttributeTarget.OWNER;
-import static wow.commons.model.attribute.AttributeTarget.PET;
 
 /**
  * User: POlszewski
@@ -22,16 +22,12 @@ public abstract class AccumulatedStats {
 		this.scalingParams = scalingParams;
 	}
 
-	public void accumulateAttributes(List<Attribute> attributes, double scaleFactor) {
+	public void accumulateAttributes(List<Attribute> attributes, double scaleFactor, Predicate<Attribute> targetPredicate) {
 		for (var attribute : attributes) {
-			if (isMatchingTarget(attribute)) {
+			if (targetPredicate.test(attribute)) {
 				accumulateAttribute(attribute, scaleFactor);
 			}
 		}
-	}
-
-	private static boolean isMatchingTarget(Attribute attribute) {
-		return attribute.target() != PET;
 	}
 
 	protected abstract void accumulateAttribute(Attribute attribute, double scaleFactor);

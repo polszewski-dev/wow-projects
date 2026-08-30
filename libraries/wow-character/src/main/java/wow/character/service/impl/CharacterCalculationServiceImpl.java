@@ -25,10 +25,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.lang.Math.*;
+import static wow.character.model.snapshot.AttributePredicates.ANY_TARGET;
+import static wow.character.model.snapshot.AttributePredicates.OWNER_OR_AURAS;
 import static wow.commons.constant.SpellConstants.*;
 import static wow.commons.model.attribute.AttributeId.COPY_PCT;
 import static wow.commons.model.attribute.AttributeId.EFFECT_PCT;
@@ -380,7 +383,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 
 		var receivedEffectStats = newAccumulatedReceivedEffectStats(target, spell, command);
 
-		accumulateEffects(target, receivedEffectStats, null);
+		accumulateEffects(target, receivedEffectStats);
 		return receivedEffectStats;
 	}
 
@@ -799,7 +802,8 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	private void accumulateEffects(Character character, AccumulatedStats stats, BaseStatsSnapshot baseStats) {
-		var collector = new DefaultEffectCollector(character, stats);
+		var collector = new DefaultEffectCollector(character, OWNER_OR_AURAS, stats);
+
 		collector.solveAll();
 		if (baseStats != null) {
 			collector.solveStatConversions(baseStats);
@@ -808,11 +812,13 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 
 	private static class DefaultEffectCollector extends AbstractEffectCollector.OnlyEffects {
 		final AccumulatedStats stats;
+		final Predicate<Attribute> attributePredicate;
 		List<StatConversion> statConversions;
 
-		DefaultEffectCollector(Character character, AccumulatedStats stats) {
+		DefaultEffectCollector(Character character, Predicate<Attribute> attributePredicate, AccumulatedStats stats) {
 			super(character);
 			this.stats = stats;
+			this.attributePredicate = attributePredicate;
 		}
 
 		@Override
@@ -823,7 +829,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 
 			if (effect.hasModifierComponent()) {
 				var modifierAttributeList = effect.getModifierAttributeList();
-				stats.accumulateAttributes(modifierAttributeList, numStacks);
+				stats.accumulateAttributes(modifierAttributeList, numStacks, attributePredicate);
 			}
 
 			if (effect.hasStatConversions()) {
@@ -907,7 +913,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 			var modifierAttributeList = effect.getModifierAttributeList();
 
 			if (modifierAttributeList != null) {
-				accumulatedEffectIncreasePct.accumulateAttributes(modifierAttributeList, stackCount);
+				accumulatedEffectIncreasePct.accumulateAttributes(modifierAttributeList, stackCount, ANY_TARGET);
 			}
 		}
 	}

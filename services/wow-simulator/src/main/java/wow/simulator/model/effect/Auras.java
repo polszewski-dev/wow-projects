@@ -84,7 +84,7 @@ public class Auras implements EffectCollection {
 
 		@Override
 		public void addEffect(Effect effect, int stackCount) {
-			if (effect.hasAugmentedAbilities() || !effect.isAura()) {
+			if (!effect.isAura() || effect.hasAugmentedAbilities()) {
 				return;
 			}
 

@@ -14,6 +14,7 @@ import wow.commons.model.spell.ActivatedAbility;
 import wow.estimator.model.*;
 import wow.estimator.repository.ProcInfoRepository;
 
+import static wow.character.model.snapshot.AttributePredicates.OWNER_OR_AURAS;
 import static wow.character.util.EventConditionChecker.check;
 import static wow.commons.model.attribute.AttributeId.CRIT_COEFF_PCT;
 import static wow.commons.model.effect.component.EventType.*;
@@ -89,7 +90,7 @@ public class SpecialAbilitySolver {
 
 		var uptime = getProcUptime(procEvent, snapshot, procChance);
 
-		abilityStats.accumulateAttributes(modifierAttributeList, appliedEffect.getMaxStacks() * uptime);
+		abilityStats.accumulateAttributes(modifierAttributeList, appliedEffect.getMaxStacks() * uptime, OWNER_OR_AURAS);
 
 		return true;
 	}
@@ -142,7 +143,7 @@ public class SpecialAbilitySolver {
 		var cooldown = activatedAbility.getCooldown().getSeconds();
 		var uptime = cooldown != 0 ? duration / cooldown : 1;
 
-		abilityStats.accumulateAttributes(modifierAttributeList, command.numStacks() * uptime);
+		abilityStats.accumulateAttributes(modifierAttributeList, command.numStacks() * uptime, OWNER_OR_AURAS);
 
 		return true;
 	}

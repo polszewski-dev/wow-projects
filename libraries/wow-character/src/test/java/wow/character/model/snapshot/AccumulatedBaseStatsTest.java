@@ -13,6 +13,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.character.constant.AttributeConditions.PHYSICAL;
+import static wow.character.model.snapshot.AttributePredicates.OWNER_OR_AURAS;
 import static wow.commons.model.attribute.AttributeId.*;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
 import static wow.commons.model.character.RaceId.ORC;
@@ -199,7 +200,7 @@ class AccumulatedBaseStatsTest extends WowCharacterSpringTest {
 				Attribute.of(attributeId, 30)
 		);
 
-		baseStats.accumulateAttributes(list, 2);
+		baseStats.accumulateAttributes(list, 2, OWNER_OR_AURAS);
 	}
 
 	AccumulatedBaseStats baseStats;

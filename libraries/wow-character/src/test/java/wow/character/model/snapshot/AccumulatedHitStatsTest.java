@@ -12,6 +12,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.character.constant.AttributeConditions.PHYSICAL;
 import static wow.character.constant.AttributeConditions.SPELL;
+import static wow.character.model.snapshot.AttributePredicates.OWNER_OR_AURAS;
 import static wow.commons.model.attribute.AttributeId.HIT_PCT;
 import static wow.commons.model.attribute.AttributeId.HIT_RATING;
 import static wow.test.commons.AbilityNames.SHADOW_BOLT;
@@ -52,7 +53,7 @@ class AccumulatedHitStatsTest extends WowCharacterSpringTest {
 				Attribute.of(attributeId, 40)
 		);
 
-		hitStats.accumulateAttributes(list, 2);
+		hitStats.accumulateAttributes(list, 2, OWNER_OR_AURAS);
 	}
 
 	AccumulatedHitStats hitStats;
