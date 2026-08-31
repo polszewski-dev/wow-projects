@@ -33,7 +33,7 @@ class BloodPactTest extends TbcWarlockSpellSimulationTest {
 						.endGcd(player),
 				at(10)
 						.endCast(player, SUMMON_IMP)
-						.decreasedResource(2742, MANA, player, SUMMON_IMP)
+						.decreasedResource(2743, MANA, player, SUMMON_IMP)
 						.petSummoned(player, IMP)
 						.beginCast(pet, BLOOD_PACT)
 						.beginGcd(pet)

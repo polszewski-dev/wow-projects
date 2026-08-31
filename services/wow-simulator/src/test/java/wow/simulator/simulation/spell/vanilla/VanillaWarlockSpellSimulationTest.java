@@ -3,7 +3,7 @@ package wow.simulator.simulation.spell.vanilla;
 import wow.simulator.simulation.spell.SpellSimulationTest;
 
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
-import static wow.commons.model.character.RaceId.ORC;
+import static wow.commons.model.character.RaceId.UNDEAD;
 import static wow.commons.model.pve.PhaseId.VANILLA_P6;
 
 /**
@@ -13,7 +13,7 @@ import static wow.commons.model.pve.PhaseId.VANILLA_P6;
 public abstract class VanillaWarlockSpellSimulationTest extends SpellSimulationTest implements VanillaSpellInfos {
 	@Override
 	protected void beforeSetUp() {
-		setPlayerConfig(WARLOCK, ORC);
+		setPlayerConfig(WARLOCK, UNDEAD);
 		phaseId = VANILLA_P6;
 	}
 }

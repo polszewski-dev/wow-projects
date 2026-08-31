@@ -35,7 +35,7 @@ class DemonicSacrificeTest extends TbcWarlockSpellSimulationTest {
 						.endGcd(player),
 				at(10)
 						.endCast(player, SUMMON_IMP)
-						.decreasedResource(2742, MANA, player, SUMMON_IMP)
+						.decreasedResource(2743, MANA, player, SUMMON_IMP)
 						.petSummoned(player, IMP)
 						.beginCast(player, DEMONIC_SACRIFICE)
 						.endCast(player, DEMONIC_SACRIFICE)
