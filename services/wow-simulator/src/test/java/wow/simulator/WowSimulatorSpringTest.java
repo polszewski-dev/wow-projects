@@ -241,9 +241,24 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	}
 
 	protected void assertCastTime(String abilityName, double expectedCastTime) {
-		var actualCastTime = handler.getCastTime(abilityName, player);
+		assertCastTime(abilityName, player, expectedCastTime);
+	}
+
+	protected void assertCastTime(String abilityName, Unit caster, double expectedCastTime) {
+		var actualCastTime = handler.getCastTime(abilityName, caster);
 
 		assertThat(actualCastTime).isEqualTo(expectedCastTime, PRECISION);
+	}
+
+	protected void assertCastTimeIsReducedBy(SpellInfo spellInfo, Unit caster, double reduction) {
+		assertCastTime(spellInfo.name(), caster, spellInfo.baseCastTime() - reduction);
+	}
+
+	protected void assertCooldownIsReducedBy(SpellInfo spellInfo, Unit caster, double reduction) {
+		var actualCooldown = handler.getCooldown(spellInfo.name(), caster);
+		var expectedCooldown = spellInfo.cooldown() - reduction;
+
+		assertThat(actualCooldown).isEqualTo(expectedCooldown);
 	}
 
 	protected void assertEffectDuration(String abilityName, Unit target, double duration) {

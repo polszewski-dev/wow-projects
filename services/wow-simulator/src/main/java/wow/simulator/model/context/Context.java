@@ -84,10 +84,14 @@ public abstract class Context implements SimulationContextSource {
 
 	protected void increaseMana(Unit target, int amount) {
 		this.lastManaRestored = target.increaseMana(amount, false, getSourceSpell(), caster);
+
+		EventContext.fireManaGainedEvent(caster, target, spell, this);
 	}
 
 	protected void decreaseMana(Unit target, int amount) {
 		this.lastManaLost = target.decreaseMana(amount, false, getSourceSpell(), caster);
+
+		EventContext.fireManaLostEvent(caster, target, spell, this);
 	}
 
 	protected void copy(Copy copy, Unit target, LastValueSnapshot last) {
@@ -115,6 +119,7 @@ public abstract class Context implements SimulationContextSource {
 			case MANA_LOSS -> last.manaLost;
 			case HEALTH_PAID -> last.parentHealthPaid;
 			case PARENT_DAMAGE -> last.parentDamageDone;
+			case PARENT_MANA_GAIN -> last.parentManaGained;
 			default -> throw new IllegalArgumentException(copy.from().name());
 		};
 	}
@@ -199,7 +204,8 @@ public abstract class Context implements SimulationContextSource {
 			int damageDone,
 			int parentDamageDone,
 			int parentHealthPaid,
-			int manaLost
+			int manaLost,
+			int parentManaGained
 	) {}
 
 	protected LastValueSnapshot getLastValueSnapshot() {
@@ -207,7 +213,8 @@ public abstract class Context implements SimulationContextSource {
 				this.getLastDamageDone(),
 				parentContext.getLastDamageDone(),
 				parentContext.getLastHealthPaid(),
-				this.getLastManaLost()
+				this.getLastManaLost(),
+				parentContext.getLastManaRestored()
 		);
 	}
 

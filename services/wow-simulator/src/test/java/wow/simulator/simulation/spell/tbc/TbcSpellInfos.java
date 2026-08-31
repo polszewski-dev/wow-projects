@@ -45,6 +45,9 @@ public interface TbcSpellInfos {
 	SpellInfo SHADOWBURN_INFO = new SpellInfo(SHADOWBURN, 435, 0).withDirect(597, 665, 42.86);
 	SpellInfo SOUL_FIRE_INFO = new SpellInfo(SOUL_FIRE, 250, 6).withDirect(1003, 1257, 115);
 
+	SpellInfo FIREBOLT_INFO = new SpellInfo(FIREBOLT, 145, 2).withDirect(112, 127, 57.14);
+	SpellInfo LASH_OF_PAIN_INFO = new SpellInfo(LASH_OF_PAIN, 190, 0).withDirect(123, 123, 42.85).withCooldown(12);
+
 	SpellInfo ARCANE_BLAST_INFO = new SpellInfo(ARCANE_BLAST, 195, 2.5).withDirect(668, 772, 71.43);
 	SpellInfo ARCANE_EXPLOSION_INFO = new SpellInfo(ARCANE_EXPLOSION, 545, 0).withDirect(377, 407, 21.28);
 	SpellInfo ARCANE_MISSILES_INFO = new SpellInfo(ARCANE_MISSILES, 785, 0).withPeriodic(1430, 142.86, 5, 5);

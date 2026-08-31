@@ -4,6 +4,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import wow.simulator.simulation.spell.tbc.talent.warlock.TbcWarlockTalentSimulationTest;
 
+import static wow.test.commons.AbilityNames.SUMMON_IMP;
 import static wow.test.commons.TalentNames.FEL_STAMINA;
 
 /**
@@ -19,5 +20,17 @@ class FelStaminaTest extends TbcWarlockTalentSimulationTest {
 	@ValueSource(ints = { 1, 2, 3 })
 	void max_health_is_increased(int rank) {
 		assertMaxHealthIsIncreasedByPct(FEL_STAMINA, rank, rank);
+	}
+
+	@ParameterizedTest
+	@ValueSource(ints = { 1, 2, 3 })
+	void pets_stamina_is_increased(int rank) {
+		enableTalent(FEL_STAMINA, rank);
+
+		player.cast(SUMMON_IMP);
+
+		updateUntil(30);
+
+		assertStaminaIsIncreasedByPct(pet, 5 * rank);
 	}
 }

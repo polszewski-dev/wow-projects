@@ -86,6 +86,18 @@ public class EventContext {
 		}
 	}
 
+	public static void fireManaGainedEvent(Unit caster, Unit target, Spell spell, Context parentContext) {
+		var context = new EventContext(caster, target, spell, parentContext);
+
+		context.fireEvent(MANA_GAINED);
+	}
+
+	public static void fireManaLostEvent(Unit caster, Unit target, Spell spell, Context parentContext) {
+		var context = new EventContext(caster, target, spell, parentContext);
+
+		context.fireEvent(MANA_DRAINED);
+	}
+
 	public static void fireStacksMaxed(EffectInstance effect, Context parentContext) {
 		var context = getEffectEventContext(effect, parentContext);
 

@@ -176,19 +176,7 @@ public abstract class SpellSimulationTest extends WowSimulatorSpringTest impleme
 	}
 
 	protected void summonedPetCasts(Unit unit, String abilityName) {
-		unit.immediateAction(self -> {
-			Pet summonedPet;
-
-			if (unit == player) {
-				summonedPet = pet;
-			} else if (unit == player2) {
-				summonedPet = pet2;
-			} else {
-				throw new IllegalArgumentException();
-			}
-
-			summonedPet.cast(abilityName);
-		});
+		unit.immediateAction(self -> self.getActivePet().cast(abilityName));
 	}
 
 	protected void simulateDamagingSpell(String abilityName, int spellDamage) {

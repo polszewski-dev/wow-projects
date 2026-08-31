@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import wow.character.model.character.BaseStatInfo;
 import wow.character.model.character.Character;
+import wow.character.model.character.PetCharacter;
 import wow.character.model.snapshot.*;
 import wow.character.service.CharacterCalculationService;
 import wow.character.util.AbstractEffectCollector;
@@ -30,8 +31,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.lang.Math.*;
-import static wow.character.model.snapshot.AttributePredicates.ANY_TARGET;
-import static wow.character.model.snapshot.AttributePredicates.OWNER_OR_AURAS;
+import static wow.character.model.snapshot.AttributePredicates.*;
 import static wow.commons.constant.SpellConstants.*;
 import static wow.commons.model.attribute.AttributeId.COPY_PCT;
 import static wow.commons.model.attribute.AttributeId.EFFECT_PCT;
@@ -805,6 +805,13 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 		var collector = new DefaultEffectCollector(character, OWNER_OR_AURAS, stats);
 
 		collector.solveAll();
+
+		if (character instanceof PetCharacter petCharacter) {
+			var masterCollector = new DefaultEffectCollector(petCharacter.getMaster(), PET_ONLY, stats);
+
+			masterCollector.solveAll();
+		}
+
 		if (baseStats != null) {
 			collector.solveStatConversions(baseStats);
 		}

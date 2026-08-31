@@ -77,7 +77,7 @@ public final class AttributeConditionChecker {
 					args.getCaster().getHealthPct().value() < value;
 
 			case PetTypeCondition(var petType) ->
-					args.getCaster().getActivePetType() == petType;
+					args.getCastersMaster().getActivePetType() == petType;
 
 			case PowerTypeCondition(var powerType) ->
 					args.getPowerType() == powerType;

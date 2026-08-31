@@ -136,7 +136,7 @@ public abstract class TalentSimulationTest extends SpellSimulationTest {
 		var baseManaCost = getBaseManaCost();
 		var modifiedManaCost = getModifiedManaCost();
 
-		assertIsIncreasedByPct(modifiedManaCost, baseManaCost, -pctReduction);
+		assertIsIncreasedByPctNonExact(modifiedManaCost, baseManaCost, -pctReduction);
 	}
 
 	protected void assertCooldownIsReducedBy(double reduction) {

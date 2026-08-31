@@ -13,7 +13,6 @@ import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.time.Clock;
 import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.Pet;
-import wow.simulator.model.unit.Player;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.unit.action.CastSpellAction;
 import wow.simulator.model.unit.action.ChannelSpellAction;
@@ -296,8 +295,8 @@ public class TestEventCollectingHandler implements GameLogHandler, TimeAware {
 				.sum();
 	}
 
-	public int getManaPaid(int eventIdx, String abilityName, Player player) {
-		return getManaPaidEvents(abilityName, player)
+	public int getManaPaid(int eventIdx, String abilityName, Unit caster) {
+		return getManaPaidEvents(abilityName, caster)
 				.skip(eventIdx)
 				.findFirst()
 				.orElseThrow()
@@ -310,16 +309,16 @@ public class TestEventCollectingHandler implements GameLogHandler, TimeAware {
 				.sum();
 	}
 
-	public double getCastTime(String abilityName, Player player) {
-		return getBeginCastEvents(abilityName, player)
+	public double getCastTime(String abilityName, Unit caster) {
+		return getBeginCastEvents(abilityName, caster)
 				.findFirst()
 				.orElseThrow()
 				.castTime()
 				.getSeconds();
 	}
 
-	public double getCooldown(String abilityName, Player player) {
-		return getCooldownStartedEvents(abilityName, player)
+	public double getCooldown(String abilityName, Unit caster) {
+		return getCooldownStartedEvents(abilityName, caster)
 				.findFirst()
 				.orElseThrow()
 				.duration()
@@ -366,7 +365,7 @@ public class TestEventCollectingHandler implements GameLogHandler, TimeAware {
 				.map(x -> (IncreasedResource) x);
 	}
 
-	public Stream<BeginCast> getBeginCastEvents(String abilityName, Player caster) {
+	public Stream<BeginCast> getBeginCastEvents(String abilityName, Unit caster) {
 		return getBeginCastEvents()
 				.filter(x -> x.caster() == caster && x.spell().equals(abilityName));
 	}
@@ -383,7 +382,7 @@ public class TestEventCollectingHandler implements GameLogHandler, TimeAware {
 				.map(x -> (BeginCast) x);
 	}
 
-	public Stream<CooldownStarted> getCooldownStartedEvents(String abilityName, Player caster) {
+	public Stream<CooldownStarted> getCooldownStartedEvents(String abilityName, Unit caster) {
 		var abilityId = AbilityId.parse(abilityName);
 		var cooldownId = CooldownId.of(abilityId);
 

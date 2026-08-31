@@ -19,7 +19,7 @@ public final class SpellBaseExcelSheetConfigs {
 	public static final SpellEffectSheetParser.Config BUFF_EFFECTS_CONFIG = new SpellEffectSheetParser.Config(0, 3, 0, 0, false);
 	public static final SpellEffectSheetParser.Config CONSUME_EFFECTS_CONFIG = new SpellEffectSheetParser.Config(0, 3, 0, 0, false);
 
-	public static final int MAX_TALENT_MODIFIER_ATTRIBUTES = 6;
+	public static final int MAX_TALENT_MODIFIER_ATTRIBUTES = 12;
 	public static final int MAX_TALENT_STAT_CONVERSIONS = 2;
 	public static final int MAX_TALENT_EVENTS = 1;
 
