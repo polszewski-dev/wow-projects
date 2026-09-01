@@ -20,12 +20,12 @@ public class SpellCastContext extends Context {
 	private final PrimaryTarget primaryTarget;
 	private final TargetResolver targetResolver;
 
-	public SpellCastContext(Unit caster, Ability ability, PrimaryTarget primaryTarget, TargetResolver targetResolver, SpellCastSnapshot snapshot) {
+	public SpellCastContext(Unit caster, Ability ability, PrimaryTarget primaryTarget) {
 		super(caster, ability, null);
-		this.snapshot = snapshot;
+		this.snapshot = caster.getSpellCastSnapshot(ability, primaryTarget.getSingleTarget());
 		this.ability = ability;
 		this.primaryTarget = primaryTarget;
-		this.targetResolver = targetResolver;
+		this.targetResolver = primaryTarget.getTargetResolver(caster);
 	}
 
 	public Duration getGcd() {

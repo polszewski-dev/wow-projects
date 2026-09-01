@@ -7,7 +7,6 @@ import wow.simulator.model.context.EventContext;
 import wow.simulator.model.context.SpellCastContext;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.unit.PrimaryTarget;
-import wow.simulator.model.unit.TargetResolver;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.unit.impl.UnitImpl;
 
@@ -23,7 +22,6 @@ public class CastSpellAction extends UnitAction {
 	@Getter
 	private final PrimaryTarget primaryTarget;
 
-	private TargetResolver targetResolver;
 	private SpellCastContext castContext;
 	private List<EffectInstance> appliedEffects = List.of();
 
@@ -41,7 +39,6 @@ public class CastSpellAction extends UnitAction {
 			return;
 		}
 
-		createTargetResolver();
 		createSpellCastContext();
 		performCast();
 	}
@@ -63,14 +60,8 @@ public class CastSpellAction extends UnitAction {
 		((UnitImpl) owner).actionTerminated(this);
 	}
 
-	private void createTargetResolver() {
-		this.targetResolver = primaryTarget.getTargetResolver(owner);
-	}
-
 	private void createSpellCastContext() {
-		var castSnapshot = owner.getSpellCastSnapshot(ability, primaryTarget.getSingleTarget());
-
-		this.castContext = new SpellCastContext(owner, ability, primaryTarget, targetResolver, castSnapshot);
+		this.castContext = new SpellCastContext(owner, ability, primaryTarget);
 	}
 
 	private void performCast() {
