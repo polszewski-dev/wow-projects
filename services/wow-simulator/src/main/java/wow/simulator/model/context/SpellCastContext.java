@@ -5,6 +5,7 @@ import wow.commons.model.Duration;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.ActivatedAbility;
 import wow.commons.model.spell.GroupCooldownId;
+import wow.simulator.model.unit.PrimaryTarget;
 import wow.simulator.model.unit.TargetResolver;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.unit.action.CastSpellAction;
@@ -16,12 +17,14 @@ import wow.simulator.model.unit.action.CastSpellAction;
 public class SpellCastContext extends Context {
 	private final SpellCastSnapshot snapshot;
 	private final Ability ability;
+	private final PrimaryTarget primaryTarget;
 	private final TargetResolver targetResolver;
 
-	public SpellCastContext(Unit caster, Ability ability, TargetResolver targetResolver, SpellCastSnapshot snapshot) {
+	public SpellCastContext(Unit caster, Ability ability, PrimaryTarget primaryTarget, TargetResolver targetResolver, SpellCastSnapshot snapshot) {
 		super(caster, ability, null);
 		this.snapshot = snapshot;
 		this.ability = ability;
+		this.primaryTarget = primaryTarget;
 		this.targetResolver = targetResolver;
 	}
 
@@ -38,7 +41,7 @@ public class SpellCastContext extends Context {
 			caster.triggerCooldown(ability, ability.getCooldown());
 			triggerGroupCooldown(activatedAbility);
 		} else {
-			var costSnapshot = caster.paySpellCost(ability);
+			var costSnapshot = caster.paySpellCost(ability, primaryTarget);
 			var cooldown = Duration.seconds(costSnapshot.getCooldown());
 
 			caster.triggerCooldown(ability, cooldown);

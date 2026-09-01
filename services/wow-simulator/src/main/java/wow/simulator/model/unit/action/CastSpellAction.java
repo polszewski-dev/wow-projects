@@ -68,9 +68,9 @@ public class CastSpellAction extends UnitAction {
 	}
 
 	private void createSpellCastContext() {
-		var castSnapshot = owner.getSpellCastSnapshot(ability);
+		var castSnapshot = owner.getSpellCastSnapshot(ability, primaryTarget.getSingleTarget());
 
-		this.castContext = new SpellCastContext(owner, ability, targetResolver, castSnapshot);
+		this.castContext = new SpellCastContext(owner, ability, primaryTarget, targetResolver, castSnapshot);
 	}
 
 	private void performCast() {

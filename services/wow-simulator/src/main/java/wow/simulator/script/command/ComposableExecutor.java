@@ -79,7 +79,7 @@ public abstract class ComposableExecutor extends ScriptCommandExecutor {
 		var actualCaster = getActualCaster();
 		var ability = getAbility();
 		var remainingSimulationTime = actualCaster.getSimulation().getRemainingTime();
-		var castTime = Duration.seconds(actualCaster.getSpellCastSnapshot(ability).getCastTime());
+		var castTime = Duration.seconds(actualCaster.getSpellCastSnapshot(ability, target).getCastTime());
 
 		if (castTime.compareTo(remainingSimulationTime) > 0) {
 			return false;

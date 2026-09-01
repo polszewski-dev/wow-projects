@@ -93,7 +93,7 @@ public class ScriptConditionChecker {
 	}
 
 	private double getCastTime(AbilityId abilityId) {
-		var snapshot = caster.getSpellCastSnapshot(abilityId);
+		var snapshot = caster.getSpellCastSnapshot(abilityId, target);
 
 		return snapshot.getCastTime();
 	}

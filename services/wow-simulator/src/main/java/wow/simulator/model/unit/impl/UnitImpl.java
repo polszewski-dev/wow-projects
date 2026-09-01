@@ -301,7 +301,7 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	public boolean canCast(Ability ability, PrimaryTarget primaryTarget) {
 		return hasAllValidTargets(ability, primaryTarget.getTargetResolver(this)) &&
 				!isOnCooldown(ability) &&
-				canPaySpellCost(ability) &&
+				canPaySpellCost(ability, primaryTarget) &&
 				!isSchoolPrevented(ability.getSchool());
 	}
 
@@ -313,11 +313,11 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 		return targetResolver.hasAllValidTargets(targets);
 	}
 
-	private boolean canPaySpellCost(Ability ability) {
+	private boolean canPaySpellCost(Ability ability, PrimaryTarget primaryTarget) {
 		if (ability instanceof ActivatedAbility) {
 			return true;
 		}
-		var costSnapshot = getSpellCostSnapshot(ability);
+		var costSnapshot = getSpellCostSnapshot(ability, primaryTarget.getSingleTarget());
 		return getResources().canPay(costSnapshot.getCostToPay());
 	}
 
@@ -326,8 +326,8 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	}
 
 	@Override
-	public SpellCostSnapshot paySpellCost(Ability ability) {
-		var costSnapshot = getSpellCostSnapshot(ability);
+	public SpellCostSnapshot paySpellCost(Ability ability, PrimaryTarget primaryTarget) {
+		var costSnapshot = getSpellCostSnapshot(ability, primaryTarget.getSingleTarget());
 		var cost = costSnapshot.getCostToPay();
 
 		paySpellCost(ability, cost);
@@ -344,19 +344,19 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	}
 
 	@Override
-	public SpellCastSnapshot getSpellCastSnapshot(AbilityId abilityId) {
+	public SpellCastSnapshot getSpellCastSnapshot(AbilityId abilityId, Unit target) {
 		var ability = getAbility(abilityId).orElseThrow();
-		return getSpellCastSnapshot(ability);
+		return getSpellCastSnapshot(ability, target);
 	}
 
 	@Override
-	public SpellCastSnapshot getSpellCastSnapshot(Ability ability) {
-		return getCharacterCalculationService().getSpellCastSnapshot(this, ability, (Character) null);
+	public SpellCastSnapshot getSpellCastSnapshot(Ability ability, Unit target) {
+		return getCharacterCalculationService().getSpellCastSnapshot(this, ability, target);
 	}
 
 	@Override
-	public SpellCostSnapshot getSpellCostSnapshot(Ability ability) {
-		return getCharacterCalculationService().getSpellCostSnapshot(this, ability, (Character) null);
+	public SpellCostSnapshot getSpellCostSnapshot(Ability ability, Unit target) {
+		return getCharacterCalculationService().getSpellCostSnapshot(this, ability, target);
 	}
 
 	@Override

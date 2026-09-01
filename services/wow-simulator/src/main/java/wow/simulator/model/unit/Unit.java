@@ -74,13 +74,13 @@ public interface Unit extends Character, SimulationContextSource {
 
 	boolean canCast(Ability ability, PrimaryTarget primaryTarget);
 
-	SpellCostSnapshot paySpellCost(Ability ability);
+	SpellCostSnapshot paySpellCost(Ability ability, PrimaryTarget primaryTarget);
 
-	SpellCastSnapshot getSpellCastSnapshot(AbilityId abilityId);
+	SpellCastSnapshot getSpellCastSnapshot(AbilityId abilityId, Unit target);
 
-	SpellCastSnapshot getSpellCastSnapshot(Ability ability);
+	SpellCastSnapshot getSpellCastSnapshot(Ability ability, Unit target);
 
-	SpellCostSnapshot getSpellCostSnapshot(Ability ability);
+	SpellCostSnapshot getSpellCostSnapshot(Ability ability, Unit target);
 
 	double getSpellHitPct(Spell spell, Unit target);
 
