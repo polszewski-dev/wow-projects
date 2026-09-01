@@ -52,12 +52,9 @@ class CalculationServiceTest extends ServiceTest {
 		var baseStats = stats.getBaseStats();
 
 		assertThat(baseStats.getBaseIntellect()).isEqualTo(131);
-		assertThat(baseStats.getIntellect()).isEqualTo(424);
-		assertThat(baseStats.getIntellectPct()).isZero();
-		assertThat(baseStats.getBaseStats()).isZero();
+		assertThat(baseStats.getIntellect()).isEqualTo(444);
+		assertThat(baseStats.getIntellectPct()).isEqualTo(10);
 		assertThat(baseStats.getBaseStatsPct()).isZero();
-		assertThat(baseStats.getStats()).isEqualTo(20);
-		assertThat(baseStats.getStatsPct()).isEqualTo(10);
 
 		var abilityStats = stats.get(SHADOW_BOLT);
 

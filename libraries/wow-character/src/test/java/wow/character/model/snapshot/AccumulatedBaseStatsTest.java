@@ -107,7 +107,11 @@ class AccumulatedBaseStatsTest extends WowCharacterSpringTest {
 	@Test
 	void getBaseStats() {
 		accumulateTestAttributes(BASE_STATS);
-		assertThat(baseStats.getBaseStats()).isEqualTo(80);
+		assertThat(baseStats.getBaseStrength()).isEqualTo(80);
+		assertThat(baseStats.getBaseAgility()).isEqualTo(80);
+		assertThat(baseStats.getBaseStamina()).isEqualTo(80);
+		assertThat(baseStats.getBaseIntellect()).isEqualTo(80);
+		assertThat(baseStats.getBaseSpirit()).isEqualTo(80);
 	}
 
 	@Test
@@ -119,13 +123,21 @@ class AccumulatedBaseStatsTest extends WowCharacterSpringTest {
 	@Test
 	void getStats() {
 		accumulateTestAttributes(STATS);
-		assertThat(baseStats.getStats()).isEqualTo(80);
+		assertThat(baseStats.getStrength()).isEqualTo(80);
+		assertThat(baseStats.getAgility()).isEqualTo(80);
+		assertThat(baseStats.getStamina()).isEqualTo(80);
+		assertThat(baseStats.getIntellect()).isEqualTo(80);
+		assertThat(baseStats.getSpirit()).isEqualTo(80);
 	}
 
 	@Test
 	void getStatsPct() {
 		accumulateTestAttributes(STATS_PCT);
-		assertThat(baseStats.getStatsPct()).isEqualTo(80);
+		assertThat(baseStats.getStrengthPct()).isEqualTo(80);
+		assertThat(baseStats.getAgilityPct()).isEqualTo(80);
+		assertThat(baseStats.getStaminaPct()).isEqualTo(80);
+		assertThat(baseStats.getIntellectPct()).isEqualTo(80);
+		assertThat(baseStats.getSpiritPct()).isEqualTo(80);
 	}
 
 	@Test
@@ -183,10 +195,7 @@ class AccumulatedBaseStatsTest extends WowCharacterSpringTest {
 		assertThat(copy.getIntellectPct()).isEqualTo(baseStats.getIntellectPct());
 		assertThat(copy.getSpirit()).isEqualTo(baseStats.getSpirit());
 		assertThat(copy.getSpiritPct()).isEqualTo(baseStats.getSpiritPct());
-		assertThat(copy.getBaseStats()).isEqualTo(baseStats.getBaseStats());
 		assertThat(copy.getBaseStatsPct()).isEqualTo(baseStats.getBaseStatsPct());
-		assertThat(copy.getStats()).isEqualTo(baseStats.getStats());
-		assertThat(copy.getStatsPct()).isEqualTo(baseStats.getStatsPct());
 		assertThat(copy.getMaxHealth()).isEqualTo(baseStats.getMaxHealth());
 		assertThat(copy.getMaxHealthPct()).isEqualTo(baseStats.getMaxHealthPct());
 		assertThat(copy.getMaxMana()).isEqualTo(baseStats.getMaxMana());

@@ -56,10 +56,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 			"Intellect%",
 			"Spirit",
 			"Spirit%",
-			"BaseStats",
 			"BaseStats%",
-			"Stats",
-			"Stats%",
 			"MaxHealth",
 			"MaxHealth%",
 			"MaxMana",
@@ -556,10 +553,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 			case INTELLECT_PCT -> stats.getIntellectPct();
 			case SPIRIT -> stats.getSpirit();
 			case SPIRIT_PCT -> stats.getSpiritPct();
-			case BASE_STATS -> stats.getBaseStats();
 			case BASE_STATS_PCT -> stats.getBaseStatsPct();
-			case STATS -> stats.getStats();
-			case STATS_PCT -> stats.getStatsPct();
 			case MAX_HEALTH -> stats.getMaxHealth();
 			case MAX_HEALTH_PCT -> stats.getMaxHealthPct();
 			case MAX_MANA -> stats.getMaxMana();

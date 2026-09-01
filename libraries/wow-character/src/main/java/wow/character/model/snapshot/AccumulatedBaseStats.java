@@ -26,10 +26,7 @@ public class AccumulatedBaseStats extends AccumulatedPartialStats {
 	private double intellectPct;
 	private double spirit;
 	private double spiritPct;
-	private double baseStats;
 	private double baseStatsPct;
-	private double stats;
-	private double statsPct;
 	private double maxHealth;
 	private double maxHealthPct;
 	private double maxMana;
@@ -56,10 +53,7 @@ public class AccumulatedBaseStats extends AccumulatedPartialStats {
 		this.intellectPct = stats.intellectPct;
 		this.spirit = stats.spirit;
 		this.spiritPct = stats.spiritPct;
-		this.baseStats = stats.baseStats;
 		this.baseStatsPct = stats.baseStatsPct;
-		this.stats = stats.stats;
-		this.statsPct = stats.statsPct;
 		this.maxHealth = stats.maxHealth;
 		this.maxHealthPct = stats.maxHealthPct;
 		this.maxMana = stats.maxMana;
@@ -110,16 +104,28 @@ public class AccumulatedBaseStats extends AccumulatedPartialStats {
 				this.spiritPct += value;
 				break;
 			case BASE_STATS:
-				this.baseStats += value;
+				this.baseStrength += value;
+				this.baseAgility += value;
+				this.baseStamina += value;
+				this.baseIntellect += value;
+				this.baseSpirit += value;
 				break;
 			case BASE_STATS_PCT:
 				this.baseStatsPct += value;
 				break;
 			case STATS:
-				this.stats += value;
+				this.strength += value;
+				this.agility += value;
+				this.stamina += value;
+				this.intellect += value;
+				this.spirit += value;
 				break;
 			case STATS_PCT:
-				this.statsPct += value;
+				this.strengthPct += value;
+				this.agilityPct += value;
+				this.staminaPct += value;
+				this.intellectPct += value;
+				this.spiritPct += value;
 				break;
 			case MAX_HEALTH:
 				this.maxHealth += value;
@@ -140,5 +146,29 @@ public class AccumulatedBaseStats extends AccumulatedPartialStats {
 
 	public AccumulatedBaseStats copy() {
 		return new AccumulatedBaseStats(this);
+	}
+
+	public double getTotalStrength() {
+		return getPrimaryStat(baseStrength, baseStatsPct, strength, strengthPct);
+	}
+
+	public double getTotalAgility() {
+		return getPrimaryStat(baseAgility, baseStatsPct, agility, agilityPct);
+	}
+
+	public double getTotalStamina() {
+		return getPrimaryStat(baseStamina, baseStatsPct, stamina, staminaPct);
+	}
+	
+	public double getTotalIntellect() {
+		return getPrimaryStat(baseIntellect, baseStatsPct, intellect, intellectPct);
+	}
+
+	public double getTotalSpirit() {
+		return getPrimaryStat(baseSpirit, baseStatsPct, spirit, spiritPct);
+	}
+
+	private double getPrimaryStat(double base, double basePct, double bonus, double bonusPct) {
+		return (base * (1 + basePct / 100) + bonus) * (1 + bonusPct / 100);
 	}
 }

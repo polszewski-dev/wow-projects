@@ -144,11 +144,11 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	public BaseStatsSnapshot getBaseStatsSnapshot(Character character, AccumulatedBaseStats stats) {
 		var snapshot = new BaseStatsSnapshot();
 
-		var strength = getPrimaryStat(stats, stats.getBaseStrength(), stats.getStrength(), stats.getStrengthPct());
-		var agility = getPrimaryStat(stats, stats.getBaseAgility(), stats.getAgility(), stats.getAgilityPct());
-		var stamina = getPrimaryStat(stats, stats.getBaseStamina(), stats.getStamina(), stats.getStaminaPct());
-		var intellect = getPrimaryStat(stats, stats.getBaseIntellect(), stats.getIntellect(), stats.getIntellectPct());
-		var spirit = getPrimaryStat(stats, stats.getBaseSpirit(), stats.getSpirit(), stats.getSpiritPct());
+		var strength = (int) stats.getTotalStrength();
+		var agility = (int) stats.getTotalAgility();
+		var stamina = (int) stats.getTotalStamina();
+		var intellect = (int) stats.getTotalIntellect();
+		var spirit = (int) stats.getTotalSpirit();
 		var maxHealth = getMaxHealth(character.getBaseStatInfo(), stats, stamina);
 		var maxMana = getMaxMana(character.getBaseStatInfo(), stats, intellect);
 
@@ -161,15 +161,6 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 		snapshot.setMaxMana(maxMana);
 
 		return snapshot;
-	}
-
-	private int getPrimaryStat(AccumulatedBaseStats stats, double baseStatPoints, double bonusStatPoints, double bonusStatPct) {
-		var base = stats.getBaseStats() + baseStatPoints;
-		var bonus = stats.getStats() + bonusStatPoints;
-		var basePct = stats.getBaseStatsPct();
-		var bonusPct = stats.getStatsPct() + bonusStatPct;
-
-		return (int) (((base * (1 + basePct / 100)) + bonus) * (1 + bonusPct / 100));
 	}
 
 	private int getMaxHealth(BaseStatInfo baseStatInfo, AccumulatedBaseStats stats, double stamina) {
