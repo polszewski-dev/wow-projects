@@ -239,20 +239,20 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public SpellCostSnapshot getSpellCostSnapshot(Character character, Ability ability, Character target, BaseStatsSnapshot baseStats) {
+	public SpellCostSnapshot getSpellCostSnapshot(Character character, Ability ability, Character target) {
 		if (ability.getCost() == null) {
 			return null;
 		}
 
-		var costStats = getAccumulatedCostStats(character, ability, target, baseStats);
+		var costStats = getAccumulatedCostStats(character, ability, target);
 
 		return getSpellCostSnapshot(character, ability, costStats);
 	}
 
-	private AccumulatedCostStats getAccumulatedCostStats(Character character, Ability ability, Character target, BaseStatsSnapshot baseStats) {
+	private AccumulatedCostStats getAccumulatedCostStats(Character character, Ability ability, Character target) {
 		var costStats = newAccumulatedCostStats(character, ability, target);
 
-		accumulateEffects(character, costStats, baseStats);
+		accumulateEffects(character, costStats);
 		return costStats;
 	}
 
@@ -434,41 +434,41 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public DirectSpellComponentSnapshot getDirectSpellDamageSnapshot(Character character, Spell spell, Character target, DealDamageDirectly command, BaseStatsSnapshot baseStats) {
-		return getDirectSpellComponentSnapshot(character, spell, target, command, baseStats, SPELL_DAMAGE);
+	public DirectSpellComponentSnapshot getDirectSpellDamageSnapshot(Character character, Spell spell, Character target, DealDamageDirectly command) {
+		return getDirectSpellComponentSnapshot(character, spell, target, command, SPELL_DAMAGE);
 	}
 
 	@Override
-	public DirectSpellComponentSnapshot getDirectHealingSnapshot(Character character, Spell spell, Character target, HealDirectly command, BaseStatsSnapshot baseStats) {
-		return getDirectSpellComponentSnapshot(character, spell, target, command, baseStats, HEALING);
+	public DirectSpellComponentSnapshot getDirectHealingSnapshot(Character character, Spell spell, Character target, HealDirectly command) {
+		return getDirectSpellComponentSnapshot(character, spell, target, command, HEALING);
 	}
 
-	private DirectSpellComponentSnapshot getDirectSpellComponentSnapshot(Character character, Spell spell, Character target, ChangeHealthDirectly command, BaseStatsSnapshot baseStats, PowerType powerType) {
-		var spellStats = getAccumulatedDirectComponentStats(character, spell, target, powerType, command, baseStats);
-		var targetStats = getAccumulatedTargetStats(spell, target, baseStats, powerType, command.school());
+	private DirectSpellComponentSnapshot getDirectSpellComponentSnapshot(Character character, Spell spell, Character target, ChangeHealthDirectly command, PowerType powerType) {
+		var spellStats = getAccumulatedDirectComponentStats(character, spell, target, powerType, command);
+		var targetStats = getAccumulatedTargetStats(spell, target, powerType, command.school());
 
-		return getDirectSpellComponentSnapshot(character, spell, target, command, baseStats, spellStats, targetStats);
+		return getDirectSpellComponentSnapshot(character, spell, target, command, spellStats, targetStats);
 	}
 
-	private AccumulatedSpellStats getAccumulatedDirectComponentStats(Character character, Spell spell, Character target, PowerType powerType, ChangeHealthDirectly command, BaseStatsSnapshot baseStats) {
+	private AccumulatedSpellStats getAccumulatedDirectComponentStats(Character character, Spell spell, Character target, PowerType powerType, ChangeHealthDirectly command) {
 		var spellStats = newAccumulatedDirectComponentStats(character, spell, target, powerType, command);
 
-		accumulateEffects(character, spellStats, baseStats);
+		accumulateEffects(character, spellStats);
 		return spellStats;
 	}
 
-	private AccumulatedTargetStats getAccumulatedTargetStats(Spell spell, Character target, BaseStatsSnapshot baseStats, PowerType powerType, SpellSchool school) {
+	private AccumulatedTargetStats getAccumulatedTargetStats(Spell spell, Character target, PowerType powerType, SpellSchool school) {
 		var targetStats = newAccumulatedTargetStats(target, spell, powerType, school);
 
-		accumulateEffects(target, targetStats, baseStats);
+		accumulateEffects(target, targetStats);
 		return targetStats;
 	}
 
 	@Override
-	public DirectSpellComponentSnapshot getDirectSpellComponentSnapshot(Character character, Spell spell, Character target, ChangeHealthDirectly command, BaseStatsSnapshot baseStats, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats) {
+	public DirectSpellComponentSnapshot getDirectSpellComponentSnapshot(Character character, Spell spell, Character target, ChangeHealthDirectly command, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats) {
 		var snapshot = new DirectSpellComponentSnapshot(command);
 
-		var critPct = getSpellCritPct(character, spellStats, baseStats, targetStats);
+		var critPct = getSpellCritPct(character, spellStats, targetStats);
 		var critCoeff = getSpellCritCoeff(spellStats);
 		var amount = getSpellAmount(spellStats, targetStats);
 		var amountPct = getSpellAmountPct(spellStats, targetStats);
@@ -488,26 +488,26 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public PeriodicSpellComponentSnapshot getPeriodicSpellDamageSnapshot(Character character, Spell spell, Character target, DealDamagePeriodically command, BaseStatsSnapshot baseStats) {
-		return getPeriodicComponentSnapshot(character, spell, target, command, baseStats, SPELL_DAMAGE);
+	public PeriodicSpellComponentSnapshot getPeriodicSpellDamageSnapshot(Character character, Spell spell, Character target, DealDamagePeriodically command) {
+		return getPeriodicComponentSnapshot(character, spell, target, command, SPELL_DAMAGE);
 	}
 
 	@Override
-	public PeriodicSpellComponentSnapshot getPeriodicHealingSnapshot(Character character, Spell spell, Character target, HealPeriodically command, BaseStatsSnapshot baseStats) {
-		return getPeriodicComponentSnapshot(character, spell, target, command, baseStats, HEALING);
+	public PeriodicSpellComponentSnapshot getPeriodicHealingSnapshot(Character character, Spell spell, Character target, HealPeriodically command) {
+		return getPeriodicComponentSnapshot(character, spell, target, command, HEALING);
 	}
 
-	private PeriodicSpellComponentSnapshot getPeriodicComponentSnapshot(Character character, Spell spell, Character target, ChangeHealthPeriodically command, BaseStatsSnapshot baseStats, PowerType powerType) {
-		var spellStats = getAccumulatedPeriodicComponentStats(character, spell, target, powerType, command, baseStats);
-		var targetStats = getAccumulatedTargetStats(spell, target, baseStats, powerType, command.school());
+	private PeriodicSpellComponentSnapshot getPeriodicComponentSnapshot(Character character, Spell spell, Character target, ChangeHealthPeriodically command, PowerType powerType) {
+		var spellStats = getAccumulatedPeriodicComponentStats(character, spell, target, powerType, command);
+		var targetStats = getAccumulatedTargetStats(spell, target, powerType, command.school());
 
 		return getPeriodicComponentSnapshot(character, spell, target, command, spellStats, targetStats);
 	}
 
-	private AccumulatedSpellStats getAccumulatedPeriodicComponentStats(Character character, Spell spell, Character target, PowerType powerType, PeriodicCommand command, BaseStatsSnapshot baseStats) {
+	private AccumulatedSpellStats getAccumulatedPeriodicComponentStats(Character character, Spell spell, Character target, PowerType powerType, PeriodicCommand command) {
 		var spellStats = newAccumulatedPeriodicComponentStats(character, spell, target, powerType, command);
 
-		accumulateEffects(character, spellStats, baseStats);
+		accumulateEffects(character, spellStats);
 		return spellStats;
 	}
 
@@ -533,7 +533,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	@Override
 	public RegenSnapshot getRegenSnapshot(Character character) {
 		var baseStats = getBaseStatsSnapshot(character);
-		var regenStats = getRegenStats(character, baseStats);
+		var regenStats = getRegenStats(character);
 
 		var spiritBasedRegen = getSpiritBasedRegen(baseStats, character);
 		var manaRegenPct = regenStats.getManaRegenPct();
@@ -581,11 +581,11 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 		return BASE_MANA_REGEN_PER_LEVEL[level];
 	}
 
-	private AccumulatedRegenStats getRegenStats(Character character, BaseStatsSnapshot baseStats) {
+	private AccumulatedRegenStats getRegenStats(Character character) {
 		var conditionArgs = AttributeConditionArgs.forRegen(character);
 		var regenStats = new AccumulatedRegenStats(conditionArgs);
 
-		accumulateEffects(character, regenStats, baseStats);
+		accumulateEffects(character, regenStats);
 
 		return regenStats;
 	}
@@ -606,19 +606,19 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 
 		accumulateEffects(character, castStats);
 		accumulateEffects(character, hitStats);
-		accumulateEffects(character, spellStats, baseStatsSnapshot);
+		accumulateEffects(character, spellStats);
 
 		var regenSnapshot = getRegenSnapshot(character);
 
 		snapshot.setBaseStatsSnapshot(baseStatsSnapshot);
 		snapshot.setSpellPower((int) spellStats.getPower());
-		snapshot.setSpellDamage(getSpellDamage(character, baseStatsSnapshot));
-		snapshot.setSpellDamageBySchool(getSpellDamageBySchool(character, baseStatsSnapshot));
-		snapshot.setSpellDamagePctBySchool(getSpellDamagePctBySchool(character, baseStatsSnapshot));
-		snapshot.setSpellHealing(getSpellHealing(character, baseStatsSnapshot));
+		snapshot.setSpellDamage(getSpellDamage(character));
+		snapshot.setSpellDamageBySchool(getSpellDamageBySchool(character));
+		snapshot.setSpellDamagePctBySchool(getSpellDamagePctBySchool(character));
+		snapshot.setSpellHealing(getSpellHealing(character));
 		snapshot.setSpellHitPctBonus(getSpellHitPctBonus(character, hitStats));
 		snapshot.setSpellHitPct(getSpellHitPct(character, hitStats, levelDifference));
-		snapshot.setSpellCritPct(getSpellCritPct(character, spellStats, baseStatsSnapshot, targetStats));
+		snapshot.setSpellCritPct(getSpellCritPct(character, spellStats, targetStats));
 		snapshot.setSpellHastePct(getHastePct(character, castStats));
 		snapshot.setSpellHitRating((int) hitStats.getHitRating());
 		snapshot.setSpellCritRating((int) spellStats.getCritRating());
@@ -652,7 +652,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	@Override
 	public double getCopiedAmountAsDamage(Character character, Spell spell, Character target, int amount, double ratioPct) {
 		var copyIncreasePct = getCopiedAmountIncreasePct(character, spell);
-		var targetStats = getAccumulatedTargetStats(spell, target, null, SPELL_DAMAGE, spell.getSchool());
+		var targetStats = getAccumulatedTargetStats(spell, target, SPELL_DAMAGE, spell.getSchool());
 		var damageTaken = targetStats.getAmountTaken();
 		var damageTakenPct = targetStats.getAmountTakenPct();
 
@@ -662,7 +662,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	@Override
 	public double getCopiedAmountAsHeal(Character character, Spell spell, Character target, int amount, double ratioPct) {
 		var copyIncreasePct = getCopiedAmountIncreasePct(character, spell);
-		var targetStats = getAccumulatedTargetStats(spell, target, null, HEALING, spell.getSchool());
+		var targetStats = getAccumulatedTargetStats(spell, target, HEALING, spell.getSchool());
 		var healingTaken = targetStats.getAmountTaken();
 		var healingTakenPct = targetStats.getAmountTakenPct();
 
@@ -693,53 +693,53 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 		return value * max(ratioPct / 100.0, 0) * max(1 + increasePct / 100.0, 0);
 	}
 
-	private Map<SpellSchool, Integer> getSpellDamageBySchool(Character character, BaseStatsSnapshot baseStats) {
+	private Map<SpellSchool, Integer> getSpellDamageBySchool(Character character) {
 		return Stream.of(SpellSchool.values()).collect(Collectors.toMap(
 				Function.identity(),
-				school -> getSpellDamage(character, school, baseStats)
+				school -> getSpellDamage(character, school)
 		));
 	}
 
-	private Map<SpellSchool, Double> getSpellDamagePctBySchool(Character character, BaseStatsSnapshot baseStats) {
+	private Map<SpellSchool, Double> getSpellDamagePctBySchool(Character character) {
 		return Stream.of(SpellSchool.values()).collect(Collectors.toMap(
 				Function.identity(),
-				school -> getSpellDamagePct(character, school, baseStats)
+				school -> getSpellDamagePct(character, school)
 		));
 	}
 
-	private double getSpellDamagePct(Character character, SpellSchool school, BaseStatsSnapshot baseStats) {
-		return getSpellPctAmount(character, baseStats, SPELL_DAMAGE, school);
+	private double getSpellDamagePct(Character character, SpellSchool school) {
+		return getSpellPctAmount(character, SPELL_DAMAGE, school);
 	}
 
-	private double getSpellPctAmount(Character character, BaseStatsSnapshot baseStats, PowerType powerType, SpellSchool school) {
+	private double getSpellPctAmount(Character character, PowerType powerType, SpellSchool school) {
 		var conditionArgs = AttributeConditionArgs.forAnySpell(character, powerType, school);
 		var spellStats = new AccumulatedSpellStats(conditionArgs);
 
-		accumulateEffects(character, spellStats, baseStats);
+		accumulateEffects(character, spellStats);
 		return spellStats.getAmountPct();
 	}
 
-	private int getSpellDamage(Character character, BaseStatsSnapshot baseStats) {
-		return getSpellDamage(character, null, baseStats);
+	private int getSpellDamage(Character character) {
+		return getSpellDamage(character, null);
 	}
 
-	private int getSpellDamage(Character character, SpellSchool school, BaseStatsSnapshot baseStats) {
-		return getSpellAmount(character, baseStats, SPELL_DAMAGE, school);
+	private int getSpellDamage(Character character, SpellSchool school) {
+		return getSpellAmount(character, SPELL_DAMAGE, school);
 	}
 
-	private int getSpellHealing(Character character, BaseStatsSnapshot baseStats) {
-		return getSpellAmount(character, baseStats, HEALING, null);
+	private int getSpellHealing(Character character) {
+		return getSpellAmount(character, HEALING, null);
 	}
 
-	private int getSpellAmount(Character character, BaseStatsSnapshot baseStats, PowerType powerType, SpellSchool school) {
+	private int getSpellAmount(Character character, PowerType powerType, SpellSchool school) {
 		var conditionArgs = AttributeConditionArgs.forAnySpell(character, powerType, school);
 		var spellStats = new AccumulatedSpellStats(conditionArgs);
 
-		accumulateEffects(character, spellStats, baseStats);
+		accumulateEffects(character, spellStats);
 		return (int) spellStats.getPower();
 	}
 
-	private double getSpellCritPct(Character character, AccumulatedSpellStats spellStats, BaseStatsSnapshot baseStats, AccumulatedTargetStats targetStats) {
+	private double getSpellCritPct(Character character, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats) {
 		var baseStatInfo = character.getBaseStatInfo();
 		var cr = character.getCombatRatingInfo();
 
@@ -783,10 +783,6 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	private void accumulateEffects(Character character, AccumulatedStats stats) {
-		accumulateEffects(character, stats, null);
-	}
-
-	private void accumulateEffects(Character character, AccumulatedStats stats, BaseStatsSnapshot baseStats) {
 		var collector = new DefaultEffectCollector(character, OWNER_OR_AURAS, stats);
 
 		collector.solveAll();

@@ -68,8 +68,6 @@ public interface Unit extends Character, SimulationContextSource {
 
 	boolean canCast(String abilityName, Unit target);
 
-	boolean canCast(AbilityId abilityId);
-
 	boolean canCast(AbilityId abilityId, Unit target);
 
 	boolean canCast(Ability ability, Unit target);
@@ -82,8 +80,6 @@ public interface Unit extends Character, SimulationContextSource {
 
 	SpellCastSnapshot getSpellCastSnapshot(Ability ability);
 
-	SpellCostSnapshot getSpellCostSnapshot(AbilityId abilityId);
-
 	SpellCostSnapshot getSpellCostSnapshot(Ability ability);
 
 	double getSpellHitPct(Spell spell, Unit target);
@@ -91,8 +87,6 @@ public interface Unit extends Character, SimulationContextSource {
 	EffectDurationSnapshot getEffectDurationSnapshot(AbilityId abilityId, Unit target);
 
 	EffectDurationSnapshot getEffectDurationSnapshot(Spell spell, Unit target);
-
-	EffectDurationSnapshot getEffectDurationSnapshot(AbilityId abilityId, Unit target, ApplyEffect command);
 
 	EffectDurationSnapshot getEffectDurationSnapshot(Spell spell, Unit target, ApplyEffect command);
 
@@ -109,8 +103,6 @@ public interface Unit extends Character, SimulationContextSource {
 	PeriodicSpellComponentSnapshot getPeriodicManaGainSnapshot(Spell spell, Unit target, GainManaPeriodically command);
 
 	PeriodicSpellComponentSnapshot getPeriodicPctOfTotalManaGainSnapshot(Spell spell, Unit target, GainPctOfTotalManaPeriodically command);
-
-	BaseStatsSnapshot getBaseStatsSnapshot();
 
 	Rng getRng();
 
@@ -155,8 +147,6 @@ public interface Unit extends Character, SimulationContextSource {
 	void removeEffect(AbilityId abilityId, Unit owner);
 
 	void removeEffect(String effectName);
-
-	boolean isUnderEffect(AbilityId abilityId, Unit owner);
 
 	Optional<EffectInstance> getEffect(AbilityId abilityId, Unit owner);
 

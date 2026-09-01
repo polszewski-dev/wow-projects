@@ -285,11 +285,6 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	}
 
 	@Override
-	public boolean canCast(AbilityId abilityId) {
-		return canCast(abilityId, null);
-	}
-
-	@Override
 	public boolean canCast(AbilityId abilityId, Unit target) {
 		var ability = getAbility(abilityId).orElseThrow();
 		var primaryTarget = getPrimaryTarget(ability, target);
@@ -360,15 +355,8 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	}
 
 	@Override
-	public SpellCostSnapshot getSpellCostSnapshot(AbilityId abilityId) {
-		var ability = getAbility(abilityId).orElseThrow();
-		return getSpellCostSnapshot(ability);
-	}
-
-	@Override
 	public SpellCostSnapshot getSpellCostSnapshot(Ability ability) {
-		var baseStats = getBaseStatsSnapshot();
-		return getCharacterCalculationService().getSpellCostSnapshot(this, ability, null, baseStats);
+		return getCharacterCalculationService().getSpellCostSnapshot(this, ability, (Character) null);
 	}
 
 	@Override
@@ -392,38 +380,28 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	}
 
 	@Override
-	public EffectDurationSnapshot getEffectDurationSnapshot(AbilityId abilityId, Unit target, ApplyEffect command) {
-		var ability = getAbility(abilityId).orElseThrow();
-		return getEffectDurationSnapshot(ability, target, command);
-	}
-
-	@Override
 	public EffectDurationSnapshot getEffectDurationSnapshot(Spell spell, Unit target, ApplyEffect command) {
 		return getCharacterCalculationService().getEffectDurationSnapshot(this, spell, target, command);
 	}
 
 	@Override
 	public DirectSpellComponentSnapshot getDirectSpellDamageSnapshot(Spell spell, Unit target, DealDamageDirectly command) {
-		var baseStats = getBaseStatsSnapshot();
-		return getCharacterCalculationService().getDirectSpellDamageSnapshot(this, spell, target, command, baseStats);
+		return getCharacterCalculationService().getDirectSpellDamageSnapshot(this, spell, target, command);
 	}
 
 	@Override
 	public DirectSpellComponentSnapshot getDirectHealingSnapshot(Spell spell, Unit target, HealDirectly command) {
-		var baseStats = getBaseStatsSnapshot();
-		return getCharacterCalculationService().getDirectHealingSnapshot(this, spell, target, command, baseStats);
+		return getCharacterCalculationService().getDirectHealingSnapshot(this, spell, target, command);
 	}
 
 	@Override
 	public PeriodicSpellComponentSnapshot getPeriodicSpellDamageSnapshot(Spell spell, Unit target, DealDamagePeriodically command) {
-		var baseStats = getBaseStatsSnapshot();
-		return getCharacterCalculationService().getPeriodicSpellDamageSnapshot(this, spell, target, command, baseStats);
+		return getCharacterCalculationService().getPeriodicSpellDamageSnapshot(this, spell, target, command);
 	}
 
 	@Override
 	public PeriodicSpellComponentSnapshot getPeriodicHealingSnapshot(Spell spell, Unit target, HealPeriodically command) {
-		var baseStats = getBaseStatsSnapshot();
-		return getCharacterCalculationService().getPeriodicHealingSnapshot(this, spell, target, command, baseStats);
+		return getCharacterCalculationService().getPeriodicHealingSnapshot(this, spell, target, command);
 	}
 
 	@Override
@@ -442,11 +420,6 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 		var maxMana = target.getMaxMana();
 
 		return new PeriodicSpellComponentSnapshot(maxMana * pct / 100, command.numTicks());
-	}
-
-	@Override
-	public BaseStatsSnapshot getBaseStatsSnapshot() {
-		return getCharacterCalculationService().getBaseStatsSnapshot(this);
 	}
 
 	@Override
@@ -583,11 +556,6 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	@Override
 	public void removeEffect(String effectName) {
 		effects.removeEffect(effectName);
-	}
-
-	@Override
-	public boolean isUnderEffect(AbilityId abilityId, Unit owner) {
-		return effects.isUnderEffect(abilityId, owner);
 	}
 
 	@Override

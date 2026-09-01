@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import wow.character.model.character.Character;
 import wow.character.model.snapshot.AccumulatedBaseStats;
-import wow.character.model.snapshot.BaseStatsSnapshot;
 import wow.character.model.snapshot.StatSummary;
 import wow.character.service.CharacterCalculationService;
 import wow.character.service.CharacterService;
@@ -202,19 +201,19 @@ public class CalculationServiceImpl implements CalculationService {
 		var base = characterCalculationService.getBaseStatsSnapshot(player, baseStats);
 
 		snapshot.setBase(base);
-		abilityStats.solveStatConversions(rotationStats.getStatConversions(), base);
-		calculateDamagingSpellStats(player, ability, abilityStats, target, snapshot, base);
+		abilityStats.solveStatConversions(rotationStats.getStatConversions());
+		calculateDamagingSpellStats(player, ability, abilityStats, target, snapshot);
 
 		var recalculate = specialAbilitySolver.solveAbilities(snapshot, abilityStats, rotationStats, player);
 
 		if (recalculate) {
-			calculateDamagingSpellStats(player, ability, abilityStats, target, snapshot, base);
+			calculateDamagingSpellStats(player, ability, abilityStats, target, snapshot);
 		}
 
 		return snapshot;
 	}
 
-	private void calculateDamagingSpellStats(Player player, Ability ability, AccumulatedDamagingAbilityStats abilityStats, Character target, Snapshot snapshot, BaseStatsSnapshot base) {
+	private void calculateDamagingSpellStats(Player player, Ability ability, AccumulatedDamagingAbilityStats abilityStats, Character target, Snapshot snapshot) {
 		var cast = characterCalculationService.getSpellCastSnapshot(player, ability, abilityStats.getCast());
 		var cost = characterCalculationService.getSpellCostSnapshot(player, ability, abilityStats.getCost());
 		var hitPct = characterCalculationService.getSpellHitPct(player, ability, target, abilityStats.getHit());
@@ -226,7 +225,7 @@ public class CalculationServiceImpl implements CalculationService {
 		var targetStats = abilityStats.getTarget();
 
 		if (abilityStats.getDirectCommand() != null) {
-			var direct = characterCalculationService.getDirectSpellComponentSnapshot(player, ability, target, abilityStats.getDirectCommand(), base, abilityStats.getDirect(), targetStats);
+			var direct = characterCalculationService.getDirectSpellComponentSnapshot(player, ability, target, abilityStats.getDirectCommand(), abilityStats.getDirect(), targetStats);
 
 			snapshot.setDirect(direct);
 		}

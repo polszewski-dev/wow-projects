@@ -330,9 +330,8 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 	void getSpellCostSnapshot() {
 		player.resetEquipment();
 
-		var baseStats = characterCalculationService.getBaseStatsSnapshot(player);
 		var ability = player.getAbility(SHADOW_BOLT).orElseThrow();
-		var snapshot = characterCalculationService.getSpellCostSnapshot(player, ability, null, baseStats);
+		var snapshot = characterCalculationService.getSpellCostSnapshot(player, ability, (Character) null);
 
 		assertThat(snapshot.getResourceType()).isEqualTo(ResourceType.MANA);
 		assertThat(snapshot.getCost()).isEqualTo(399);
@@ -348,9 +347,8 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 
 		assertThat(player.hasTalent(IMPROVED_LIFE_TAP)).isTrue();
 
-		var baseStats = characterCalculationService.getBaseStatsSnapshot(player);
 		var ability = player.getAbility(LIFE_TAP).orElseThrow();
-		var snapshot = characterCalculationService.getSpellCostSnapshot(player, ability, null, baseStats);
+		var snapshot = characterCalculationService.getSpellCostSnapshot(player, ability, (Character) null);
 
 		assertThat(snapshot.getResourceType()).isEqualTo(ResourceType.HEALTH);
 		assertThat(snapshot.getCost()).isEqualTo(698);
@@ -362,9 +360,8 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 	void getSpellCostSnapshot3() {
 		player.resetEquipment();
 
-		var baseStats = characterCalculationService.getBaseStatsSnapshot(player);
 		var ability = player.getAbility(SHADOWBURN).orElseThrow();
-		var snapshot = characterCalculationService.getSpellCostSnapshot(player, ability, null, baseStats);
+		var snapshot = characterCalculationService.getSpellCostSnapshot(player, ability, (Character) null);
 
 		assertThat(snapshot.getResourceType()).isEqualTo(ResourceType.MANA);
 		assertThat(snapshot.getCost()).isEqualTo(489);
@@ -450,7 +447,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 
 		var ability = player.getAbility(SHADOW_BOLT).orElseThrow();
 		var directCommand = (DealDamageDirectly) ability.getDirectCommands().getFirst();
-		var snapshot = characterCalculationService.getDirectSpellDamageSnapshot(player, ability, target, directCommand, baseStats);
+		var snapshot = characterCalculationService.getDirectSpellDamageSnapshot(player, ability, target, directCommand);
 
 		assertThat(snapshot.getCritPct()).isEqualTo(11.97, PRECISION);
 		assertThat(snapshot.getCritCoeff()).isEqualTo(2);
@@ -478,7 +475,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 
 		var ability = player.getAbility(SHADOW_BOLT).orElseThrow();
 		var directCommand = (DealDamageDirectly) ability.getDirectCommands().getFirst();
-		var snapshot = characterCalculationService.getDirectSpellDamageSnapshot(player, ability, target, directCommand, baseStats);
+		var snapshot = characterCalculationService.getDirectSpellDamageSnapshot(player, ability, target, directCommand);
 
 		assertThat(snapshot.getCritPct()).isEqualTo(15.66, PRECISION);
 		assertThat(snapshot.getCritCoeff()).isEqualTo(2);
@@ -493,11 +490,9 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 	void getPeriodicSpellDamageSnapshot() {
 		player.resetEquipment();
 
-		var baseStats = characterCalculationService.getBaseStatsSnapshot(player);
-
 		var ability = player.getAbility(CURSE_OF_AGONY).orElseThrow();
 		var periodicCommand = (DealDamagePeriodically) ability.getApplyEffectCommands().getFirst().effect().getPeriodicComponent().commands().getFirst();
-		var snapshot = characterCalculationService.getPeriodicSpellDamageSnapshot(player, ability, target, periodicCommand, baseStats);
+		var snapshot = characterCalculationService.getPeriodicSpellDamageSnapshot(player, ability, target, periodicCommand);
 
 		assertThat(snapshot.getAmount()).isZero();
 		assertThat(snapshot.getAmountPct()).isZero();
