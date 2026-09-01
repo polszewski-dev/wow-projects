@@ -1,15 +1,12 @@
 package wow.character.model.snapshot;
 
 import wow.commons.model.attribute.Attribute;
-import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.AttributeScalingParams;
 import wow.commons.model.attribute.AttributeTarget;
 import wow.commons.model.effect.component.StatConversion;
 
 import java.util.List;
 import java.util.function.Predicate;
-
-import static wow.commons.model.attribute.AttributeTarget.OWNER;
 
 /**
  * User: POlszewski
@@ -32,24 +29,17 @@ public abstract class AccumulatedStats {
 
 	protected abstract void accumulateAttribute(Attribute attribute, double scaleFactor);
 
-	public void solveStatConversions(List<StatConversion> statConversions, BaseStatsSnapshot baseStats) {
+	public void solveStatConversions(List<StatConversion> statConversions) {
 		for (var statConversion : statConversions) {
-			accumulateConvertedStat(statConversion, baseStats);
+			if (statConversion.fromTarget() == AttributeTarget.OWNER && toConditionMatches(statConversion)) {
+				accumulateConvertedStat(statConversion);
+			}
 		}
 	}
 
-	protected abstract void accumulateConvertedStat(StatConversion statConversion, BaseStatsSnapshot baseStats);
+	protected abstract boolean toConditionMatches(StatConversion statConversion);
 
-	protected double getAccumulatedValue(AttributeTarget attributeTarget, AttributeId attributeId, BaseStatsSnapshot baseStats) {
-		if (attributeTarget != OWNER) {
-			return 0;
-		}
-
-		return switch (attributeId) {
-			case STAMINA -> baseStats.getStamina();
-			case INTELLECT -> baseStats.getIntellect();
-			case SPIRIT -> baseStats.getSpirit();
-			default -> throw new IllegalArgumentException();
-		};
+	public void accumulateConvertedStat(StatConversion statConversion) {
+		// void
 	}
 }

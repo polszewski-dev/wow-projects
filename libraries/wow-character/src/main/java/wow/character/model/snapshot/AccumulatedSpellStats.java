@@ -1,16 +1,16 @@
 package wow.character.model.snapshot;
 
 import lombok.Getter;
-import wow.character.model.character.BaseStatInfo;
 import wow.character.util.AttributeConditionArgs;
 import wow.commons.model.attribute.AttributeId;
+import wow.commons.model.effect.component.StatConversion;
 
 /**
  * User: POlszewski
  * Date: 2022-12-16
  */
 @Getter
-public class AccumulatedSpellStats extends AccumulatedPartialStats {
+public class AccumulatedSpellStats extends AccumulatedBaseStats {
 	private double amount;
 	private double amountPct;
 	private double effectPct;
@@ -25,6 +25,7 @@ public class AccumulatedSpellStats extends AccumulatedPartialStats {
 
 	public AccumulatedSpellStats(AttributeConditionArgs conditionArgs) {
 		super(conditionArgs);
+		accumulateBaseStatInfo();
 	}
 
 	private AccumulatedSpellStats(AccumulatedSpellStats stats) {
@@ -42,7 +43,9 @@ public class AccumulatedSpellStats extends AccumulatedPartialStats {
 		this.critCoeffPct = stats.critCoeffPct;
 	}
 
-	public void accumulateBaseStatInfo(BaseStatInfo baseStatInfo) {
+	private void accumulateBaseStatInfo() {
+		var baseStatInfo = conditionArgs.getCaster().getBaseStatInfo();
+
 		critPct += baseStatInfo.getBaseSpellCritPct().value();
 	}
 
@@ -97,11 +100,19 @@ public class AccumulatedSpellStats extends AccumulatedPartialStats {
 				this.critCoeffPct += value;
 				break;
 			default:
-				// ignore the rest
+				super.accumulateAttribute(id, value);
 		}
 	}
 
+	@Override
 	public AccumulatedSpellStats copy() {
 		return new AccumulatedSpellStats(this);
+	}
+
+	@Override
+	public void accumulateConvertedStat(StatConversion statConversion) {
+		if (statConversion.to() == AttributeId.POWER) {
+			this.power += getValueTo(statConversion);
+		}
 	}
 }

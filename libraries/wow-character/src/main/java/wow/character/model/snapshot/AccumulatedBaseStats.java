@@ -1,9 +1,9 @@
 package wow.character.model.snapshot;
 
 import lombok.Getter;
-import wow.character.model.character.BaseStatInfo;
 import wow.character.util.AttributeConditionArgs;
 import wow.commons.model.attribute.AttributeId;
+import wow.commons.model.effect.component.StatConversion;
 
 /**
  * User: POlszewski
@@ -34,9 +34,10 @@ public class AccumulatedBaseStats extends AccumulatedPartialStats {
 
 	public AccumulatedBaseStats(AttributeConditionArgs conditionArgs) {
 		super(conditionArgs);
+		accumulateBaseStatInfo();
 	}
 
-	private AccumulatedBaseStats(AccumulatedBaseStats stats) {
+	protected AccumulatedBaseStats(AccumulatedBaseStats stats) {
 		super(stats);
 		this.baseStrength = stats.baseStrength;
 		this.baseAgility = stats.baseAgility;
@@ -60,7 +61,9 @@ public class AccumulatedBaseStats extends AccumulatedPartialStats {
 		this.maxManaPct = stats.maxManaPct;
 	}
 
-	public void accumulateBaseStatInfo(BaseStatInfo baseStatInfo) {
+	private void accumulateBaseStatInfo() {
+		var baseStatInfo = conditionArgs.getCaster().getBaseStatInfo();
+
 		baseStrength += baseStatInfo.getBaseStrength();
 		baseAgility += baseStatInfo.getBaseAgility();
 		baseStamina += baseStatInfo.getBaseStamina();
@@ -170,5 +173,25 @@ public class AccumulatedBaseStats extends AccumulatedPartialStats {
 
 	private double getPrimaryStat(double base, double basePct, double bonus, double bonusPct) {
 		return (base * (1 + basePct / 100) + bonus) * (1 + bonusPct / 100);
+	}
+
+	protected double getValueTo(StatConversion statConversion) {
+		var valueFrom = getValueFrom(statConversion);
+
+		return getValueTo(statConversion, valueFrom);
+	}
+
+	private double getValueTo(StatConversion statConversion, double valueFrom) {
+		var ratio = statConversion.ratioPct().value() / 100;
+
+		return valueFrom * ratio;
+	}
+
+	private double getValueFrom(StatConversion statConversion) {
+		return switch (statConversion.from()) {
+			case INTELLECT -> getTotalIntellect();
+			case SPIRIT -> getTotalSpirit();
+			default -> throw new IllegalArgumentException("" + statConversion.from());
+		};
 	}
 }

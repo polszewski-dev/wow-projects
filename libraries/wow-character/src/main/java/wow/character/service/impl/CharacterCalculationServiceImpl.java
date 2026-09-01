@@ -50,10 +50,8 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	@Override
 	public AccumulatedBaseStats newAccumulatedBaseStats(Character character) {
 		var conditionArgs = AttributeConditionArgs.forBaseStats(character);
-		var stats = new AccumulatedBaseStats(conditionArgs);
 
-		stats.accumulateBaseStatInfo(character.getBaseStatInfo());
-		return stats;
+		return new AccumulatedBaseStats(conditionArgs);
 	}
 
 	@Override
@@ -108,7 +106,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 
 		conditionArgs.setDirect(true);
 
-		return newAccumulatedSpellStats(character, conditionArgs);
+		return newAccumulatedSpellStats(conditionArgs);
 	}
 
 	@Override
@@ -117,13 +115,11 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 
 		conditionArgs.setPeriodic(true);
 
-		return newAccumulatedSpellStats(character, conditionArgs);
+		return newAccumulatedSpellStats(conditionArgs);
 	}
 
-	private AccumulatedSpellStats newAccumulatedSpellStats(Character character, AttributeConditionArgs conditionArgs) {
-		var spellStats = new AccumulatedSpellStats(conditionArgs);
-		spellStats.accumulateBaseStatInfo(character.getBaseStatInfo());
-		return spellStats;
+	private AccumulatedSpellStats newAccumulatedSpellStats(AttributeConditionArgs conditionArgs) {
+		return new AccumulatedSpellStats(conditionArgs);
 	}
 
 	@Override
@@ -608,8 +604,6 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 		var spellStats = new AccumulatedSpellStats(conditionArgs);
 		var targetStats = new AccumulatedTargetStats(conditionArgs);
 
-		spellStats.accumulateBaseStatInfo(character.getBaseStatInfo());
-
 		accumulateEffects(character, castStats);
 		accumulateEffects(character, hitStats);
 		accumulateEffects(character, spellStats, baseStatsSnapshot);
@@ -749,7 +743,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 		var baseStatInfo = character.getBaseStatInfo();
 		var cr = character.getCombatRatingInfo();
 
-		var intellect = baseStats.getIntellect();
+		var intellect = (int) spellStats.getTotalIntellect();
 		var intCrit = intellect / baseStatInfo.getIntellectPerCritPct();
 		var ratingCrit = spellStats.getCritRating() / cr.getSpellCrit();
 		var pctCrit = spellStats.getCritPct();
@@ -803,9 +797,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 			masterCollector.solveAll();
 		}
 
-		if (baseStats != null) {
-			collector.solveStatConversions(baseStats);
-		}
+		collector.solveStatConversions();
 	}
 
 	private static class DefaultEffectCollector extends AbstractEffectCollector.OnlyEffects {
@@ -842,9 +834,9 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 			statConversions.addAll(effect.getStatConversions());
 		}
 
-		void solveStatConversions(BaseStatsSnapshot baseStats) {
+		void solveStatConversions() {
 			if (statConversions != null) {
-				stats.solveStatConversions(statConversions, baseStats);
+				stats.solveStatConversions(statConversions);
 			}
 		}
 	}

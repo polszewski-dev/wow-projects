@@ -10,7 +10,7 @@ import wow.commons.model.spell.ResourceType;
  * Date: 2023-10-20
  */
 @Getter
-public class AccumulatedCostStats extends AccumulatedPartialStats {
+public class AccumulatedCostStats extends AccumulatedBaseStats {
 	private double manaCost;
 	private double manaCostPct;
 	private double energyCost;
@@ -84,7 +84,7 @@ public class AccumulatedCostStats extends AccumulatedPartialStats {
 				this.cooldownPct += value;
 				break;
 			default:
-				// ignore the rest
+				super.accumulateAttribute(id, value);
 		}
 	}
 
@@ -108,6 +108,7 @@ public class AccumulatedCostStats extends AccumulatedPartialStats {
 		};
 	}
 
+	@Override
 	public AccumulatedCostStats copy() {
 		return new AccumulatedCostStats(this);
 	}

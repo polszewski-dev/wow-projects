@@ -2,9 +2,8 @@ package wow.character.model.snapshot;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import wow.character.WowCharacterSpringTest;
-import wow.character.repository.BaseStatInfoRepository;
+import wow.character.model.character.BaseStatInfo;
 import wow.character.util.AttributeConditionArgs;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeId;
@@ -15,24 +14,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static wow.character.constant.AttributeConditions.PHYSICAL;
 import static wow.character.model.snapshot.AttributePredicates.OWNER_OR_AURAS;
 import static wow.commons.model.attribute.AttributeId.*;
-import static wow.commons.model.character.CharacterClassId.WARLOCK;
-import static wow.commons.model.character.RaceId.ORC;
-import static wow.commons.model.pve.GameVersionId.TBC;
 
 /**
  * User: POlszewski
  * Date: 2023-10-16
  */
 class AccumulatedBaseStatsTest extends WowCharacterSpringTest {
-	@Autowired
-	BaseStatInfoRepository baseStatInfoRepository;
-
 	@Test
 	void accumulateBaseStatInfo() {
-		var level = baseStats.conditionArgs.getCaster().getLevel();
-		var baseStatInfo = baseStatInfoRepository.getBaseStatInfo(TBC, WARLOCK, ORC, level).orElseThrow();
-
-		baseStats.accumulateBaseStatInfo(baseStatInfo);
+		var baseStatInfo = getBaseStatInfo();
 
 		assertThat(baseStats.getBaseStrength()).isEqualTo(baseStatInfo.getBaseStrength());
 		assertThat(baseStats.getBaseAgility()).isEqualTo(baseStatInfo.getBaseAgility());
@@ -107,11 +97,14 @@ class AccumulatedBaseStatsTest extends WowCharacterSpringTest {
 	@Test
 	void getBaseStats() {
 		accumulateTestAttributes(BASE_STATS);
-		assertThat(baseStats.getBaseStrength()).isEqualTo(80);
-		assertThat(baseStats.getBaseAgility()).isEqualTo(80);
-		assertThat(baseStats.getBaseStamina()).isEqualTo(80);
-		assertThat(baseStats.getBaseIntellect()).isEqualTo(80);
-		assertThat(baseStats.getBaseSpirit()).isEqualTo(80);
+
+		var baseStatInfo = getBaseStatInfo();
+
+		assertThat(baseStats.getBaseStrength()).isEqualTo(80 + baseStatInfo.getBaseStrength());
+		assertThat(baseStats.getBaseAgility()).isEqualTo(80 + baseStatInfo.getBaseAgility());
+		assertThat(baseStats.getBaseStamina()).isEqualTo(80 + baseStatInfo.getBaseStamina());
+		assertThat(baseStats.getBaseIntellect()).isEqualTo(80 + baseStatInfo.getBaseIntellect());
+		assertThat(baseStats.getBaseSpirit()).isEqualTo(80 + baseStatInfo.getBaseSpirit());
 	}
 
 	@Test
@@ -143,7 +136,7 @@ class AccumulatedBaseStatsTest extends WowCharacterSpringTest {
 	@Test
 	void getMaxHealth() {
 		accumulateTestAttributes(MAX_HEALTH);
-		assertThat(baseStats.getMaxHealth()).isEqualTo(80);
+		assertThat(baseStats.getMaxHealth()).isEqualTo(80 + getBaseStatInfo().getBaseHealth());
 	}
 
 	@Test
@@ -155,7 +148,7 @@ class AccumulatedBaseStatsTest extends WowCharacterSpringTest {
 	@Test
 	void getMaxMana() {
 		accumulateTestAttributes(MAX_MANA);
-		assertThat(baseStats.getMaxMana()).isEqualTo(80);
+		assertThat(baseStats.getMaxMana()).isEqualTo(80 + getBaseStatInfo().getBaseMana());
 	}
 
 	@Test
@@ -220,5 +213,9 @@ class AccumulatedBaseStatsTest extends WowCharacterSpringTest {
 		var conditionArgs = AttributeConditionArgs.forBaseStats(caster);
 
 		this.baseStats = new AccumulatedBaseStats(conditionArgs);
+	}
+
+	private BaseStatInfo getBaseStatInfo() {
+		return baseStats.conditionArgs.getCaster().getBaseStatInfo();
 	}
 }

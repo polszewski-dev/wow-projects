@@ -1,11 +1,11 @@
 package wow.character.model.snapshot;
 
+import lombok.Getter;
 import wow.character.util.AttributeConditionArgs;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.effect.component.StatConversion;
-import wow.commons.model.effect.component.StatConversionCondition;
 
 import static wow.character.util.AttributeConditionChecker.check;
 import static wow.character.util.StatConversionConditionChecker.check;
@@ -16,6 +16,7 @@ import static wow.commons.model.attribute.PowerType.HEALING;
  * Date: 2023-11-16
  */
 public abstract class AccumulatedPartialStats extends AccumulatedStats {
+	@Getter
 	protected final AttributeConditionArgs conditionArgs;
 	protected final boolean isDamage;
 	protected final boolean isHealing;
@@ -45,28 +46,14 @@ public abstract class AccumulatedPartialStats extends AccumulatedStats {
 
 	public abstract void accumulateAttribute(AttributeId id, double value);
 
+	@Override
+	protected boolean toConditionMatches(StatConversion statConversion) {
+		return check(statConversion.toCondition(), conditionArgs);
+	}
+
 	public void accumulateAttribute(AttributeId id, double value, AttributeCondition condition) {
 		if (check(condition, conditionArgs)) {
 			accumulateAttribute(id, value);
 		}
-	}
-
-	public void accumulateAttribute(AttributeId id, double value, StatConversionCondition condition) {
-		if (check(condition, conditionArgs)) {
-			accumulateAttribute(id, value);
-		}
-	}
-
-	@Override
-	protected void accumulateConvertedStat(StatConversion statConversion, BaseStatsSnapshot baseStats) {
-		if (!check(statConversion.toCondition(), conditionArgs)) {
-			return;
-		}
-
-		var valueFrom = getAccumulatedValue(statConversion.fromTarget(), statConversion.from(), baseStats);
-		var ratio = statConversion.ratioPct().value() / 100;
-		var valueTo = valueFrom * ratio;
-
-		accumulateAttribute(statConversion.to(), valueTo);
 	}
 }

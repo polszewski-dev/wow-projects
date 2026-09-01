@@ -3,13 +3,14 @@ package wow.character.model.snapshot;
 import lombok.Getter;
 import wow.character.util.AttributeConditionArgs;
 import wow.commons.model.attribute.AttributeId;
+import wow.commons.model.effect.component.StatConversion;
 
 /**
  * User: POlszewski
  * Date: 2025-10-12
  */
 @Getter
-public class AccumulatedRegenStats extends AccumulatedPartialStats {
+public class AccumulatedRegenStats extends AccumulatedBaseStats {
 	private double hp5;
 	private double mp5;
 	private double healingTakenPct;
@@ -58,11 +59,19 @@ public class AccumulatedRegenStats extends AccumulatedPartialStats {
 				this.inCombatManaRegenPct += value;
 				break;
 			default:
-				// ignore the rest
+				super.accumulateAttribute(id, value);
 		}
 	}
 
+	@Override
 	public AccumulatedRegenStats copy() {
 		return new AccumulatedRegenStats(this);
+	}
+
+	@Override
+	public void accumulateConvertedStat(StatConversion statConversion) {
+		if (statConversion.to() == AttributeId.MP5) {
+			this.mp5 += getValueTo(statConversion);
+		}
 	}
 }

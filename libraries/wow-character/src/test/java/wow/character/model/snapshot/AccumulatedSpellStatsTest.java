@@ -2,9 +2,8 @@ package wow.character.model.snapshot;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import wow.character.WowCharacterSpringTest;
-import wow.character.repository.BaseStatInfoRepository;
+import wow.character.model.character.BaseStatInfo;
 import wow.character.util.AttributeConditionArgs;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeId;
@@ -19,9 +18,6 @@ import static wow.character.constant.AttributeConditions.SPELL;
 import static wow.character.model.snapshot.AttributePredicates.OWNER_OR_AURAS;
 import static wow.commons.model.attribute.AttributeId.*;
 import static wow.commons.model.attribute.PowerType.SPELL_DAMAGE;
-import static wow.commons.model.character.CharacterClassId.WARLOCK;
-import static wow.commons.model.character.RaceId.ORC;
-import static wow.commons.model.pve.GameVersionId.TBC;
 import static wow.test.commons.AbilityNames.SHADOW_BOLT;
 
 /**
@@ -29,15 +25,9 @@ import static wow.test.commons.AbilityNames.SHADOW_BOLT;
  * Date: 2022-12-19
  */
 class AccumulatedSpellStatsTest extends WowCharacterSpringTest {
-	@Autowired
-	BaseStatInfoRepository baseStatInfoRepository;
-
 	@Test
 	void accumulateBaseStatInfo() {
-		var level = spellStats.conditionArgs.getCaster().getLevel();
-		var baseStatInfo = baseStatInfoRepository.getBaseStatInfo(TBC, WARLOCK, ORC, level).orElseThrow();
-
-		spellStats.accumulateBaseStatInfo(baseStatInfo);
+		var baseStatInfo = getBaseStatInfo();
 
 		assertThat(spellStats.getCritPct()).isEqualTo(baseStatInfo.getBaseSpellCritPct().value());
 	}
@@ -87,7 +77,7 @@ class AccumulatedSpellStatsTest extends WowCharacterSpringTest {
 	@Test
 	void getCritPct() {
 		accumulateTestAttributes(CRIT_PCT);
-		assertThat(spellStats.getCritPct()).isEqualTo(160);
+		assertThat(spellStats.getCritPct()).isEqualTo(160 + getBaseStatInfo().getBaseSpellCritPct().value());
 	}
 
 	@Test
@@ -167,5 +157,9 @@ class AccumulatedSpellStatsTest extends WowCharacterSpringTest {
 		var conditionArgs = AttributeConditionArgs.forSpell(caster, spell, null, SPELL_DAMAGE, null);
 
 		this.spellStats = new AccumulatedSpellStats(conditionArgs);
+	}
+
+	private BaseStatInfo getBaseStatInfo() {
+		return spellStats.conditionArgs.getCaster().getBaseStatInfo();
 	}
 }

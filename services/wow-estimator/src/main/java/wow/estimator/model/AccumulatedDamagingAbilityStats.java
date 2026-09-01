@@ -8,9 +8,9 @@ import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.AttributeScalingParams;
 import wow.commons.model.effect.component.StatConversion;
-import wow.commons.model.effect.component.StatConversionCondition;
 import wow.commons.model.spell.Ability;
 
+import static wow.character.util.StatConversionConditionChecker.check;
 import static wow.commons.model.spell.component.ComponentCommand.DealDamageDirectly;
 import static wow.commons.model.spell.component.ComponentCommand.DealDamagePeriodically;
 
@@ -67,13 +67,8 @@ public class AccumulatedDamagingAbilityStats extends AccumulatedStats {
 	}
 
 	@Override
-	protected void accumulateConvertedStat(StatConversion statConversion, BaseStatsSnapshot baseStats) {
-		var valueFrom = getAccumulatedValue(statConversion.fromTarget(), statConversion.from(), baseStats);
-		var ratio = statConversion.ratioPct().value() / 100;
-		var valueTo = valueFrom * ratio;
-		var condition = statConversion.toCondition();
-
-		accumulateAttribute(statConversion.to(), valueTo, condition);
+	protected boolean toConditionMatches(StatConversion statConversion) {
+		return check(statConversion.toCondition(), direct.getConditionArgs());
 	}
 
 	public void accumulateAttribute(AttributeId id, double value, AttributeCondition condition) {
@@ -92,19 +87,20 @@ public class AccumulatedDamagingAbilityStats extends AccumulatedStats {
 		}
 	}
 
-	public void accumulateAttribute(AttributeId id, double value, StatConversionCondition condition) {
-		cast.accumulateAttribute(id, value, condition);
-		cost.accumulateAttribute(id, value, condition);
-		hit.accumulateAttribute(id, value, condition);
+	@Override
+	public void accumulateConvertedStat(StatConversion statConversion) {
+		cast.accumulateConvertedStat(statConversion);
+		cost.accumulateConvertedStat(statConversion);
+		hit.accumulateConvertedStat(statConversion);
 
 		if (direct != null) {
-			direct.accumulateAttribute(id, value, condition);
+			direct.accumulateConvertedStat(statConversion);
 		}
 
 		if (periodic != null) {
-			periodic.accumulateAttribute(id, value, condition);
-			effectDuration.accumulateAttribute(id, value, condition);
-			receivedEffectStats.accumulateAttribute(id, value, condition);
+			periodic.accumulateConvertedStat(statConversion);
+			effectDuration.accumulateConvertedStat(statConversion);
+			receivedEffectStats.accumulateConvertedStat(statConversion);
 		}
 	}
 
