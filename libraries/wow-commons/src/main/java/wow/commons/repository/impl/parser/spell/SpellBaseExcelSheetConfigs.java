@@ -16,7 +16,7 @@ public final class SpellBaseExcelSheetConfigs {
 	public static final SpellEffectSheetParser.Config ITEM_EFFECTS_CONFIG = new SpellEffectSheetParser.Config(1, 3, 1, 3, true);
 	public static final SpellEffectSheetParser.Config TALENT_EFFECTS_CONFIG = new SpellEffectSheetParser.Config(1, 3, 0, 1, false);
 	public static final SpellEffectSheetParser.Config RACIAL_EFFECTS_CONFIG = new SpellEffectSheetParser.Config(0, 3, 0, 0, false);
-	public static final SpellEffectSheetParser.Config BUFF_EFFECTS_CONFIG = new SpellEffectSheetParser.Config(0, 3, 0, 0, false);
+	public static final SpellEffectSheetParser.Config BUFF_EFFECTS_CONFIG = new SpellEffectSheetParser.Config(0, 3, 6, 0, false);
 	public static final SpellEffectSheetParser.Config CONSUME_EFFECTS_CONFIG = new SpellEffectSheetParser.Config(0, 3, 0, 0, false);
 
 	public static final int MAX_TALENT_MODIFIER_ATTRIBUTES = 12;

@@ -73,4 +73,10 @@ public class PetImpl extends UnitImpl implements Pet {
 				.map(EffectInstance::getRemainingDuration)
 				.orElse(Duration.INFINITE);
 	}
+
+	@Override
+	public void onAddedToSimulation() {
+		addHiddenEffect("Pet Conversions", 1);
+		super.onAddedToSimulation();
+	}
 }
