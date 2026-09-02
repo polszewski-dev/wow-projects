@@ -32,6 +32,7 @@ import java.util.stream.Stream;
 
 import static java.lang.Math.*;
 import static wow.character.model.snapshot.AttributePredicates.*;
+import static wow.character.util.StatConversionConditionChecker.check;
 import static wow.commons.constant.SpellConstants.*;
 import static wow.commons.model.attribute.AttributeId.COPY_PCT;
 import static wow.commons.model.attribute.AttributeId.EFFECT_PCT;
@@ -782,7 +783,11 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 		return coeff + coeffBonus;
 	}
 
-	private void accumulateEffects(Character character, AccumulatedStats stats) {
+	private void accumulateEffects(Character character, AccumulatedPartialStats stats) {
+		accumulateEffects(character, stats, true);
+	}
+
+	private DefaultEffectCollector accumulateEffects(Character character, AccumulatedPartialStats stats, boolean performConversions) {
 		var collector = new DefaultEffectCollector(character, OWNER_OR_AURAS, stats);
 
 		collector.solveAll();
@@ -793,15 +798,19 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 			masterCollector.solveAll();
 		}
 
-		collector.solveStatConversions();
+		if (performConversions) {
+			collector.solveStatConversions(this);
+		}
+
+		return collector;
 	}
 
 	private static class DefaultEffectCollector extends AbstractEffectCollector.OnlyEffects {
-		final AccumulatedStats stats;
+		final AccumulatedPartialStats stats;
 		final Predicate<Attribute> attributePredicate;
 		List<StatConversion> statConversions;
 
-		DefaultEffectCollector(Character character, Predicate<Attribute> attributePredicate, AccumulatedStats stats) {
+		DefaultEffectCollector(Character character, Predicate<Attribute> attributePredicate, AccumulatedPartialStats stats) {
 			super(character);
 			this.stats = stats;
 			this.attributePredicate = attributePredicate;
@@ -830,9 +839,201 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 			statConversions.addAll(effect.getStatConversions());
 		}
 
-		void solveStatConversions() {
-			if (statConversions != null) {
-				stats.solveStatConversions(statConversions);
+		void solveStatConversions(CharacterCalculationServiceImpl service) {
+			var solver = newStatsConversionSolver(service);
+
+			if (solver != null) {
+				solver.solve();
+			}
+		}
+
+		StatConversionSolver newStatsConversionSolver(CharacterCalculationServiceImpl service) {
+			if (statConversions == null) {
+				return null;
+			}
+
+			return service.new StatConversionSolver(character, stats, statConversions);
+		}
+	}
+
+	private class StatConversionSolver {
+		private final PetCharacter pet;
+		private final Character master;
+
+		private final AccumulatedPartialStats stats;
+		private final List<StatConversion> conversions;
+
+		private AccumulatedBaseStats petsBaseStats;
+		private AccumulatedBaseStats mastersBaseStats;
+		private AccumulatedSpellStats mastersSpellStats;
+
+		private final List<StatConversion> ownersBaseStatsAvailable = new ArrayList<>();
+		private final List<StatConversion> petsBaseStatsRequired = new ArrayList<>();
+		private final List<StatConversion> mastersBaseStatsRequired = new ArrayList<>();
+		private final List<StatConversion> mastersHitStatsRequired = new ArrayList<>();
+		private final List<StatConversion> mastersSpellStatsRequired = new ArrayList<>();
+
+		StatConversionSolver(Character character, AccumulatedPartialStats stats, List<StatConversion> conversions) {
+			this.pet = character.getActivePet();
+			this.master = character instanceof PetCharacter petCharacter ? petCharacter.getMaster() : null;
+			this.stats = stats;
+			this.conversions = conversions;
+		}
+
+		void solve() {
+			moveToTheCorrectLists(conversions);
+
+			stats.accumulateConvertedAttributes(ownersBaseStatsAvailable);
+
+			if (!petsBaseStatsRequired.isEmpty()) {
+				calcPetsBaseStats();
+
+				stats.accumulateConvertedAttributes(petsBaseStatsRequired, petsBaseStats);
+			}
+
+			if (!mastersBaseStatsRequired.isEmpty()) {
+				calcMastersBaseStats();
+
+				stats.accumulateConvertedAttributes(mastersBaseStatsRequired, mastersBaseStats);
+			}
+
+			if (!mastersSpellStatsRequired.isEmpty()) {
+				calcMastersSpellStats();
+
+				stats.accumulateConvertedAttributes(mastersSpellStatsRequired, mastersSpellStats);
+			}
+
+			if (!mastersHitStatsRequired.isEmpty()) {
+				var mastersHitStats = calcMasterHitStats();
+
+				stats.accumulateConvertedAttributes(mastersHitStatsRequired, mastersHitStats);
+			}
+		}
+
+		private void calcPetsBaseStats() {
+			if (petsBaseStats != null) {
+				return;
+			}
+
+			this.petsBaseStats = newAccumulatedBaseStats(pet);
+
+			var petConversionSolver = accumulateEffectsWithoutConversions(pet, petsBaseStats);
+
+			if (petConversionSolver != null) {
+				petConversionSolver.setMastersBaseStats(stats);
+				petConversionSolver.solve();
+			}
+		}
+
+		private void calcMastersBaseStats() {
+			if (mastersBaseStats != null) {
+				return;
+			}
+
+			this.mastersBaseStats = newAccumulatedBaseStats(master);
+
+			var masterConversionSolver = accumulateEffectsWithoutConversions(master, mastersBaseStats);
+
+			if (masterConversionSolver != null) {
+				masterConversionSolver.setPetsBaseStats(stats);
+				masterConversionSolver.solve();
+			}
+		}
+
+		private void calcMastersSpellStats() {
+			if (mastersSpellStats != null) {
+				return;
+			}
+
+			var conditionArgs = stats.getConditionArgs().withCaster(master);
+			this.mastersSpellStats = new AccumulatedSpellStats(conditionArgs);
+
+			var masterConversionSolver = accumulateEffectsWithoutConversions(master, mastersSpellStats);
+
+			if (masterConversionSolver != null) {
+				masterConversionSolver.setPetsBaseStats(stats);
+				masterConversionSolver.solve();
+			}
+		}
+
+		private StatConversionSolver accumulateEffectsWithoutConversions(Character character, AccumulatedBaseStats baseStats) {
+			var collector = accumulateEffects(character, baseStats, false);
+
+			return collector.newStatsConversionSolver(CharacterCalculationServiceImpl.this);
+		}
+
+		private void setPetsBaseStats(AccumulatedPartialStats petStats) {
+			if (petStats instanceof AccumulatedBaseStats baseStats) {
+				this.petsBaseStats = baseStats;
+			}
+		}
+
+		private void setMastersBaseStats(AccumulatedPartialStats mastersStats) {
+			if (mastersStats instanceof AccumulatedBaseStats baseStats) {
+				this.mastersBaseStats = baseStats;
+			}
+		}
+
+		private AccumulatedHitStats calcMasterHitStats() {
+			var masterConditionArgs = stats.getConditionArgs().withCaster(master);
+			var masterHitStats = new AccumulatedHitStats(masterConditionArgs);
+
+			accumulateEffects(master, masterHitStats, false);
+			return masterHitStats;
+		}
+
+		private void moveToTheCorrectLists(List<StatConversion> conversions) {
+			for (var conversion : conversions) {
+				if (toConditionMatches(conversion)) {
+					addToTheCorrectList(conversion);
+				}
+			}
+		}
+
+		private boolean toConditionMatches(StatConversion statConversion) {
+			var toCondition = statConversion.toCondition();
+			var conditionArgs = stats.getConditionArgs();
+
+			return check(toCondition, conditionArgs);
+		}
+
+		private void addToTheCorrectList(StatConversion conversion) {
+			switch (conversion.type()) {
+				case OWNER_INTELLECT_TO_SPELL_POWER, OWNER_INTELLECT_TO_SPELL_DAMAGE, OWNER_INTELLECT_TO_SPELL_HEALING, OWNER_SPIRIT_TO_SPELL_POWER -> {
+					if ((stats instanceof AccumulatedSpellStats || stats instanceof AccumulatedCostStats)) {
+						ownersBaseStatsAvailable.add(conversion);
+					}
+				}
+
+				case PET_STAMINA_TO_SPELL_DAMAGE, PET_INTELLECT_TO_SPELL_DAMAGE -> {
+					if (pet != null && stats instanceof AccumulatedSpellStats) {
+						petsBaseStatsRequired.add(conversion);
+					}
+				}
+
+				case MASTER_POWER_TO_SPELL_DAMAGE, MASTER_POWER_TO_ATTACK_POWER -> {
+					if (master != null && stats instanceof AccumulatedSpellStats) {
+						mastersSpellStatsRequired.add(conversion);
+					}
+				}
+
+				case OWNER_INTELLECT_TO_MP5 -> {
+					if (stats instanceof AccumulatedRegenStats) {
+						ownersBaseStatsAvailable.add(conversion);
+					}
+				}
+
+				case MASTER_STAMINA_TO_STAMINA, MASTER_INTELLECT_TO_INTELLECT -> {
+					if (master != null && stats instanceof AccumulatedBaseStats) {
+						mastersBaseStatsRequired.add(conversion);
+					}
+				}
+
+				case MASTER_HIT_PCT_TO_HIT_PCT, MASTER_HIT_RATING_TO_HIT_RATING -> {
+					if (master != null && stats instanceof AccumulatedHitStats) {
+						mastersHitStatsRequired.add(conversion);
+					}
+				}
 			}
 		}
 	}

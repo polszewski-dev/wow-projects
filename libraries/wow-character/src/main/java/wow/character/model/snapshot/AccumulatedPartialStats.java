@@ -6,9 +6,11 @@ import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.effect.component.StatConversion;
+import wow.commons.model.effect.component.StatConversionType;
+
+import java.util.List;
 
 import static wow.character.util.AttributeConditionChecker.check;
-import static wow.character.util.StatConversionConditionChecker.check;
 import static wow.commons.model.attribute.PowerType.HEALING;
 
 /**
@@ -46,14 +48,36 @@ public abstract class AccumulatedPartialStats extends AccumulatedStats {
 
 	public abstract void accumulateAttribute(AttributeId id, double value);
 
-	@Override
-	protected boolean toConditionMatches(StatConversion statConversion) {
-		return check(statConversion.toCondition(), conditionArgs);
-	}
-
 	public void accumulateAttribute(AttributeId id, double value, AttributeCondition condition) {
 		if (check(condition, conditionArgs)) {
 			accumulateAttribute(id, value);
 		}
+	}
+
+	public void accumulateConvertedAttributes(List<StatConversion> statConversions) {
+		accumulateConvertedAttributes(statConversions, this);
+	}
+
+	public void accumulateConvertedAttributes(List<StatConversion> statConversions, AccumulatedPartialStats otherStats) {
+		for (var conversion : statConversions) {
+			accumulateConvertedAttribute(conversion, otherStats);
+		}
+	}
+
+	public void accumulateConvertedAttribute(StatConversion conversion) {
+		accumulateConvertedAttribute(conversion, this);
+	}
+
+	private void accumulateConvertedAttribute(StatConversion conversion, AccumulatedPartialStats otherStats) {
+		var to = conversion.to();
+		var ratio = conversion.ratioPct().value() / 100;
+		var valueFrom = otherStats.getValueFrom(conversion.type());
+		var valueTo = valueFrom * ratio;
+
+		accumulateAttribute(to, valueTo);
+	}
+
+	protected double getValueFrom(StatConversionType type) {
+		throw new IllegalArgumentException("" + type);
 	}
 }

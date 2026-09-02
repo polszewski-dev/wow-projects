@@ -3,6 +3,7 @@ package wow.character.model.snapshot;
 import lombok.Getter;
 import wow.character.util.AttributeConditionArgs;
 import wow.commons.model.attribute.AttributeId;
+import wow.commons.model.effect.component.StatConversionType;
 
 /**
  * User: POlszewski
@@ -39,5 +40,22 @@ public class AccumulatedHitStats extends AccumulatedPartialStats {
 
 	public AccumulatedHitStats copy() {
 		return new AccumulatedHitStats(this);
+	}
+
+	@Override
+	protected double getValueFrom(StatConversionType type) {
+		return switch (type) {
+			case MASTER_HIT_PCT_TO_HIT_PCT
+
+					-> hitPct;
+
+			case MASTER_HIT_RATING_TO_HIT_RATING
+
+					-> hitRating;
+
+			default
+
+					-> super.getValueFrom(type);
+		};
 	}
 }

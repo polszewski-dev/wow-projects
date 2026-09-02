@@ -10,6 +10,8 @@ import wow.commons.model.attribute.AttributeScalingParams;
 import wow.commons.model.effect.component.StatConversion;
 import wow.commons.model.spell.Ability;
 
+import java.util.List;
+
 import static wow.character.util.StatConversionConditionChecker.check;
 import static wow.commons.model.spell.component.ComponentCommand.DealDamageDirectly;
 import static wow.commons.model.spell.component.ComponentCommand.DealDamagePeriodically;
@@ -66,8 +68,7 @@ public class AccumulatedDamagingAbilityStats extends AccumulatedStats {
 		accumulateAttribute(id, value, condition);
 	}
 
-	@Override
-	protected boolean toConditionMatches(StatConversion statConversion) {
+	private boolean toConditionMatches(StatConversion statConversion) {
 		return check(statConversion.toCondition(), direct.getConditionArgs());
 	}
 
@@ -87,24 +88,31 @@ public class AccumulatedDamagingAbilityStats extends AccumulatedStats {
 		}
 	}
 
-	@Override
-	public void accumulateConvertedStat(StatConversion statConversion) {
-		cast.accumulateConvertedStat(statConversion);
-		cost.accumulateConvertedStat(statConversion);
-		hit.accumulateConvertedStat(statConversion);
+	public void increasePower(double value) {
+		accumulateAttribute(AttributeId.POWER, value, AttributeCondition.EMPTY);
+	}
 
-		if (direct != null) {
-			direct.accumulateConvertedStat(statConversion);
-		}
-
-		if (periodic != null) {
-			periodic.accumulateConvertedStat(statConversion);
-			effectDuration.accumulateConvertedStat(statConversion);
-			receivedEffectStats.accumulateConvertedStat(statConversion);
+	public void solveStatConversions(List<StatConversion> statConversions) {
+		for (var statConversion : statConversions) {
+			if (statConversion.isFromOwner() && toConditionMatches(statConversion)) {
+				accumulateConvertedStat(statConversion);
+			}
 		}
 	}
 
-	public void increasePower(double value) {
-		accumulateAttribute(AttributeId.POWER, value, AttributeCondition.EMPTY);
+	private void accumulateConvertedStat(StatConversion statConversion) {
+		cast.accumulateConvertedAttribute(statConversion);
+		cost.accumulateConvertedAttribute(statConversion);
+		hit.accumulateConvertedAttribute(statConversion);
+
+		if (direct != null) {
+			direct.accumulateConvertedAttribute(statConversion);
+		}
+
+		if (periodic != null) {
+			periodic.accumulateConvertedAttribute(statConversion);
+			effectDuration.accumulateConvertedAttribute(statConversion);
+			receivedEffectStats.accumulateConvertedAttribute(statConversion);
+		}
 	}
 }

@@ -3,7 +3,7 @@ package wow.character.model.snapshot;
 import lombok.Getter;
 import wow.character.util.AttributeConditionArgs;
 import wow.commons.model.attribute.AttributeId;
-import wow.commons.model.effect.component.StatConversion;
+import wow.commons.model.effect.component.StatConversionType;
 
 /**
  * User: POlszewski
@@ -175,36 +175,35 @@ public class AccumulatedBaseStats extends AccumulatedPartialStats {
 		return (base * (1 + basePct / 100) + bonus) * (1 + bonusPct / 100);
 	}
 
-	protected double getValueTo(StatConversion statConversion) {
-		var valueFrom = getValueFrom(statConversion);
+	@Override
+	protected double getValueFrom(StatConversionType type) {
+		return switch (type) {
+			case
+					PET_STAMINA_TO_SPELL_DAMAGE,
+					MASTER_STAMINA_TO_STAMINA
 
-		return getValueTo(statConversion, valueFrom);
-	}
+					-> getTotalStamina();
 
-	private double getValueTo(StatConversion statConversion, double valueFrom) {
-		var ratio = statConversion.ratioPct().value() / 100;
-
-		return valueFrom * ratio;
-	}
-
-	private double getValueFrom(StatConversion statConversion) {
-		return switch (statConversion.type()) {
 			case
 					OWNER_INTELLECT_TO_SPELL_POWER,
 					OWNER_INTELLECT_TO_SPELL_DAMAGE,
 					OWNER_INTELLECT_TO_SPELL_HEALING,
 					OWNER_INTELLECT_TO_MP5,
-					OWNER_INTELLECT_TO_ARMOR
+					OWNER_INTELLECT_TO_ARMOR,
+					PET_INTELLECT_TO_SPELL_DAMAGE,
+					MASTER_INTELLECT_TO_INTELLECT
 
 					-> getTotalIntellect();
 
-			case OWNER_SPIRIT_TO_SPELL_POWER
+			case
+					OWNER_SPIRIT_TO_SPELL_POWER
 
 					-> getTotalSpirit();
 
 			default
 
-					-> throw new IllegalArgumentException("" + statConversion.type());
+					-> super.getValueFrom(type);
+
 		};
 	}
 }

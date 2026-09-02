@@ -28,9 +28,10 @@ class FelStaminaTest extends TbcWarlockTalentSimulationTest {
 		enableTalent(FEL_STAMINA, rank);
 
 		player.cast(SUMMON_IMP);
+		baseline.cast(SUMMON_IMP);
 
 		updateUntil(30);
 
-		assertStaminaIsIncreasedByPct(pet, 5 * rank);
+		assertStaminaIsIncreasedByPct(pet, baseline.getActivePet(), 5 * rank);
 	}
 }

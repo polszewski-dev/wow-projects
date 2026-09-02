@@ -2,7 +2,6 @@ package wow.character.model.snapshot;
 
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeScalingParams;
-import wow.commons.model.effect.component.StatConversion;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -27,18 +26,4 @@ public abstract class AccumulatedStats {
 	}
 
 	protected abstract void accumulateAttribute(Attribute attribute, double scaleFactor);
-
-	public void solveStatConversions(List<StatConversion> statConversions) {
-		for (var statConversion : statConversions) {
-			if (statConversion.isFromOwner() && toConditionMatches(statConversion)) {
-				accumulateConvertedStat(statConversion);
-			}
-		}
-	}
-
-	protected abstract boolean toConditionMatches(StatConversion statConversion);
-
-	public void accumulateConvertedStat(StatConversion statConversion) {
-		// void
-	}
 }

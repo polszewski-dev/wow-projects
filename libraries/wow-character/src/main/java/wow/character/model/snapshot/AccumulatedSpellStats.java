@@ -3,7 +3,7 @@ package wow.character.model.snapshot;
 import lombok.Getter;
 import wow.character.util.AttributeConditionArgs;
 import wow.commons.model.attribute.AttributeId;
-import wow.commons.model.effect.component.StatConversion;
+import wow.commons.model.effect.component.StatConversionType;
 
 /**
  * User: POlszewski
@@ -110,9 +110,17 @@ public class AccumulatedSpellStats extends AccumulatedBaseStats {
 	}
 
 	@Override
-	public void accumulateConvertedStat(StatConversion statConversion) {
-		if (statConversion.to() == AttributeId.POWER) {
-			this.power += getValueTo(statConversion);
-		}
+	protected double getValueFrom(StatConversionType type) {
+		return switch (type) {
+			case
+					MASTER_POWER_TO_SPELL_DAMAGE,
+					MASTER_POWER_TO_ATTACK_POWER
+
+					-> power;
+
+			default
+
+					-> super.getValueFrom(type);
+		};
 	}
 }

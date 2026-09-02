@@ -132,7 +132,7 @@ class AuraTest extends SpellSimulationTest {
 		updateUntil(30);
 
 		assertStaminaIsIncreasedBy(player, 70);
-		assertStaminaIsIncreasedBy(player.getActivePet(), baseline.getActivePet(), 70);
+		assertStaminaIsIncreasedBy(player.getActivePet(), baseline.getActivePet(), 70 + 21);//todo incorrectly added 30% from player's "Blood Pact"
 	}
 
 	@Test

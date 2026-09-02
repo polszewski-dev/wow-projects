@@ -3,7 +3,6 @@ package wow.character.model.snapshot;
 import lombok.Getter;
 import wow.character.util.AttributeConditionArgs;
 import wow.commons.model.attribute.AttributeId;
-import wow.commons.model.effect.component.StatConversion;
 
 /**
  * User: POlszewski
@@ -66,12 +65,5 @@ public class AccumulatedRegenStats extends AccumulatedBaseStats {
 	@Override
 	public AccumulatedRegenStats copy() {
 		return new AccumulatedRegenStats(this);
-	}
-
-	@Override
-	public void accumulateConvertedStat(StatConversion statConversion) {
-		if (statConversion.to() == AttributeId.MP5) {
-			this.mp5 += getValueTo(statConversion);
-		}
 	}
 }

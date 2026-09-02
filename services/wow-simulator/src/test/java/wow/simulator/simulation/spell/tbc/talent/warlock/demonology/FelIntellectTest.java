@@ -28,9 +28,10 @@ class FelIntellectTest extends TbcWarlockTalentSimulationTest {
 		enableTalent(FEL_INTELLECT, rank);
 
 		player.cast(SUMMON_IMP);
+		baseline.cast(SUMMON_IMP);
 
 		updateUntil(30);
 
-		assertIntellectIsIncreasedByPct(pet, 5 * rank);
+		assertIntellectIsIncreasedByPct(pet, baseline.getActivePet(), 5 * rank);
 	}
 }

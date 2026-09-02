@@ -215,6 +215,14 @@ public abstract class SpellSimulationTest extends WowSimulatorSpringTest impleme
 	}
 
 	@Override
+	protected void equip(Unit unit, String itemName, String enchantName) {
+		super.equip(unit, itemName, enchantName);
+		if (unit == player) {
+			super.equip(baseline, itemName, enchantName);
+		}
+	}
+
+	@Override
 	protected void equip(Unit unit, String itemName, ItemSlot itemSlot) {
 		super.equip(unit, itemName, itemSlot);
 		if (unit == player) {
@@ -228,6 +236,46 @@ public abstract class SpellSimulationTest extends WowSimulatorSpringTest impleme
 		if (unit == player) {
 			super.equip(baseline, itemId, itemSlot);
 		}
+	}
+
+	protected void assertStamina(Unit unit, int expected) {
+		assertThat(unit.getStats().getStamina()).isEqualTo(expected);
+	}
+
+	protected void assertIntellect(Unit unit, int expected) {
+		assertThat(unit.getStats().getIntellect()).isEqualTo(expected);
+	}
+
+	protected void assertSpirit(Unit unit, int expected) {
+		assertThat(unit.getStats().getSpirit()).isEqualTo(expected);
+	}
+
+	protected void assertSpellPower(Unit unit, int expected) {
+		assertThat(unit.getStats().getSpellPower()).isEqualTo(expected);
+	}
+
+	protected void assertSpellDamage(Unit unit, int expected) {
+		assertThat(unit.getStats().getSpellDamage()).isEqualTo(expected);
+	}
+
+	protected void assertSpellDamage(Unit unit, SpellSchool school, int expected) {
+		assertThat(unit.getStats().getSpellDamage(school)).isEqualTo(expected);
+	}
+
+	protected void assertSpellHealing(Unit unit, int expected) {
+		assertThat(unit.getStats().getSpellHealing()).isEqualTo(expected);
+	}
+
+	protected void assertSpellHitRating(Unit unit, int expected) {
+		assertThat(unit.getStats().getSpellHitRating()).isEqualTo(expected);
+	}
+
+	protected void assertSpellHitPct(Unit unit, double expected) {
+		assertThat(unit.getStats().getSpellHitPct()).isEqualTo(expected);
+	}
+
+	protected void assertMp5(Unit unit, int expected) {
+		assertThat(unit.getStats().getInterruptedManaRegen()).isEqualTo(expected);
 	}
 
 	protected void assertHealthGained(SpellInfo spellInfo, int sp) {
@@ -277,7 +325,11 @@ public abstract class SpellSimulationTest extends WowSimulatorSpringTest impleme
 	}
 
 	protected void assertSpellCritPctIsIncreasedBy(Unit unit, double increase) {
-		var baselineValue = baseline.getStats().getSpellCritPct();
+		assertSpellCritPctIsIncreasedBy(unit, baseline, increase);
+	}
+
+	protected void assertSpellCritPctIsIncreasedBy(Unit unit, Unit baselineUnit, double increase) {
+		var baselineValue = baselineUnit.getStats().getSpellCritPct();
 		var unitValue = unit.getStats().getSpellCritPct();
 
 		assertThat(unitValue).isEqualTo(baselineValue + increase, PRECISION);
@@ -332,14 +384,22 @@ public abstract class SpellSimulationTest extends WowSimulatorSpringTest impleme
 	}
 
 	protected void assertStaminaIsIncreasedByPct(Unit unit, int pctIncrease) {
-		var baselineValue = baseline.getStats().getStamina();
+		assertStaminaIsIncreasedByPct(unit, baseline, pctIncrease);
+	}
+
+	protected void assertStaminaIsIncreasedByPct(Unit unit, Unit baselineUnit, int pctIncrease) {
+		var baselineValue = baselineUnit.getStats().getStamina();
 		var unitValue = unit.getStats().getStamina();
 
 		assertThat(unitValue).isEqualTo(increaseByPct(baselineValue, pctIncrease));
 	}
 
 	protected void assertIntellectIsIncreasedByPct(Unit unit, int pctIncrease) {
-		var baselineValue = baseline.getStats().getIntellect();
+		assertIntellectIsIncreasedByPct(unit, baseline, pctIncrease);
+	}
+
+	protected void assertIntellectIsIncreasedByPct(Unit unit, Unit baselineUnit, int pctIncrease) {
+		var baselineValue = baselineUnit.getStats().getIntellect();
 		var unitValue = unit.getStats().getIntellect();
 
 		assertThat(unitValue).isEqualTo(increaseByPct(baselineValue, pctIncrease));

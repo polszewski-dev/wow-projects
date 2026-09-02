@@ -3,6 +3,7 @@ package wow.character.model.snapshot;
 import lombok.Getter;
 import wow.character.util.AttributeConditionArgs;
 import wow.commons.model.attribute.AttributeId;
+import wow.commons.model.effect.component.StatConversionType;
 import wow.commons.model.spell.ResourceType;
 
 /**
@@ -111,5 +112,20 @@ public class AccumulatedCostStats extends AccumulatedBaseStats {
 	@Override
 	public AccumulatedCostStats copy() {
 		return new AccumulatedCostStats(this);
+	}
+
+	@Override
+	protected double getValueFrom(StatConversionType type) {
+		return switch (type) {
+			case
+					MASTER_POWER_TO_SPELL_DAMAGE,
+					MASTER_POWER_TO_ATTACK_POWER
+
+					-> power;
+
+			default
+
+					-> super.getValueFrom(type);
+		};
 	}
 }

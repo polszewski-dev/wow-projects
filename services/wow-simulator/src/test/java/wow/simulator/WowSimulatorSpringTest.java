@@ -14,6 +14,7 @@ import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.RaceId;
+import wow.commons.model.item.Enchant;
 import wow.commons.model.item.ItemId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.repository.pve.PhaseRepository;
@@ -292,6 +293,19 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	protected void equip(Unit unit, String itemName) {
 		var item = getItemRepository().getItem(itemName, unit.getPhaseId()).orElseThrow();
 		unit.equip(new EquippableItem(item));
+	}
+
+	protected void equip(Unit unit, String itemName, String enchantName) {
+		var item = getItemRepository().getItem(itemName, unit.getPhaseId()).orElseThrow();
+		var enchant = getEnchant(unit, enchantName);
+		unit.equip(new EquippableItem(item).enchant(enchant));
+	}
+
+	private Enchant getEnchant(Unit unit, String enchantName) {
+		if (enchantName == null) {
+			return null;
+		}
+		return getEnchantRepository().getEnchant(enchantName, unit.getPhaseId()).orElseThrow();
 	}
 
 	protected void equip(String itemName, ItemSlot itemSlot) {

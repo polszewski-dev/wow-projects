@@ -44,6 +44,18 @@ public class AttributeConditionArgs implements AttributeScalingParams {
 	private WeaponSubType weaponType;
 	private boolean hadCrit;
 
+	public AttributeConditionArgs withCaster(Character caster) {
+		var result = new AttributeConditionArgs(caster, spell, target, actionType, powerType, spellSchool);
+
+		result.direct = direct;
+		result.periodic = periodic;
+		result.appliedEffect = appliedEffect;
+		result.weaponType = weaponType;
+		result.hadCrit = hadCrit;
+
+		return result;
+	}
+
 	public static AttributeConditionArgs forAnySpell(Character caster) {
 		return forAnySpell(caster, null, null);
 	}
