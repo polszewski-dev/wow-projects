@@ -2,38 +2,41 @@ package wow.commons.model.effect.component;
 
 import wow.commons.model.Percent;
 import wow.commons.model.attribute.AttributeId;
-import wow.commons.model.attribute.AttributeTarget;
-import wow.commons.model.attribute.ValueType;
 
 import java.util.Objects;
-
-import static wow.commons.model.attribute.AttributeTarget.OWNER;
-import static wow.commons.model.attribute.AttributeTarget.PET;
 
 /**
  * User: POlszewski
  * Date: 2021-01-17
  */
 public record StatConversion(
-		AttributeTarget fromTarget,
-		AttributeId from,
-		AttributeId to,
-		StatConversionCondition toCondition,
+		StatConversionType type,
 		Percent ratioPct
 ) implements EffectComponent {
 	public StatConversion {
-		Objects.requireNonNull(fromTarget);
-		Objects.requireNonNull(from);
-		Objects.requireNonNull(to);
-		Objects.requireNonNull(toCondition);
+		Objects.requireNonNull(type);
 		Objects.requireNonNull(ratioPct);
+	}
 
-		if (fromTarget != OWNER && fromTarget != PET) {
-			throw new IllegalArgumentException();
-		}
+	public AttributeId to() {
+		return type.getTo();
+	}
 
-		if (from.getValueType() != ValueType.POINT) {
-			throw new IllegalArgumentException();
-		}
+	public StatConversionCondition toCondition() {
+		return type.getToCondition();
+	}
+
+	public boolean isFromOwner() {
+		return switch (type) {
+			case
+					OWNER_INTELLECT_TO_SPELL_POWER,
+					OWNER_INTELLECT_TO_SPELL_DAMAGE,
+					OWNER_INTELLECT_TO_SPELL_HEALING,
+					OWNER_INTELLECT_TO_MP5,
+					OWNER_INTELLECT_TO_ARMOR,
+					OWNER_SPIRIT_TO_SPELL_POWER
+			-> true;
+			default -> false;
+		};
 	}
 }

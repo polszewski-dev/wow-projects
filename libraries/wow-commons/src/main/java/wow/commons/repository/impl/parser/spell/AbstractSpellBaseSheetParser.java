@@ -1,8 +1,6 @@
 package wow.commons.repository.impl.parser.spell;
 
 import wow.commons.model.Percent;
-import wow.commons.model.attribute.AttributeId;
-import wow.commons.model.attribute.AttributeTarget;
 import wow.commons.model.effect.EffectId;
 import wow.commons.model.effect.component.*;
 import wow.commons.model.effect.impl.EffectImpl;
@@ -28,26 +26,20 @@ public abstract class AbstractSpellBaseSheetParser extends WowExcelSheetParser {
 		return readSections(maxStatConversions, this::getStatConversion);
 	}
 
-	private final ExcelColumn colStatConversionFromTarget = column(STAT_CONVERSION_FROM_TARGET, true);
-	private final ExcelColumn colStatConversionFrom = column(STAT_CONVERSION_FROM);
-	private final ExcelColumn colStatConversionTo = column(STAT_CONVERSION_TO);
-	private final ExcelColumn colStatConversionToCondition = column(STAT_CONVERSION_TO_CONDITION);
+	private final ExcelColumn colStatConversionType = column(STAT_CONVERSION_TYPE);
 	private final ExcelColumn colStatConversionRatio = column(STAT_CONVERSION_RATIO);
 
 	private StatConversion getStatConversion(int idx) {
 		var prefix = getStatConversionPrefix(idx);
 
-		if (colStatConversionFrom.prefixed(prefix).isEmpty()) {
+		if (colStatConversionType.prefixed(prefix).isEmpty()) {
 			return null;
 		}
 
-		var fromTarget = colStatConversionFromTarget.prefixed(prefix).getEnum(AttributeTarget::parse, AttributeTarget.OWNER);
-		var from = colStatConversionFrom.prefixed(prefix).getEnum(AttributeId::parse);
-		var to = colStatConversionTo.prefixed(prefix).getEnum(AttributeId::parse);
-		var toCondition = colStatConversionToCondition.prefixed(prefix).getEnum(StatConversionCondition::parse, StatConversionCondition.EMPTY);
+		var type = colStatConversionType.prefixed(prefix).getEnum(StatConversionType::parse);
 		var ratio = colStatConversionRatio.prefixed(prefix).getPercent();
 
-		return new StatConversion(fromTarget, from, to, toCondition, ratio);
+		return new StatConversion(type, ratio);
 	}
 
 	protected EffectImpl getDummyEffect(EffectId effectId) {

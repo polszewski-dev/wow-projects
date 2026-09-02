@@ -57,16 +57,12 @@ public final class SpellBaseExcelColumnNames {
 	public static final String ABSORB_CONDITION = "condition";
 	public static final String ABSORB_MIN = "min";
 	public static final String ABSORB_MAX = "max";
-	public static final String STAT_CONVERSION_FROM_TARGET = "from target";
-	public static final String STAT_CONVERSION_FROM = "from";
-	public static final String STAT_CONVERSION_TO = "to";
-	public static final String STAT_CONVERSION_TO_CONDITION = "to condition";
+	public static final String STAT_CONVERSION_TYPE = "type";
 	public static final String STAT_CONVERSION_RATIO = "%";
 	public static final String EVENT_ON = "on";
 	public static final String EVENT_CONDITION = "condition";
 	public static final String EVENT_CHANCE_PCT = "chance%";
 	public static final String EVENT_ACTION = "action";
-	public static final String EVENT_COOLDOWN = "cd";
 	public static final String EVENT_TRIGGERED_SPELL = "triggered spell";
 	public static final String EVENT_ACTION_PARAMS = "action params";
 
@@ -110,8 +106,6 @@ public final class SpellBaseExcelColumnNames {
 	public static String getEventPrefix(int idx) {
 		return "event" + idx + ": ";
 	}
-
-	public static final String EFFECT_ID = "id";
 
 	private SpellBaseExcelColumnNames() {}
 }

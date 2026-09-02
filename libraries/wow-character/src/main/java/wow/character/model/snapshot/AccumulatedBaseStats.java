@@ -188,10 +188,23 @@ public class AccumulatedBaseStats extends AccumulatedPartialStats {
 	}
 
 	private double getValueFrom(StatConversion statConversion) {
-		return switch (statConversion.from()) {
-			case INTELLECT -> getTotalIntellect();
-			case SPIRIT -> getTotalSpirit();
-			default -> throw new IllegalArgumentException("" + statConversion.from());
+		return switch (statConversion.type()) {
+			case
+					OWNER_INTELLECT_TO_SPELL_POWER,
+					OWNER_INTELLECT_TO_SPELL_DAMAGE,
+					OWNER_INTELLECT_TO_SPELL_HEALING,
+					OWNER_INTELLECT_TO_MP5,
+					OWNER_INTELLECT_TO_ARMOR
+
+					-> getTotalIntellect();
+
+			case OWNER_SPIRIT_TO_SPELL_POWER
+
+					-> getTotalSpirit();
+
+			default
+
+					-> throw new IllegalArgumentException("" + statConversion.type());
 		};
 	}
 }

@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import wow.commons.WowCommonsSpringTest;
 import wow.commons.constant.AttributeConditions;
 import wow.commons.constant.EventConditions;
-import wow.commons.constant.StatConversionConditions;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attribute.Attribute;
@@ -25,12 +24,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static wow.commons.constant.AbilityIds.DIVINE_SPIRIT;
 import static wow.commons.constant.AbilityIds.PRAYER_OF_SPIRIT;
 import static wow.commons.model.attribute.AttributeId.*;
-import static wow.commons.model.attribute.AttributeTarget.OWNER;
 import static wow.commons.model.attribute.AttributeTarget.PET;
 import static wow.commons.model.character.CharacterClassId.PRIEST;
 import static wow.commons.model.character.CharacterClassId.WARLOCK;
 import static wow.commons.model.effect.component.EventAction.TRIGGER_SPELL;
 import static wow.commons.model.effect.component.EventType.SPELL_CRIT;
+import static wow.commons.model.effect.component.StatConversionType.*;
 import static wow.commons.model.pve.GameVersionId.TBC;
 import static wow.commons.model.pve.PhaseId.TBC_P5;
 import static wow.commons.model.talent.TalentTree.AFFLICTION;
@@ -150,7 +149,7 @@ class TalentRepositoryTest extends WowCommonsSpringTest {
 		var effect = talent.getEffect();
 
 		assertThat(effect.getAugmentedAbilities()).isEqualTo(List.of(DIVINE_SPIRIT, PRAYER_OF_SPIRIT));
-		assertStatConversion(effect, 0, OWNER, SPIRIT, POWER, 10, StatConversionConditions.SPELL);
+		assertStatConversion(effect, 0, OWNER_SPIRIT_TO_SPELL_POWER, 10);
 	}
 
 	@Test
@@ -158,8 +157,8 @@ class TalentRepositoryTest extends WowCommonsSpringTest {
 		var talent = getTalent(WARLOCK, DEMONIC_KNOWLEDGE, 3, TBC_P5);
 		var effect = talent.getEffect();
 
-		assertStatConversion(effect, 0, PET, STAMINA, POWER, 12, StatConversionConditions.SPELL_DAMAGE);
-		assertStatConversion(effect, 1, PET, INTELLECT, POWER, 12, StatConversionConditions.SPELL_DAMAGE);
+		assertStatConversion(effect, 0, PET_STAMINA_TO_SPELL_DAMAGE, 12);
+		assertStatConversion(effect, 1, PET_INTELLECT_TO_SPELL_DAMAGE, 12);
 	}
 
 	@Test
