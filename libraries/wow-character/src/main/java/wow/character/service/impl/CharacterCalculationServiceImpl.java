@@ -991,10 +991,9 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 		}
 
 		private boolean toConditionMatches(StatConversion statConversion) {
-			var toCondition = statConversion.toCondition();
 			var conditionArgs = stats.getConditionArgs();
 
-			return check(toCondition, conditionArgs);
+			return check(statConversion, conditionArgs);
 		}
 
 		private void addToTheCorrectList(StatConversion conversion) {

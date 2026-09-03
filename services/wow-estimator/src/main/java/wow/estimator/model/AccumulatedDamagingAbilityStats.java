@@ -69,7 +69,7 @@ public class AccumulatedDamagingAbilityStats extends AccumulatedStats {
 	}
 
 	private boolean toConditionMatches(StatConversion statConversion) {
-		return check(statConversion.toCondition(), direct.getConditionArgs());
+		return check(statConversion, direct.getConditionArgs());
 	}
 
 	public void accumulateAttribute(AttributeId id, double value, AttributeCondition condition) {

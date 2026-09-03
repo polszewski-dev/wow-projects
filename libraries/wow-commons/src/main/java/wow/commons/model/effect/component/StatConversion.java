@@ -22,10 +22,6 @@ public record StatConversion(
 		return type.getTo();
 	}
 
-	public StatConversionCondition toCondition() {
-		return type.getToCondition();
-	}
-
 	public boolean isFromOwner() {
 		return switch (type) {
 			case

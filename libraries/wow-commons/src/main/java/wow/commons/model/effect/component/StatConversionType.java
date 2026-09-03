@@ -5,10 +5,6 @@ import wow.commons.model.attribute.AttributeId;
 import wow.commons.util.EnumUtil;
 
 import static wow.commons.model.attribute.AttributeId.*;
-import static wow.commons.model.attribute.PowerType.HEALING;
-import static wow.commons.model.attribute.PowerType.SPELL_DAMAGE;
-import static wow.commons.model.spell.ActionType.PHYSICAL;
-import static wow.commons.model.spell.ActionType.SPELL;
 
 /**
  * User: POlszewski
@@ -16,33 +12,31 @@ import static wow.commons.model.spell.ActionType.SPELL;
  */
 @Getter
 public enum StatConversionType implements EffectComponent {
-	OWNER_INTELLECT_TO_SPELL_POWER("Intellect -> Power [Spell]", POWER, StatConversionCondition.of(SPELL)),
-	OWNER_INTELLECT_TO_SPELL_DAMAGE("Intellect -> Power [SpellDamage]", POWER, StatConversionCondition.of(SPELL_DAMAGE)),
-	OWNER_INTELLECT_TO_SPELL_HEALING("Intellect -> Power [Healing]", POWER, StatConversionCondition.of(HEALING)),
-	OWNER_INTELLECT_TO_MP5("Intellect -> Mp5", MP5, StatConversionCondition.EMPTY),
-	OWNER_INTELLECT_TO_ARMOR("Intellect -> Armor", ARMOR, StatConversionCondition.EMPTY),
+	OWNER_INTELLECT_TO_SPELL_POWER("Intellect -> Power [Spell]", POWER),
+	OWNER_INTELLECT_TO_SPELL_DAMAGE("Intellect -> Power [SpellDamage]", POWER),
+	OWNER_INTELLECT_TO_SPELL_HEALING("Intellect -> Power [Healing]", POWER),
+	OWNER_INTELLECT_TO_MP5("Intellect -> Mp5", MP5),
+	OWNER_INTELLECT_TO_ARMOR("Intellect -> Armor", ARMOR),
 
-	OWNER_SPIRIT_TO_SPELL_POWER("Spirit -> Power [Spell]", POWER, StatConversionCondition.of(SPELL)),
+	OWNER_SPIRIT_TO_SPELL_POWER("Spirit -> Power [Spell]", POWER),
 
-	PET_STAMINA_TO_SPELL_DAMAGE("Pet.Stamina -> Power [SpellDamage]", POWER, StatConversionCondition.of(SPELL_DAMAGE)),
-	PET_INTELLECT_TO_SPELL_DAMAGE("Pet.Intellect -> Power [SpellDamage]", POWER, StatConversionCondition.of(SPELL_DAMAGE)),
+	PET_STAMINA_TO_SPELL_DAMAGE("Pet.Stamina -> Power [SpellDamage]", POWER),
+	PET_INTELLECT_TO_SPELL_DAMAGE("Pet.Intellect -> Power [SpellDamage]", POWER),
 
-	MASTER_STAMINA_TO_STAMINA("Master.Stamina -> Stamina", STAMINA, StatConversionCondition.EMPTY),
-	MASTER_INTELLECT_TO_INTELLECT("Master.Intellect -> Intellect", INTELLECT, StatConversionCondition.EMPTY),
-	MASTER_POWER_TO_SPELL_DAMAGE("Master.Power -> Power [SpellDamage]", POWER, StatConversionCondition.of(SPELL_DAMAGE)),
-	MASTER_POWER_TO_ATTACK_POWER("Master.Power -> Power [Physical]", POWER, StatConversionCondition.of(PHYSICAL)),
-	MASTER_HIT_PCT_TO_HIT_PCT("Master.Hit% -> Hit%", HIT_PCT, StatConversionCondition.EMPTY),
-	MASTER_HIT_RATING_TO_HIT_RATING("Master.HitRating -> HitRating", HIT_RATING, StatConversionCondition.EMPTY),
+	MASTER_STAMINA_TO_STAMINA("Master.Stamina -> Stamina", STAMINA),
+	MASTER_INTELLECT_TO_INTELLECT("Master.Intellect -> Intellect", INTELLECT),
+	MASTER_POWER_TO_SPELL_DAMAGE("Master.Power -> Power [SpellDamage]", POWER),
+	MASTER_POWER_TO_ATTACK_POWER("Master.Power -> Power [Physical]", POWER),
+	MASTER_HIT_PCT_TO_HIT_PCT("Master.Hit% -> Hit%", HIT_PCT),
+	MASTER_HIT_RATING_TO_HIT_RATING("Master.HitRating -> HitRating", HIT_RATING),
 	;
 
 	private final String key;
 	private final AttributeId to;
-	private final StatConversionCondition toCondition;
 
-	StatConversionType(String key, AttributeId to, StatConversionCondition toCondition) {
+	StatConversionType(String key, AttributeId to) {
 		this.key = key;
 		this.to = to;
-		this.toCondition = toCondition;
 	}
 
 	public static StatConversionType parse(String value) {
