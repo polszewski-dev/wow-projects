@@ -50,7 +50,7 @@ class GreaterBlessingOfKingsTest extends TbcPaladinSpellSimulationTest {
 
 	@Override
 	protected void afterSetUp() {
-		enableTalent(BLESSING_OF_KINGS, 1);
+		enableTalent(BLESSING_OF_KINGS);
 
 		player2.disbandParty();
 		player2.invite(player3, player4);

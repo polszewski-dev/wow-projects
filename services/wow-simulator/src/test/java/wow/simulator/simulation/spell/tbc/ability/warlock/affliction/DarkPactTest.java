@@ -38,7 +38,7 @@ class DarkPactTest extends TbcWarlockSpellSimulationTest {
 
 	@Override
 	protected void afterSetUp() {
-		enableTalent(TalentNames.DARK_PACT, 1);
+		enableTalent(TalentNames.DARK_PACT);
 
 		player.summonPet(PetType.IMP, null);
 		pet = player.getActivePet();

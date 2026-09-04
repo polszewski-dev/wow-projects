@@ -82,7 +82,7 @@ class SpellInterruptTest extends TbcWarlockSpellSimulationTest {
 
 	@Test
 	void instant_direct_spell_can_not_be_interrupted() {
-		enableTalent(SHADOWBURN, 1);
+		enableTalent(SHADOWBURN);
 
 		player.cast(SHADOWBURN);
 

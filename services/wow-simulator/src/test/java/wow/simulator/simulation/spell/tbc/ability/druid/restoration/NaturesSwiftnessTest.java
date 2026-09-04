@@ -64,6 +64,6 @@ class NaturesSwiftnessTest extends TbcDruidSpellSimulationTest {
 
 	@Override
 	protected void afterSetUp() {
-		enableTalent(TalentNames.NATURES_SWIFTNESS, 1);
+		enableTalent(TalentNames.NATURES_SWIFTNESS);
 	}
 }

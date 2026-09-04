@@ -57,6 +57,6 @@ class DragonsBreathTest extends TbcMageSpellSimulationTest {
 
 	@Override
 	protected void afterSetUp() {
-		enableTalent(TalentNames.DRAGONS_BREATH, 1);
+		enableTalent(TalentNames.DRAGONS_BREATH);
 	}
 }

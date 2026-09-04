@@ -23,7 +23,7 @@ class AshtongueTalismanOfShadowsTest extends TbcWarlockSpellSimulationTest {
 	void procIsTriggered() {
 		eventsOnlyOnFollowingRolls(0, 1, 2, 3, 4, 5);
 
-		enableTalent(IMPROVED_CORRUPTION, 5);
+		enableTalent(IMPROVED_CORRUPTION);
 
 		player.cast(CORRUPTION);
 
@@ -70,7 +70,7 @@ class AshtongueTalismanOfShadowsTest extends TbcWarlockSpellSimulationTest {
 	@Test
 	void modifierIsTakenIntoAccount() {
 		eventsOnlyOnFollowingRolls(0, 1, 2);
-		enableTalent(IMPROVED_CORRUPTION, 5);
+		enableTalent(IMPROVED_CORRUPTION);
 
 		player.cast(CORRUPTION);
 

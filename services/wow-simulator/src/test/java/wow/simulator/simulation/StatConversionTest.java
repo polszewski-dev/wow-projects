@@ -21,7 +21,7 @@ import static wow.test.commons.TalentNames.*;
 class StatConversionTest extends SpellSimulationTest {
 	@Test
 	void intellect_to_spell_power_conversion_from_lunar_guidance() {
-		enableTalent(druid, LUNAR_GUIDANCE, 3);
+		enableTalent(druid, LUNAR_GUIDANCE);
 
 		int totalIntellect = 115;
 		int totalSpellPower = getPercentOf(25, totalIntellect);
@@ -34,7 +34,7 @@ class StatConversionTest extends SpellSimulationTest {
 
 	@Test
 	void intellect_to_spell_power_conversion_from_natures_blessing() {
-		enableTalent(shaman, NATURES_BLESSING, 3);
+		enableTalent(shaman, NATURES_BLESSING);
 
 		int totalIntellect = 103;
 		int totalSpellPower = getPercentOf(30, totalIntellect);
@@ -47,7 +47,7 @@ class StatConversionTest extends SpellSimulationTest {
 
 	@Test
 	void intellect_to_spell_power_conversion_from_holy_guidance() {
-		enableTalent(paladin, HOLY_GUIDANCE, 5);
+		enableTalent(paladin, HOLY_GUIDANCE);
 
 		int totalIntellect = 86;
 		int totalSpellPower = getPercentOf(35, totalIntellect);
@@ -60,7 +60,7 @@ class StatConversionTest extends SpellSimulationTest {
 
 	@Test
 	void intellect_to_spell_damage_conversion_from_mind_mastery() {
-		enableTalent(mage, MIND_MASTERY, 5);
+		enableTalent(mage, MIND_MASTERY);
 
 		int totalIntellect = 149;
 		int totalSpellDamage = getPercentOf(25, totalIntellect);
@@ -107,7 +107,7 @@ class StatConversionTest extends SpellSimulationTest {
 
 	@Test
 	void spirit_to_spell_power_conversion_from_spiritual_guidance() {
-		enableTalent(priest, SPIRITUAL_GUIDANCE, 5);
+		enableTalent(priest, SPIRITUAL_GUIDANCE);
 
 		int totalSpirit = 156;
 		int totalSpellPower = getPercentOf(25, totalSpirit);
@@ -120,8 +120,8 @@ class StatConversionTest extends SpellSimulationTest {
 
 	@Test
 	void spirit_to_spell_power_conversion_from_improved_divine_spirit() {
-		enableTalent(priest, DIVINE_SPIRIT, 1);
-		enableTalent(priest, IMPROVED_DIVINE_SPIRIT, 2);
+		enableTalent(priest, DIVINE_SPIRIT);
+		enableTalent(priest, IMPROVED_DIVINE_SPIRIT);
 
 		priest.cast(DIVINE_SPIRIT);
 
@@ -138,9 +138,9 @@ class StatConversionTest extends SpellSimulationTest {
 
 	@Test
 	void spirit_to_spell_power_conversion_from_spiritual_guidance_and_improved_divine_spirit() {
-		enableTalent(priest, SPIRITUAL_GUIDANCE, 5);
-		enableTalent(priest, DIVINE_SPIRIT, 1);
-		enableTalent(priest, IMPROVED_DIVINE_SPIRIT, 2);
+		enableTalent(priest, SPIRITUAL_GUIDANCE);
+		enableTalent(priest, DIVINE_SPIRIT);
+		enableTalent(priest, IMPROVED_DIVINE_SPIRIT);
 
 		priest.cast(DIVINE_SPIRIT);
 
@@ -157,7 +157,7 @@ class StatConversionTest extends SpellSimulationTest {
 
 	@Test
 	void intellect_to_mp5_conversion_from_dreamstate() {
-		enableTalent(druid, DREAMSTATE, 3);
+		enableTalent(druid, DREAMSTATE);
 
 		int totalIntellect = 115;
 		int totalMp5 = getPercentOf(10, totalIntellect);
@@ -168,7 +168,7 @@ class StatConversionTest extends SpellSimulationTest {
 
 	@Test
 	void intellect_to_mp5_conversion_from_unrelenting_storm() {
-		enableTalent(shaman, UNRELENTING_STORM, 5);
+		enableTalent(shaman, UNRELENTING_STORM);
 
 		int totalIntellect = 103;
 		int totalMp5 = getPercentOf(10, totalIntellect);
@@ -242,7 +242,7 @@ class StatConversionTest extends SpellSimulationTest {
 
 	@Test
 	void pet_sta_plus_int_to_master_spell_damage_conversion_from_demonic_knowledge() {
-		enableTalent(warlock, DEMONIC_KNOWLEDGE, 3);
+		enableTalent(warlock, DEMONIC_KNOWLEDGE);
 
 		warlock.cast(SUMMON_IMP);
 
@@ -255,7 +255,7 @@ class StatConversionTest extends SpellSimulationTest {
 	void pet_sta_plus_int_to_master_spell_damage_conversion_from_demonic_knowledge_with_item_equipped() {
 		equip(warlock, "Robes of Rhonin");
 
-		enableTalent(warlock, DEMONIC_KNOWLEDGE, 3);
+		enableTalent(warlock, DEMONIC_KNOWLEDGE);
 
 		warlock.cast(SUMMON_IMP);
 
@@ -268,9 +268,9 @@ class StatConversionTest extends SpellSimulationTest {
 	void pet_sta_plus_int_to_master_spell_damage_conversion_from_demonic_knowledge_with_item_equipped_and_improved_divine_spirit() {
 		equip(warlock, "Robes of Rhonin");
 
-		enableTalent(warlock, DEMONIC_KNOWLEDGE, 3);
-		enableTalent(priest, DIVINE_SPIRIT, 1);
-		enableTalent(priest, IMPROVED_DIVINE_SPIRIT, 2);
+		enableTalent(warlock, DEMONIC_KNOWLEDGE);
+		enableTalent(priest, DIVINE_SPIRIT);
+		enableTalent(priest, IMPROVED_DIVINE_SPIRIT);
 
 		warlock.cast(SUMMON_IMP);
 		warlock.immediateAction(() -> priest.cast(DIVINE_SPIRIT, pet));

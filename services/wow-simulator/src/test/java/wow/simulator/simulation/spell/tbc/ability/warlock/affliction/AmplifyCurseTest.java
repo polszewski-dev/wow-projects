@@ -89,6 +89,6 @@ class AmplifyCurseTest extends TbcWarlockSpellSimulationTest {
 
 	@Override
 	protected void afterSetUp() {
-		enableTalent(TalentNames.AMPLIFY_CURSE, 1);
+		enableTalent(TalentNames.AMPLIFY_CURSE);
 	}
 }

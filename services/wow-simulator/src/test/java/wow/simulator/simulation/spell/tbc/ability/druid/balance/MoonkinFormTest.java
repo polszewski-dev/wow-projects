@@ -79,6 +79,6 @@ class MoonkinFormTest extends TbcDruidSpellSimulationTest {
 
 	@Override
 	protected void afterSetUp() {
-		enableTalent(TalentNames.MOONKIN_FORM, 1);
+		enableTalent(TalentNames.MOONKIN_FORM);
 	}
 }

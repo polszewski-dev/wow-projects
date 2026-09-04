@@ -56,6 +56,6 @@ class MindFlayTest extends TbcPriestSpellSimulationTest {
 
 	@Override
 	protected void afterSetUp() {
-		enableTalent(TalentNames.MIND_FLAY, 1);
+		enableTalent(TalentNames.MIND_FLAY);
 	}
 }

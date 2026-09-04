@@ -27,7 +27,7 @@ class NightfallTest extends TbcWarlockTalentSimulationTest {
 	@ValueSource(ints = { 1, 2 })
 	void procIsTriggeredByCorruption(int rank) {
 		enableTalent(NIGHTFALL, rank);
-		enableTalent(IMPROVED_CORRUPTION, 5);
+		enableTalent(IMPROVED_CORRUPTION);
 
 		eventsOnlyOnFollowingRolls(0);
 
@@ -125,7 +125,7 @@ class NightfallTest extends TbcWarlockTalentSimulationTest {
 	@ValueSource(ints = { 1, 2 })
 	void effectIsRemovedAfterShadowBoltCast(int rank) {
 		enableTalent(NIGHTFALL, rank);
-		enableTalent(IMPROVED_CORRUPTION, 5);
+		enableTalent(IMPROVED_CORRUPTION);
 
 		eventsOnlyOnFollowingRolls(0);
 

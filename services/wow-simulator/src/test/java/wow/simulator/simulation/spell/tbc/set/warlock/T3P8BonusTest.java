@@ -20,7 +20,7 @@ class T3P8BonusTest extends TbcWarlockSpellSimulationTest {
 
 	@Test
 	void healthCostIsIncreased() {
-		enableTalent(IMPROVED_LIFE_TAP, 2);
+		enableTalent(IMPROVED_LIFE_TAP);
 		setMana(player, 0);
 
 		player.cast(LIFE_TAP);

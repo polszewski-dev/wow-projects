@@ -92,6 +92,6 @@ class CombustionTest extends TbcMageSpellSimulationTest {
 
 	@Override
 	protected void afterSetUp() {
-		enableTalent(TalentNames.COMBUSTION, 1);
+		enableTalent(TalentNames.COMBUSTION);
 	}
 }

@@ -113,7 +113,7 @@ class ScriptExecutorTest extends TbcWarlockSpellSimulationTest {
 
 	@Test
 	void AC_preceeding_CoD_when_available() {
-		enableTalent(AMPLIFY_CURSE, 1);
+		enableTalent(AMPLIFY_CURSE);
 		simulate("/script/executor-test5.txt", 300);
 
 		assertEvents(

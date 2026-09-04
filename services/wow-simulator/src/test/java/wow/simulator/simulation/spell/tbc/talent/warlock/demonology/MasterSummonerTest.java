@@ -59,8 +59,8 @@ class MasterSummonerTest extends TbcWarlockTalentSimulationTest {
 
 	private void enableSummonFelguardTalent(String abilityName) {
 		if (abilityName.equals(SUMMON_FELGUARD)) {
-			enableTalent(player, SUMMON_FELGUARD, 1);
-			enableTalent(player2, SUMMON_FELGUARD, 1);
+			enableTalent(player, SUMMON_FELGUARD);
+			enableTalent(player2, SUMMON_FELGUARD);
 		}
 	}
 }

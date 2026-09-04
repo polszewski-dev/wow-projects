@@ -25,7 +25,7 @@ class ShadowWeavingTest extends TbcPriestTalentSimulationTest {
 
 	@Test
 	void effectIsStackedTo5() {
-		enableTalent(SHADOW_WEAVING, 5);
+		enableTalent(SHADOW_WEAVING);
 
 		player.cast(SHADOW_WORD_PAIN);
 		player.cast(SHADOW_WORD_PAIN);
@@ -57,8 +57,8 @@ class ShadowWeavingTest extends TbcPriestTalentSimulationTest {
 
 	@Test
 	void damageBonusIsTakenIntoAccount() {
-		enableTalent(SHADOW_WEAVING, 5);
-		enableTalent(TalentNames.MIND_FLAY, 1);
+		enableTalent(SHADOW_WEAVING);
+		enableTalent(TalentNames.MIND_FLAY);
 
 		player.cast(MIND_BLAST);
 		player.idleUntil(Time.at(10));

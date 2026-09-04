@@ -66,7 +66,7 @@ class ImprovedScorchTest extends TbcMageTalentSimulationTest {
 
 	@Test
 	void effect_stacks_to_5() {
-		enableTalent(IMPROVED_SCORCH, 3);
+		enableTalent(IMPROVED_SCORCH);
 
 		eventsOnlyOnFollowingRolls(0, 1, 2, 3, 4, 5);
 

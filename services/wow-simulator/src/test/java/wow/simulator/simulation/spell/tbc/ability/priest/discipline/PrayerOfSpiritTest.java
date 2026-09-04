@@ -49,7 +49,7 @@ class PrayerOfSpiritTest extends TbcPriestSpellSimulationTest {
 
 	@Override
 	protected void afterSetUp() {
-		enableTalent(TalentNames.DIVINE_SPIRIT, 1);
+		enableTalent(TalentNames.DIVINE_SPIRIT);
 
 		player2.disbandParty();
 		player2.invite(player3, player4);

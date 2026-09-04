@@ -79,8 +79,8 @@ class AuraTest extends SpellSimulationTest {
 
 		createDefaultUnits();
 
-		enableTalent(player2, MOONKIN_FORM, 1);
-		enableTalent(player3, MOONKIN_FORM, 1);
+		enableTalent(player2, MOONKIN_FORM);
+		enableTalent(player3, MOONKIN_FORM);
 
 		player2.cast(MOONKIN_FORM);
 		player3.cast(MOONKIN_FORM);
@@ -99,9 +99,9 @@ class AuraTest extends SpellSimulationTest {
 
 		createDefaultUnits();
 
-		enableTalent(player2, SANCTITY_AURA, 1);
-		enableTalent(player3, SANCTITY_AURA, 1);
-		enableTalent(player4, SANCTITY_AURA, 1);
+		enableTalent(player2, SANCTITY_AURA);
+		enableTalent(player3, SANCTITY_AURA);
+		enableTalent(player4, SANCTITY_AURA);
 
 		enableTalent(player2, IMPROVED_SANCTITY_AURA, 2);
 		enableTalent(player3, IMPROVED_SANCTITY_AURA, 1);
@@ -159,7 +159,7 @@ class AuraTest extends SpellSimulationTest {
 
 		createDefaultUnits();
 
-		enableTalent(player2, DEMONIC_SACRIFICE, 1);
+		enableTalent(player2, DEMONIC_SACRIFICE);
 
 		player2.cast(SUMMON_IMP);
 		summonedPetCasts(player2, BLOOD_PACT);

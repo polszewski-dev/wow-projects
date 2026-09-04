@@ -103,8 +103,6 @@ public interface Character extends CharacterInfo, EffectCollection {
 		return getTalents().getTalentLink();
 	}
 
-	PveRole getRole();
-
 	void setRole(PveRole role);
 
 	String getScript();

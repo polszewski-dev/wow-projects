@@ -47,6 +47,6 @@ class ArcanePowerTest extends TbcMageSpellSimulationTest {
 
 	@Override
 	protected void afterSetUp() {
-		enableTalent(TalentNames.ARCANE_POWER, 1);
+		enableTalent(TalentNames.ARCANE_POWER);
 	}
 }

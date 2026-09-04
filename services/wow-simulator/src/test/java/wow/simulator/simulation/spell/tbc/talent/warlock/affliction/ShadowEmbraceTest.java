@@ -22,7 +22,7 @@ class ShadowEmbraceTest extends TbcWarlockTalentSimulationTest {
 
 	@Test
 	void effectIsTriggeredByCurseOfAgony() {
-		enableTalent(SHADOW_EMBRACE, 5);
+		enableTalent(SHADOW_EMBRACE);
 
 		player.cast(CURSE_OF_AGONY);
 
@@ -41,8 +41,8 @@ class ShadowEmbraceTest extends TbcWarlockTalentSimulationTest {
 
 	@Test
 	void effectIsTriggeredByCorruption() {
-		enableTalent(SHADOW_EMBRACE, 5);
-		enableTalent(IMPROVED_CORRUPTION, 5);
+		enableTalent(SHADOW_EMBRACE);
+		enableTalent(IMPROVED_CORRUPTION);
 
 		player.cast(CORRUPTION);
 
@@ -61,8 +61,8 @@ class ShadowEmbraceTest extends TbcWarlockTalentSimulationTest {
 
 	@Test
 	void effectIsTriggeredBySiphonLife() {
-		enableTalent(SHADOW_EMBRACE, 5);
-		enableTalent(TalentNames.SIPHON_LIFE, 1);
+		enableTalent(SHADOW_EMBRACE);
+		enableTalent(TalentNames.SIPHON_LIFE);
 
 		player.cast(SIPHON_LIFE);
 
@@ -81,9 +81,9 @@ class ShadowEmbraceTest extends TbcWarlockTalentSimulationTest {
 
 	@Test
 	void shadowEmbraceIsEndedAfterLastSpellExpires() {
-		enableTalent(SHADOW_EMBRACE, 5);
-		enableTalent(IMPROVED_CORRUPTION, 5);
-		enableTalent(TalentNames.SIPHON_LIFE, 1);
+		enableTalent(SHADOW_EMBRACE);
+		enableTalent(IMPROVED_CORRUPTION);
+		enableTalent(TalentNames.SIPHON_LIFE);
 
 		player.cast(CURSE_OF_AGONY);
 		player.cast(CORRUPTION);

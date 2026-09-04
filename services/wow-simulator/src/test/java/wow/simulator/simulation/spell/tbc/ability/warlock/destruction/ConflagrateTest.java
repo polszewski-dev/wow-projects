@@ -82,6 +82,6 @@ class ConflagrateTest extends TbcWarlockSpellSimulationTest {
 
 	@Override
 	protected void afterSetUp() {
-		enableTalent(TalentNames.CONFLAGRATE, 1);
+		enableTalent(TalentNames.CONFLAGRATE);
 	}
 }

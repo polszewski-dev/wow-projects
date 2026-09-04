@@ -26,7 +26,8 @@ class MiseryTest extends TbcPriestTalentSimulationTest {
 
 	@Test
 	void effectIsTriggeredByShadowWordPain() {
-		enableTalent(MISERY, 5);
+		enableTalent(MISERY);
+
 		player.cast(SHADOW_WORD_PAIN);
 
 		updateUntil(30);
@@ -60,8 +61,8 @@ class MiseryTest extends TbcPriestTalentSimulationTest {
 
 	@Test
 	void effectIsTriggeredByMindFlay() {
-		enableTalent(TalentNames.MISERY, 5);
-		enableTalent(TalentNames.MIND_FLAY, 1);
+		enableTalent(TalentNames.MISERY);
+		enableTalent(TalentNames.MIND_FLAY);
 
 		player.cast(MIND_FLAY);
 
@@ -92,8 +93,8 @@ class MiseryTest extends TbcPriestTalentSimulationTest {
 
 	@Test
 	void effectIsTriggeredByVampiricTouch() {
-		enableTalent(MISERY, 5);
-		enableTalent(TalentNames.VAMPIRIC_TOUCH, 1);
+		enableTalent(MISERY);
+		enableTalent(TalentNames.VAMPIRIC_TOUCH);
 
 		player.cast(VAMPIRIC_TOUCH);
 
@@ -131,8 +132,8 @@ class MiseryTest extends TbcPriestTalentSimulationTest {
 
 	@Test
 	void miseryIsEndedAfterLastSpellExpires() {
-		enableTalent(MISERY, 5);
-		enableTalent(TalentNames.MIND_FLAY, 1);
+		enableTalent(MISERY);
+		enableTalent(TalentNames.MIND_FLAY);
 
 		player.cast(SHADOW_WORD_PAIN);
 		player.cast(MIND_FLAY);
@@ -158,8 +159,8 @@ class MiseryTest extends TbcPriestTalentSimulationTest {
 
 	@Test
 	void miseryReappliedAtTheSameTimeItExpired() {
-		enableTalent(MISERY, 5);
-		enableTalent(TalentNames.MIND_FLAY, 1);
+		enableTalent(MISERY);
+		enableTalent(TalentNames.MIND_FLAY);
 
 		player.cast(MIND_FLAY);
 		player.cast(MIND_FLAY);
@@ -187,7 +188,7 @@ class MiseryTest extends TbcPriestTalentSimulationTest {
 	@ValueSource(ints = { 1, 2, 3, 4, 5 })
 	void spellDamageIsIncreased(int rank) {
 		enableTalent(MISERY, rank);
-		enableTalent(TalentNames.MIND_FLAY, 1);
+		enableTalent(TalentNames.MIND_FLAY);
 
 		player.cast(SHADOW_WORD_PAIN);
 		player.cast(MIND_FLAY);

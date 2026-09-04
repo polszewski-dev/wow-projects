@@ -61,6 +61,6 @@ class ShadowformTest extends TbcPriestSpellSimulationTest {
 
 	@Override
 	protected void afterSetUp() {
-		enableTalent(TalentNames.SHADOWFORM, 1);
+		enableTalent(TalentNames.SHADOWFORM);
 	}
 }

@@ -25,7 +25,7 @@ class ImprovedShadowBoltTest extends TbcWarlockTalentSimulationTest {
 	void isbIsAppliedAfterCrit() {
 		critsOnlyOnFollowingRolls(0);
 
-		enableTalent(IMPROVED_SHADOW_BOLT, 5);
+		enableTalent(IMPROVED_SHADOW_BOLT);
 
 		player.cast(SHADOW_BOLT);
 
@@ -51,7 +51,7 @@ class ImprovedShadowBoltTest extends TbcWarlockTalentSimulationTest {
 	void sbDecreasesIsbChargesToZero() {
 		critsOnlyOnFollowingRolls(0);
 
-		enableTalent(IMPROVED_SHADOW_BOLT, 5);
+		enableTalent(IMPROVED_SHADOW_BOLT);
 
 		player.cast(SHADOW_BOLT);
 		player.cast(SHADOW_BOLT);
@@ -116,7 +116,7 @@ class ImprovedShadowBoltTest extends TbcWarlockTalentSimulationTest {
 	void overwritingIsb() {
 		critsOnlyOnFollowingRolls(0, 1);
 
-		enableTalent(IMPROVED_SHADOW_BOLT, 5);
+		enableTalent(IMPROVED_SHADOW_BOLT);
 
 		player.cast(SHADOW_BOLT);
 		player.cast(SHADOW_BOLT);
@@ -154,8 +154,8 @@ class ImprovedShadowBoltTest extends TbcWarlockTalentSimulationTest {
 	void isbIncreasesCorruptionDamage() {
 		critsOnlyOnFollowingRolls(0);
 
-		enableTalent(IMPROVED_CORRUPTION, 5);
-		enableTalent(IMPROVED_SHADOW_BOLT, 5);
+		enableTalent(IMPROVED_CORRUPTION);
+		enableTalent(IMPROVED_SHADOW_BOLT);
 
 		player.cast(SHADOW_BOLT);
 		player.cast(CORRUPTION);

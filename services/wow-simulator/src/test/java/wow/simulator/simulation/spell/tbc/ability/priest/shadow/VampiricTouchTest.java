@@ -153,7 +153,7 @@ class VampiricTouchTest extends TbcPriestSpellSimulationTest {
 
 	@Override
 	protected void afterSetUp() {
-		enableTalent(TalentNames.VAMPIRIC_TOUCH, 1);
+		enableTalent(TalentNames.VAMPIRIC_TOUCH);
 
 		setMana(player2, 0);
 		setMana(player3, 0);

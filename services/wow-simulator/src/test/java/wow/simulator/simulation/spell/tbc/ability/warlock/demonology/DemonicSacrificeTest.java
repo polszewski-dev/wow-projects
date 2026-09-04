@@ -74,6 +74,6 @@ class DemonicSacrificeTest extends TbcWarlockSpellSimulationTest {
 
 	@Override
 	protected void afterSetUp() {
-		enableTalent(DEMONIC_SACRIFICE, 1);
+		enableTalent(DEMONIC_SACRIFICE);
 	}
 }

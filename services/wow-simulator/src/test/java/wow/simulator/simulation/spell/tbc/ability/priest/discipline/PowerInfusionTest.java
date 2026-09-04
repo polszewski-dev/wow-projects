@@ -91,6 +91,6 @@ class PowerInfusionTest extends TbcPriestSpellSimulationTest {
 
 	@Override
 	protected void afterSetUp() {
-		enableTalent(TalentNames.POWER_INFUSION, 1);
+		enableTalent(TalentNames.POWER_INFUSION);
 	}
 }

@@ -61,7 +61,7 @@ class WintersChillTest extends TbcMageTalentSimulationTest {
 
 	@Test
 	void effect_stacks_to_5() {
-		enableTalent(WINTERS_CHILL, 5);
+		enableTalent(WINTERS_CHILL);
 
 		eventsOnlyOnFollowingRolls(0, 1, 2, 3, 4, 5);
 

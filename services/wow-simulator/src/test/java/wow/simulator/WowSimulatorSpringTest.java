@@ -335,6 +335,15 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		getCharacterService().updateAfterRestrictionChange(player);
 	}
 
+	protected void enableTalent(String name) {
+		enableTalent(player, name);
+	}
+
+	protected void enableTalent(Player player, String name) {
+		player.getTalents().enableMaxRank(name);
+		getCharacterService().updateAfterRestrictionChange(player);
+	}
+
 	protected void addSpBonus(int amount) {
 		addSpBonus(player, amount);
 	}

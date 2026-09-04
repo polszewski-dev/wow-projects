@@ -54,7 +54,7 @@ class DivineFavorTest extends TbcPaladinSpellSimulationTest {
 
 	@Override
 	protected void afterSetUp() {
-		enableTalent(TalentNames.DIVINE_FAVOR, 1);
-		enableTalent(TalentNames.HOLY_SHOCK, 1);
+		enableTalent(TalentNames.DIVINE_FAVOR);
+		enableTalent(TalentNames.HOLY_SHOCK);
 	}
 }

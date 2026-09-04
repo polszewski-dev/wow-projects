@@ -51,6 +51,6 @@ class ShadowBurnTest extends TbcWarlockSpellSimulationTest {
 
 	@Override
 	protected void afterSetUp() {
-		enableTalent(TalentNames.SHADOWBURN, 1);
+		enableTalent(TalentNames.SHADOWBURN);
 	}
 }

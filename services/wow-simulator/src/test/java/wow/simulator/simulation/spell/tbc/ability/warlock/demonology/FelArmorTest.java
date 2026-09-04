@@ -64,7 +64,7 @@ class FelArmorTest extends TbcWarlockSpellSimulationTest {
 
 	@Test
 	void siphon_life_healing_increased() {
-		enableTalent(SIPHON_LIFE, 1);
+		enableTalent(SIPHON_LIFE);
 		setHealth(player, 100);
 
 		player.cast(FEL_ARMOR);

@@ -327,7 +327,7 @@ class T5P4BonusTest extends TbcWarlockSpellSimulationTest {
 
 	@Override
 	protected void afterSetUp() {
-		enableTalent(IMPROVED_CORRUPTION, 5);
+		enableTalent(IMPROVED_CORRUPTION);
 
 		equip("Hood of the Corruptor");
 		equip("Mantle of the Corruptor");

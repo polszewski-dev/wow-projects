@@ -20,7 +20,7 @@ class ImprovedSanctityAuraTest extends TbcPaladinTalentSimulationTest {
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2 })
 	void damage_is_increased(int rank) {
-		enableTalent(player, SANCTITY_AURA, 1);
+		enableTalent(player, SANCTITY_AURA);
 
 		player.cast(SANCTITY_AURA);
 

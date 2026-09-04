@@ -18,7 +18,7 @@ class T4P4BonusTest extends TbcPriestSpellSimulationTest {
 
 	@Test
 	void mindFLayDamageIsIncreased() {
-		enableTalent(TalentNames.MIND_FLAY, 1);
+		enableTalent(TalentNames.MIND_FLAY);
 
 		player.cast(MIND_FLAY);
 

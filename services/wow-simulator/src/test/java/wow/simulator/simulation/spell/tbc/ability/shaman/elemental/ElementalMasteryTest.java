@@ -73,6 +73,6 @@ class ElementalMasteryTest extends TbcShamanSpellSimulationTest {
 
 	@Override
 	protected void afterSetUp() {
-		enableTalent(TalentNames.ELEMENTAL_MASTERY, 1);
+		enableTalent(TalentNames.ELEMENTAL_MASTERY);
 	}
 }

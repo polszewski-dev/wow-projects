@@ -64,6 +64,6 @@ class PresenceOfMindTest extends TbcMageSpellSimulationTest {
 
 	@Override
 	protected void afterSetUp() {
-		enableTalent(TalentNames.PRESENCE_OF_MIND, 1);
+		enableTalent(TalentNames.PRESENCE_OF_MIND);
 	}
 }

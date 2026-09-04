@@ -58,6 +58,6 @@ class PyroblastTest extends TbcMageSpellSimulationTest {
 
 	@Override
 	protected void afterSetUp() {
-		enableTalent(TalentNames.PYROBLAST, 1);
+		enableTalent(TalentNames.PYROBLAST);
 	}
 }

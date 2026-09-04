@@ -60,6 +60,6 @@ class InsectSwarmTest extends TbcDruidSpellSimulationTest {
 
 	@Override
 	protected void afterSetUp() {
-		enableTalent(TalentNames.INSECT_SWARM, 1);
+		enableTalent(TalentNames.INSECT_SWARM);
 	}
 }

@@ -45,6 +45,6 @@ class ShadowfuryTest extends TbcWarlockSpellSimulationTest {
 
 	@Override
 	protected void afterSetUp() {
-		enableTalent(TalentNames.SHADOWFURY, 1);
+		enableTalent(TalentNames.SHADOWFURY);
 	}
 }

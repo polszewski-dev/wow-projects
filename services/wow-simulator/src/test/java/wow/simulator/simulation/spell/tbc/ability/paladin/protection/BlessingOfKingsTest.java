@@ -46,6 +46,6 @@ class BlessingOfKingsTest extends TbcPaladinSpellSimulationTest {
 
 	@Override
 	protected void afterSetUp() {
-		enableTalent(TalentNames.BLESSING_OF_KINGS, 1);
+		enableTalent(TalentNames.BLESSING_OF_KINGS);
 	}
 }

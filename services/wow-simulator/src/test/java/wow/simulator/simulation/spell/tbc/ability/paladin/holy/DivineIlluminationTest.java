@@ -47,6 +47,6 @@ class DivineIlluminationTest extends TbcPaladinSpellSimulationTest {
 
 	@Override
 	protected void afterSetUp() {
-		enableTalent(TalentNames.DIVINE_ILLUMINATION, 1);
+		enableTalent(TalentNames.DIVINE_ILLUMINATION);
 	}
 }

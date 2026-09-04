@@ -122,7 +122,7 @@ class VampiricEmbraceTest extends TbcPriestSpellSimulationTest {
 
 	@Override
 	protected void afterSetUp() {
-		enableTalent(TalentNames.VAMPIRIC_EMBRACE, 1);
+		enableTalent(TalentNames.VAMPIRIC_EMBRACE);
 
 		setHealth(player, 1000);
 		setHealth(player2, 1000);

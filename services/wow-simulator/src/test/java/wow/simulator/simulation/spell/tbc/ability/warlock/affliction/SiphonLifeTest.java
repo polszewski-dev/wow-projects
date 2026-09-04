@@ -87,7 +87,7 @@ class SiphonLifeTest extends TbcWarlockSpellSimulationTest {
 
 	@Override
 	protected void afterSetUp() {
-		enableTalent(TalentNames.SIPHON_LIFE, 1);
+		enableTalent(TalentNames.SIPHON_LIFE);
 		setHealth(player, 1000);
 	}
 }

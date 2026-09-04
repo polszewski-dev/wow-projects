@@ -77,7 +77,7 @@ class CastSpellActionTest extends WowSimulatorSpringTest {
 
 	@Test
 	void instantIgnoringGcd() {
-		enableTalent(AMPLIFY_CURSE, 1);
+		enableTalent(AMPLIFY_CURSE);
 
 		CastSpellAction action = getCastSpellOnSelfAction(AMPLIFY_CURSE);
 

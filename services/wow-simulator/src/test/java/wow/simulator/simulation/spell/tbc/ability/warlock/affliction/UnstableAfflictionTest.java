@@ -61,6 +61,6 @@ class UnstableAfflictionTest extends TbcWarlockSpellSimulationTest {
 
 	@Override
 	protected void afterSetUp() {
-		enableTalent(TalentNames.UNSTABLE_AFFLICTION, 1);
+		enableTalent(TalentNames.UNSTABLE_AFFLICTION);
 	}
 }

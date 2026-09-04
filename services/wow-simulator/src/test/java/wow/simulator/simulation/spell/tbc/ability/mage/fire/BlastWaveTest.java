@@ -57,6 +57,6 @@ class BlastWaveTest extends TbcMageSpellSimulationTest {
 
 	@Override
 	protected void afterSetUp() {
-		enableTalent(TalentNames.BLAST_WAVE, 1);
+		enableTalent(TalentNames.BLAST_WAVE);
 	}
 }

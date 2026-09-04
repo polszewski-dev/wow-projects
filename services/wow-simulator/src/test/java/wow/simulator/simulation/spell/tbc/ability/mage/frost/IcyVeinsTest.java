@@ -56,6 +56,6 @@ class IcyVeinsTest extends TbcMageSpellSimulationTest {
 
 	@Override
 	protected void afterSetUp() {
-		enableTalent(TalentNames.ICY_VEINS, 1);
+		enableTalent(TalentNames.ICY_VEINS);
 	}
 }

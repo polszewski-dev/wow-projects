@@ -57,7 +57,7 @@ class IgniteTest extends TbcMageTalentSimulationTest {
 
 	@Test
 	void effect_stacks_to_5() {
-		enableTalent(IGNITE, 5);
+		enableTalent(IGNITE);
 
 		critsOnlyOnFollowingRolls(0, 1, 2, 3, 4);
 

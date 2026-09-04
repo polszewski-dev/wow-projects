@@ -75,7 +75,7 @@ class SpellResistTest extends TbcWarlockSpellSimulationTest {
 
 	@Test
 	void instant_direct_spell_resisted() {
-		enableTalent(SHADOWBURN, 1);
+		enableTalent(SHADOWBURN);
 
 		missesOnlyOnFollowingRolls(0);
 

@@ -90,6 +90,6 @@ class InnerFocusTest extends TbcPriestSpellSimulationTest {
 
 	@Override
 	protected void afterSetUp() {
-		enableTalent(TalentNames.INNER_FOCUS, 1);
+		enableTalent(TalentNames.INNER_FOCUS);
 	}
 }
