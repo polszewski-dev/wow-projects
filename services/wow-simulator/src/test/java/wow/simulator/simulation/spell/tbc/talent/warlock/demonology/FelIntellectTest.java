@@ -19,7 +19,9 @@ class FelIntellectTest extends TbcWarlockTalentSimulationTest {
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2, 3 })
 	void max_mana_is_increased(int rank) {
-		assertMaxManaIsIncreasedByPct(FEL_INTELLECT, rank, rank);
+		enableTalent(player, FEL_INTELLECT, rank);
+
+		assertMaxManaIsIncreasedByPct(player, rank);
 	}
 
 	@ParameterizedTest

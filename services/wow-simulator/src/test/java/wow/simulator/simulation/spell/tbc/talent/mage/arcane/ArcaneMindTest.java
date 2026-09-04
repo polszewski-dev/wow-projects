@@ -18,6 +18,8 @@ class ArcaneMindTest extends TbcMageTalentSimulationTest {
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2, 3, 4, 5 })
 	void intellect_is_increased(int rank) {
-		assertIntellectIsIncreasedByPct(ARCANE_MIND, rank, 3 * rank);
+		enableTalent(player, ARCANE_MIND, rank);
+
+		assertIntellectIsIncreasedByPct(player, 3 * rank);
 	}
 }

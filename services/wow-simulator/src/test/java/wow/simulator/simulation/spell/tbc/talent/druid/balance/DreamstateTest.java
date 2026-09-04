@@ -2,7 +2,6 @@ package wow.simulator.simulation.spell.tbc.talent.druid.balance;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import wow.character.model.snapshot.StatSummary;
 import wow.simulator.simulation.spell.tbc.talent.druid.TbcDruidTalentSimulationTest;
 
 import static wow.test.commons.TalentNames.DREAMSTATE;
@@ -23,6 +22,8 @@ class DreamstateTest extends TbcDruidTalentSimulationTest {
 			"3, 10"
 	})
 	void mp5_is_increased(int rank, int ratio) {
-		assertStatConversion(DREAMSTATE, rank, StatSummary::getIntellect, StatSummary::getInterruptedManaRegen, ratio);
+		enableTalent(DREAMSTATE, rank);
+
+		assertIntellectToMp5Conversion(player, ratio);
 	}
 }

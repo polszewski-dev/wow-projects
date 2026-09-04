@@ -2,7 +2,6 @@ package wow.simulator.simulation.spell.tbc.talent.druid.balance;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import wow.character.model.snapshot.StatSummary;
 import wow.simulator.simulation.spell.tbc.talent.druid.TbcDruidTalentSimulationTest;
 
 import static wow.test.commons.TalentNames.LUNAR_GUIDANCE;
@@ -23,6 +22,8 @@ class LunarGuidanceTest extends TbcDruidTalentSimulationTest {
 			"3, 25"
 	})
 	void spell_power_is_increased(int rank, int ratio) {
-		assertStatConversion(LUNAR_GUIDANCE, rank, StatSummary::getIntellect, StatSummary::getSpellPower, ratio);
+		enableTalent(LUNAR_GUIDANCE, rank);
+
+		assertIntellectToSpellPowerConversion(player, ratio);
 	}
 }

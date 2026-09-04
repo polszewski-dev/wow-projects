@@ -18,6 +18,8 @@ class MentalStrengthTest extends TbcPriestTalentSimulationTest {
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2, 3, 4, 5 })
 	void max_mana_is_increased(int rank) {
-		assertMaxManaIsIncreasedByPct(MENTAL_STRENGTH, rank, 2 * rank);
+		enableTalent(player, MENTAL_STRENGTH, rank);
+
+		assertMaxManaIsIncreasedByPct(player, 2 * rank);
 	}
 }

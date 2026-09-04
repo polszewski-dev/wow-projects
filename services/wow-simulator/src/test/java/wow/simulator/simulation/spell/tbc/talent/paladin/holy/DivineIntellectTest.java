@@ -18,6 +18,8 @@ class DivineIntellectTest extends TbcPaladinTalentSimulationTest {
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2, 3, 4, 5 })
 	void intellect_is_increased(int rank) {
-		assertIntellectIsIncreasedByPct(DIVINE_INTELLECT, rank, 2 * rank);
+		enableTalent(player, DIVINE_INTELLECT, rank);
+
+		assertIntellectIsIncreasedByPct(player, 2 * rank);
 	}
 }

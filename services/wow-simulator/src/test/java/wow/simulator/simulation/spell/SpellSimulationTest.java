@@ -16,6 +16,7 @@ import wow.simulator.util.SpellInfo;
 import wow.simulator.util.TestEventCollectingHandler;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static wow.simulator.util.CalcUtils.getPercentOf;
 import static wow.simulator.util.CalcUtils.increaseByPct;
 
 /**
@@ -423,5 +424,47 @@ public abstract class SpellSimulationTest extends WowSimulatorSpringTest impleme
 		var unitValue = unit.getStats().getInterruptedManaRegen();
 
 		assertThat(unitValue).isEqualTo(baselineValue + increase);
+	}
+
+	protected void assertMaxHealthIsIncreasedByPct(Unit unit, int pctIncrease) {
+		var baselineValue = baseline.getStats().getMaxHealth();
+		var unitValue = unit.getStats().getMaxHealth();
+
+		assertThat(unitValue).isEqualTo(increaseByPct(baselineValue, pctIncrease));
+	}
+
+	protected void assertMaxManaIsIncreasedByPct(Unit unit, int pctIncrease) {
+		var baselineValue = baseline.getStats().getMaxMana();
+		var unitValue = unit.getStats().getMaxMana();
+
+		assertThat(unitValue).isEqualTo(increaseByPct(baselineValue, pctIncrease));
+	}
+
+	protected void assertIntellectToSpellPowerConversion(Unit unit, int ratio) {
+		var sourceStat = baseline.getStats().getIntellect();
+		var bonus = getPercentOf(ratio, sourceStat);
+
+		assertSpellPowerIsIncreasedBy(unit, bonus);
+	}
+
+	protected void assertIntellectToSpellDamageConversion(Unit unit, int ratio) {
+		var sourceStat = baseline.getStats().getIntellect();
+		var bonus = getPercentOf(ratio, sourceStat);
+
+		assertSpellDamageIsIncreasedBy(unit, bonus);
+	}
+
+	protected void assertIntellectToMp5Conversion(Unit unit, int ratio) {
+		var sourceStat = baseline.getStats().getIntellect();
+		var bonus = getPercentOf(ratio, sourceStat);
+
+		assertMp5IsIncreasedBy(unit, bonus);
+	}
+
+	protected void assertSpiritToSpellPowerConversion(Player unit, int ratio) {
+		var sourceStat = baseline.getStats().getSpirit();
+		var bonus = getPercentOf(ratio, sourceStat);
+
+		assertSpellPowerIsIncreasedBy(unit, bonus);
 	}
 }

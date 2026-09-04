@@ -240,55 +240,6 @@ public abstract class TalentSimulationTest extends SpellSimulationTest {
 		return ((Duration) handler.getEffectDuration(simulatedAbilityName, player.getTarget())).getSeconds();
 	}
 
-	protected void assertStatConversion(String talentName, int rank, ToIntFunction<StatSummary> sourceStat, ToIntFunction<StatSummary> targetStat, int ratio) {
-		var statsBefore = player.getStats();
-
-		enableTalent(talentName, rank);
-
-		var statsAfter = player.getStats();
-
-		var sourceStatBefore = sourceStat.applyAsInt(statsBefore);
-		var targetStatBefore = targetStat.applyAsInt(statsBefore);
-		var targetStatAfter = targetStat.applyAsInt(statsAfter);
-		var bonus = getPercentOf(ratio, sourceStatBefore);
-
-		assertThat(targetStatAfter).isEqualTo(targetStatBefore + bonus);
-	}
-
-	protected void assertStaminaIsIncreasedByPct(String talentName, int rank, int pctIncrease) {
-		assertStatIncreasedByPct(talentName, rank, StatSummary::getStamina, pctIncrease);
-	}
-
-	protected void assertIntellectIsIncreasedByPct(String talentName, int rank, int pctIncrease) {
-		assertStatIncreasedByPct(talentName, rank, StatSummary::getIntellect, pctIncrease);
-	}
-
-	protected void assertSpiritIsIncreasedByPct(String talentName, int rank, int pctIncrease) {
-		assertStatIncreasedByPct(talentName, rank, StatSummary::getSpirit, pctIncrease);
-	}
-
-	protected void assertSpiritIsReducedByPct(String talentName, int rank, int pctReduction) {
-		assertStatIncreasedByPct(talentName, rank, StatSummary::getSpirit, -pctReduction);
-	}
-
-	protected void assertMaxHealthIsIncreasedByPct(String talentName, int rank, int pctIncrease) {
-		assertStatIncreasedByPct(talentName, rank, StatSummary::getMaxHealth, pctIncrease);
-	}
-
-	protected void assertMaxManaIsIncreasedByPct(String talentName, int rank, int pctIncrease) {
-		assertStatIncreasedByPct(talentName, rank, StatSummary::getMaxMana, pctIncrease);
-	}
-
-	private void assertStatIncreasedByPct(String talentName, int rank, ToIntFunction<StatSummary> stat, int pctIncrease) {
-		var statBefore = stat.applyAsInt(player.getStats());
-
-		enableTalent(talentName, rank);
-
-		var statAfter = stat.applyAsInt(player.getStats());
-
-		assertIsIncreasedByPct(statAfter, statBefore, pctIncrease);
-	}
-
 	protected void assertStatBonusIsIncreasedByPct(ToIntFunction<StatSummary> stat, int pctIncrease) {
 		var base = stat.applyAsInt(baseline.getStats());
 		var modifiedBonus = stat.applyAsInt(player.getStats()) - base;

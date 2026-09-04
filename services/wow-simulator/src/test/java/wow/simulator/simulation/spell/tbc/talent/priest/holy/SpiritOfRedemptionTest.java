@@ -18,6 +18,8 @@ class SpiritOfRedemptionTest extends TbcPriestTalentSimulationTest {
 
 	@Test
 	void spirit_is_increased() {
-		assertSpiritIsIncreasedByPct(SPIRIT_OF_REDEMPTION, 1, 5);
+		enableTalent(player, SPIRIT_OF_REDEMPTION);
+
+		assertSpiritIsIncreasedByPct(player, 5);
 	}
 }

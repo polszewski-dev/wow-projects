@@ -18,6 +18,8 @@ class AncestralKnowledgeTest extends TbcShamanTalentSimulationTest {
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2, 3, 4, 5 })
 	void max_mana_is_increased(int rank) {
-		assertMaxManaIsIncreasedByPct(ANCESTRAL_KNOWLEDGE, rank, rank);
+		enableTalent(player, ANCESTRAL_KNOWLEDGE, rank);
+
+		assertMaxManaIsIncreasedByPct(player, rank);
 	}
 }

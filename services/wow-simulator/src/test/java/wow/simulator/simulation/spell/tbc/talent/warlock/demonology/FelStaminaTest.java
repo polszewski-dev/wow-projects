@@ -19,7 +19,9 @@ class FelStaminaTest extends TbcWarlockTalentSimulationTest {
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2, 3 })
 	void max_health_is_increased(int rank) {
-		assertMaxHealthIsIncreasedByPct(FEL_STAMINA, rank, rank);
+		enableTalent(player, FEL_STAMINA, rank);
+
+		assertMaxHealthIsIncreasedByPct(player, rank);
 	}
 
 	@ParameterizedTest

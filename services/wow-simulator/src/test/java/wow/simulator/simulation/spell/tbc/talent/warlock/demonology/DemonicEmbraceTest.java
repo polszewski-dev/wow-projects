@@ -18,12 +18,16 @@ class DemonicEmbraceTest extends TbcWarlockTalentSimulationTest {
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2, 3, 4, 5 })
 	void stamina_is_increased(int rank) {
-		assertStaminaIsIncreasedByPct(DEMONIC_EMBRACE, rank, 3 * rank);
+		enableTalent(player, DEMONIC_EMBRACE, rank);
+
+		assertStaminaIsIncreasedByPct(player, 3 * rank);
 	}
 
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2, 3, 4, 5 })
 	void spirit_is_reduced(int rank) {
-		assertSpiritIsReducedByPct(DEMONIC_EMBRACE, rank, rank);
+		enableTalent(player, DEMONIC_EMBRACE, rank);
+
+		assertSpiritIsIncreasedByPct(player, -rank);
 	}
 }

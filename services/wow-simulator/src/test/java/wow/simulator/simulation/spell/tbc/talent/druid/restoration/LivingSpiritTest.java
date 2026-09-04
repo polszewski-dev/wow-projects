@@ -18,6 +18,8 @@ class LivingSpiritTest extends TbcDruidTalentSimulationTest {
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2, 3 })
 	void spirit_is_increased(int rank) {
-		assertSpiritIsIncreasedByPct(LIVING_SPIRIT, rank, 5 * rank);
+		enableTalent(player, LIVING_SPIRIT, rank);
+
+		assertSpiritIsIncreasedByPct(player, 5 * rank);
 	}
 }

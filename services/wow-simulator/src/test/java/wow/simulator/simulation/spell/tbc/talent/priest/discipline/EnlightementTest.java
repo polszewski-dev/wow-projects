@@ -18,18 +18,24 @@ class EnlightementTest extends TbcPriestTalentSimulationTest {
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2, 3, 4, 5 })
 	void stamina_is_increased(int rank) {
-		assertStaminaIsIncreasedByPct(ENLIGHTENMENT, rank, rank);
+		enableTalent(player, ENLIGHTENMENT, rank);
+
+		assertStaminaIsIncreasedByPct(player, rank);
 	}
 
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2, 3, 4, 5 })
 	void intellect_is_increased(int rank) {
-		assertIntellectIsIncreasedByPct(ENLIGHTENMENT, rank, rank);
+		enableTalent(player, ENLIGHTENMENT, rank);
+
+		assertIntellectIsIncreasedByPct(player, rank);
 	}
 
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2, 3, 4, 5 })
 	void spirit_is_increased(int rank) {
-		assertSpiritIsIncreasedByPct(ENLIGHTENMENT, rank, rank);
+		enableTalent(player, ENLIGHTENMENT, rank);
+
+		assertSpiritIsIncreasedByPct(player, rank);
 	}
 }

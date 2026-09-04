@@ -2,7 +2,6 @@ package wow.simulator.simulation.spell.tbc.talent.shaman.elemental;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import wow.character.model.snapshot.StatSummary;
 import wow.simulator.simulation.spell.tbc.talent.shaman.TbcShamanTalentSimulationTest;
 
 import static wow.test.commons.TalentNames.UNRELENTING_STORM;
@@ -19,6 +18,8 @@ class UnrelentingStormTest extends TbcShamanTalentSimulationTest {
 	@ParameterizedTest
 	@ValueSource(ints = {1, 2, 3, 4, 5})
 	void mp5_is_increased(int rank) {
-		assertStatConversion(UNRELENTING_STORM, rank, StatSummary::getIntellect, StatSummary::getInterruptedManaRegen, 2 * rank);
+		enableTalent(UNRELENTING_STORM, rank);
+
+		assertIntellectToMp5Conversion(player, 2 * rank);
 	}
 }
