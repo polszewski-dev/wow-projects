@@ -80,6 +80,11 @@ public class AugmentedEffect implements Effect {
 	}
 
 	@Override
+	public boolean isAura() {
+		return effect.isAura();
+	}
+
+	@Override
 	public PeriodicComponent getPeriodicComponent() {
 		return effect.getPeriodicComponent();
 	}

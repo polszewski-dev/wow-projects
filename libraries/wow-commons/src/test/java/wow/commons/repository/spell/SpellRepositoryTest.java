@@ -13,6 +13,7 @@ import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeCondition;
+import wow.commons.model.attribute.AttributeTarget;
 import wow.commons.model.attribute.Attributes;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.PetType;
@@ -894,7 +895,16 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 			}
 		}
 
+		if (effect.isAura() != isAura(effect)) {
+			return "Incorrect aura field";
+		}
+
 		return null;
+	}
+
+	private boolean isAura(Effect effect) {
+		return effect.hasModifierComponent() && effect.getModifierAttributeList().stream()
+				.anyMatch(x -> x.target() == AttributeTarget.PARTY);
 	}
 
 	private Set<SpellSchool> getComponentSchool(Spell spell) {

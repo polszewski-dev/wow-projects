@@ -389,6 +389,11 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	}
 
 	@Override
+	public boolean isAura() {
+		return effect.isAura();
+	}
+
+	@Override
 	public PeriodicComponent getPeriodicComponent() {
 		return effect.getPeriodicComponent();
 	}

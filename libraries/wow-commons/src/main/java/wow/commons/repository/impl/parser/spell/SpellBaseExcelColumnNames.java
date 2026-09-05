@@ -54,6 +54,7 @@ public final class SpellBaseExcelColumnNames {
 	public static final String SCOPE = "scope";
 	public static final String EXCLUSION_GROUP = "exclusion group";
 	public static final String FORM_TYPE = "form type";
+	public static final String AURA = "aura";
 	public static final String PREVENTED_SCHOOLS = "prevented schools";
 	public static final String ABSORB_CONDITION = "condition";
 	public static final String ABSORB_MIN = "min";

@@ -14,6 +14,8 @@ import wow.commons.model.spell.SpellSchool;
 import java.util.List;
 import java.util.Objects;
 
+import static wow.commons.model.attribute.AttributeTarget.PARTY;
+
 /**
  * User: POlszewski
  * Date: 2026-04-08
@@ -25,6 +27,7 @@ public class AttributeEffect implements Effect {
 	private final List<Attribute> modifierAttributeList;
 	private final EffectSource source;
 	private final Description description;
+	private final boolean aura;
 
 	public AttributeEffect(List<AbilityId> augmentedAbilities, ModifierComponent modifierComponent, EffectSource source, Description description) {
 		Objects.requireNonNull(augmentedAbilities);
@@ -33,14 +36,11 @@ public class AttributeEffect implements Effect {
 		this.modifierAttributeList = (modifierComponent != null) ? modifierComponent.attributes().list() : null;
 		this.source = source;
 		this.description = description;
+		this.aura = modifierAttributeList != null && modifierAttributeList.stream().anyMatch(x -> x.target() == PARTY);
 	}
 
 	public AttributeEffect(Attributes attributes) {
 		this(List.of(), attributes, null);
-	}
-
-	public AttributeEffect(Attributes attributes, String tooltip) {
-		this(List.of(), attributes, tooltip);
 	}
 
 	public AttributeEffect(List<AbilityId> augmentedAbilities, Attributes attributes, String tooltip) {
@@ -93,6 +93,11 @@ public class AttributeEffect implements Effect {
 	@Override
 	public FormType getFormType() {
 		return null;
+	}
+
+	@Override
+	public boolean isAura() {
+		return aura;
 	}
 
 	@Override

@@ -32,6 +32,7 @@ public class EffectImpl implements Effect {
 	private EffectScope scope;
 	private EffectExclusionGroup exclusionGroup;
 	private FormType formType;
+	private boolean aura;
 	private PeriodicComponent periodicComponent;
 	private ModifierComponent modifierComponent;
 	private AbsorptionComponent absorptionComponent;

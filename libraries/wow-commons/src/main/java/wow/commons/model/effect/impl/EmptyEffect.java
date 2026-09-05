@@ -72,6 +72,11 @@ public class EmptyEffect implements Effect {
 	}
 
 	@Override
+	public boolean isAura() {
+		return false;
+	}
+
+	@Override
 	public PeriodicComponent getPeriodicComponent() {
 		return null;
 	}

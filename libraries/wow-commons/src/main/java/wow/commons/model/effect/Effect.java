@@ -2,7 +2,6 @@ package wow.commons.model.effect;
 
 import wow.commons.model.Duration;
 import wow.commons.model.attribute.Attribute;
-import wow.commons.model.attribute.AttributeTarget;
 import wow.commons.model.character.FormType;
 import wow.commons.model.config.Described;
 import wow.commons.model.config.TimeRestricted;
@@ -41,6 +40,8 @@ public interface Effect extends Described, TimeRestricted {
 	EffectExclusionGroup getExclusionGroup();
 
 	FormType getFormType();
+
+	boolean isAura();
 
 	PeriodicComponent getPeriodicComponent();
 
@@ -113,11 +114,6 @@ public interface Effect extends Described, TimeRestricted {
 
 	default boolean hasEvents() {
 		return !getEvents().isEmpty();
-	}
-
-	default boolean isAura() {
-		return hasModifierComponent() && getModifierAttributeList().stream()
-				.anyMatch(x -> x.target() == AttributeTarget.PARTY);
 	}
 
 	default Effect augment(EffectAugmentations augmentations) {

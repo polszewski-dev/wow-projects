@@ -52,6 +52,7 @@ public class SpellEffectSheetParser extends AbstractSpellBaseSheetParser {
 	private final ExcelColumn colScope = column(SCOPE);
 	private final ExcelColumn colExclusionGroup = column(EXCLUSION_GROUP);
 	private final ExcelColumn colFormType = column(FORM_TYPE, true);
+	private final ExcelColumn colAura = column(AURA, true);
 	private final ExcelColumn colPreventedSchools = column(PREVENTED_SCHOOLS, true);
 
 	protected Effect getEffect() {
@@ -64,6 +65,7 @@ public class SpellEffectSheetParser extends AbstractSpellBaseSheetParser {
 		var scope = colScope.getEnum(EffectScope::parse);
 		var exclusionGroup = colExclusionGroup.getEnum(EffectExclusionGroup::parse, null);
 		var formType = colFormType.getEnum(FormType::parse, null);
+		var isAura = colAura.getBoolean();
 		var periodicComponent = getPeriodicComponent();
 		var modifierComponent = getModifierComponent(config.maxModAttributes());
 		var absorptionComponent = getAbsorptionComponent();
@@ -83,6 +85,7 @@ public class SpellEffectSheetParser extends AbstractSpellBaseSheetParser {
 		effect.setScope(scope);
 		effect.setExclusionGroup(exclusionGroup);
 		effect.setFormType(formType);
+		effect.setAura(isAura);
 		effect.setPeriodicComponent(periodicComponent);
 		effect.setModifierComponent(modifierComponent);
 		effect.setPreventedSchools(preventedSchools);
