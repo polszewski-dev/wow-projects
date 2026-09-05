@@ -28,7 +28,6 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static java.lang.Math.*;
 import static wow.character.model.snapshot.AttributePredicates.*;
@@ -38,6 +37,7 @@ import static wow.commons.model.attribute.AttributeId.COPY_PCT;
 import static wow.commons.model.attribute.AttributeId.EFFECT_PCT;
 import static wow.commons.model.attribute.PowerType.HEALING;
 import static wow.commons.model.attribute.PowerType.SPELL_DAMAGE;
+import static wow.commons.model.spell.SpellSchool.magicSpellSchoolsStream;
 import static wow.commons.model.spell.SpellTargetType.GROUND;
 import static wow.commons.model.spell.component.ComponentCommand.*;
 
@@ -695,14 +695,14 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	private Map<SpellSchool, Integer> getSpellDamageBySchool(Character character) {
-		return Stream.of(SpellSchool.values()).collect(Collectors.toMap(
+		return magicSpellSchoolsStream().collect(Collectors.toMap(
 				Function.identity(),
 				school -> getSpellDamage(character, school)
 		));
 	}
 
 	private Map<SpellSchool, Double> getSpellDamagePctBySchool(Character character) {
-		return Stream.of(SpellSchool.values()).collect(Collectors.toMap(
+		return magicSpellSchoolsStream().collect(Collectors.toMap(
 				Function.identity(),
 				school -> getSpellDamagePct(character, school)
 		));
