@@ -111,6 +111,7 @@ public abstract class AbstractSpellSheetParser extends AbstractSpellBaseSheetPar
 		var spellId = colId.getInteger(SpellId::of);
 		var description = getDescription();
 		var timeRestriction = getTimeRestriction();
+		var school = colSchool.getEnum(SpellSchool::parse, null);
 		var cooldown = colCooldown.getDuration(Duration.ZERO);
 		var bolt = colBolt.getBoolean();
 		var directComponent = getDirectComponent();
@@ -120,12 +121,14 @@ public abstract class AbstractSpellSheetParser extends AbstractSpellBaseSheetPar
 		spell.setDescription(description);
 		spell.setTimeRestriction(timeRestriction);
 
+		spell.setSchool(school);
 		spell.setCooldown(cooldown);
 		spell.setBolt(bolt);
 		spell.setDirectComponent(directComponent);
 		spell.setEffectApplication(effectApplication);
 	}
 
+	private final ExcelColumn colSchool = column(SCHOOL);
 	private final ExcelColumn colCategory = column(ABILITY_CATEGORY);
 	private final ExcelColumn colCooldown = column(COOLDOWN);
 	private final ExcelColumn colRange = column(RANGE);
@@ -292,7 +295,7 @@ public abstract class AbstractSpellSheetParser extends AbstractSpellBaseSheetPar
 		return new GainManaDirectly(target, condition, coeff, min, max);
 	}
 
-	private final ExcelColumn colSchool = column(DIRECT_SCHOOL, true);
+	private final ExcelColumn colDirectSchool = column(DIRECT_SCHOOL, true);
 	private final ExcelColumn colRatio = column(DIRECT_RATIO, true);
 	private final ExcelColumn colFrom = column(DIRECT_FROM, true);
 	private final ExcelColumn colTo = column(DIRECT_TO, true);
@@ -300,7 +303,7 @@ public abstract class AbstractSpellSheetParser extends AbstractSpellBaseSheetPar
 	private Copy getCopyDirectly(String prefix) {
 		var target = getTarget(prefix);
 		var condition = getTargetCondition(prefix);
-		var school = colSchool.prefixed(prefix).getEnum(SpellSchool::parse, null);
+		var school = colDirectSchool.prefixed(prefix).getEnum(SpellSchool::parse, null);
 		var ratio = colRatio.prefixed(prefix).getPercent();
 		var from = colFrom.prefixed(prefix).getEnum(From::parse);
 		var to = colTo.prefixed(prefix).getEnum(To::parse);

@@ -202,7 +202,7 @@ public class SpellEffectSheetParser extends AbstractSpellBaseSheetParser {
 		return new GainPctOfTotalManaPeriodically(target, coefficient, amount, numTicks);
 	}
 
-	private final ExcelColumn colSchool = column(PERIODIC_SCHOOL, true);
+	private final ExcelColumn colPeriodicSchool = column(PERIODIC_SCHOOL, true);
 	private final ExcelColumn colRatio = column(PERIODIC_RATIO, true);
 	private final ExcelColumn colFrom = column(PERIODIC_FROM, true);
 	private final ExcelColumn colTo = column(PERIODIC_TO, true);
@@ -210,7 +210,7 @@ public class SpellEffectSheetParser extends AbstractSpellBaseSheetParser {
 	private Copy getCopyPeriodically(String prefix) {
 		var target = getTarget(prefix);
 		var condition = SpellTargetCondition.EMPTY;
-		var school = colSchool.prefixed(prefix).getEnum(SpellSchool::parse, null);
+		var school = colPeriodicSchool.prefixed(prefix).getEnum(SpellSchool::parse, null);
 		var ratio = colRatio.prefixed(prefix).getPercent();
 		var from = colFrom.prefixed(prefix).getEnum(From::parse);
 		var to = colTo.prefixed(prefix).getEnum(To::parse);

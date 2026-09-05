@@ -24,6 +24,7 @@ public final class SpellBaseExcelColumnNames {
 	public static final String COOLDOWN_GROUP = "cooldown: group";
 	public static final String RANGE = "range";
 	public static final String BOLT = "bolt";
+	public static final String SCHOOL = "school";
 	public static final String EFFECT_REMOVED_ON_HIT = "effect removed on hit";
 	public static final String TARGET_CONDITION = "target condition";
 	public static final String DIRECT_TYPE = "type";

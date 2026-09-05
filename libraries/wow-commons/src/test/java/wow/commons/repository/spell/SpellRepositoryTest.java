@@ -26,12 +26,12 @@ import wow.commons.model.effect.component.*;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spell.*;
+import wow.commons.model.spell.component.ComponentCommand;
 import wow.commons.model.spell.component.DirectComponent;
 import wow.commons.model.spell.component.DirectComponentBonus;
 import wow.commons.model.talent.TalentTree;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -855,6 +855,13 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 			return "Channeled ability with non-zero cast time: " + ability;
 		}
 
+		var spellSchool = spell.getSchool() != null ? Set.of(spell.getSchool()) : Set.of();
+		var componentSchool = getComponentSchool(spell);
+
+		if (!componentSchool.isEmpty() && !spellSchool.equals(componentSchool)) {
+			return "Wrong spell school, expected %s, was %s".formatted(spellSchool, componentSchool);
+		}
+
 		for (var applyEffectCommand : ability.getApplyEffectCommands()) {
 			var effectTarget = applyEffectCommand.target();
 			var effect = applyEffectCommand.effect();
@@ -888,6 +895,46 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		}
 
 		return null;
+	}
+
+	private Set<SpellSchool> getComponentSchool(Spell spell) {
+		var commands = getComponentCommands(spell);
+
+		var result = new HashSet<SpellSchool>();
+
+		for (var command : commands) {
+			switch (command) {
+				case DirectCommand c ->
+						result.add(c.school());
+
+				case PeriodicCommand c ->
+						result.add(c.school());
+
+				default -> {
+					// void
+				}
+			}
+		}
+
+		result.remove(null);
+
+		return result;
+	}
+
+	private List<ComponentCommand> getComponentCommands(Spell spell) {
+		var result = new ArrayList<ComponentCommand>();
+
+		result.addAll(spell.getDirectCommands());
+		result.addAll(getPeriodicCommands(spell));
+		return result;
+	}
+
+	private List<PeriodicCommand> getPeriodicCommands(Spell spell) {
+		return spell.getApplyEffectCommands().stream()
+				.map(ApplyEffect::effect)
+				.map(Effect::getPeriodicCommands)
+				.flatMap(List::stream)
+				.toList();
 	}
 
 

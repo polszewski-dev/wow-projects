@@ -14,17 +14,13 @@ import wow.commons.model.effect.impl.EffectImpl;
 import wow.commons.model.spell.EffectApplication;
 import wow.commons.model.spell.Spell;
 import wow.commons.model.spell.SpellId;
-import wow.commons.model.spell.SpellSchool;
 import wow.commons.model.spell.component.ComponentCommand;
 import wow.commons.model.spell.impl.SpellImpl;
-import wow.commons.util.CollectionUtil;
 import wow.commons.util.PhaseMap;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import static wow.commons.model.spell.component.ComponentCommand.*;
@@ -146,12 +142,10 @@ public class SpellExcelParser extends ExcelParser {
 	}
 
 	private void setMissingSpellFields(Spell spell) {
-		var school = getSpellSchool(spell).orElse(null);
 		var hasDamagingComponent = hasDamagingComponent(spell);
 		var hasHealingComponent = hasHealingComponent(spell);
 		var spellImpl = (SpellImpl) spell;
 
-		spellImpl.setSchool(school);
 		spellImpl.setHasDamagingComponent(hasDamagingComponent);
 		spellImpl.setHasHealingComponent(hasHealingComponent);
 	}
@@ -168,30 +162,6 @@ public class SpellExcelParser extends ExcelParser {
 
 		return commands.stream()
 				.anyMatch(x -> x instanceof HealDirectly || x instanceof HealPeriodically);
-	}
-
-	private Optional<SpellSchool> getSpellSchool(Spell spell) {
-		var commands = getComponentCommands(spell);
-
-		var result = new HashSet<SpellSchool>();
-
-		for (var command : commands) {
-			switch (command) {
-				case DirectCommand c ->
-						result.add(c.school());
-
-				case PeriodicCommand c ->
-						result.add(c.school());
-
-				default -> {
-					// void
-				}
-			}
-		}
-
-		result.remove(null);
-
-		return CollectionUtil.getUniqueResult(List.copyOf(result));
 	}
 
 	private List<ComponentCommand> getComponentCommands(Spell spell) {
