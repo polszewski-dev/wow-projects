@@ -47,8 +47,7 @@ import static wow.commons.model.pve.PhaseId.TBC_P5;
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
 import static wow.commons.model.spell.SpellSchool.*;
-import static wow.commons.model.spell.SpellTargetType.GROUND;
-import static wow.commons.model.spell.SpellTargetType.TARGET;
+import static wow.commons.model.spell.SpellTargetType.*;
 import static wow.commons.model.spell.component.ComponentCommand.*;
 import static wow.test.commons.AbilityNames.*;
 
@@ -863,6 +862,13 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 			return "Wrong spell school, expected %s, was %s".formatted(spellSchool, componentSchool);
 		}
 
+		var primaryTarget = ability.getPrimaryTarget();
+		var computedPrimaryTarget = getPrimaryTarget(ability);
+
+		if (computedPrimaryTarget != null && primaryTarget != computedPrimaryTarget) {
+			System.err.printf("%s - %s <> %s%n", ability, primaryTarget, computedPrimaryTarget);
+		}
+
 		for (var applyEffectCommand : ability.getApplyEffectCommands()) {
 			var effectTarget = applyEffectCommand.target();
 			var effect = applyEffectCommand.effect();
@@ -947,6 +953,60 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 				.toList();
 	}
 
+	private PrimaryTargetType getPrimaryTarget(Ability ability) {
+		var singleTargets = getSingleTargets(ability);
+
+		if (singleTargets.isEmpty()) {
+			return null;
+		}
+
+		var nonIgnorableSingleTargets = getNonIgnorableSingleTargets(ability);
+
+		if (nonIgnorableSingleTargets.size() == 1) {
+			return translate(nonIgnorableSingleTargets.getFirst().type());
+		}
+
+		if (singleTargets.size() == 1) {
+			return translate(singleTargets.getFirst().type());
+		}
+
+		throw new IllegalArgumentException("Can't compute primary target for " + ability);
+	}
+
+	private PrimaryTargetType translate(SpellTargetType spellTarget) {
+		return switch (spellTarget) {
+			case SELF -> PrimaryTargetType.SELF;
+			case PET -> PrimaryTargetType.PET;
+			case FRIEND -> PrimaryTargetType.FRIEND;
+			case FRIENDS_PARTY -> PrimaryTargetType.FRIEND;
+			case ENEMY -> PrimaryTargetType.ENEMY;
+			case ANY -> PrimaryTargetType.ANY;
+			case MASTER, TARGET, ATTACKER, FRIEND_AOE, PARTY, PARTY_AOE, ENEMY_AOE, ENEMY_AOE_EXCEPT_TARGET, GROUND -> throw new IllegalArgumentException(spellTarget + "");
+		};
+	}
+
+	private List<SpellTarget> getSingleTargets(Ability ability) {
+		var targets = ability.getTargets();
+
+		return targets.stream()
+				.filter(SpellTarget::isSingle)
+				.toList();
+	}
+
+	private List<SpellTarget> getNonIgnorableSingleTargets(Ability ability) {
+		var targets = ability.getTargets(
+				command -> !(
+						command instanceof Copy &&
+								(command.target().hasType(MASTER) || command.target().hasType(PET))
+				),
+				command -> true
+		);
+
+		return targets.stream()
+				.filter(SpellTarget::isSingle)
+				.filter(x -> !x.hasType(SELF))
+				.toList();
+	}
 
 	private ClassAbility getClassAbility(String name, int rank, PhaseId phaseId) {
 		return (ClassAbility) spellRepository.getAbility(name, rank, phaseId).orElseThrow();

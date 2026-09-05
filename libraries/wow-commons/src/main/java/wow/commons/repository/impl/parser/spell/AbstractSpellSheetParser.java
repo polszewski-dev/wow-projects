@@ -133,6 +133,7 @@ public abstract class AbstractSpellSheetParser extends AbstractSpellBaseSheetPar
 	private final ExcelColumn colCooldown = column(COOLDOWN);
 	private final ExcelColumn colRange = column(RANGE);
 	private final ExcelColumn colBolt = column(BOLT);
+	private final ExcelColumn colPrimaryTarget = column(PRIMARY_TARGET);
 	private final ExcelColumn colEffectRemovedOnHit = column(EFFECT_REMOVED_ON_HIT);
 
 	protected void initAbility(AbilityImpl ability) {
@@ -140,6 +141,7 @@ public abstract class AbstractSpellSheetParser extends AbstractSpellBaseSheetPar
 
 		var abilityId = colName.getEnum(AbilityId::parse);
 		var category = colCategory.getEnum(AbilityCategory::parse, null);
+		var primaryTarget = colPrimaryTarget.getEnum(PrimaryTargetType::parse, null);
 		var castInfo = getCastInfo(ability instanceof ActivatedAbility);
 		var range = colRange.getInteger();
 		var effectRemovedOnHit = colEffectRemovedOnHit.getEnum(AbilityId::parse, null);
@@ -147,6 +149,7 @@ public abstract class AbstractSpellSheetParser extends AbstractSpellBaseSheetPar
 
 		ability.setAbilityId(abilityId);
 		ability.setCategory(category);
+		ability.setPrimaryTarget(primaryTarget);
 		ability.setCastInfo(castInfo);
 		ability.setRange(range);
 		ability.setEffectRemovedOnHit(effectRemovedOnHit);

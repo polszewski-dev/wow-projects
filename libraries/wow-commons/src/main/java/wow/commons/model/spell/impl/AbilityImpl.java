@@ -14,6 +14,7 @@ import wow.commons.model.spell.*;
 public abstract class AbilityImpl extends SpellImpl implements Ability {
 	private AbilityId abilityId;
 	private AbilityCategory category;
+	private PrimaryTargetType primaryTarget;
 	private CastInfo castInfo;
 	private int range;
 	private AbilityId effectRemovedOnHit;

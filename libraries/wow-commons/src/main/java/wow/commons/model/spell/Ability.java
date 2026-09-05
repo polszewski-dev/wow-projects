@@ -12,6 +12,8 @@ public interface Ability extends Spell, CharacterRestricted {
 
 	AbilityCategory getCategory();
 
+	PrimaryTargetType getPrimaryTarget();
+
 	CastInfo getCastInfo();
 
 	Cost getCost();

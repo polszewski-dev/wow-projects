@@ -2,12 +2,8 @@ package wow.simulator.model.unit;
 
 import lombok.AllArgsConstructor;
 import wow.commons.model.spell.Ability;
-import wow.commons.model.spell.SpellTarget;
+import wow.commons.model.spell.PrimaryTargetType;
 
-import java.util.List;
-
-import static wow.commons.model.spell.SpellTargetType.*;
-import static wow.commons.model.spell.component.ComponentCommand.Copy;
 import static wow.simulator.model.unit.Unit.areFriendly;
 import static wow.simulator.model.unit.Unit.areHostile;
 
@@ -23,9 +19,9 @@ public class PrimaryTargetResolver {
 	private final Unit explicitTarget;
 
 	public PrimaryTarget getPrimaryTarget() {
-		var singleTargets = getSingleTargets();
+		var targetType = ability.getPrimaryTarget();
 
-		if (singleTargets.isEmpty()) {
+		if (targetType == null) {
 			if (explicitTarget != null) {
 				return PrimaryTarget.INVALID;
 			} else {
@@ -33,58 +29,23 @@ public class PrimaryTargetResolver {
 			}
 		}
 
-		var nonIgnorableSingleTargets = getNonIgnorableSingleTargets();
-
-		if (nonIgnorableSingleTargets.size() == 1) {
-			return resolveTarget(nonIgnorableSingleTargets.getFirst());
-		}
-
-		if (singleTargets.size() == 1) {
-			return resolveTarget(singleTargets.getFirst());
-		}
-
-		return PrimaryTarget.INVALID;
+		return resolveTarget(targetType);
 	}
 
-	private List<SpellTarget> getSingleTargets() {
-		var targets = ability.getTargets();
-
-		return targets.stream()
-				.filter(SpellTarget::isSingle)
-				.toList();
-	}
-
-	private List<SpellTarget> getNonIgnorableSingleTargets() {
-		var targets = ability.getTargets(
-				command -> !(
-						command instanceof Copy &&
-						(command.target().hasType(MASTER) || command.target().hasType(PET))
-				),
-				command -> true
-		);
-
-		return targets.stream()
-				.filter(SpellTarget::isSingle)
-				.filter(x -> !x.hasType(SELF))
-				.toList();
-	}
-
-	private PrimaryTarget resolveTarget(SpellTarget spellTarget) {
-		return switch (spellTarget.type()) {
+	private PrimaryTarget resolveTarget(PrimaryTargetType targetType) {
+		return switch (targetType) {
 			case SELF ->
 					getSelf();
 			case PET ->
 					getActivePet();
 			case MASTER ->
 					getMaster();
-			case FRIEND, FRIENDS_PARTY ->
+			case FRIEND ->
 					getFriendlyTarget();
 			case ENEMY ->
 					getHostileTarget();
 			case ANY ->
 					getAnyTarget();
-			default ->
-					throw new UnsupportedOperationException("No AoE targets atm");
 		};
 	}
 

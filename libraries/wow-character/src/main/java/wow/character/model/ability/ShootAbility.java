@@ -61,6 +61,11 @@ public class ShootAbility implements Ability {
 	}
 
 	@Override
+	public PrimaryTargetType getPrimaryTarget() {
+		return ability.getPrimaryTarget();
+	}
+
+	@Override
 	public Cost getCost() {
 		return ability.getCost();
 	}
