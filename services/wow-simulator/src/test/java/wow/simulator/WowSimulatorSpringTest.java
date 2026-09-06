@@ -231,6 +231,10 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		assertManaPaid(abilityName, target, increaseByPct(expectedBaseAmount, pctIncrease));
 	}
 
+	protected void assertManaPaid(SpellInfo spellInfo, Unit target, int pctIncrease) {
+		assertManaPaid(spellInfo.name(), target, spellInfo.manaCost(), pctIncrease);
+	}
+
 	protected void assertManaGained(String abilityName, Unit target, double expectedAmount) {
 		var totalMana = handler.getManaGained(abilityName, target);
 
@@ -266,6 +270,12 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		var actualEffectDuration = handler.getEffectDuration(abilityName, target);
 
 		assertThat(actualEffectDuration).isEqualTo(Duration.seconds(duration));
+	}
+
+	protected void assertEffectDuration(String abilityName, Unit target, Duration duration) {
+		var actualEffectDuration = handler.getEffectDuration(abilityName, target);
+
+		assertThat(actualEffectDuration).isEqualTo(duration);
 	}
 
 	protected Action newAction(int delay, Runnable runnable) {

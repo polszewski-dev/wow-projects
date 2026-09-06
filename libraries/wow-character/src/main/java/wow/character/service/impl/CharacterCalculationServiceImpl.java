@@ -9,6 +9,7 @@ import wow.character.model.snapshot.*;
 import wow.character.service.CharacterCalculationService;
 import wow.character.util.AbstractEffectCollector;
 import wow.character.util.AttributeConditionArgs;
+import wow.commons.model.AnyDuration;
 import wow.commons.model.Duration;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeId;
@@ -377,44 +378,69 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 
 	@Override
 	public EffectDurationSnapshot getEffectDurationSnapshot(Character character, Spell spell, ApplyEffect command, AccumulatedDurationStats durationStats, AccumulatedReceivedEffectStats receivedEffectStats) {
+		if (spell instanceof Ability ability && ability.isChanneled()) {
+			return getChanneledEffectDurationSnapshot(character, command, durationStats, receivedEffectStats);
+		}
+
+		var tickInterval = command.effect().getTickInterval();
+
+		if (tickInterval != null) {
+			return getPeriodicEffectDurationSnapshot(command, durationStats, receivedEffectStats);
+		} else {
+			return getNonPeriodicEffectDurationSnapshot(command, durationStats, receivedEffectStats);
+		}
+	}
+
+	private EffectDurationSnapshot getChanneledEffectDurationSnapshot(Character character, ApplyEffect command, AccumulatedDurationStats durationStats, AccumulatedReceivedEffectStats receivedEffectStats) {
 		var effect = command.effect();
+
+		var baseDuration = (Duration) command.duration();
+		var baseTickIntervalMillis = effect.getTickInterval().millis();
+		var duration = getEffectDuration(baseDuration, durationStats, receivedEffectStats);
+		var durationMillis = duration.millis();
+		var numTicks = durationMillis / baseTickIntervalMillis;
+		var numTicksNotRounded = (double) durationMillis / baseTickIntervalMillis;
+
+		var hastePct = getHastePct(character, durationStats);
+		var tickIntervalMillis = (long) getActualCastTime(baseTickIntervalMillis, hastePct);
+		var channelTimeMillis = (long) (tickIntervalMillis * numTicksNotRounded);
 
 		var durationSnapshot = new EffectDurationSnapshot();
 
-		if (spell instanceof Ability ability && ability.isChanneled()) {
-			var baseDuration = (Duration) command.duration();
-			var baseDurationMillis = baseDuration.millis();
-			var baseTickIntervalMillis = effect.getTickInterval().millis();
-			var numTicks = baseDurationMillis / baseTickIntervalMillis;
+		durationSnapshot.setNumTicks((int) numTicks);
+		durationSnapshot.setTickInterval(Duration.millis(tickIntervalMillis));
+		durationSnapshot.setDuration(Duration.millis(channelTimeMillis));
 
-			var hastePct = getHastePct(character, durationStats);
-			var channelTimeMillis = getActualCastTime(baseDurationMillis, hastePct);
-			var tickIntervalMillis = (long) (channelTimeMillis / numTicks);
+		return durationSnapshot;
+	}
 
-			durationSnapshot.setDuration(Duration.millis(tickIntervalMillis * numTicks));
-			durationSnapshot.setNumTicks((int) numTicks);
-			durationSnapshot.setTickInterval(Duration.millis(tickIntervalMillis));
-		} else {
-			var baseDuration = command.duration();
-			var tickInterval = effect.getTickInterval();
+	private EffectDurationSnapshot getPeriodicEffectDurationSnapshot(ApplyEffect command, AccumulatedDurationStats durationStats, AccumulatedReceivedEffectStats receivedEffectStats) {
+		var effect = command.effect();
+		var baseDuration = (Duration) command.duration();
+		var tickInterval = effect.getTickInterval();
+		var duration = getEffectDuration(baseDuration, durationStats, receivedEffectStats);
+		var numTicks = duration.millis() / tickInterval.millis();
 
-			if (tickInterval != null) {
-				var duration = getEffectDuration((Duration) baseDuration, durationStats, receivedEffectStats);
-				var numTicks = duration.millis() / tickInterval.millis();
+		var durationSnapshot = new EffectDurationSnapshot();
 
-				durationSnapshot.setNumTicks((int) numTicks);
-				durationSnapshot.setTickInterval(tickInterval);
-				durationSnapshot.setDuration(duration);
-			} else {
-				var duration = baseDuration.isInfinite()
-						? baseDuration
-						: getEffectDuration((Duration) baseDuration, durationStats, receivedEffectStats);
+		durationSnapshot.setNumTicks((int) numTicks);
+		durationSnapshot.setTickInterval(tickInterval);
+		durationSnapshot.setDuration(duration);
 
-				durationSnapshot.setNumTicks(0);
-				durationSnapshot.setTickInterval(Duration.ZERO);
-				durationSnapshot.setDuration(duration);
-			}
-		}
+		return durationSnapshot;
+	}
+
+	private EffectDurationSnapshot getNonPeriodicEffectDurationSnapshot(ApplyEffect command, AccumulatedDurationStats durationStats, AccumulatedReceivedEffectStats receivedEffectStats) {
+		var baseDuration = command.duration();
+		var duration = baseDuration.isInfinite()
+				? baseDuration
+				: getEffectDuration((Duration) baseDuration, durationStats, receivedEffectStats);
+
+		var durationSnapshot = new EffectDurationSnapshot();
+
+		durationSnapshot.setNumTicks(0);
+		durationSnapshot.setTickInterval(Duration.ZERO);
+		durationSnapshot.setDuration(duration);
 
 		return durationSnapshot;
 	}
@@ -428,6 +454,28 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 			duration += receivedEffectStats.getReceivedEffectDuration();
 			durationPct += receivedEffectStats.getReceivedEffectDurationPct();
 		}
+
+		var result = addAndMultiplyByPct(baseDurationSeconds, duration, durationPct);
+
+		return Duration.seconds(result);
+	}
+
+	@Override
+	public AnyDuration getSummonDuration(Character character, Spell spell, SummonPet command) {
+		var commandDuration = command.duration();
+
+		if (commandDuration.isInfinite()) {
+			return commandDuration;
+		}
+
+		var conditionArgs = AttributeConditionArgs.forSpell(character, spell, null);
+		var durationStats = new AccumulatedDurationStats(conditionArgs);
+
+		accumulateEffects(character, durationStats);
+
+		var baseDurationSeconds = ((Duration) commandDuration).getSeconds();
+		var duration = durationStats.getDuration();
+		var durationPct = durationStats.getDurationPct();
 
 		var result = addAndMultiplyByPct(baseDurationSeconds, duration, durationPct);
 

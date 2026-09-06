@@ -51,8 +51,9 @@ public interface TbcSpellInfos {
 	SpellInfo ARCANE_BLAST_INFO = new SpellInfo(ARCANE_BLAST, 195, 2.5).withDirect(668, 772, 71.43);
 	SpellInfo ARCANE_EXPLOSION_INFO = new SpellInfo(ARCANE_EXPLOSION, 545, 0).withDirect(377, 407, 21.28);
 	SpellInfo ARCANE_MISSILES_INFO = new SpellInfo(ARCANE_MISSILES, 785, 0).withPeriodic(1430, 142.86, 5, 5);
+	SpellInfo PRESENCE_OF_MIND_INFO = new SpellInfo(PRESENCE_OF_MIND, 0, 0).withCooldown(180);
 
-	SpellInfo BLAST_WAVE_INFO = new SpellInfo(BLAST_WAVE, 620, 0).withDirect(616, 724, 13.57);
+	SpellInfo BLAST_WAVE_INFO = new SpellInfo(BLAST_WAVE, 620, 0).withDirect(616, 724, 13.57).withCooldown(30);
 	SpellInfo DRAGONS_BREATH_INFO = new SpellInfo(DRAGONS_BREATH, 700, 0).withDirect(680, 790, 13.57);
 	SpellInfo FIRE_BLAST_INFO = new SpellInfo(FIRE_BLAST, 465, 0).withDirect(664, 786, 42.86);
 	SpellInfo FIREBALL_INFO = new SpellInfo(FIREBALL, 465, 3.5).withDirect(717, 913, 100).withPeriodic(84, 0, 8, 4);
@@ -65,6 +66,7 @@ public interface TbcSpellInfos {
 	SpellInfo FROST_NOVA_INFO = new SpellInfo(FROST_NOVA, 185, 0).withDirect(100, 113, 13.57);
 	SpellInfo FROSTBOLT_INFO = new SpellInfo(FROSTBOLT, 345, 3).withDirect(630, 680, 81.43);
 	SpellInfo ICE_LANCE_INFO = new SpellInfo(ICE_LANCE, 150, 0).withDirect(173, 200, 14.29);
+	SpellInfo ICE_BLOCK_INFO = new SpellInfo(ICE_BLOCK, 0, 0).withCooldown(300);
 
 	SpellInfo ENTANGLING_ROOTS_INFO = new SpellInfo(ENTANGLING_ROOTS, 160, 1.5).withPeriodic(351, 90, 27, 9);
 	SpellInfo HURRICANE_INFO = new SpellInfo(HURRICANE, 1905, 0).withPeriodic(2060, 128, 10, 10);

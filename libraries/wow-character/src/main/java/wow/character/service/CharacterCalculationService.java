@@ -2,6 +2,7 @@ package wow.character.service;
 
 import wow.character.model.character.Character;
 import wow.character.model.snapshot.*;
+import wow.commons.model.AnyDuration;
 import wow.commons.model.attribute.PowerType;
 import wow.commons.model.effect.EffectAugmentations;
 import wow.commons.model.spell.Ability;
@@ -52,6 +53,8 @@ public interface CharacterCalculationService {
 	EffectDurationSnapshot getEffectDurationSnapshot(Character character, Spell spell, Character target, ApplyEffect command);
 
 	EffectDurationSnapshot getEffectDurationSnapshot(Character character, Spell spell, ApplyEffect command, AccumulatedDurationStats durationStats, AccumulatedReceivedEffectStats receivedEffectStats);
+
+	AnyDuration getSummonDuration(Character character, Spell spell, SummonPet command);
 
 	DirectSpellComponentSnapshot getDirectSpellDamageSnapshot(Character character, Spell spell, Character target, DealDamageDirectly command);
 

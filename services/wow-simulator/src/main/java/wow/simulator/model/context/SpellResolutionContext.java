@@ -178,7 +178,7 @@ public class SpellResolutionContext extends Context {
 	protected void summonPet(SummonPet command, Unit target) {
 		target.summonPet(command.petType(), spell);
 
-		var duration = command.duration();
+		var duration = target.getSummonDuration(spell, command);
 
 		if (duration.isFinite()) {
 			var tinyDelay = Duration.millis(1);

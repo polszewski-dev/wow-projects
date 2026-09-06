@@ -75,6 +75,10 @@ public sealed interface TestEvent {
 		return isBeginCast() || isEndCast();
 	}
 
+	default boolean isPet() {
+		return this instanceof PetSummoned || this instanceof PetUnsummoned || this instanceof PetDismissed || this instanceof PetSacrificed;
+	}
+
 	record BeginGcd(Time time, Unit caster) implements TestEvent {}
 
 	record EndGcd(Time time, Unit caster) implements TestEvent {}

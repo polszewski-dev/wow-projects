@@ -90,6 +90,8 @@ public interface Unit extends Character, SimulationContextSource {
 
 	EffectDurationSnapshot getEffectDurationSnapshot(Spell spell, Unit target, ApplyEffect command);
 
+	AnyDuration getSummonDuration(Spell spell, SummonPet command);
+
 	DirectSpellComponentSnapshot getDirectSpellDamageSnapshot(Spell spell, Unit target, DealDamageDirectly command);
 
 	DirectSpellComponentSnapshot getDirectHealingSnapshot(Spell spell, Unit target, HealDirectly command);
