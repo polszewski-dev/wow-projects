@@ -188,10 +188,7 @@ public class ScriptCompiler {
 			return ScriptCommandTarget.DEFAULT;
 		}
 
-		return Stream.of(ScriptCommandTarget.values())
-				.filter(x -> x.name().equalsIgnoreCase(targetStr))
-				.findAny()
-				.orElseThrow(() -> new IllegalArgumentException("Invalid target: " + targetStr));
+		return ScriptCommandTarget.parse(targetStr);
 	}
 
 	private ItemSlot tryParseItemSlot(String line) {
