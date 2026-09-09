@@ -63,6 +63,16 @@ public class PetImpl extends UnitImpl implements Pet {
 	}
 
 	@Override
+	public Unit getFocus() {
+		return master.getFocus();
+	}
+
+	@Override
+	public void setFocus(Unit focus) {
+		throw new UnsupportedOperationException("Pet's always focus master's focus");
+	}
+
+	@Override
 	public UnitParty<? extends Unit> getParty() {
 		return master != null ? master.getParty() : null;
 	}

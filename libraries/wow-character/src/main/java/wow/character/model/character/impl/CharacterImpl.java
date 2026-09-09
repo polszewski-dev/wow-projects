@@ -49,6 +49,7 @@ public abstract class CharacterImpl implements Character {
 	private String script;
 	private PetCharacter activePet;
 	private Character target;
+	private Character focus;
 
 	private static final String IDLE_SCRIPT = "idle";
 
@@ -153,6 +154,11 @@ public abstract class CharacterImpl implements Character {
 	@Override
 	public void setTarget(Character target) {
 		this.target = target;
+	}
+
+	@Override
+	public void setFocus(Character focus) {
+		this.focus = focus;
 	}
 
 	@Override

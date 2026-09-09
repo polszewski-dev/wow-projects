@@ -79,6 +79,14 @@ public class NonPlayerImpl extends CharacterImpl implements NonPlayer {
 	}
 
 	@Override
+	public void setFocus(Character focus) {
+		if (focus != null && !(focus instanceof Unit)) {
+			throw new IllegalArgumentException();
+		}
+		super.setFocus(focus);
+	}
+
+	@Override
 	public NonPlayer copy() {
 		var copy = new NonPlayerImpl(
 				getName(),
@@ -97,9 +105,10 @@ public class NonPlayerImpl extends CharacterImpl implements NonPlayer {
 				getBuffs().copy(),
 				getEffectInstances().copy()
 		);
-		copy.setTarget(getTarget());
 		copy.setRole(getRole());
 		copy.setScript(getScript());
+		copy.setTarget(getTarget());
+		copy.setFocus(getFocus());
 		return copy;
 	}
 

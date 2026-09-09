@@ -89,6 +89,14 @@ public class PlayerImpl extends CharacterImpl implements Player {
 	}
 
 	@Override
+	public void setFocus(Character focus) {
+		if (focus != null && !(focus instanceof Unit)) {
+			throw new IllegalArgumentException();
+		}
+		super.setFocus(focus);
+	}
+
+	@Override
 	public PlayerImpl copy() {
 		var copy = new PlayerImpl(
 				getName(),
@@ -111,6 +119,7 @@ public class PlayerImpl extends CharacterImpl implements Player {
 		copy.setRole(getRole());
 		copy.setScript(getScript());
 		copy.setTarget(getTarget());
+		copy.setFocus(getFocus());
 		return copy;
 	}
 

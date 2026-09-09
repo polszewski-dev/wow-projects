@@ -36,6 +36,11 @@ public interface Unit extends Character, SimulationContextSource {
 
 	void setTarget(Unit target);
 
+	@Override
+	Unit getFocus();
+
+	void setFocus(Unit focus);
+
 	StatSummary getStats();
 
 	void setActive();

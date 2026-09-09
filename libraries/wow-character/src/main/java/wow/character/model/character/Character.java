@@ -76,6 +76,12 @@ public interface Character extends CharacterInfo, EffectCollection {
 
 	void setTarget(Character target);
 
+	// focus
+
+	Character getFocus();
+
+	void setFocus(Character focus);
+
 	// stats
 
 	BaseStatInfo getBaseStatInfo();

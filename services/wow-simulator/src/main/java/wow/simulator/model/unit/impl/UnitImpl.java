@@ -173,6 +173,16 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	}
 
 	@Override
+	public Unit getFocus() {
+		return (Unit) super.getFocus();
+	}
+
+	@Override
+	public void setFocus(Unit focus) {
+		setFocus((Character) focus);
+	}
+
+	@Override
 	public void setActive() {
 		state.setActive();
 	}
@@ -660,6 +670,14 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 			throw new IllegalArgumentException();
 		}
 		super.setTarget(target);
+	}
+
+	@Override
+	public void setFocus(Character focus) {
+		if (focus != null && !(focus instanceof Unit)) {
+			throw new IllegalArgumentException();
+		}
+		super.setFocus(focus);
 	}
 
 	@Override
