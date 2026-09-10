@@ -15,7 +15,7 @@ import static wow.test.commons.AbilityNames.EYE_OF_THE_NIGHT;
  * User: POlszewski
  * Date: 2026-08-21
  */
-public class NecklaceTest extends SpellSimulationTest {
+class NecklaceTest extends SpellSimulationTest {
 
 	@Autowired
 	SimulatorService simulationService;

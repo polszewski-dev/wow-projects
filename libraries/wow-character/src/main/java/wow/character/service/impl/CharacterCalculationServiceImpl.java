@@ -1081,6 +1081,12 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 						mastersHitStatsRequired.add(conversion);
 					}
 				}
+
+				case OWNER_INTELLECT_TO_ARMOR -> {
+					// ignored
+				}
+
+				default -> throw new IllegalArgumentException("" + conversion.type());
 			}
 		}
 	}

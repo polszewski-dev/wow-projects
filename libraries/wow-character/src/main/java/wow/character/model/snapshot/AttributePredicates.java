@@ -16,4 +16,6 @@ public final class AttributePredicates {
 	public static final Predicate<Attribute> PET_ONLY = attribute -> attribute.target() == PET;
 
 	public static final Predicate<Attribute> ANY_TARGET = attribute -> true;
+
+	private AttributePredicates() {}
 }
