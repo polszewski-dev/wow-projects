@@ -83,7 +83,7 @@ public class TargetResolver implements SimulationContextSource {
 	}
 
 	public static TargetResolver ofMaster(Unit self) {
-		Objects.requireNonNull(((Pet) self).getMaster());
+		Objects.requireNonNull(self.getMaster());
 		return new TargetResolver(self);
 	}
 
@@ -131,7 +131,7 @@ public class TargetResolver implements SimulationContextSource {
 			case PET ->
 					self.getActivePet() != null ? List.of(self.getActivePet()) : List.of();
 			case MASTER ->
-					self instanceof Pet pet && pet.getMaster() != null ? List.of(pet.getMaster()) : List.of();
+					self.isPet() ? List.of(self.getMaster()) : List.of();
 			case FRIEND ->
 					List.of(friend);
 			case ENEMY ->

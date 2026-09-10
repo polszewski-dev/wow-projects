@@ -67,4 +67,9 @@ public interface PlayerCharacter extends Character {
 	}
 
 	Assets getAssets();
+
+	@Override
+	default PlayerCharacter getMaster() {
+		return this;
+	}
 }

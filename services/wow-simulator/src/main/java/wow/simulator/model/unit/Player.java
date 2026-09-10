@@ -26,4 +26,9 @@ public interface Player extends Unit, PlayerCharacter {
 	default void invite(Player... players) {
 		getParty().add(players);
 	}
+
+	@Override
+	default Player getMaster() {
+		return this;
+	}
 }

@@ -923,7 +923,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 
 		StatConversionSolver(Character character, AccumulatedPartialStats stats, List<StatConversion> conversions) {
 			this.pet = character.getActivePet();
-			this.master = character instanceof PetCharacter petCharacter ? petCharacter.getMaster() : null;
+			this.master = character.isPet() ? character.getMaster() : null;
 			this.stats = stats;
 			this.conversions = conversions;
 		}

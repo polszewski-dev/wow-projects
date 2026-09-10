@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import wow.character.model.character.Character;
-import wow.character.model.character.PetCharacter;
 import wow.commons.model.attribute.AttributeScalingParams;
 import wow.commons.model.attribute.PowerType;
 import wow.commons.model.categorization.WeaponSubType;
@@ -125,9 +124,5 @@ public class AttributeConditionArgs implements AttributeScalingParams {
 			return 0;
 		}
 		return target.getNumberOfEffects(tree);
-	}
-
-	public Character getCastersMaster() {
-		return caster instanceof PetCharacter pet ? pet.getMaster() : caster;
 	}
 }

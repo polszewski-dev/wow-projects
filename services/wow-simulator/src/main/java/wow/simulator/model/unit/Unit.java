@@ -182,6 +182,9 @@ public interface Unit extends Character, SimulationContextSource {
 	@Override
 	Pet getActivePet();
 
+	@Override
+	Unit getMaster();
+
 	void summonPet(PetType petType, Spell sourceSpell);
 
 	@Override

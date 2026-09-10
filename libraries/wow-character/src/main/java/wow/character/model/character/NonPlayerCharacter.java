@@ -27,4 +27,9 @@ public interface NonPlayerCharacter extends Character {
 	default boolean hasExclusiveFaction(String exclusiveFaction) {
 		return false;
 	}
+
+	@Override
+	default NonPlayerCharacter getMaster() {
+		return this;
+	}
 }

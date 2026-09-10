@@ -201,6 +201,8 @@ public interface Character extends CharacterInfo, EffectCollection {
 		return getPetType() != null;
 	}
 
+	Character getMaster();
+
 	//
 
 	static int getLevelDifference(Character caster, Character target) {

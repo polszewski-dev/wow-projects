@@ -67,7 +67,7 @@ public class PrimaryTargetResolver {
 
 	private PrimaryTarget getMaster() {
 		if (explicitTarget == self || explicitTarget == null) {
-			return PrimaryTarget.ofMaster(((Pet) self).getMaster());
+			return PrimaryTarget.ofMaster(self.getMaster());
 		}
 
 		return PrimaryTarget.INVALID;

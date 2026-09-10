@@ -12,8 +12,6 @@ import wow.commons.model.spell.Spell;
  * Date: 09.08.2026
  */
 public interface PetCharacter extends Character, CharacterRestricted {
-	Character getMaster();
-
 	void setMaster(Character master);
 
 	Spell getSourceSpell();

@@ -22,4 +22,9 @@ public interface NonPlayer extends Unit, NonPlayerCharacter {
 	default List<NonPlayer> getPartyMembers() {
 		return getParty().getMembers();
 	}
+
+	@Override
+	default NonPlayer getMaster() {
+		return this;
+	}
 }

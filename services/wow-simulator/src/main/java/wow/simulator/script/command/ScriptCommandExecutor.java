@@ -2,7 +2,6 @@ package wow.simulator.script.command;
 
 import wow.character.model.script.ScriptCommand;
 import wow.character.model.script.ScriptCommandTarget;
-import wow.simulator.model.unit.Pet;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.script.ScriptParams;
 
@@ -43,7 +42,7 @@ public abstract class ScriptCommandExecutor {
 			case SELF -> getActualCaster();
 			case TARGET -> getActualCaster().getTarget();
 			case FOCUS -> getActualCaster().getFocus();
-			case MASTER -> ((Pet) getActualCaster()).getMaster();
+			case MASTER -> getActualCaster().getMaster();
 		};
 	}
 }
