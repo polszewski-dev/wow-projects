@@ -32,6 +32,9 @@ import wow.simulator.model.unit.Unit;
 import wow.simulator.model.unit.impl.NonPlayerImpl;
 import wow.simulator.model.unit.impl.PlayerImpl;
 import wow.simulator.model.update.Scheduler;
+import wow.simulator.scenario.InfiniteTargetHealthScenario;
+import wow.simulator.scenario.Scenario;
+import wow.simulator.service.SimulatorService;
 import wow.simulator.simulation.Simulation;
 import wow.simulator.simulation.SimulationContext;
 import wow.simulator.util.*;
@@ -73,6 +76,9 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 
 	@Autowired
 	private SpellRepository spellRepository;
+
+	@Autowired
+	private SimulatorService simulationService;
 
 	protected SimulationContext getSimulationContext() {
 		var clock = new Clock();
@@ -118,6 +124,8 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		);
 
 		simulationContext.shareSimulationContext(enemy);
+
+		enemy.addHiddenEffect(BONUS_STAMINA, 100_000_000);
 
 		return enemy;
 	}
@@ -561,5 +569,9 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 
 	protected int getManaDifference(Player unit) {
 		return unit.getCurrentMana() - getRegeneratedMana(unit);
+	}
+
+	protected Scenario getScenario(double duration) {
+		return new InfiniteTargetHealthScenario(Duration.seconds(duration), this::getSimulationContext, simulationService);
 	}
 }

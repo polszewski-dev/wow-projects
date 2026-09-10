@@ -7,23 +7,14 @@ import wow.character.model.asset.AssetExecution;
 import wow.character.model.asset.AssetExecutionPlan;
 import wow.character.model.character.Raid;
 import wow.character.service.AssetService;
-import wow.character.service.CharacterCalculationService;
-import wow.character.service.CharacterService;
 import wow.commons.model.Duration;
 import wow.commons.model.categorization.ItemSlot;
-import wow.commons.repository.spell.SpellRepository;
-import wow.simulator.client.dto.RngType;
-import wow.simulator.log.GameLog;
 import wow.simulator.log.handler.GameLogHandler;
-import wow.simulator.model.rng.PredeterminedRng;
-import wow.simulator.model.rng.RealRng;
-import wow.simulator.model.rng.RngFactory;
-import wow.simulator.model.time.Clock;
 import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.Player;
 import wow.simulator.model.unit.Unit;
-import wow.simulator.model.update.Scheduler;
 import wow.simulator.script.ScriptParams;
+import wow.simulator.service.SimulationCallback;
 import wow.simulator.service.SimulatorService;
 import wow.simulator.simulation.Simulation;
 import wow.simulator.simulation.SimulationContext;
@@ -31,7 +22,8 @@ import wow.simulator.simulation.SimulationContext;
 import java.util.List;
 import java.util.Map;
 
-import static wow.simulator.constant.HiddenEffectNames.*;
+import static wow.simulator.constant.HiddenEffectNames.INFINITE_BUFFS;
+import static wow.simulator.constant.HiddenEffectNames.INFINITE_RESOURCES;
 
 /**
  * User: POlszewski
@@ -40,10 +32,7 @@ import static wow.simulator.constant.HiddenEffectNames.*;
 @Service
 @AllArgsConstructor
 public class SimulatorServiceImpl implements SimulatorService {
-	private final CharacterService characterService;
-	private final CharacterCalculationService characterCalculationService;
 	private final AssetService assetService;
-	private final SpellRepository spellRepository;
 
 	@Value("#{${buff.items.by.slot}}")
 	private final Map<ItemSlot, List<String>> buffItemsBySlot;
@@ -55,19 +44,12 @@ public class SimulatorServiceImpl implements SimulatorService {
 	private static final Time PREPARATION_PHASE_END_TIME = BUFF_PHASE_END_TIME;
 
 	@Override
-	public void simulate(Raid<Player> raid, Unit target, Duration duration, RngType rngType, List<GameLogHandler> handlers) {
-		var simulationContext = createSimulationContext(rngType);
-
-		simulate(raid, target, duration, simulationContext, handlers);
-	}
-
-	@Override
-	public void simulate(Raid<Player> raid, Unit target, Duration duration, SimulationContext simulationContext, List<GameLogHandler> handlers) {
+	public void simulate(Raid<Player> raid, Unit target, Duration duration, SimulationContext simulationContext, List<GameLogHandler> handlers, SimulationCallback callback) {
 		var simulation = createSimulation(raid, target, simulationContext);
 
 		simulation.addHandlers(handlers);
 
-		executePreparationPhase(raid, target, simulation);
+		executePreparationPhase(raid, target, simulation, callback);
 
 		simulation.updateFor(duration);
 		simulation.finish();
@@ -82,9 +64,9 @@ public class SimulatorServiceImpl implements SimulatorService {
 		return simulation;
 	}
 
-	private void executePreparationPhase(Raid<Player> raid, Unit target, Simulation simulation) {
+	private void executePreparationPhase(Raid<Player> raid, Unit target, Simulation simulation, SimulationCallback callback) {
 		simulation.runAt(PREPARATION_PHASE_START_TIME, () -> {
-			beforePreparationPhaseStarts(raid, target);
+			callback.beforePreparationPhaseStarts(raid, target);
 			applyTemporaryEffects(raid);
 		});
 
@@ -95,7 +77,7 @@ public class SimulatorServiceImpl implements SimulatorService {
 
 		simulation.runAt(PREPARATION_PHASE_END_TIME, () -> {
 			removeTemporaryEffects(raid);
-			afterPreparationPhaseEnds(raid);
+			callback.afterPreparationPhaseEnds(raid);
 			activateAllRaidMembersAndPets(raid);
 		});
 	}
@@ -172,35 +154,5 @@ public class SimulatorServiceImpl implements SimulatorService {
 
 	private void activateAllRaidMembersAndPets(Raid<Player> raid) {
 		raid.forEachMemberAndPet((Unit memberOrPet) -> memberOrPet.setActive());
-	}
-
-	private void beforePreparationPhaseStarts(Raid<Player> raid, Unit target) {
-		raid.forEach(member -> member.setTarget(target));
-	}
-
-	private void afterPreparationPhaseEnds(Raid<Player> raid) {
-		raid.forEachMemberAndPet((Unit memberOrPet) -> {
-			memberOrPet.addHiddenEffect(BONUS_HP5, 5000);
-			memberOrPet.addHiddenEffect(BONUS_MP5, 5000);
-			memberOrPet.setAllResourcesToMax();
-		});
-	}
-
-	private SimulationContext createSimulationContext(RngType rngType) {
-		var clock = new Clock();
-		var gameLog = new GameLog();
-		var rngFactory = createRngFactory(rngType);
-		var scheduler = new Scheduler(clock);
-
-		return new SimulationContext(
-				clock, gameLog, rngFactory, scheduler, characterService, characterCalculationService, spellRepository
-		);
-	}
-
-	private RngFactory createRngFactory(RngType rngType) {
-		return switch (rngType) {
-			case REAL -> RealRng::new;
-			case PREDETERMINED -> PredeterminedRng::new;
-		};
 	}
 }

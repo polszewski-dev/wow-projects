@@ -1,15 +1,12 @@
 package wow.simulator.simulation.asset;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.springframework.beans.factory.annotation.Autowired;
-import wow.commons.model.Duration;
 import wow.commons.model.character.CharacterClassId;
 import wow.commons.model.character.RaceId;
 import wow.simulator.WowSimulatorSpringTest;
 import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.Player;
 import wow.simulator.model.unit.Unit;
-import wow.simulator.service.SimulatorService;
 import wow.simulator.util.TestEventCollectingHandler;
 
 import java.util.List;
@@ -21,9 +18,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Date: 2025-12-13
  */
 public abstract class AssetTest extends WowSimulatorSpringTest {
-	@Autowired
-	SimulatorService simulatorService;
-
 	protected CharacterClassId assetPlayerClassId;
 	protected RaceId assetPlayerRaceId;
 	protected String assetPlayerTalentLink;
@@ -31,8 +25,8 @@ public abstract class AssetTest extends WowSimulatorSpringTest {
 
 	protected Player partyAsset;
 
-	private static final Duration SIMULATION_DURATION = Duration.seconds(90 + 60);
-	private static final Time SIMULATION_END_TIME = Time.at(SIMULATION_DURATION.getSeconds());
+	private static final double SIMULATION_DURATION = 90;
+	private static final Time SIMULATION_END_TIME = Time.at(SIMULATION_DURATION);
 
 	@BeforeEach
 	void setUp() {
@@ -45,7 +39,6 @@ public abstract class AssetTest extends WowSimulatorSpringTest {
 		player.setScript("warlock-shadow-bolt-spam");
 
 		partyAsset = getNakedPlayer(assetPlayerClassId, assetPlayerRaceId, "Asset");
-		partyAsset.setTarget(player.getTarget());
 
 		if (assetPlayerTalentLink != null) {
 			partyAsset.getTalents().loadFromTalentLink(assetPlayerTalentLink);
@@ -60,11 +53,11 @@ public abstract class AssetTest extends WowSimulatorSpringTest {
 
 		afterSetUp();
 
-		simulatorService.simulate(
+		var scenario = getScenario(SIMULATION_DURATION);
+
+		scenario.execute(
 				player.getRaid(),
 				player.getTarget(),
-				SIMULATION_DURATION,
-				simulationContext,
 				List.of(handler)
 		);
 	}

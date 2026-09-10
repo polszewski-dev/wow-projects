@@ -1,9 +1,6 @@
 package wow.simulator.simulation;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import wow.commons.model.Duration;
-import wow.simulator.service.SimulatorService;
 import wow.simulator.simulation.spell.SpellSimulationTest;
 
 import java.util.List;
@@ -16,16 +13,14 @@ import static wow.test.commons.AbilityNames.EYE_OF_THE_NIGHT;
  * Date: 2026-08-21
  */
 class NecklaceTest extends SpellSimulationTest {
-
-	@Autowired
-	SimulatorService simulationService;
-
 	@Test
 	void necklace_abilities_are_activated_during_buff_phase() {
 		equip(player2, "Chain of the Twilight Owl");
 		equip(player3, "Eye of the Night");
 
-		simulationService.simulate(player.getRaid(), target, Duration.seconds(120), simulationContext, List.of());
+		var scenario = getScenario(120);
+
+		scenario.execute(player.getRaid(), target, List.of(handler));
 
 		assertEvents(
 				event -> event.isBeginCast() || event.isEffect(),

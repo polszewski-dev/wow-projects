@@ -15,8 +15,6 @@ import wow.simulator.model.unit.NonPlayer;
 import wow.simulator.model.unit.UnitParty;
 import wow.simulator.model.unit.UnitRaid;
 
-import static wow.simulator.constant.HiddenEffectNames.BONUS_STAMINA;
-
 /**
  * User: POlszewski
  * Date: 2023-08-07
@@ -55,12 +53,6 @@ public class NonPlayerImpl extends UnitImpl implements NonPlayer, UnitParty.OnAd
 	@Override
 	public void regen(Duration sinceLastRegen) {
 		// void
-	}
-
-	@Override
-	public void onAddedToSimulation() {
-		addHiddenEffect(BONUS_STAMINA, 100_000_000);
-		super.onAddedToSimulation();
 	}
 
 	@Override
