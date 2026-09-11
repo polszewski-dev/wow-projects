@@ -55,6 +55,8 @@ public interface Unit extends Character, SimulationContextSource {
 
 	void cast(String abilityName, Unit target);
 
+	void cast(Ability ability, Unit target);
+
 	PrimaryTarget getPrimaryTarget(Ability ability, Unit explicitTarget);
 
 	void idleUntil(AnyTime time);

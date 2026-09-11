@@ -59,7 +59,7 @@ public abstract class ComposableExecutor extends ScriptCommandExecutor {
 	public void execute() {
 		var target = getTarget(commandTarget);
 
-		getActualCaster().cast(getAbility().getAbilityId(), target);
+		getActualCaster().cast(getAbility(), target);
 	}
 
 	private boolean isConditionMet(ScriptCommandCondition condition, Unit target) {
