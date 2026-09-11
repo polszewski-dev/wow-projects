@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
 
 import static wow.commons.model.spell.ResourceType.MANA;
+import static wow.simulator.constant.HiddenEffectNames.BONUS_INTELLECT;
 import static wow.test.commons.AbilityNames.DRAIN_MANA;
 
 /**
@@ -54,7 +55,7 @@ class DrainManaTest extends TbcWarlockSpellSimulationTest {
 	@Override
 	protected void afterSetUp() {
 		setMana(player, 1000);
-		target.addHiddenEffect("Bonus Intellect", 1000);
+		target.addHiddenEffect(BONUS_INTELLECT, 1000);
 		target.setManaToMax();
 	}
 }

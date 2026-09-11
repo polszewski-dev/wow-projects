@@ -47,6 +47,7 @@ import static wow.commons.model.character.CharacterClassId.WARLOCK;
 import static wow.commons.model.character.CreatureType.BEAST;
 import static wow.commons.model.character.RaceId.ORC;
 import static wow.commons.model.pve.PhaseId.TBC_P5;
+import static wow.simulator.constant.HiddenEffectNames.*;
 import static wow.simulator.util.CalcUtils.getPercentOf;
 import static wow.simulator.util.CalcUtils.increaseByPct;
 
@@ -362,28 +363,28 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		if (amount == 0) {
 			return;
 		}
-		player.addHiddenEffect("Bonus Spell Power", amount);
+		player.addHiddenEffect(BONUS_SPELL_POWER, amount);
 	}
 
 	protected void addSdBonus(int amount) {
 		if (amount == 0) {
 			return;
 		}
-		player.addHiddenEffect("Bonus Spell Damage", amount);
+		player.addHiddenEffect(BONUS_SPELL_DAMAGE, amount);
 	}
 
 	protected void addHealingBonus(int amount) {
 		if (amount == 0) {
 			return;
 		}
-		player.addHiddenEffect("Bonus Healing", amount);
+		player.addHiddenEffect(BONUS_HEALING, amount);
 	}
 
 	protected void addStaminaBonus(Player player, int amount) {
 		if (amount == 0) {
 			return;
 		}
-		player.addHiddenEffect("Bonus Stamina", amount);
+		player.addHiddenEffect(BONUS_STAMINA, amount);
 		player.setHealthToMax();
 	}
 
@@ -391,7 +392,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		if (amount == 0) {
 			return;
 		}
-		player.addHiddenEffect("Bonus Intellect", amount);
+		player.addHiddenEffect(BONUS_INTELLECT, amount);
 		player.setManaToMax();
 	}
 

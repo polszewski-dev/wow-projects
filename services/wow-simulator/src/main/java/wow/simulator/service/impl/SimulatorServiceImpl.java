@@ -31,6 +31,8 @@ import wow.simulator.simulation.SimulationContext;
 import java.util.List;
 import java.util.Map;
 
+import static wow.simulator.constant.HiddenEffectNames.*;
+
 /**
  * User: POlszewski
  * Date: 2024-11-10
@@ -49,11 +51,6 @@ public class SimulatorServiceImpl implements SimulatorService {
 	private static final Time SUMMON_PHASE_END_TIME = Time.at(10);
 	private static final Time BUFF_PHASE_END_TIME = Time.at(60);
 	private static final Duration PREP_PHASE_DURATION = BUFF_PHASE_END_TIME.subtract(Time.ZERO);
-
-	private static final String BONUS_HP5 = "Bonus Hp5";
-	private static final String BONUS_MP5 = "Bonus Mp5";
-	private static final String INFINITE_RESOURCES = "Infinite Resources";
-	private static final String INFINITE_BUFFS = "Infinite Buffs";
 
 	@Override
 	public void simulate(Raid<Player> raid, Unit target, Duration duration, RngType rngType, List<GameLogHandler> handlers) {

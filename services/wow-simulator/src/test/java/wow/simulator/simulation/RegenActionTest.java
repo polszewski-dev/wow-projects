@@ -5,6 +5,7 @@ import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
 import wow.simulator.util.TestEvent;
 
 import static wow.commons.model.spell.ResourceType.MANA;
+import static wow.simulator.constant.HiddenEffectNames.BONUS_MP5;
 import static wow.test.commons.AbilityNames.SHADOW_BOLT;
 
 /**
@@ -31,7 +32,7 @@ class RegenActionTest extends TbcWarlockSpellSimulationTest {
 	void uninterrupted_mana_50_mp5() {
 		setMana(player, 500);
 
-		player.addHiddenEffect("Bonus Mp5", 50);
+		player.addHiddenEffect(BONUS_MP5, 50);
 
 		updateUntil(10);
 
@@ -64,7 +65,7 @@ class RegenActionTest extends TbcWarlockSpellSimulationTest {
 	void interrupted_mana_50_mp5() {
 		setMana(player, 500);
 
-		player.addHiddenEffect("Bonus Mp5", 50);
+		player.addHiddenEffect(BONUS_MP5, 50);
 
 		player.cast(SHADOW_BOLT);
 

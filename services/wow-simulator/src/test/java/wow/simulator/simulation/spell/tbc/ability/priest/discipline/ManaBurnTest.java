@@ -5,6 +5,7 @@ import wow.simulator.simulation.spell.tbc.TbcPriestSpellSimulationTest;
 
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
+import static wow.simulator.constant.HiddenEffectNames.BONUS_INTELLECT;
 import static wow.test.commons.AbilityNames.MANA_BURN;
 
 /**
@@ -38,7 +39,7 @@ class ManaBurnTest extends TbcPriestSpellSimulationTest {
 
 	@Override
 	protected void afterSetUp() {
-		target.addHiddenEffect("Bonus Intellect", 1000);
+		target.addHiddenEffect(BONUS_INTELLECT, 1000);
 		target.setManaToMax();
 	}
 }

@@ -9,6 +9,4 @@ import wow.commons.model.AnyDuration;
  */
 public interface Pet extends Unit, PetCharacter {
 	AnyDuration getRemainingDuration();
-
-	String UNSUMMON_PET = "Unsummon Pet";
 }

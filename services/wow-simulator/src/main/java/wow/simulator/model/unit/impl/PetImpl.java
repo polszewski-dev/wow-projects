@@ -18,6 +18,9 @@ import wow.simulator.model.unit.Pet;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.unit.UnitParty;
 
+import static wow.simulator.constant.HiddenEffectNames.PET_CONVERSIONS;
+import static wow.simulator.constant.HiddenEffectNames.UNSUMMON_PET;
+
 /**
  * User: POlszewski
  * Date: 09.08.2026
@@ -86,7 +89,7 @@ public class PetImpl extends UnitImpl implements Pet {
 
 	@Override
 	public void onAddedToSimulation() {
-		addHiddenEffect("Pet Conversions", 1);
+		addHiddenEffect(PET_CONVERSIONS, 1);
 		super.onAddedToSimulation();
 	}
 }

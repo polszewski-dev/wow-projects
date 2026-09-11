@@ -5,6 +5,7 @@ import wow.commons.model.Duration;
 import wow.simulator.simulation.spell.tbc.TbcMageSpellSimulationTest;
 import wow.test.commons.TalentNames;
 
+import static wow.simulator.constant.HiddenEffectNames.BONUS_MP5;
 import static wow.test.commons.AbilityNames.COMBUSTION;
 import static wow.test.commons.AbilityNames.FIREBALL;
 
@@ -37,7 +38,7 @@ class CombustionTest extends TbcMageSpellSimulationTest {
 
 	@Test
 	void crit_chance_increases_each_time_theres_no_crit_until_reaching_100_pct() {
-		player.addHiddenEffect("Bonus Mp5", 500);
+		player.addHiddenEffect(BONUS_MP5, 500);
 
 		player.cast(FIREBALL);
 		player.cast(COMBUSTION);
@@ -68,7 +69,7 @@ class CombustionTest extends TbcMageSpellSimulationTest {
 
 	@Test
 	void crit_chance_increases_each_time_theres_no_crit_before_reaching_100_pct() {
-		player.addHiddenEffect("Bonus Mp5", 500);
+		player.addHiddenEffect(BONUS_MP5, 500);
 
 		critsOnlyOnFollowingRolls(2, 3, 4);
 

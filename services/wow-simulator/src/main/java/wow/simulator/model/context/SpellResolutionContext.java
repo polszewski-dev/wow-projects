@@ -25,7 +25,7 @@ import java.util.Map;
 import static wow.commons.model.effect.EffectSource.AbilitySource;
 import static wow.commons.model.spell.SpellTargetType.GROUND;
 import static wow.commons.model.spell.component.ComponentCommand.*;
-import static wow.simulator.model.unit.Pet.UNSUMMON_PET;
+import static wow.simulator.constant.HiddenEffectNames.UNSUMMON_PET;
 
 /**
  * User: POlszewski

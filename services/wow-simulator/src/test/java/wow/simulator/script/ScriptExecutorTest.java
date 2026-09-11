@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test;
 import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
 import wow.simulator.util.TestEvent;
 
+import static wow.simulator.constant.HiddenEffectNames.BONUS_HP5;
+import static wow.simulator.constant.HiddenEffectNames.BONUS_MP5;
 import static wow.test.commons.AbilityNames.*;
 
 /**
@@ -136,8 +138,8 @@ class ScriptExecutorTest extends TbcWarlockSpellSimulationTest {
 		player.setScript(script);
 		player.setActive();
 
-		player.addHiddenEffect("Bonus Hp5", 5000);
-		player.addHiddenEffect("Bonus Mp5", 5000);
+		player.addHiddenEffect(BONUS_HP5, 5000);
+		player.addHiddenEffect(BONUS_MP5, 5000);
 
 		updateUntil(time);
 	}
