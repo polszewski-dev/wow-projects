@@ -19,20 +19,23 @@ import java.util.List;
 public class CastSpellAction extends UnitAction {
 	@Getter
 	private final Ability ability;
+	private final Unit target;
 	@Getter
-	private final PrimaryTarget primaryTarget;
+	private PrimaryTarget primaryTarget;
 
 	private SpellCastContext castContext;
 	private List<EffectInstance> appliedEffects = List.of();
 
-	public CastSpellAction(Unit owner, Ability ability, PrimaryTarget primaryTarget) {
+	public CastSpellAction(Unit owner, Ability ability, Unit target) {
 		super(owner);
 		this.ability = ability;
-		this.primaryTarget = primaryTarget;
+		this.target = target;
 	}
 
 	@Override
 	protected void setUp() {
+		this.primaryTarget = owner.getPrimaryTarget(ability, target);
+
 		if (!owner.canCast(ability, primaryTarget)) {
 			getGameLog().canNotBeCasted(this);
 			finish();

@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import wow.simulator.WowSimulatorSpringTest;
 import wow.simulator.model.action.ActionStatus;
 import wow.simulator.model.time.Time;
-import wow.simulator.model.unit.PrimaryTarget;
+import wow.simulator.model.unit.Unit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static wow.test.commons.AbilityNames.CORRUPTION;
@@ -120,16 +120,16 @@ class CastSpellActionTest extends WowSimulatorSpringTest {
 	}
 
 	CastSpellAction getCastSpellAction(String abilityName) {
-		return getSpellAction(abilityName, PrimaryTarget.ofEnemy(target));
+		return getSpellAction(abilityName, target);
 	}
 
 	CastSpellAction getCastSpellOnSelfAction(String abilityName) {
-		return getSpellAction(abilityName, PrimaryTarget.ofSelf(player));
+		return getSpellAction(abilityName, player);
 	}
 
-	private CastSpellAction getSpellAction(String abilityName, PrimaryTarget primaryTarget) {
+	private CastSpellAction getSpellAction(String abilityName, Unit abilityTarget) {
 		var ability = player.getAbility(abilityName).orElseThrow();
-		return new CastSpellAction(player, ability, primaryTarget);
+		return new CastSpellAction(player, ability, abilityTarget);
 	}
 
 	@BeforeEach

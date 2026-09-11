@@ -216,8 +216,7 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 
 	@Override
 	public void cast(Ability ability, Unit target) {
-		var primaryTarget = getPrimaryTarget(ability, target);
-		var action = new CastSpellAction(this, ability, primaryTarget);
+		var action = new CastSpellAction(this, ability, target);
 
 		enqueueAction(action);
 	}
