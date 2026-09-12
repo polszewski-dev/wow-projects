@@ -46,7 +46,7 @@ public class CastPetSpellExecutor extends DynamicExecutor {
 	public void execute() {
 		caster.petCast(
 				this::getAbility,
-				() -> getTarget(commandTarget)
+				this::getTarget
 		);
 	}
 

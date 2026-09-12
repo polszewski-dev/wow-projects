@@ -48,7 +48,7 @@ public abstract class ComposableExecutor extends ScriptCommandExecutor {
 
 	@Override
 	public boolean allConditionsAreMet() {
-		var target = getTarget(commandTarget);
+		var target = getTarget();
 
 		return isConditionMet(commandCondition, target) &&
 				getActualCaster().canCast(getAbility(), target) &&
@@ -57,9 +57,19 @@ public abstract class ComposableExecutor extends ScriptCommandExecutor {
 
 	@Override
 	public void execute() {
-		var target = getTarget(commandTarget);
+		var target = getTarget();
 
 		getActualCaster().cast(getAbility(), target);
+	}
+
+	protected Unit getTarget() {
+		return switch (commandTarget) {
+			case DEFAULT -> null;
+			case SELF -> getActualCaster();
+			case TARGET -> getActualCaster().getTarget();
+			case FOCUS -> getActualCaster().getFocus();
+			case MASTER -> getActualCaster().getMaster();
+		};
 	}
 
 	private boolean isConditionMet(ScriptCommandCondition condition, Unit target) {

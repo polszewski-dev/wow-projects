@@ -1,6 +1,5 @@
 package wow.simulator.script.command;
 
-import wow.character.model.script.ScriptCommandTarget;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.script.ScriptParams;
 
@@ -23,7 +22,7 @@ public class CastSpellOnTargetExecutor extends StaticExecutor {
 	}
 
 	@Override
-	protected Unit getTarget(ScriptCommandTarget target) {
+	protected Unit getTarget() {
 		return this.actualTarget;
 	}
 }
