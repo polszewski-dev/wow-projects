@@ -117,6 +117,10 @@ public class Simulation implements SimulationContextSource {
 		getScheduler().add(delay, runnable);
 	}
 
+	public void runAt(Time time, Runnable runnable) {
+		getScheduler().add(time, runnable);
+	}
+
 	public Duration getRemainingTime() {
 		return timeUntilSimulationEnd.subtract(now());
 	}

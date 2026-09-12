@@ -2,7 +2,6 @@ package wow.simulator.script;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import wow.character.model.script.ScriptCompiler;
 import wow.character.model.script.ScriptSectionType;
 import wow.simulator.script.command.ScriptCommandExecutor;
@@ -18,10 +17,7 @@ import static wow.character.model.script.ScriptPathResolver.getScriptPath;
 @RequiredArgsConstructor
 @Getter
 public class SinglePassScriptExecutor {
-	private final ScriptParams params;
 	private final List<ScriptCommandExecutor> commands;
-	@Setter
-	private Runnable finalAction;
 
 	public static SinglePassScriptExecutor compileScript(String scriptName, ScriptSectionType sectionType, ScriptParams params) {
 		var caster = params.caster();
@@ -35,21 +31,12 @@ public class SinglePassScriptExecutor {
 				.filter(ScriptCommandExecutor::isValid)
 				.toList();
 
-		return new SinglePassScriptExecutor(params, commands);
+		return new SinglePassScriptExecutor(commands);
 	}
 
 	public void execute() {
-		executeNext(0);
-	}
-
-	private void executeNext(int idx) {
-		if (idx < commands.size()) {
-			commands.get(idx).execute();
-		}
-		if (idx + 1 < commands.size()) {
-			params.caster().immediateAction(() -> executeNext(idx + 1));
-		} else if (idx + 1 == commands.size() && finalAction != null) {
-			params.caster().immediateAction(finalAction);
+		for (var command : commands) {
+			command.execute();
 		}
 	}
 }

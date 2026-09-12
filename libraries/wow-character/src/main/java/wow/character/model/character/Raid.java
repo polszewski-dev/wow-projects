@@ -3,9 +3,7 @@ package wow.character.model.character;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Consumer;
-import java.util.stream.Stream;
 
 /**
  * User: POlszewski
@@ -95,14 +93,13 @@ public class Raid<M extends Character> {
 		}
 	}
 
-	public <T extends Character> Stream<T> getEachMemberAndPetStream() {
-		return parties.stream()
-				.flatMap(Party::getEachMemberAndPetStream);
-	}
+	public void forEachPartyFirstMember(Consumer<? super M> consumer) {
+		for (var party : parties) {
+			var firstMember = party.getFirstMember();
 
-	public Stream<M> getEachPartyFirstMemberStream() {
-		return getParties().stream()
-				.map(Party::getFirstMember)
-				.filter(Objects::nonNull);
+			if (firstMember != null) {
+				consumer.accept(firstMember);
+			}
+		}
 	}
 }

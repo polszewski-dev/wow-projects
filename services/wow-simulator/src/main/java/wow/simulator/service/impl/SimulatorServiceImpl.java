@@ -48,9 +48,11 @@ public class SimulatorServiceImpl implements SimulatorService {
 	@Value("#{${buff.items.by.slot}}")
 	private final Map<ItemSlot, List<String>> buffItemsBySlot;
 
+	private static final Time SUMMON_PHASE_START_TIME = Time.ZERO;
 	private static final Time SUMMON_PHASE_END_TIME = Time.at(10);
 	private static final Time BUFF_PHASE_END_TIME = Time.at(60);
-	private static final Duration PREP_PHASE_DURATION = BUFF_PHASE_END_TIME.subtract(Time.ZERO);
+	private static final Time PREPARATION_PHASE_START_TIME = SUMMON_PHASE_START_TIME;
+	private static final Time PREPARATION_PHASE_END_TIME = BUFF_PHASE_END_TIME;
 
 	@Override
 	public void simulate(Raid<Player> raid, Unit target, Duration duration, RngType rngType, List<GameLogHandler> handlers) {
@@ -65,9 +67,9 @@ public class SimulatorServiceImpl implements SimulatorService {
 
 		simulation.addHandlers(handlers);
 
-		executeAssets(raid);
+		executePreparationPhase(raid, target, simulation);
 
-		simulation.updateFor(PREP_PHASE_DURATION.add(duration));
+		simulation.updateFor(duration);
 		simulation.finish();
 	}
 
@@ -75,82 +77,67 @@ public class SimulatorServiceImpl implements SimulatorService {
 		var simulation = new Simulation(simulationContext);
 
 		simulation.add(target);
-
-		raid.forEach(raidMember -> {
-			simulation.add(raidMember);
-			raidMember.setTarget(target);
-		});
+		raid.forEach(simulation::add);
 
 		return simulation;
 	}
 
-	private void executeAssets(Raid<Player> raid) {
-		applyTemporaryEffects(raid);
+	private void executePreparationPhase(Raid<Player> raid, Unit target, Simulation simulation) {
+		simulation.runAt(PREPARATION_PHASE_START_TIME, () -> {
+			beforePreparationPhaseStarts(raid, target);
+			applyTemporaryEffects(raid);
+		});
 
 		var executionPlan = assetService.getAssetExecutionPlan(raid);
 
-		for (var member : raid.getMembers()) {
-			executeAssets(member, executionPlan);
-		}
+		executeSummonPhase(raid, executionPlan, simulation);
+		executeBuffPhase(raid, executionPlan, simulation);
+
+		simulation.runAt(PREPARATION_PHASE_END_TIME, () -> {
+			removeTemporaryEffects(raid);
+			afterPreparationPhaseEnds(raid);
+			activateAllRaidMembersAndPets(raid);
+		});
 	}
 
-	private void executeAssets(Player member, AssetExecutionPlan<Player> executionPlan) {
-		executeSummonPhase(
-				member,
-				executionPlan,
-				() -> {
-					if (executionPlan.hasSummonPhase()) {
-						member.idleUntil(SUMMON_PHASE_END_TIME);
-
-						var activePet = member.getActivePet();
-
-						if (activePet != null) {
-							activePet.idleUntil(BUFF_PHASE_END_TIME);
-							activePet.immediateAction(this::finalizeBuffStage);
-						}
-					}
-
-					executeBuffPhase(
-							member,
-							executionPlan,
-							() -> {
-								activateBuffItems(member);
-								member.idleUntil(BUFF_PHASE_END_TIME);
-								member.immediateAction(this::finalizeBuffStage);
-							}
-					);
-				}
-		);
-	}
-
-	private void executeSummonPhase(Player player, AssetExecutionPlan<Player> executionPlan, Runnable endStep) {
+	private void executeSummonPhase(Raid<Player> raid, AssetExecutionPlan<Player> executionPlan, Simulation simulation) {
 		if (!executionPlan.hasSummonPhase()) {
-			endStep.run();
 			return;
 		}
 
 		var summonsByPlayer = executionPlan.summonsByPlayer();
-		var summonExecutions = summonsByPlayer.get(player);
 
-		execute(player, summonExecutions, endStep);
-	}
+		for (var member : raid.getMembers()) {
+			var summonExecutions = summonsByPlayer.get(member);
 
-	private void executeBuffPhase(Player player, AssetExecutionPlan<Player> executionPlan, Runnable endStep) {
-		var buffsByPlayer = executionPlan.buffsByPlayer();
-		var buffExecutions = buffsByPlayer.get(player);
-
-		execute(player, buffExecutions, endStep);
-	}
-
-	private void execute(Player player, List<AssetExecution<Player>> summonExecutions, Runnable endStep) {
-		if (summonExecutions == null) {
-			endStep.run();
-		} else {
-			var params = new ScriptParams(player);
-			var executor = new AssetExecutor(params, summonExecutions, endStep);
-
-			executor.execute();
+			execute(member, summonExecutions);
 		}
+
+		simulation.updateUntil(SUMMON_PHASE_END_TIME);
+	}
+
+	private void executeBuffPhase(Raid<Player> raid, AssetExecutionPlan<Player> executionPlan, Simulation simulation) {
+		var buffsByPlayer = executionPlan.buffsByPlayer();
+
+		for (var member : raid.getMembers()) {
+			var buffExecutions = buffsByPlayer.get(member);
+
+			execute(member, buffExecutions);
+			activateBuffItems(member);
+		}
+
+		simulation.updateUntil(BUFF_PHASE_END_TIME);
+	}
+
+	private void execute(Player player, List<AssetExecution<Player>> assetExecutions) {
+		if (assetExecutions == null) {
+			return;
+		}
+
+		var params = new ScriptParams(player);
+		var executor = new AssetExecutor(params, assetExecutions);
+
+		executor.execute();
 	}
 
 	private void activateBuffItems(Player member) {
@@ -166,22 +153,37 @@ public class SimulatorServiceImpl implements SimulatorService {
 	}
 
 	private void applyTemporaryEffects(Raid<Player> raid) {
-		raid.forEachMemberAndPet((Unit memberOrPet) -> {
-			memberOrPet.addHiddenEffect(INFINITE_RESOURCES, 1);
-			memberOrPet.addHiddenEffect(INFINITE_BUFFS, 1);
-		});
+		raid.forEach(this::applyTemporaryEffects);
 	}
 
-	private void finalizeBuffStage(Unit memberOrPet) {
+	private void removeTemporaryEffects(Raid<Player> raid) {
+		raid.forEach(this::removeTemporaryEffects);
+	}
+
+	private void applyTemporaryEffects(Unit memberOrPet) {
+		memberOrPet.addHiddenEffect(INFINITE_RESOURCES, 1);
+		memberOrPet.addHiddenEffect(INFINITE_BUFFS, 1);
+	}
+
+	private void removeTemporaryEffects(Unit memberOrPet) {
 		memberOrPet.removeEffect(INFINITE_RESOURCES);
 		memberOrPet.removeEffect(INFINITE_BUFFS);
+	}
 
-		memberOrPet.addHiddenEffect(BONUS_HP5, 5000);
-		memberOrPet.addHiddenEffect(BONUS_MP5, 5000);
+	private void activateAllRaidMembersAndPets(Raid<Player> raid) {
+		raid.forEachMemberAndPet((Unit memberOrPet) -> memberOrPet.setActive());
+	}
 
-		memberOrPet.setAllResourcesToMax();
+	private void beforePreparationPhaseStarts(Raid<Player> raid, Unit target) {
+		raid.forEach(member -> member.setTarget(target));
+	}
 
-		memberOrPet.setActive();
+	private void afterPreparationPhaseEnds(Raid<Player> raid) {
+		raid.forEachMemberAndPet((Unit memberOrPet) -> {
+			memberOrPet.addHiddenEffect(BONUS_HP5, 5000);
+			memberOrPet.addHiddenEffect(BONUS_MP5, 5000);
+			memberOrPet.setAllResourcesToMax();
+		});
 	}
 
 	private SimulationContext createSimulationContext(RngType rngType) {
