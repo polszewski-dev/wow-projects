@@ -20,7 +20,7 @@ class CommandTest extends TbcWarlockSpellSimulationTest {
 	@Test
 	void pets_damage_is_increased() {
 		player.cast(SUMMON_IMP);
-		summonedPetCasts(player, FIREBOLT);
+		player.petCast(FIREBOLT);
 
 		updateUntil(30);
 

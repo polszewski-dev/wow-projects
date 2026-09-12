@@ -176,10 +176,6 @@ public abstract class SpellSimulationTest extends WowSimulatorSpringTest impleme
 		petUnsummoned(master, pet);
 	}
 
-	protected void summonedPetCasts(Unit unit, String abilityName) {
-		unit.immediateAction(self -> self.getActivePet().cast(abilityName));
-	}
-
 	protected void simulateDamagingSpell(String abilityName, int spellDamage) {
 		addSdBonus(spellDamage);
 

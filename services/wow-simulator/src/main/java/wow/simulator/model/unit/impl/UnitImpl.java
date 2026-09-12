@@ -41,6 +41,7 @@ import wow.simulator.util.IdGenerator;
 
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 import static wow.commons.model.spell.GcdCooldownId.GCD;
@@ -219,6 +220,31 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 		var action = new CastSpellAction(this, ability, target);
 
 		enqueueAction(action);
+	}
+
+	@Override
+	public void petCast(String abilityName) {
+		immediateAction(() -> getActivePet().cast(abilityName));
+	}
+
+	@Override
+	public void petCast(String abilityName, Unit target) {
+		immediateAction(() -> getActivePet().cast(abilityName, target));
+	}
+
+	@Override
+	public void petCast(Ability ability, Unit target) {
+		immediateAction(() -> getActivePet().cast(ability, target));
+	}
+
+	@Override
+	public void petCast(Supplier<Ability> abilitySupplier, Supplier<Unit> targetSupplier) {
+		immediateAction(() -> {
+			var ability = abilitySupplier.get();
+			var target = targetSupplier.get();
+
+			getActivePet().cast(ability, target);
+		});
 	}
 
 	@Override

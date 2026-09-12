@@ -23,7 +23,7 @@ class UnholyPowerTest extends TbcWarlockTalentSimulationTest {
 		enableTalent(UNHOLY_POWER, rank);
 
 		player.cast(SUMMON_IMP);
-		summonedPetCasts(player, FIREBOLT);
+		player.petCast(FIREBOLT);
 
 		updateUntil(30);
 

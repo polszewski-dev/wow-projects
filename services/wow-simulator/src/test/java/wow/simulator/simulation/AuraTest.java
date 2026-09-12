@@ -126,8 +126,8 @@ class AuraTest extends SpellSimulationTest {
 		player2.cast(SUMMON_IMP);
 		baseline.cast(SUMMON_IMP);
 
-		summonedPetCasts(player, BLOOD_PACT);
-		summonedPetCasts(player2, BLOOD_PACT);
+		player.petCast(BLOOD_PACT);
+		player2.petCast(BLOOD_PACT);
 
 		updateUntil(30);
 
@@ -143,7 +143,7 @@ class AuraTest extends SpellSimulationTest {
 		createDefaultUnits();
 
 		player2.cast(SUMMON_IMP);
-		summonedPetCasts(player2, BLOOD_PACT);
+		player2.petCast(BLOOD_PACT);
 		player2.idleUntil(Time.at(20));
 		player2.immediateAction(Unit::dismissPet);
 
@@ -162,7 +162,7 @@ class AuraTest extends SpellSimulationTest {
 		enableTalent(player2, DEMONIC_SACRIFICE);
 
 		player2.cast(SUMMON_IMP);
-		summonedPetCasts(player2, BLOOD_PACT);
+		player2.petCast(BLOOD_PACT);
 		player2.idleUntil(Time.at(20));
 		player2.cast(DEMONIC_SACRIFICE);
 
@@ -179,7 +179,7 @@ class AuraTest extends SpellSimulationTest {
 		createDefaultUnits();
 
 		player2.cast(SUMMON_IMP);
-		summonedPetCasts(player2, BLOOD_PACT);
+		player2.petCast(BLOOD_PACT);
 		player2.idleUntil(Time.at(20));
 		player2.immediateAction(self -> self.decreaseHealth(100_000, false, null, self));
 

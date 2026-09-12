@@ -24,7 +24,7 @@ class ImprovedLashOfPainTest extends TbcWarlockTalentSimulationTest {
 		enableTalent(IMPROVED_LASH_OF_PAIN, rank);
 
 		player.cast(SUMMON_SUCCUBUS);
-		summonedPetCasts(player, LASH_OF_PAIN);
+		player.petCast(LASH_OF_PAIN);
 
 		updateUntil(30);
 

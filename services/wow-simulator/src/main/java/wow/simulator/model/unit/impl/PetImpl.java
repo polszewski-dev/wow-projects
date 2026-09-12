@@ -12,11 +12,14 @@ import wow.commons.model.character.PetType;
 import wow.commons.model.character.Race;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
+import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.Spell;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.unit.Pet;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.unit.UnitParty;
+
+import java.util.function.Supplier;
 
 import static wow.simulator.constant.HiddenEffectNames.PET_CONVERSIONS;
 import static wow.simulator.constant.HiddenEffectNames.UNSUMMON_PET;
@@ -91,5 +94,28 @@ public class PetImpl extends UnitImpl implements Pet {
 	public void onAddedToSimulation() {
 		addHiddenEffect(PET_CONVERSIONS, 1);
 		super.onAddedToSimulation();
+	}
+
+	@Override
+	public void petCast(String abilityName) {
+		cast(abilityName);
+	}
+
+	@Override
+	public void petCast(String abilityName, Unit target) {
+		cast(abilityName, target);
+	}
+
+	@Override
+	public void petCast(Ability ability, Unit target) {
+		cast(ability, target);
+	}
+
+	@Override
+	public void petCast(Supplier<Ability> abilitySupplier, Supplier<Unit> targetSupplier) {
+		var ability = abilitySupplier.get();
+		var target = targetSupplier.get();
+
+		cast(ability, target);
 	}
 }

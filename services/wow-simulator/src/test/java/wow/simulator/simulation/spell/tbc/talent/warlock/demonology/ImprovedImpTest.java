@@ -23,7 +23,7 @@ class ImprovedImpTest extends TbcWarlockTalentSimulationTest {
 		enableTalent(IMPROVED_IMP, rank);
 
 		player.cast(SUMMON_IMP);
-		summonedPetCasts(player, FIREBOLT);
+		player.petCast(FIREBOLT);
 
 		updateUntil(30);
 

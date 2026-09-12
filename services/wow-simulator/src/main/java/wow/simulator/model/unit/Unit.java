@@ -17,6 +17,7 @@ import wow.simulator.simulation.SimulationContextSource;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 import static wow.commons.model.spell.component.ComponentCommand.*;
@@ -56,6 +57,14 @@ public interface Unit extends Character, SimulationContextSource {
 	void cast(String abilityName, Unit target);
 
 	void cast(Ability ability, Unit target);
+
+	void petCast(String abilityName);
+
+	void petCast(String abilityName, Unit target);
+
+	void petCast(Ability ability, Unit target);
+
+	void petCast(Supplier<Ability> abilitySupplier, Supplier<Unit> targetSupplier);
 
 	PrimaryTarget getPrimaryTarget(Ability ability, Unit explicitTarget);
 

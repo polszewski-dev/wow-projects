@@ -43,6 +43,14 @@ public class CastPetSpellExecutor extends DynamicExecutor {
 	}
 
 	@Override
+	public void execute() {
+		caster.petCast(
+				this::getAbility,
+				() -> getTarget(commandTarget)
+		);
+	}
+
+	@Override
 	protected Ability getAbility() {
 		return getActualCaster().getAbility(abilityId).orElse(null);
 	}

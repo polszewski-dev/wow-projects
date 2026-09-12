@@ -20,7 +20,7 @@ class LashOfPainTest extends TbcWarlockSpellSimulationTest {
 	@Test
 	void success() {
 		player.cast(SUMMON_SUCCUBUS);
-		summonedPetCasts(player, LASH_OF_PAIN);
+		player.petCast(LASH_OF_PAIN);
 
 		updateUntil(30);
 
