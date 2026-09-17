@@ -7,6 +7,7 @@ package wow.simulator.constant;
 public final class HiddenEffectNames {
 	public static final String BONUS_STAMINA = "Bonus Stamina";
 	public static final String BONUS_INTELLECT = "Bonus Intellect";
+	public static final String BONUS_MAX_HEALTH = "Bonus Max Health";
 	public static final String BONUS_HP5 = "Bonus Hp5";
 	public static final String BONUS_MP5 = "Bonus Mp5";
 	public static final String BONUS_SPELL_POWER = "Bonus Spell Power";

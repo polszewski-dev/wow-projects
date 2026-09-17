@@ -18,6 +18,8 @@ import java.util.function.Supplier;
 public class InfiniteTargetHealthScenario extends AbstractMultipleTargetScenario {
 	private final Duration duration;
 
+	private static final int INFINITE_HEALTH = 1_000_000_000;
+
 	public InfiniteTargetHealthScenario(Duration duration, Supplier<SimulationContext> simulationContextSupplier, SimulatorService simulatorService) {
 		super(simulationContextSupplier, simulatorService);
 		this.duration = duration;
@@ -25,6 +27,7 @@ public class InfiniteTargetHealthScenario extends AbstractMultipleTargetScenario
 
 	@Override
 	public void execute(Raid<Player> raid, List<Unit> targets, List<GameLogHandler> handlers) {
+		targetHpShallBe(INFINITE_HEALTH);
 		setUnits(raid, targets);
 		doExecute(duration, handlers);
 	}

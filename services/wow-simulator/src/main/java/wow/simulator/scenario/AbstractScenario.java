@@ -26,6 +26,8 @@ public abstract class AbstractScenario implements Scenario, SimulationCallback {
 	protected Raid<Player> raid;
 	protected Player main;
 
+	private int targetHp;
+
 	protected AbstractScenario(Supplier<SimulationContext> simulationContextSupplier, SimulatorService simulatorService) {
 		this.simulationContextSupplier = simulationContextSupplier;
 		this.simulatorService = simulatorService;
@@ -76,8 +78,18 @@ public abstract class AbstractScenario implements Scenario, SimulationCallback {
 		getTargets().forEach(this::setTargetHp);
 	}
 
+	protected void targetHpShallBe(int targetHp) {
+		this.targetHp = targetHp;
+	}
+
 	private void setTargetHp(Unit target) {
-		target.addHiddenEffect(BONUS_STAMINA, 100_000_000);
+		if (targetHp <= 0) {
+			return;
+		}
+
+		var missingHp = targetHp - target.getMaxHealth();
+
+		target.addHiddenEffect(BONUS_MAX_HEALTH, missingHp);
 		target.setAllResourcesToMax();
 	}
 

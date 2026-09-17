@@ -124,7 +124,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 
 		simulationContext.shareSimulationContext(enemy);
 
-		enemy.addHiddenEffect(BONUS_STAMINA, 100_000_000);
+		enemy.addHiddenEffect(BONUS_MAX_HEALTH, 1_000_000);
 
 		return enemy;
 	}
