@@ -22,6 +22,7 @@ public abstract class DefaultScenario implements Scenario, SimulationCallback {
 	private final Supplier<SimulationContext> simulationContextSupplier;
 	private final SimulatorService simulatorService;
 
+	private Raid<Player> raid;
 	private Player main;
 	private Unit target;
 
@@ -35,17 +36,18 @@ public abstract class DefaultScenario implements Scenario, SimulationCallback {
 	}
 
 	protected void setUnits(Raid<Player> raid, Unit target) {
+		this.raid = raid;
 		this.main = raid.getFirstMember();
 		this.target = target;
 	}
 
 	@Override
-	public void beforePreparationPhaseStarts(Raid<Player> raid, Unit target) {
+	public void beforePreparationPhaseStarts() {
 		raid.forEach(member -> member.setTarget(target));
 	}
 
 	@Override
-	public void afterPreparationPhaseEnds(Raid<Player> raid) {
+	public void afterPreparationPhaseEnds() {
 		raid.forEach(member -> {
 			member.setTarget(target);
 			member.setFocus(main);

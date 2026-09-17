@@ -49,7 +49,7 @@ public class SimulatorServiceImpl implements SimulatorService {
 
 		simulation.addHandlers(handlers);
 
-		executePreparationPhase(raid, target, simulation, callback);
+		executePreparationPhase(raid, simulation, callback);
 
 		simulation.updateFor(duration);
 		simulation.finish();
@@ -64,9 +64,9 @@ public class SimulatorServiceImpl implements SimulatorService {
 		return simulation;
 	}
 
-	private void executePreparationPhase(Raid<Player> raid, Unit target, Simulation simulation, SimulationCallback callback) {
+	private void executePreparationPhase(Raid<Player> raid, Simulation simulation, SimulationCallback callback) {
 		simulation.runAt(PREPARATION_PHASE_START_TIME, () -> {
-			callback.beforePreparationPhaseStarts(raid, target);
+			callback.beforePreparationPhaseStarts();
 			applyTemporaryEffects(raid);
 		});
 
@@ -77,7 +77,7 @@ public class SimulatorServiceImpl implements SimulatorService {
 
 		simulation.runAt(PREPARATION_PHASE_END_TIME, () -> {
 			removeTemporaryEffects(raid);
-			callback.afterPreparationPhaseEnds(raid);
+			callback.afterPreparationPhaseEnds();
 			activateAllRaidMembersAndPets(raid);
 		});
 	}
