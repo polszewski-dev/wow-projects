@@ -44,27 +44,27 @@ public class SimulatorServiceImpl implements SimulatorService {
 	private static final Time PREPARATION_PHASE_END_TIME = BUFF_PHASE_END_TIME;
 
 	@Override
-	public void simulate(Raid<Player> raid, Unit target, Duration duration, SimulationContext simulationContext, List<GameLogHandler> handlers, SimulationCallback callback) {
-		var simulation = createSimulation(raid, target, simulationContext);
+	public void simulate(Raid<Player> raid, List<Unit> targets, Duration duration, SimulationContext simulationContext, List<GameLogHandler> handlers, SimulationCallback callback) {
+		var simulation = createSimulation(raid, targets, simulationContext);
 
 		simulation.addHandlers(handlers);
 
-		executePreparationPhase(raid, simulation, callback);
+		executePreparationPhase(raid, targets, simulation, callback);
 
 		simulation.updateFor(duration);
 		simulation.finish();
 	}
 
-	private Simulation createSimulation(Raid<Player> raid, Unit target, SimulationContext simulationContext) {
+	private Simulation createSimulation(Raid<Player> raid, List<Unit> targets, SimulationContext simulationContext) {
 		var simulation = new Simulation(simulationContext);
 
-		simulation.add(target);
-		raid.forEach(simulation::add);
+		simulation.add(targets);
+		simulation.add(raid.getMembers());
 
 		return simulation;
 	}
 
-	private void executePreparationPhase(Raid<Player> raid, Simulation simulation, SimulationCallback callback) {
+	private void executePreparationPhase(Raid<Player> raid, List<Unit> targets, Simulation simulation, SimulationCallback callback) {
 		simulation.runAt(PREPARATION_PHASE_START_TIME, () -> {
 			callback.beforePreparationPhaseStarts();
 			applyTemporaryEffects(raid);
@@ -73,7 +73,7 @@ public class SimulatorServiceImpl implements SimulatorService {
 		var executionPlan = assetService.getAssetExecutionPlan(raid);
 
 		executeSummonPhase(raid, executionPlan, simulation);
-		executeBuffPhase(raid, executionPlan, simulation);
+		executeBuffPhase(raid, targets, executionPlan, simulation);
 
 		simulation.runAt(PREPARATION_PHASE_END_TIME, () -> {
 			removeTemporaryEffects(raid);
@@ -92,32 +92,32 @@ public class SimulatorServiceImpl implements SimulatorService {
 		for (var member : raid.getMembers()) {
 			var summonExecutions = summonsByPlayer.get(member);
 
-			execute(member, summonExecutions);
+			execute(member, List.of(), summonExecutions);
 		}
 
 		simulation.updateUntil(SUMMON_PHASE_END_TIME);
 	}
 
-	private void executeBuffPhase(Raid<Player> raid, AssetExecutionPlan<Player> executionPlan, Simulation simulation) {
+	private void executeBuffPhase(Raid<Player> raid, List<Unit> targets, AssetExecutionPlan<Player> executionPlan, Simulation simulation) {
 		var buffsByPlayer = executionPlan.buffsByPlayer();
 
 		for (var member : raid.getMembers()) {
 			var buffExecutions = buffsByPlayer.get(member);
 
-			execute(member, buffExecutions);
+			execute(member, targets, buffExecutions);
 			activateBuffItems(member);
 		}
 
 		simulation.updateUntil(BUFF_PHASE_END_TIME);
 	}
 
-	private void execute(Player player, List<AssetExecution<Player>> assetExecutions) {
+	private void execute(Player player, List<Unit> targets, List<AssetExecution<Player>> assetExecutions) {
 		if (assetExecutions == null) {
 			return;
 		}
 
 		var params = new ScriptParams(player);
-		var executor = new AssetExecutor(params, assetExecutions);
+		var executor = new AssetExecutor(params, targets, assetExecutions);
 
 		executor.execute();
 	}

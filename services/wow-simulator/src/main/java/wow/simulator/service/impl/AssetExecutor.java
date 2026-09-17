@@ -18,11 +18,13 @@ import static wow.character.model.script.ScriptSectionType.PREPARATION;
  */
 class AssetExecutor {
 	private final Unit player;
+	private final List<Unit> enemies;
 	private final ScriptParams params;
 	private final List<AssetExecution<Player>> executions;
 
-	AssetExecutor(ScriptParams params, List<AssetExecution<Player>> executions) {
+	AssetExecutor(ScriptParams params, List<Unit> enemies, List<AssetExecution<Player>> executions) {
 		this.player = params.caster();
+		this.enemies = enemies;
 		this.params = params;
 		this.executions = executions;
 	}
@@ -60,8 +62,8 @@ class AssetExecutor {
 			case SELF ->
 					player.cast(abilityId);
 
-			case TARGET_ENEMY ->
-					player.cast(abilityId, player.getTarget());
+			case EACH_ENEMY ->
+					enemies.forEach(enemy -> player.cast(abilityId, enemy));
 		}
 	}
 

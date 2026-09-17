@@ -10,6 +10,7 @@ import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.Unit;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -39,6 +40,10 @@ public class Simulation implements SimulationContextSource {
 		shareSimulationContext(unit);
 		this.units.add(unit);
 		unit.onAddedToSimulation();
+	}
+
+	public void add(Collection<? extends Unit> units) {
+		units.forEach(this::add);
 	}
 
 	public void add(Action action) {

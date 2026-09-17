@@ -57,7 +57,7 @@ public record Asset(
 		EACH_RAID_MEMBER,
 		EACH_PARTY_FIRST_MEMBER,
 		SELF,
-		TARGET_ENEMY;
+		EACH_ENEMY;
 
 		public static BuffTarget parse(String value) {
 			return EnumUtil.parse(value, values());

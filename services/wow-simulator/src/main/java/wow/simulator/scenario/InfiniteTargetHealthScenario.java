@@ -15,7 +15,7 @@ import java.util.function.Supplier;
  * User: POlszewski
  * Date: 2026-09-11
  */
-public class InfiniteTargetHealthScenario extends AbstractScenario {
+public class InfiniteTargetHealthScenario extends AbstractMultipleTargetScenario {
 	private final Duration duration;
 
 	public InfiniteTargetHealthScenario(Duration duration, Supplier<SimulationContext> simulationContextSupplier, SimulatorService simulatorService) {
@@ -24,8 +24,8 @@ public class InfiniteTargetHealthScenario extends AbstractScenario {
 	}
 
 	@Override
-	public void execute(Raid<Player> raid, Unit target, List<GameLogHandler> handlers) {
-		setUnits(raid, target);
+	public void execute(Raid<Player> raid, List<Unit> targets, List<GameLogHandler> handlers) {
+		setUnits(raid, targets);
 		doExecute(duration, handlers);
 	}
 }

@@ -33,7 +33,6 @@ import wow.simulator.model.unit.impl.NonPlayerImpl;
 import wow.simulator.model.unit.impl.PlayerImpl;
 import wow.simulator.model.update.Scheduler;
 import wow.simulator.scenario.InfiniteTargetHealthScenario;
-import wow.simulator.scenario.Scenario;
 import wow.simulator.service.SimulatorService;
 import wow.simulator.simulation.Simulation;
 import wow.simulator.simulation.SimulationContext;
@@ -571,7 +570,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		return unit.getCurrentMana() - getRegeneratedMana(unit);
 	}
 
-	protected Scenario getScenario(double duration) {
+	protected InfiniteTargetHealthScenario getScenario(double duration) {
 		return new InfiniteTargetHealthScenario(Duration.seconds(duration), this::getSimulationContext, simulationService);
 	}
 }

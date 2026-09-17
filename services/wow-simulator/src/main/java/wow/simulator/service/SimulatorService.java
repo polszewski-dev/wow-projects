@@ -14,5 +14,5 @@ import java.util.List;
  * Date: 2024-11-10
  */
 public interface SimulatorService {
-	void simulate(Raid<Player> raid, Unit target, Duration duration, SimulationContext simulationContext, List<GameLogHandler> handlers, SimulationCallback callback);
+	void simulate(Raid<Player> raid, List<Unit> targets, Duration duration, SimulationContext simulationContext, List<GameLogHandler> handlers, SimulationCallback callback);
 }
