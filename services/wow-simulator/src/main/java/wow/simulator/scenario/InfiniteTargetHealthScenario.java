@@ -15,7 +15,7 @@ import java.util.function.Supplier;
  * User: POlszewski
  * Date: 2026-09-11
  */
-public class InfiniteTargetHealthScenario extends DefaultScenario {
+public class InfiniteTargetHealthScenario extends AbstractScenario {
 	private final Duration duration;
 
 	public InfiniteTargetHealthScenario(Duration duration, Supplier<SimulationContext> simulationContextSupplier, SimulatorService simulatorService) {

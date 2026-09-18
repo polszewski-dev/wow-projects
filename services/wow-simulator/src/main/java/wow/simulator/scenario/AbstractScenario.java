@@ -18,7 +18,7 @@ import static wow.simulator.constant.HiddenEffectNames.*;
  * User: POlszewski
  * Date: 2026-09-10
  */
-public abstract class DefaultScenario implements Scenario, SimulationCallback {
+public abstract class AbstractScenario implements Scenario, SimulationCallback {
 	private final Supplier<SimulationContext> simulationContextSupplier;
 	private final SimulatorService simulatorService;
 
@@ -26,7 +26,7 @@ public abstract class DefaultScenario implements Scenario, SimulationCallback {
 	private Player main;
 	private Unit target;
 
-	protected DefaultScenario(Supplier<SimulationContext> simulationContextSupplier, SimulatorService simulatorService) {
+	protected AbstractScenario(Supplier<SimulationContext> simulationContextSupplier, SimulatorService simulatorService) {
 		this.simulationContextSupplier = simulationContextSupplier;
 		this.simulatorService = simulatorService;
 	}
