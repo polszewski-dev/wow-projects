@@ -11,6 +11,7 @@ import wow.simulator.simulation.SimulationContext;
 import wow.simulator.simulation.SimulationContextSource;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -94,5 +95,13 @@ public class Cooldowns implements SimulationContextSource {
 	@Override
 	public SimulationContext getSimulationContext() {
 		return owner.getSimulationContext();
+	}
+
+	public void reset() {
+		var existingCooldowns = List.copyOf(cooldownsById.values());
+
+		for (var cooldown : existingCooldowns) {
+			cooldown.interrupt();
+		}
 	}
 }

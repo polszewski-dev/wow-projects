@@ -242,4 +242,6 @@ public interface Unit extends Character, SimulationContextSource {
 	void triggerDeath(Unit caster);
 
 	void setOnDeath(Consumer<Unit> onDeath);
+
+	void resetAfterCombat();
 }

@@ -100,5 +100,10 @@ public abstract class AbstractScenario implements Scenario, SimulationCallback {
 		targets.forEach(target -> target.setOnDeath(self -> counter.decrease()));
 	}
 
+	protected void resetUnits() {
+		raid.forEach(Unit::resetAfterCombat);
+		getTargets().forEach(Unit::resetAfterCombat);
+	}
+
 	protected abstract List<Unit> getTargets();
 }

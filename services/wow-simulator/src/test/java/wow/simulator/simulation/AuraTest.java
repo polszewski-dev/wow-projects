@@ -181,7 +181,7 @@ class AuraTest extends SpellSimulationTest {
 		player2.cast(SUMMON_IMP);
 		player2.petCast(BLOOD_PACT);
 		player2.idleUntil(Time.at(20));
-		player2.immediateAction(self -> self.decreaseHealth(100_000, false, null, self));
+		player2.immediateAction(self -> instaKill(self, self));
 
 		updateUntil(30);
 

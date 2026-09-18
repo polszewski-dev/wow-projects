@@ -176,4 +176,8 @@ public abstract class Effects implements SimulationContextSource, EffectCollecti
 				.findAny()
 				.orElse(FormType.CASTER_FORM);
 	}
+
+	public void reset() {
+		removeAllEffects();
+	}
 }

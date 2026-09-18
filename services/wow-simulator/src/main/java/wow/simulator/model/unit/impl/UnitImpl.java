@@ -924,6 +924,20 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 		return effects.getForm();
 	}
 
+	@Override
+	public void resetAfterCombat() {
+		unsummonPet();
+		effects.reset();
+		cooldowns.reset();
+		pendingActionQueue.reset();
+		currentAction = null;
+		deactivated = false;
+		lastTimeManaSpent = null;
+		inCombat = false;
+		setPassive();
+		setAllResourcesToMax();
+	}
+
 	@RequiredArgsConstructor
 	private static class AuraExcludingCollector implements EffectCollector {
 		private final EffectCollector collector;

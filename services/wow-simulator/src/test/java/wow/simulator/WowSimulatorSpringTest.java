@@ -570,7 +570,29 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		return unit.getCurrentMana() - getRegeneratedMana(unit);
 	}
 
-	protected InfiniteTargetHealthScenario getScenario(double duration) {
-		return new InfiniteTargetHealthScenario(Duration.seconds(duration), this::getSimulationContext, simulationService);
+	protected static class TestScenario extends InfiniteTargetHealthScenario {
+		private final List<Runnable> commands = new ArrayList<>();
+
+		public TestScenario(Duration duration, Supplier<SimulationContext> simulationContextSupplier, SimulatorService simulatorService) {
+			super(duration, simulationContextSupplier, simulatorService);
+		}
+
+		@Override
+		public void afterPreparationPhaseEnds() {
+			super.afterPreparationPhaseEnds();
+			commands.forEach(Runnable::run);
+		}
+
+		public void runBeforeCombat(Runnable command) {
+			commands.add(command);
+		}
+	}
+
+	protected TestScenario getScenario(double duration) {
+		return new TestScenario(Duration.seconds(duration), this::getSimulationContext, simulationService);
+	}
+
+	protected void instaKill(Unit caster, Unit target) {
+		target.decreaseHealth(target.getMaxHealth(), false, null, caster);
 	}
 }

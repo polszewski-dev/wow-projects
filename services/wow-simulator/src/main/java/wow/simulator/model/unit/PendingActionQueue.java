@@ -28,7 +28,11 @@ public class PendingActionQueue<T extends Action> {
 	}
 
 	public T removeEarliestAction() {
-		return pendingActions.remove(0);
+		return pendingActions.removeFirst();
+	}
+
+	public void reset() {
+		pendingActions.clear();
 	}
 }
 
