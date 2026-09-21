@@ -35,6 +35,7 @@ public abstract class ComposableExecutor extends ScriptCommandExecutor {
 			case CastSpellRank castSpellRank -> CastSpellRankExecutor.create(castSpellRank, params);
 			case CastPetSpell castPetSpell -> CastPetSpellExecutor.create(castPetSpell, params);
 			case UseItem useItem -> UseItemExecutor.create(useItem, params);
+			case TryMoveToTargetWithShortestDurationOf tryMoveToTargetWithShortestDurationOf -> TryMoveToTargetWithShortestDurationOfExecutor.create(tryMoveToTargetWithShortestDurationOf, params);
 		};
 	}
 }

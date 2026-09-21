@@ -275,6 +275,13 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	}
 
 	@Override
+	public void emptyAction() {
+		immediateAction(() -> {
+			// do nothing
+		});
+	}
+
+	@Override
 	public void triggerGcd(Duration duration) {
 		triggerCooldown(GCD, duration);
 	}

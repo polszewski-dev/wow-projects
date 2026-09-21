@@ -76,6 +76,8 @@ public interface Unit extends Character, SimulationContextSource {
 
 	void immediateAction(Runnable action);
 
+	void emptyAction();
+
 	void triggerGcd(Duration duration);
 
 	void interruptCurrentAction();

@@ -14,7 +14,7 @@ import java.util.Objects;
  * Date: 2025-09-17
  */
 public sealed interface ScriptCommand {
-	sealed interface ComposableCommand extends ScriptCommand permits CastSpell, CastSpellRank, CastPetSpell, UseItem {
+	sealed interface ComposableCommand extends ScriptCommand permits CastSpell, CastSpellRank, CastPetSpell, UseItem, TryMoveToTargetWithShortestDurationOf {
 		boolean optional();
 	}
 
@@ -65,6 +65,17 @@ public sealed interface ScriptCommand {
 			}
 
 			return equippedItem.getItem().getActivatedAbility();
+		}
+	}
+
+	record TryMoveToTargetWithShortestDurationOf(ScriptCommandCondition condition, AbilityId abilityId, boolean optional) implements ComposableCommand {
+		public TryMoveToTargetWithShortestDurationOf {
+			Objects.requireNonNull(condition);
+			Objects.requireNonNull(abilityId);
+		}
+
+		public Ability getAbility(Character character) {
+			return character.getAbility(abilityId).orElse(null);
 		}
 	}
 

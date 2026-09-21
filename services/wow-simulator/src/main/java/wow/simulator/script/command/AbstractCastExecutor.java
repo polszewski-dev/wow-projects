@@ -92,9 +92,17 @@ public abstract class AbstractCastExecutor extends ComposableExecutor {
 			return false;
 		}
 
-		var effectDuration = actualCaster.getEffectDurationSnapshot(ability, target).getDuration();
+		var effectDuration = getEffectDuration(actualCaster, ability, target);
 
 		return castTime.add(effectDuration).compareTo(remainingSimulationTime) <= 0;
+	}
+
+	private AnyDuration getEffectDuration(Unit actualCaster, Ability ability, Unit target) {
+		if (ability.getName().equals("Seed of Corruption")) {
+			return Duration.seconds(2);
+		}
+
+		return actualCaster.getEffectDurationSnapshot(ability, target).getDuration();
 	}
 
 	private AnyDuration getRemainingEffectDuration(Unit target) {

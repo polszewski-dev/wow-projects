@@ -1,0 +1,12 @@
+@	Rotation
+
+	Destruction Potion
+	Blood Fury
+	Trinket1
+	Trinket2
+
+	Seed of Corruption
+	TryMoveToTargetWithShortestDurationOf Seed of Corruption
+	Shadowburn
+	Shadow Bolt
+	Shoot

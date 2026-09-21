@@ -60,6 +60,9 @@ public class RotationTemplate {
 			case UseItem ignored -> {
 				// ignore
 			}
+			case TryMoveToTargetWithShortestDurationOf ignored -> {
+				// ignore
+			}
 		}
 	}
 

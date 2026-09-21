@@ -45,6 +45,13 @@ public final class ParserUtil {
 		return null;
 	}
 
+	public static String removePrefixAndTrim(String prefix, String line) {
+		if (line.startsWith(prefix)) {
+			return line.substring(prefix.length()).trim();
+		}
+		return null;
+	}
+
 	public static String substituteParams(String expression, IntFunction<String> paramProvider) {
 		if (expression == null || expression.isBlank()) {
 			return expression;

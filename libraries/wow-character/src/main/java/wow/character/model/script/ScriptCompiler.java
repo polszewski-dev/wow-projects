@@ -6,6 +6,7 @@ import lombok.SneakyThrows;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.util.parser.ParsedMultipleValues;
+import wow.commons.util.parser.ParserUtil;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -34,6 +35,8 @@ public class ScriptCompiler {
 
 	private static final String LET_DIRECTIVE_REGEX = "@\\s*let\\s+(\\w+)\\s*=(.*)";
 	private static final Pattern COMMAND_PATTERN = Pattern.compile("^(\\[(.+)]\\s*)?(.+?)(\\s*\\(Rank\\s+(\\d+)\\))?(\\s*@\\s*(\\S+))?$");
+
+	private static final String TRY_MOVE_TO_TARGET_WITH_SHORTEST_DURATION_OF_PREFIX = "TryMoveToTargetWithShortestDurationOf";
 
 	private final String path;
 	private ScriptSectionType currentSectionType = ROTATION;
@@ -142,6 +145,17 @@ public class ScriptCompiler {
 					condition,
 					itemSlot,
 					target,
+					optional
+			);
+		}
+
+		if (abilityIdStr.startsWith(TRY_MOVE_TO_TARGET_WITH_SHORTEST_DURATION_OF_PREFIX)) {
+			var abilityName = ParserUtil.removePrefixAndTrim(TRY_MOVE_TO_TARGET_WITH_SHORTEST_DURATION_OF_PREFIX, abilityIdStr);
+			var abilityId = AbilityId.parse(abilityName);
+
+			return new TryMoveToTargetWithShortestDurationOf(
+					condition, 
+					abilityId,
 					optional
 			);
 		}
