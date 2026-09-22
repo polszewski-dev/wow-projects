@@ -6,7 +6,6 @@ import wow.character.model.script.ScriptCommandTarget;
 import wow.commons.model.AnyDuration;
 import wow.commons.model.Duration;
 import wow.commons.model.spell.Ability;
-import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.unit.Pet;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.script.ScriptParams;
@@ -122,8 +121,6 @@ public abstract class ComposableExecutor extends ScriptCommandExecutor {
 		var actualCaster = getActualCaster();
 		var ability = getAbility();
 
-		return target.getEffect(ability.getAbilityId(), actualCaster)
-				.map(EffectInstance::getRemainingDuration)
-				.orElse(Duration.ZERO);
+		return target.getRemainingEffectDuration(ability, actualCaster).orElse(Duration.ZERO);
 	}
 }

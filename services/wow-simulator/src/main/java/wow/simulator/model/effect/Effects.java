@@ -144,6 +144,12 @@ public abstract class Effects implements SimulationContextSource, EffectCollecti
 				.findAny();
 	}
 
+	public Optional<EffectInstance> getEffect(String effectName, Unit owner) {
+		return getStream()
+				.filter(x -> x.matches(effectName, owner))
+				.findAny();
+	}
+
 	public int getNumberOfEffects(TalentTree tree) {
 		return (int) getStream()
 				.filter(x -> x.matches(tree))

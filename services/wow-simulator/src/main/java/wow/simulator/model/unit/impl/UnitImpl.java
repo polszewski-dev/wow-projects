@@ -612,6 +612,11 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	}
 
 	@Override
+	public Optional<EffectInstance> getEffect(String effectName, Unit effectOwner) {
+		return effects.getEffect(effectName, effectOwner);
+	}
+
+	@Override
 	public boolean hasEffect(AbilityId requiredEffect, Unit effectOwner) {
 		return effects.isUnderEffect(requiredEffect, effectOwner);
 	}
@@ -629,6 +634,18 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	@Override
 	public boolean hasEffect(Pattern effectNamePattern, Unit effectOwner) {
 		return effects.isUnderEffect(effectNamePattern, effectOwner);
+	}
+
+	@Override
+	public Optional<AnyDuration> getRemainingEffectDuration(String effectName, Unit caster) {
+		return getEffect(effectName, caster)
+				.map(EffectInstance::getRemainingDuration);
+	}
+
+	@Override
+	public Optional<AnyDuration> getRemainingEffectDuration(Ability ability, Unit caster) {
+		return getEffect(ability.getAbilityId(), caster)
+				.map(EffectInstance::getRemainingDuration);
 	}
 
 	@Override

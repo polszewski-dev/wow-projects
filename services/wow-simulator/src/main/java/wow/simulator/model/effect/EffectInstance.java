@@ -30,6 +30,8 @@ public interface EffectInstance extends Effect, Updateable, SimulationContextSou
 
 	boolean matches(String effectName);
 
+	boolean matches(String effectName, Unit owner);
+
 	boolean matches(Pattern effectNamePattern);
 
 	boolean matches(Pattern effectNamePattern, Unit owner);

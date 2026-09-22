@@ -170,11 +170,17 @@ public interface Unit extends Character, SimulationContextSource {
 
 	Optional<EffectInstance> getEffect(String effectName);
 
+	Optional<EffectInstance> getEffect(String effectName, Unit effectOwner);
+
 	boolean hasEffect(AbilityId requiredEffect, Unit effectOwner);
 
 	boolean hasEffect(Pattern effectNamePattern);
 
 	boolean hasEffect(Pattern effectNamePattern, Unit effectOwner);
+
+	Optional<AnyDuration> getRemainingEffectDuration(String effectName, Unit caster);
+
+	Optional<AnyDuration> getRemainingEffectDuration(Ability ability, Unit caster);
 
 	boolean isOnCooldown(AbilityId abilityId);
 

@@ -14,7 +14,6 @@ import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.Spell;
-import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.unit.Pet;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.unit.UnitParty;
@@ -85,9 +84,7 @@ public class PetImpl extends UnitImpl implements Pet {
 
 	@Override
 	public AnyDuration getRemainingDuration() {
-		return getEffect(UNSUMMON_PET)
-				.map(EffectInstance::getRemainingDuration)
-				.orElse(Duration.INFINITE);
+		return getRemainingEffectDuration(UNSUMMON_PET, this).orElse(Duration.INFINITE);
 	}
 
 	@Override

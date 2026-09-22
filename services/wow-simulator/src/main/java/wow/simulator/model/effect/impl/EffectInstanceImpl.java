@@ -163,6 +163,11 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	}
 
 	@Override
+	public boolean matches(String effectName, Unit owner) {
+		return getName().equals(effectName) && this.owner == owner;
+	}
+
+	@Override
 	public boolean matches(Pattern effectNamePattern) {
 		return effectNamePattern.matcher(getName()).find();
 	}
