@@ -8,7 +8,7 @@ import wow.simulator.script.ScriptParams;
  * User: POlszewski
  * Date: 12.08.2026
  */
-public abstract class DynamicExecutor extends ComposableExecutor {
+public abstract class DynamicExecutor extends AbstractCastExecutor {
 	protected DynamicExecutor(
 			ScriptParams params,
 			ScriptCommandCondition commandCondition,

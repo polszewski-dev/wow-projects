@@ -11,7 +11,7 @@ import wow.simulator.script.ScriptParams;
  * Date: 12.08.2026
  */
 @Getter
-public abstract class StaticExecutor extends ComposableExecutor {
+public abstract class StaticExecutor extends AbstractCastExecutor {
 	protected final Ability ability;
 
 	protected StaticExecutor(
