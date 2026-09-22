@@ -39,6 +39,7 @@ import wow.simulator.simulation.SimulationContext;
 import wow.simulator.simulation.SimulationContextAware;
 import wow.simulator.util.IdGenerator;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -887,6 +888,16 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 		}
 
 		effects.collectEffects(collector);
+	}
+
+	@Override
+	public List<Unit> getAllEnemies() {
+		return getSimulation().getEnemiesOf(this);
+	}
+
+	@Override
+	public List<Unit> getAllFriends() {
+		return getSimulation().getFriendsOf(this);
 	}
 
 	@Override

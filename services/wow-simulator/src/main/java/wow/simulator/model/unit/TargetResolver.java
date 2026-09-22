@@ -145,11 +145,11 @@ public class TargetResolver implements SimulationContextSource {
 			case FRIENDS_PARTY ->
 					(List<Unit>) friend.getPartyMembers();
 			case ENEMY_AOE ->
-					getSimulation().getEnemiesOf(self);
+					self.getAllEnemies();
 			case ENEMY_AOE_EXCEPT_TARGET ->
-					getSimulation().getEnemiesOf(self).stream().filter(enemyOfSelf -> enemyOfSelf != target).toList();
+					self.getAllEnemies().stream().filter(enemyOfSelf -> enemyOfSelf != target).toList();
 			case FRIEND_AOE ->
-					getSimulation().getFriendsOf(self);
+					self.getAllFriends();
 			default ->
 					throw new IllegalArgumentException(spellTarget.type() + "");
 		};

@@ -229,6 +229,10 @@ public interface Unit extends Character, SimulationContextSource {
 		return first.isHostileWith(second);
 	}
 
+	List<Unit> getAllEnemies();
+
+	List<Unit> getAllFriends();
+
 	void onAddedToSimulation();
 
 	void onEffectListChanged(EffectInstance effectInstance);
