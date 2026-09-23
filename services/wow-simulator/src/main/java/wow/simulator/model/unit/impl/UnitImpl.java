@@ -26,6 +26,7 @@ import wow.simulator.model.cooldown.Cooldowns;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.effect.Effects;
 import wow.simulator.model.effect.impl.NonPeriodicEffectInstance;
+import wow.simulator.model.event.EventBus;
 import wow.simulator.model.rng.Rng;
 import wow.simulator.model.time.AnyTime;
 import wow.simulator.model.time.Time;
@@ -47,9 +48,9 @@ import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 import static wow.commons.model.spell.GcdCooldownId.GCD;
-import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
 import static wow.commons.model.spell.component.ComponentCommand.*;
+import static wow.simulator.constant.HiddenEffectNames.UNSUMMON_PET;
 import static wow.simulator.model.time.AnyTime.TIME_IN_INFINITY;
 
 /**
@@ -64,6 +65,7 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	private final UnitResources resources = new UnitResources(this);
 	protected final Effects effects = new UnitEffects(this);
 	private final Cooldowns cooldowns = new Cooldowns(this);
+	private final EventBus eventBus = new EventBus(this);
 
 	private UnitState state;
 
@@ -379,13 +381,7 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 
 		getResources().pay(cost);
 
-		var actualAmount = cost.amount();
-
-		if (actualAmount > 0) {
-			var type = cost.resourceType();
-
-			getGameLog().decreasedResource(type, ability, this, actualAmount, true, false, this);
-		}
+		eventBus.costPaid(ability, cost, parentContext);
 
 		if (cost.resourceType() == MANA && cost.amount() > 0) {
 			this.lastTimeManaSpent = now();
@@ -405,8 +401,7 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 		return getCharacterCalculationService().getSpellCastSnapshot(this, ability, target);
 	}
 
-	@Override
-	public SpellCostSnapshot getSpellCostSnapshot(Ability ability, Unit target) {
+	private SpellCostSnapshot getSpellCostSnapshot(Ability ability, Unit target) {
 		return getCharacterCalculationService().getSpellCostSnapshot(this, ability, target);
 	}
 
@@ -435,9 +430,8 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 		return getCharacterCalculationService().getEffectDurationSnapshot(this, spell, target, command);
 	}
 
-	@Override
-	public AnyDuration getSummonDuration(Spell spell, AnyDuration commandDuration) {
-		return getCharacterCalculationService().getSummonDuration(this, spell, commandDuration);
+	private AnyDuration getSummonDuration(Spell spell, AnyDuration baseDuration) {
+		return getCharacterCalculationService().getSummonDuration(this, spell, baseDuration);
 	}
 
 	@Override
@@ -542,59 +536,74 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	}
 
 	@Override
-	public int increaseHealth(int amount, boolean direct, boolean crit, Unit caster, Spell spell, Context parentContext) {
+	public void increaseHealth(int amount, boolean direct, boolean crit, Unit caster, Spell spell, Context parentContext) {
+		putInCombat(caster, this);
+
 		int actualAmount = getResources().increaseHealth(amount);
 
-		if (actualAmount > 0) {
-			getGameLog().increasedResource(HEALTH, spell, this, actualAmount, true, crit, caster);
+		if (parentContext != null) {
+			parentContext.setLastHealingDone(actualAmount);
 		}
 
-		return actualAmount;
+		eventBus.healthIncreased(actualAmount, direct, crit, caster, spell, parentContext);
 	}
 
 	@Override
-	public int decreaseHealth(int amount, boolean direct, boolean crit, Unit caster, Spell spell, Context parentContext) {
-		putInCombat((UnitImpl) caster, this);
+	public void decreaseHealth(int amount, boolean direct, boolean crit, Unit caster, Spell spell, Context parentContext) {
+		putInCombat(caster, this);
+
 		int actualAmount = getResources().decreaseHealth(amount);
 
-		if (actualAmount > 0) {
-			getGameLog().decreasedResource(HEALTH, spell, this, actualAmount, true, crit, caster);
+		if (parentContext != null) {
+			parentContext.setLastDamageDone(actualAmount);
+		}
 
-			if (getCurrentHealth() == 0) {
-				getGameLog().targetDied(this, caster);
-				triggerDeath(caster);
+		if (actualAmount == 0) {
+			return;
+		}
+
+		eventBus.healthDecreased(actualAmount, direct, crit, caster, spell, parentContext);
+
+		if (isDead()) {
+			triggerDeath(caster);
+
+			caster.getEventBus().targetDied(spell, this, parentContext);
+
+			if (isPet()) {
+				getMaster().getEventBus().petDied((Pet) this, spell, parentContext);
 			}
 		}
-
-		return actualAmount;
 	}
 
 	@Override
-	public int increaseMana(int amount, boolean direct, boolean crit, Unit caster, Spell spell, Context parentContext) {
+	public void increaseMana(int amount, boolean direct, boolean crit, Unit caster, Spell spell, Context parentContext) {
+		putInCombat(caster, this);
+
 		int actualAmount = getResources().increaseMana(amount);
 
-		if (actualAmount > 0) {
-			getGameLog().increasedResource(MANA, spell, this, actualAmount, true, crit, caster);
+		if (parentContext != null) {
+			parentContext.setLastManaRestored(actualAmount);
 		}
 
-		return actualAmount;
+		eventBus.manaIncreased(actualAmount, direct, crit, caster, spell, parentContext);
 	}
 
 	@Override
-	public int decreaseMana(int amount, boolean direct, boolean crit, Unit caster, Spell spell, Context parentContext) {
-		putInCombat((UnitImpl) caster, this);
+	public void decreaseMana(int amount, boolean direct, boolean crit, Unit caster, Spell spell, Context parentContext) {
+		putInCombat(caster, this);
+
 		int actualAmount = getResources().decreaseMana(amount);
 
-		if (actualAmount > 0) {
-			getGameLog().decreasedResource(MANA, spell, this, actualAmount, true, crit, caster);
+		if (parentContext != null) {
+			parentContext.setLastManaLost(actualAmount);
 		}
 
-		return actualAmount;
+		eventBus.manaDecreased(actualAmount, direct, crit, caster, spell, parentContext);
 	}
 
 	@Override
 	public void addEffect(EffectInstance effect, EffectReplacementMode replacementMode) {
-		putInCombat((UnitImpl) effect.getOwner(), this);
+		putInCombat(effect.getOwner(), this);
 		effects.addEffect(effect, replacementMode);
 	}
 
@@ -820,6 +829,7 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	@Override
 	public void triggerDeath(Unit caster) {
 		deactivate();
+		interruptCurrentAction();
 		effects.removeAllEffects();
 		dismissPet();
 		if (onDeath != null) {
@@ -860,40 +870,72 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	}
 
 	@Override
-	public void summonPet(PetType petType, Spell sourceSpell) {
+	public void summonPet(PetType petType, AnyDuration baseDuration, Spell spell, Context parentContext) {
 		dismissPet();
 
+		var pet = newPet(petType, spell);
+
+		getSimulation().add(pet);
+		limitPetDuration(pet, baseDuration, spell);
+		eventBus.petSummoned(this, pet);
+	}
+
+	private PetImpl newPet(PetType petType, Spell spell) {
 		var petName = "%s's %s".formatted(getName(), petType.getName());
-		var pet = getCharacterService().createPetCharacter(petName, petType, this, sourceSpell, PetImpl::new);
+		var pet = getCharacterService().createPetCharacter(petName, petType, this, spell, PetImpl::new);
 
 		getCharacterService().applyDefaultCharacterTemplate(pet);
 
-		this.setActivePet(pet);
+		setActivePet(pet);
 
 		if (inCombat) {
 			pet.setActive();
 		}
 
-		getSimulation().add(pet);
+		return pet;
+	}
+
+	private void limitPetDuration(PetImpl pet, AnyDuration baseDuration, Spell spell) {
+		var duration = getSummonDuration(spell, baseDuration);
+
+		if (duration.isInfinite()) {
+			return;
+		}
+
+		var tinyDelay = Duration.millis(1);
+		var actualSummonDuration = tinyDelay.add(duration);
+
+		pet.addHiddenEffect(UNSUMMON_PET, 1, actualSummonDuration, spell);
 	}
 
 	@Override
-	public Pet dismissPet() {
-		return cleanUpAfterPetIsGone();
+	public void dismissPet() {
+		dismissPet(null, null);
 	}
 
 	@Override
-	public Pet unsummonPet() {
-		return cleanUpAfterPetIsGone();
+	public void dismissPet(Spell spell, Context parentContext) {
+		var dismissedPet = cleanUpAfterPetIsGone();
+
+		eventBus.petDismissed(dismissedPet, spell, parentContext);
 	}
 
 	@Override
-	public Pet sacrificePet() {
+	public void unsummonPet(Spell spell, Context parentContext) {
+		var unsummonedPet = cleanUpAfterPetIsGone();
+
+		eventBus.petUnsummoned(unsummonedPet, spell, parentContext);
+	}
+
+	@Override
+	public void sacrificePet(Spell spell, Context parentContext) {
 		if (getActivePet() == null) {
 			throw new IllegalStateException("No active pet for the sacrifice");
 		}
 
-		return cleanUpAfterPetIsGone();
+		var sacrificedPet = cleanUpAfterPetIsGone();
+
+		eventBus.petSacrificed(sacrificedPet, spell, parentContext);
 	}
 
 	private Pet cleanUpAfterPetIsGone() {
@@ -910,9 +952,13 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 		return activePet;
 	}
 
-	private static void putInCombat(UnitImpl caster, UnitImpl target) {
+	private static void putInCombat(Unit caster, UnitImpl target) {
+		if (caster == null || caster == target) {
+			return;
+		}
+
 		if (target.inCombat || caster.isHostileWith(target)) {
-			caster.putInCombat();
+			((UnitImpl) caster).putInCombat();
 			target.putInCombat();
 		}
 	}
@@ -996,7 +1042,7 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 
 	@Override
 	public void resetAfterCombat() {
-		unsummonPet();
+		dismissPet();
 		effects.reset();
 		cooldowns.reset();
 		pendingActionQueue.reset();
@@ -1006,6 +1052,11 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 		inCombat = false;
 		setPassive();
 		setAllResourcesToMax();
+	}
+
+	@Override
+	public EventBus getEventBus() {
+		return eventBus;
 	}
 
 	@RequiredArgsConstructor

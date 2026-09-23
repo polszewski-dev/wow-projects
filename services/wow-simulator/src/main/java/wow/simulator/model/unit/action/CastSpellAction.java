@@ -3,7 +3,6 @@ package wow.simulator.model.unit.action;
 import lombok.Getter;
 import wow.commons.model.Duration;
 import wow.commons.model.spell.Ability;
-import wow.simulator.model.context.EventContext;
 import wow.simulator.model.context.SpellCastContext;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.unit.PrimaryTarget;
@@ -95,7 +94,7 @@ public class CastSpellAction extends UnitAction {
 	private void paySpellCost() {
 		castContext.paySpellCost();
 		removeEffectRemovedOnHit();
-		EventContext.fireSpellCastEvent(owner, primaryTarget.getSingleTarget(), ability, castContext);
+		owner.getEventBus().spellCast(ability, primaryTarget.getSingleTarget(), castContext);
 	}
 
 	private void removeEffectRemovedOnHit() {

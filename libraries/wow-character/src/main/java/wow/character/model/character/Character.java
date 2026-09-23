@@ -237,9 +237,7 @@ public interface Character extends CharacterInfo, EffectCollection {
 		return !isFriendlyWith(target);
 	}
 
-	default PetCharacter dismissPet() {
-		var activePet = getActivePet();
+	default void dismissPet() {
 		setActivePet(null);
-		return activePet;
 	}
 }

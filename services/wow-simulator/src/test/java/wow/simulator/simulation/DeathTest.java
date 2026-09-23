@@ -75,8 +75,8 @@ class DeathTest extends TbcWarlockSpellSimulationTest {
 						.effectApplied(CORRUPTION, target, 18),
 				at(5)
 						.decreasedResource(1, ResourceType.HEALTH, target, CORRUPTION)
-						.targetDied(target, player)
 						.effectRemoved(CORRUPTION, target)
+						.targetDied(target, player)
 		);
 	}
 
@@ -106,9 +106,9 @@ class DeathTest extends TbcWarlockSpellSimulationTest {
 						.endGcd(player),
 				at(5)
 						.decreasedResource(1, ResourceType.HEALTH, target, CORRUPTION)
-						.targetDied(target, player)
 						.effectRemoved(CORRUPTION, target)
 						.castInterrupted(player, SHADOW_BOLT)
+						.targetDied(target, player)
 		);
 	}
 }

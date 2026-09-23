@@ -4,7 +4,6 @@ import lombok.Setter;
 import wow.character.model.snapshot.RngStrategy;
 import wow.character.util.SpellTargetConditionArgs;
 import wow.character.util.SpellTargetConditionChecker;
-import wow.commons.model.Duration;
 import wow.commons.model.character.PetType;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.EffectAugmentations;
@@ -25,7 +24,6 @@ import java.util.Map;
 import static wow.commons.model.effect.EffectSource.AbilitySource;
 import static wow.commons.model.spell.SpellTargetType.GROUND;
 import static wow.commons.model.spell.component.ComponentCommand.*;
-import static wow.simulator.constant.HiddenEffectNames.UNSUMMON_PET;
 
 /**
  * User: POlszewski
@@ -174,36 +172,20 @@ public class SpellResolutionContext extends Context {
 		increaseMana(target, mana, true, false);
 	}
 
-	protected void summonPet(SummonPet command, Unit target) {
-		target.summonPet(command.petType(), spell);
-
-		var duration = target.getSummonDuration(spell, command.duration());
-
-		if (duration.isFinite()) {
-			var tinyDelay = Duration.millis(1);
-			var actualSummonDuration = tinyDelay.add(duration);
-
-			target.getActivePet().addHiddenEffect(UNSUMMON_PET, 1, actualSummonDuration, spell);
-		}
-
-		getGameLog().petSummoned(target, target.getActivePet());
+	private void summonPet(SummonPet command, Unit target) {
+		target.summonPet(command.petType(), command.duration(), spell, this);
 	}
 
-	protected void unsummonPet(Unit target) {
+	private void unsummonPet(Unit target) {
 		var master = target.getMaster();
-		var unsummonedPet = master.unsummonPet();
 
-		getGameLog().petUnsummoned(master, unsummonedPet);
-		EventContext.firePetUnsummoned(master, unsummonedPet, spell, this);
+		master.unsummonPet(spell, this);
 	}
 
-	protected void sacrificePet(Unit target) {
+	private void sacrificePet(Unit target) {
 		this.sacrificedPetType = target.getActivePetType();
 
-		var sacrificedPet = target.sacrificePet();
-
-		getGameLog().petSacrificed(target, sacrificedPet);
-		EventContext.firePetSacrificed(target, sacrificedPet, spell, this);
+		target.sacrificePet(spell, this);
 	}
 
 	@Override

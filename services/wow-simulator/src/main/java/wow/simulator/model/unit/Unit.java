@@ -11,6 +11,7 @@ import wow.commons.model.character.PetType;
 import wow.commons.model.spell.*;
 import wow.simulator.model.context.Context;
 import wow.simulator.model.effect.EffectInstance;
+import wow.simulator.model.event.EventBus;
 import wow.simulator.model.rng.Rng;
 import wow.simulator.model.time.AnyTime;
 import wow.simulator.simulation.SimulationContextSource;
@@ -99,8 +100,6 @@ public interface Unit extends Character, SimulationContextSource {
 
 	SpellCastSnapshot getSpellCastSnapshot(Ability ability, Unit target);
 
-	SpellCostSnapshot getSpellCostSnapshot(Ability ability, Unit target);
-
 	double getSpellHitPct(Spell spell, Unit target);
 
 	EffectDurationSnapshot getEffectDurationSnapshot(AbilityId abilityId, Unit target);
@@ -108,8 +107,6 @@ public interface Unit extends Character, SimulationContextSource {
 	EffectDurationSnapshot getEffectDurationSnapshot(Spell spell, Unit target);
 
 	EffectDurationSnapshot getEffectDurationSnapshot(Spell spell, Unit target, ApplyEffect command);
-
-	AnyDuration getSummonDuration(Spell spell, AnyDuration commandDuration);
 
 	DirectSpellComponentSnapshot getDirectSpellDamageSnapshot(Spell spell, Unit target, DealDamageDirectly command);
 
@@ -147,13 +144,13 @@ public interface Unit extends Character, SimulationContextSource {
 
 	void setAllResourcesToMax();
 
-	int increaseHealth(int amount, boolean direct, boolean crit, Unit caster, Spell spell, Context parentContext);
+	void increaseHealth(int amount, boolean direct, boolean crit, Unit caster, Spell spell, Context parentContext);
 
-	int decreaseHealth(int amount, boolean direct, boolean crit, Unit caster, Spell spell, Context parentContext);
+	void decreaseHealth(int amount, boolean direct, boolean crit, Unit caster, Spell spell, Context parentContext);
 
-	int increaseMana(int amount, boolean direct, boolean crit, Unit caster, Spell spell, Context parentContext);
+	void increaseMana(int amount, boolean direct, boolean crit, Unit caster, Spell spell, Context parentContext);
 
-	int decreaseMana(int amount, boolean direct, boolean crit, Unit caster, Spell spell, Context parentContext);
+	void decreaseMana(int amount, boolean direct, boolean crit, Unit caster, Spell spell, Context parentContext);
 
 	void addEffect(EffectInstance effect, EffectReplacementMode replacementMode);
 
@@ -205,14 +202,13 @@ public interface Unit extends Character, SimulationContextSource {
 	@Override
 	Unit getMaster();
 
-	void summonPet(PetType petType, Spell sourceSpell);
+	void summonPet(PetType petType, AnyDuration baseDuration, Spell spell, Context parentContext);
 
-	@Override
-	Pet dismissPet();
+	void dismissPet(Spell spell, Context parentContext);
 
-	Pet unsummonPet();
+	void unsummonPet(Spell spell, Context parentContext);
 
-	Pet sacrificePet();
+	void sacrificePet(Spell spell, Context parentContext);
 
 	UnitParty<? extends Unit> getParty();
 
@@ -257,4 +253,6 @@ public interface Unit extends Character, SimulationContextSource {
 	void setOnDeath(Consumer<Unit> onDeath);
 
 	void resetAfterCombat();
+
+	EventBus getEventBus();
 }

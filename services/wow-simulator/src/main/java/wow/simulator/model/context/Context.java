@@ -5,7 +5,6 @@ import lombok.Setter;
 import wow.character.model.snapshot.SpellCostSnapshot;
 import wow.commons.model.spell.Spell;
 import wow.commons.model.spell.TriggeredSpell;
-import wow.simulator.model.unit.Pet;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.simulation.SimulationContext;
 import wow.simulator.simulation.SimulationContextSource;
@@ -52,46 +51,28 @@ public abstract class Context implements SimulationContextSource {
 		var hitRoll = caster.getRng().hitRoll(hitChancePct, spell);
 
 		if (hitRoll) {
-			getGameLog().spellHit(caster, target, spell);
-			EventContext.fireSpellHitEvent(caster, target, spell, this);
+			caster.getEventBus().spellHit(spell, target, this);
 		} else {
-			getGameLog().spellResisted(caster, target, spell);
-			EventContext.fireSpellResistedEvent(caster, target, spell, this);
+			caster.getEventBus().spellResisted(spell, target, this);
 		}
 
 		return hitRoll;
 	}
 
 	protected void decreaseHealth(Unit target, int amount, boolean direct, boolean crit) {
-		this.lastDamageDone = target.decreaseHealth(amount, direct, crit, caster, getSourceSpell(), this);
-
-		EventContext.fireSpellDamageEvent(caster, target, spell, direct, crit, this);
-
-		if (lastDamageDone > 0 && target.isDead()) {
-			EventContext.fireTargetDied(caster, target, spell, this);
-
-			if (target.isPet()) {
-				EventContext.firePetDied(caster, (Pet) target, spell, this);
-			}
-		}
+		target.decreaseHealth(amount, direct, crit, caster, spell, this);
 	}
 
 	protected void increaseHealth(Unit target, int amount, boolean direct, boolean crit) {
-		this.lastHealingDone = target.increaseHealth(amount, direct, crit, caster, getSourceSpell(), this);
-
-		EventContext.fireSpellHealEvent(caster, target, spell, direct, crit, this);
+		target.increaseHealth(amount, direct, crit, caster, spell, this);
 	}
 
 	protected void increaseMana(Unit target, int amount, boolean direct, boolean crit) {
-		this.lastManaRestored = target.increaseMana(amount, direct, crit, caster, getSourceSpell(), this);
-
-		EventContext.fireManaGainedEvent(caster, target, spell, this);
+		target.increaseMana(amount, direct, crit, caster, spell, this);
 	}
 
 	protected void decreaseMana(Unit target, int amount, boolean direct, boolean crit) {
-		this.lastManaLost = target.decreaseMana(amount, direct, crit, caster, getSourceSpell(), this);
-
-		EventContext.fireManaLostEvent(caster, target, spell, this);
+		target.decreaseMana(amount, direct, crit, caster, spell, this);
 	}
 
 	protected void copy(Copy copy, Unit target, LastValueSnapshot last, boolean direct) {
@@ -168,7 +149,7 @@ public abstract class Context implements SimulationContextSource {
 		}
 	}
 
-	protected Spell getSourceSpell() {
+	public Spell getSourceSpell() {
 		if (sourceSpellOverride != null) {
 			return sourceSpellOverride;
 		}
@@ -216,6 +197,22 @@ public abstract class Context implements SimulationContextSource {
 				this.getLastManaLost(),
 				parentContext.getLastManaRestored()
 		);
+	}
+
+	public void setLastDamageDone(int lastDamageDone) {
+		this.lastDamageDone = lastDamageDone;
+	}
+
+	public void setLastHealingDone(int lastHealingDone) {
+		this.lastHealingDone = lastHealingDone;
+	}
+
+	public void setLastManaRestored(int lastManaRestored) {
+		this.lastManaRestored = lastManaRestored;
+	}
+
+	public void setLastManaLost(int lastManaLost) {
+		this.lastManaLost = lastManaLost;
 	}
 
 	@Override

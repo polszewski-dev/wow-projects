@@ -14,7 +14,6 @@ import wow.simulator.model.action.Action;
 import wow.simulator.model.action.ActionStatus;
 import wow.simulator.model.context.Context;
 import wow.simulator.model.context.EffectUpdateContext;
-import wow.simulator.model.context.EventContext;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.effect.EffectInstanceId;
 import wow.simulator.model.time.AnyTime;
@@ -139,7 +138,7 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	}
 
 	private void fireEffectEnded() {
-		EventContext.fireEffectEnded(this, effectUpdateContext);
+		owner.getEventBus().effectEnded(this, effectUpdateContext);
 	}
 
 	@Override
@@ -258,7 +257,7 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 		if (getStatus() == ActionStatus.CREATED || deferEvents) {
 			this.fireStacksMaxed = true;
 		} else if (getStatus() == ActionStatus.IN_PROGRESS) {
-			EventContext.fireStacksMaxed(this, effectUpdateContext);
+			owner.getEventBus().effectStacksMaxed(this, effectUpdateContext);
 		}
 	}
 
@@ -266,16 +265,16 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 		if (getStatus() == ActionStatus.CREATED || deferEvents) {
 			this.fireCountersMaxed = true;
 		} else if (getStatus() == ActionStatus.IN_PROGRESS) {
-			EventContext.fireCountersMaxed(this, effectUpdateContext);
+			owner.getEventBus().effectCountersMaxed(this, effectUpdateContext);
 		}
 	}
 
 	private void fireDeferredEvents() {
 		if (fireStacksMaxed) {
-			EventContext.fireStacksMaxed(this, effectUpdateContext);
+			owner.getEventBus().effectStacksMaxed(this, effectUpdateContext);
 		}
 		if (fireCountersMaxed) {
-			EventContext.fireCountersMaxed(this, effectUpdateContext);
+			owner.getEventBus().effectCountersMaxed(this, effectUpdateContext);
 		}
 		this.deferEvents = false;
 	}
