@@ -9,6 +9,7 @@ import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.character.PetType;
 import wow.commons.model.spell.*;
+import wow.simulator.model.context.Context;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.rng.Rng;
 import wow.simulator.model.time.AnyTime;
@@ -92,7 +93,7 @@ public interface Unit extends Character, SimulationContextSource {
 
 	boolean canCast(Ability ability, PrimaryTarget primaryTarget);
 
-	SpellCostSnapshot paySpellCost(Ability ability, PrimaryTarget primaryTarget);
+	SpellCostSnapshot paySpellCost(Ability ability, PrimaryTarget primaryTarget, Context parentContext);
 
 	SpellCastSnapshot getSpellCastSnapshot(AbilityId abilityId, Unit target);
 
@@ -146,13 +147,13 @@ public interface Unit extends Character, SimulationContextSource {
 
 	void setAllResourcesToMax();
 
-	int increaseHealth(int amount, boolean crit, Spell spell, Unit caster);
+	int increaseHealth(int amount, boolean direct, boolean crit, Unit caster, Spell spell, Context parentContext);
 
-	int decreaseHealth(int amount, boolean crit, Spell spell, Unit caster);
+	int decreaseHealth(int amount, boolean direct, boolean crit, Unit caster, Spell spell, Context parentContext);
 
-	int increaseMana(int amount, boolean crit, Spell spell, Unit caster);
+	int increaseMana(int amount, boolean direct, boolean crit, Unit caster, Spell spell, Context parentContext);
 
-	int decreaseMana(int amount, boolean crit, Spell spell, Unit caster);
+	int decreaseMana(int amount, boolean direct, boolean crit, Unit caster, Spell spell, Context parentContext);
 
 	void addEffect(EffectInstance effect, EffectReplacementMode replacementMode);
 

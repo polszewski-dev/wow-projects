@@ -20,6 +20,7 @@ import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
 import wow.commons.model.spell.*;
 import wow.commons.model.talent.TalentTree;
+import wow.simulator.model.context.Context;
 import wow.simulator.model.cooldown.CooldownInstance;
 import wow.simulator.model.cooldown.Cooldowns;
 import wow.simulator.model.effect.EffectInstance;
@@ -46,6 +47,7 @@ import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 import static wow.commons.model.spell.GcdCooldownId.GCD;
+import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
 import static wow.commons.model.spell.component.ComponentCommand.*;
 import static wow.simulator.model.time.AnyTime.TIME_IN_INFINITY;
@@ -371,21 +373,25 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	}
 
 	@Override
-	public SpellCostSnapshot paySpellCost(Ability ability, PrimaryTarget primaryTarget) {
+	public SpellCostSnapshot paySpellCost(Ability ability, PrimaryTarget primaryTarget, Context parentContext) {
 		var costSnapshot = getSpellCostSnapshot(ability, primaryTarget.getSingleTarget());
 		var cost = costSnapshot.getCostToPay();
 
-		paySpellCost(ability, cost);
+		getResources().pay(cost);
 
-		return costSnapshot;
-	}
+		var actualAmount = cost.amount();
 
-	protected void paySpellCost(Ability ability, Cost cost) {
-		getResources().pay(cost, ability);
+		if (actualAmount > 0) {
+			var type = cost.resourceType();
+
+			getGameLog().decreasedResource(type, ability, this, actualAmount, true, false, this);
+		}
 
 		if (cost.resourceType() == MANA && cost.amount() > 0) {
 			this.lastTimeManaSpent = now();
 		}
+
+		return costSnapshot;
 	}
 
 	@Override
@@ -536,25 +542,54 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	}
 
 	@Override
-	public int increaseHealth(int amount, boolean crit, Spell spell, Unit caster) {
-		return getResources().increaseHealth(amount, crit, spell, caster);
+	public int increaseHealth(int amount, boolean direct, boolean crit, Unit caster, Spell spell, Context parentContext) {
+		int actualAmount = getResources().increaseHealth(amount);
+
+		if (actualAmount > 0) {
+			getGameLog().increasedResource(HEALTH, spell, this, actualAmount, true, crit, caster);
+		}
+
+		return actualAmount;
 	}
 
 	@Override
-	public int decreaseHealth(int amount, boolean crit, Spell spell, Unit caster) {
+	public int decreaseHealth(int amount, boolean direct, boolean crit, Unit caster, Spell spell, Context parentContext) {
 		putInCombat((UnitImpl) caster, this);
-		return getResources().decreaseHealth(amount, crit, spell, caster);
+		int actualAmount = getResources().decreaseHealth(amount);
+
+		if (actualAmount > 0) {
+			getGameLog().decreasedResource(HEALTH, spell, this, actualAmount, true, crit, caster);
+
+			if (getCurrentHealth() == 0) {
+				getGameLog().targetDied(this, caster);
+				triggerDeath(caster);
+			}
+		}
+
+		return actualAmount;
 	}
 
 	@Override
-	public int increaseMana(int amount, boolean crit, Spell spell, Unit caster) {
-		return getResources().increaseMana(amount, crit, spell, caster);
+	public int increaseMana(int amount, boolean direct, boolean crit, Unit caster, Spell spell, Context parentContext) {
+		int actualAmount = getResources().increaseMana(amount);
+
+		if (actualAmount > 0) {
+			getGameLog().increasedResource(MANA, spell, this, actualAmount, true, crit, caster);
+		}
+
+		return actualAmount;
 	}
 
 	@Override
-	public int decreaseMana(int amount, boolean crit, Spell spell, Unit caster) {
+	public int decreaseMana(int amount, boolean direct, boolean crit, Unit caster, Spell spell, Context parentContext) {
 		putInCombat((UnitImpl) caster, this);
-		return getResources().decreaseMana(amount, crit, spell, caster);
+		int actualAmount = getResources().decreaseMana(amount);
+
+		if (actualAmount > 0) {
+			getGameLog().decreasedResource(MANA, spell, this, actualAmount, true, crit, caster);
+		}
+
+		return actualAmount;
 	}
 
 	@Override
@@ -706,8 +741,8 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 		var health = snapshot.getHealthToRegen(true, sinceLastRegen);
 		var mana = snapshot.getManaToRegen(sinceLastManaSpent, sinceLastRegen);
 
-		increaseHealth(health, false, null, null);
-		increaseMana(mana, false, null, null);
+		increaseHealth(health, false, false, null, null, null);
+		increaseMana(mana, false, false, null, null, null);
 	}
 
 	private Duration getSinceLastManaSpent() {

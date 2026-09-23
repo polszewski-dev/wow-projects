@@ -62,10 +62,10 @@ public abstract class Context implements SimulationContextSource {
 		return hitRoll;
 	}
 
-	protected void decreaseHealth(Unit target, int amount, boolean directDamage, boolean critRoll) {
-		this.lastDamageDone = target.decreaseHealth(amount, critRoll, getSourceSpell(), caster);
+	protected void decreaseHealth(Unit target, int amount, boolean direct, boolean crit) {
+		this.lastDamageDone = target.decreaseHealth(amount, direct, crit, caster, getSourceSpell(), this);
 
-		EventContext.fireSpellDamageEvent(caster, target, spell, directDamage, critRoll, this);
+		EventContext.fireSpellDamageEvent(caster, target, spell, direct, crit, this);
 
 		if (lastDamageDone > 0 && target.isDead()) {
 			EventContext.fireTargetDied(caster, target, spell, this);
@@ -76,40 +76,40 @@ public abstract class Context implements SimulationContextSource {
 		}
 	}
 
-	protected void increaseHealth(Unit target, int amount, boolean directHeal, boolean critRoll) {
-		this.lastHealingDone = target.increaseHealth(amount, critRoll, getSourceSpell(), caster);
+	protected void increaseHealth(Unit target, int amount, boolean direct, boolean crit) {
+		this.lastHealingDone = target.increaseHealth(amount, direct, crit, caster, getSourceSpell(), this);
 
-		EventContext.fireSpellHealEvent(caster, target, spell, directHeal, critRoll, this);
+		EventContext.fireSpellHealEvent(caster, target, spell, direct, crit, this);
 	}
 
-	protected void increaseMana(Unit target, int amount) {
-		this.lastManaRestored = target.increaseMana(amount, false, getSourceSpell(), caster);
+	protected void increaseMana(Unit target, int amount, boolean direct, boolean crit) {
+		this.lastManaRestored = target.increaseMana(amount, direct, crit, caster, getSourceSpell(), this);
 
 		EventContext.fireManaGainedEvent(caster, target, spell, this);
 	}
 
-	protected void decreaseMana(Unit target, int amount) {
-		this.lastManaLost = target.decreaseMana(amount, false, getSourceSpell(), caster);
+	protected void decreaseMana(Unit target, int amount, boolean direct, boolean crit) {
+		this.lastManaLost = target.decreaseMana(amount, direct, crit, caster, getSourceSpell(), this);
 
 		EventContext.fireManaLostEvent(caster, target, spell, this);
 	}
 
-	protected void copy(Copy copy, Unit target, LastValueSnapshot last) {
+	protected void copy(Copy copy, Unit target, LastValueSnapshot last, boolean direct) {
 		var from = getFrom(copy, last);
 		var ratioPct = getRatioPct(copy);
 
 		switch (copy.to()) {
 			case DAMAGE ->
-					copyAsDamage(target, from, ratioPct);
+					copyAsDamage(target, from, ratioPct, direct);
 
 			case HEAL ->
-					copyAsHeal(target, from, ratioPct);
+					copyAsHeal(target, from, ratioPct, direct);
 
 			case MANA_LOSS ->
-					copyAsManaLoss(target, from, ratioPct);
+					copyAsManaLoss(target, from, ratioPct, direct);
 
 			case MANA_GAIN ->
-					copyAsManaGain(target, from, ratioPct);
+					copyAsManaGain(target, from, ratioPct, direct);
 		}
 	}
 
@@ -128,32 +128,32 @@ public abstract class Context implements SimulationContextSource {
 		return command.ratio().value();
 	}
 
-	protected void copyAsDamage(Unit target, int value, double ratioPct) {
+	protected void copyAsDamage(Unit target, int value, double ratioPct, boolean direct) {
 		var damage = getCharacterCalculationService().getCopiedAmountAsDamage(caster, getSourceSpell(), target, value, ratioPct);
 		var roundedDamage = roundValue(damage, target);
 
-		decreaseHealth(target, roundedDamage, true, false);
+		decreaseHealth(target, roundedDamage, direct, false);
 	}
 
-	protected void copyAsHeal(Unit target, int value, double ratioPct) {
+	protected void copyAsHeal(Unit target, int value, double ratioPct, boolean direct) {
 		var heal = getCharacterCalculationService().getCopiedAmountAsHeal(caster, getSourceSpell(), target, value, ratioPct);
 		var roundedHeal = roundValue(heal, target);
 
-		increaseHealth(target, roundedHeal, true, false);
+		increaseHealth(target, roundedHeal, direct, false);
 	}
 
-	protected void copyAsManaGain(Unit target, int value, double ratioPct) {
+	protected void copyAsManaGain(Unit target, int value, double ratioPct, boolean direct) {
 		var manaGain = getCharacterCalculationService().getCopiedAmountAsManaGain(caster, getSourceSpell(), target, value, ratioPct);
 		var roundedManaGain = roundValue(manaGain, target);
 
-		increaseMana(target, roundedManaGain);
+		increaseMana(target, roundedManaGain, direct, false);
 	}
 
-	protected void copyAsManaLoss(Unit target, int value, double ratioPct) {
+	protected void copyAsManaLoss(Unit target, int value, double ratioPct, boolean direct) {
 		var manaLoss = value * ratioPct / 100;
 		var roundedManaGain = roundValue(manaLoss, target);
 
-		decreaseMana(target, roundedManaGain);
+		decreaseMana(target, roundedManaGain, direct, false);
 	}
 
 	protected void setPaidCost(SpellCostSnapshot costSnapshot) {

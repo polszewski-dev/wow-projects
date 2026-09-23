@@ -3,9 +3,7 @@ package wow.simulator.model.unit;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import wow.commons.model.Percent;
-import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.ResourceType;
-import wow.commons.model.spell.Spell;
 import wow.simulator.simulation.SimulationContext;
 import wow.simulator.simulation.SimulationContextSource;
 
@@ -34,7 +32,7 @@ public class UnitResource implements SimulationContextSource {
 		this.max = max;
 	}
 
-	public int increase(int amount, boolean crit, Spell spell, Unit caster) {
+	public int increase(int amount) {
 		if (amount == 0) {
 			return 0;
 		}
@@ -45,16 +43,10 @@ public class UnitResource implements SimulationContextSource {
 
 		this.current = min(current + amount, max);
 
-		int actualAmount = current - previous;
-
-		if (actualAmount > 0) {
-			getGameLog().increasedResource(type, spell, owner, actualAmount, true, crit, caster);
-		}
-
-		return actualAmount;
+		return current - previous;
 	}
 
-	public int decrease(int amount, boolean crit, Spell spell, Unit caster) {
+	public int decrease(int amount) {
 		if (amount == 0) {
 			return 0;
 		}
@@ -65,25 +57,14 @@ public class UnitResource implements SimulationContextSource {
 
 		this.current = max(current - amount, 0);
 
-		int actualAmount = previous - current;
-
-		if (actualAmount > 0) {
-			getGameLog().decreasedResource(type, spell, owner, actualAmount, true, crit, caster);
-
-			if (current == 0 && type == HEALTH) {
-				getGameLog().targetDied(owner, caster);
-				owner.triggerDeath(caster);
-			}
-		}
-
-		return actualAmount;
+		return previous - current;
 	}
 
-	public void pay(int amount, Ability ability) {
+	public void pay(int amount) {
 		if (!canPay(amount)) {
 			throw new IllegalArgumentException("Can't pay %s when having only %s".formatted(amount, current));
 		}
-		decrease(amount, false, ability, owner);
+		decrease(amount);
 	}
 
 	public boolean canPay(int amount) {

@@ -60,7 +60,7 @@ public class EffectUpdateContext extends Context {
 					periodicPctOfTotalManaGain(tickNo, numStacks, command, target);
 
 			case Copy command ->
-					copy(command, target, getLastValueSnapshot());
+					copy(command, target, getLastValueSnapshot(), false);
 
 			case DealCounterDamagePeriodically command ->
 					dealCounterDamagePeriodically(tickNo, command, target);
@@ -94,21 +94,21 @@ public class EffectUpdateContext extends Context {
 		var snapshot = getManaLossSnapshot(command, target);
 		var roundedTickManaLoss = getRoundedTickAmount(snapshot, tickNo, numStacks, target);
 
-		decreaseMana(target, roundedTickManaLoss);
+		decreaseMana(target, roundedTickManaLoss, false, false);
 	}
 
 	private void periodicManaGain(int tickNo, int numStacks, GainManaPeriodically command, Unit target) {
 		var snapshot = getManaGainSnapshot(command, target);
 		var roundedTickManaGain = getRoundedTickAmount(snapshot, tickNo, numStacks, target);
 
-		increaseMana(target, roundedTickManaGain);
+		increaseMana(target, roundedTickManaGain, false, false);
 	}
 
 	private void periodicPctOfTotalManaGain(int tickNo, int numStacks, GainPctOfTotalManaPeriodically command, Unit target) {
 		var snapshot = getPctOfTotalManaGainSnapshot(command, target);
 		var roundedTickManaGain = getRoundedTickAmount(snapshot, tickNo, numStacks, target);
 
-		increaseMana(target, roundedTickManaGain);
+		increaseMana(target, roundedTickManaGain, false, false);
 	}
 
 	private void dealCounterDamagePeriodically(int tickNo, DealCounterDamagePeriodically command, Unit target) {

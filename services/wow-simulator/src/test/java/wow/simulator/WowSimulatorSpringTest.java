@@ -593,6 +593,6 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	}
 
 	protected void instaKill(Unit caster, Unit target) {
-		target.decreaseHealth(target.getMaxHealth(), false, null, caster);
+		target.decreaseHealth(target.getMaxHealth(), true, false, caster, null, null);
 	}
 }

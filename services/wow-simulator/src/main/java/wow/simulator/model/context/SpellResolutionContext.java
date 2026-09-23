@@ -110,7 +110,7 @@ public class SpellResolutionContext extends Context {
 					directManaGain(command, target);
 
 			case Copy command ->
-					copy(command, target, last);
+					copy(command, target, last, true);
 
 			case SummonPet command ->
 					summonPet(command, target);
@@ -165,13 +165,13 @@ public class SpellResolutionContext extends Context {
 	private void directManaLoss(LoseManaDirectly command, Unit target) {
 		var mana = (command.min() + command.max()) / 2;
 
-		decreaseMana(target, mana);
+		decreaseMana(target, mana, true, false);
 	}
 
 	private void directManaGain(GainManaDirectly command, Unit target) {
 		var mana = (command.min() + command.max()) / 2;
 
-		increaseMana(target, mana);
+		increaseMana(target, mana, true, false);
 	}
 
 	protected void summonPet(SummonPet command, Unit target) {

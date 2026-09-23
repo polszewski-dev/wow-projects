@@ -41,7 +41,7 @@ public class SpellCastContext extends Context {
 			caster.triggerCooldown(ability, ability.getCooldown());
 			triggerGroupCooldown(activatedAbility);
 		} else {
-			var costSnapshot = caster.paySpellCost(ability, primaryTarget);
+			var costSnapshot = caster.paySpellCost(ability, primaryTarget, this);
 			var cooldown = Duration.seconds(costSnapshot.getCooldown());
 
 			caster.triggerCooldown(ability, cooldown);
