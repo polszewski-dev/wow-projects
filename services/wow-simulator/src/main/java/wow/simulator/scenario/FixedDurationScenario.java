@@ -77,7 +77,7 @@ public class FixedDurationScenario extends AbstractSingleTargetScenario {
 		private int totalDamageTaken;
 		
 		@Override
-		public void decreasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit, Unit caster) {
+		public void decreasedResource(ResourceType type, Spell spell, Unit target, int amount, boolean direct, boolean crit, Unit caster) {
 			if (type == HEALTH && target == unit) {
 				totalDamageTaken += amount;
 			}

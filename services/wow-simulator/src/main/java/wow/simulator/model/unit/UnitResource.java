@@ -48,7 +48,7 @@ public class UnitResource implements SimulationContextSource {
 		int actualAmount = current - previous;
 
 		if (actualAmount > 0) {
-			getGameLog().increasedResource(type, spell, owner, actualAmount, current, previous, crit, caster);
+			getGameLog().increasedResource(type, spell, owner, actualAmount, true, crit, caster);
 		}
 
 		return actualAmount;
@@ -68,7 +68,7 @@ public class UnitResource implements SimulationContextSource {
 		int actualAmount = previous - current;
 
 		if (actualAmount > 0) {
-			getGameLog().decreasedResource(type, spell, owner, actualAmount, current, previous, crit, caster);
+			getGameLog().decreasedResource(type, spell, owner, actualAmount, true, crit, caster);
 
 			if (current == 0 && type == HEALTH) {
 				getGameLog().targetDied(owner, caster);

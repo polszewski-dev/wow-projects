@@ -62,14 +62,14 @@ public class ConsoleGameLogHandler implements GameLogHandler, TimeAware {
 	}
 
 	@Override
-	public void increasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit, Unit caster) {
+	public void increasedResource(ResourceType type, Spell spell, Unit target, int amount, boolean direct, boolean crit, Unit caster) {
 		if (spell != null) {
 			print("%s increased %s %s by %s%s", spell, target, type.toString().toLowerCase(), amount, crit ? " (crit)" : "");
 		}
 	}
 
 	@Override
-	public void decreasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit, Unit caster) {
+	public void decreasedResource(ResourceType type, Spell spell, Unit target, int amount, boolean direct, boolean crit, Unit caster) {
 		print("%s decreased %s %s by %s%s", spell, target, type.toString().toLowerCase(), amount, crit ? " (crit)" : "");
 	}
 

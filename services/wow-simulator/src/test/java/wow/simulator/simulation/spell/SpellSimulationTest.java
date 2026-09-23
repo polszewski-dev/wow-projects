@@ -135,7 +135,7 @@ public abstract class SpellSimulationTest extends WowSimulatorSpringTest impleme
 	}
 
 	@Override
-	public void increasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit, Unit caster) {
+	public void increasedResource(ResourceType type, Spell spell, Unit target, int amount, boolean direct, boolean crit, Unit caster) {
 		if (spell != null) {
 			return;
 		}

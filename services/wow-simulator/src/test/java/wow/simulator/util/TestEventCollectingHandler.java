@@ -95,7 +95,7 @@ public class TestEventCollectingHandler implements GameLogHandler, TimeAware {
 	}
 
 	@Override
-	public void increasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit, Unit caster) {
+	public void increasedResource(ResourceType type, Spell spell, Unit target, int amount, boolean direct, boolean crit, Unit caster) {
 		if (spell == null && ignoreRegen) {
 			return;
 		}
@@ -104,7 +104,7 @@ public class TestEventCollectingHandler implements GameLogHandler, TimeAware {
 	}
 
 	@Override
-	public void decreasedResource(ResourceType type, Spell spell, Unit target, int amount, int current, int previous, boolean crit, Unit caster) {
+	public void decreasedResource(ResourceType type, Spell spell, Unit target, int amount, boolean direct, boolean crit, Unit caster) {
 		var event = addEvent(new DecreasedResource(now(), amount, type, crit, target, getAbilityId(spell)));
 		addArgs(event, caster, target);
 	}
