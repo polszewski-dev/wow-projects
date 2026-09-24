@@ -1,181 +1,46 @@
 package wow.simulator.model.context;
 
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import wow.character.util.AbstractEffectCollector;
+import lombok.Setter;
 import wow.character.util.EventConditionArgs;
 import wow.commons.model.attribute.PowerType;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.component.Event;
 import wow.commons.model.effect.component.EventAction;
-import wow.commons.model.effect.component.EventType;
 import wow.commons.model.spell.CooldownId;
 import wow.commons.model.spell.Spell;
 import wow.simulator.model.effect.EffectInstance;
-import wow.simulator.model.unit.Pet;
 import wow.simulator.model.unit.TargetResolver;
 import wow.simulator.model.unit.Unit;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import static wow.character.util.EventConditionChecker.check;
 import static wow.commons.model.effect.EffectSource.*;
-import static wow.commons.model.effect.component.EventType.*;
 
 /**
  * User: POlszewski
  * Date: 2024-11-15
  */
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor
+@Setter
 public class EventContext {
 	private final Unit caster;
 	private final Unit target;
 	private final Spell spell;
 	private final Context parentContext;
+	private final List<EventAndEffect> eventEntries;
 	private boolean damage;
 	private boolean directDamage;
 	private boolean heal;
 	private boolean directHeal;
 	private boolean critRoll;
 
-	public static void fireSpellHitEvent(Unit caster, Unit target, Spell spell, Context parentContext) {
-		var context = new EventContext(caster, target, spell, parentContext);
-
-		context.fireEvent(SPELL_HIT);
-	}
-
-	public static void fireSpellResistedEvent(Unit caster, Unit target, Spell spell, Context parentContext) {
-		var context = new EventContext(caster, target, spell, parentContext);
-
-		context.fireEvent(SPELL_RESISTED);
-	}
-
-	public static void fireSpellCastEvent(Unit caster, Unit target, Spell spell, Context parentContext) {
-		var context = new EventContext(caster, target, spell, parentContext);
-
-		context.fireEvent(SPELL_CAST);
-	}
-
-	public static void fireSpellDamageEvent(Unit caster, Unit target, Spell spell, boolean directDamage, boolean critRoll, Context parentContext) {
-		var context = new EventContext(caster, target, spell, parentContext);
-
-		context.damage = true;
-		context.directDamage = directDamage;
-		context.critRoll = critRoll;
-
-		context.fireEvent(SPELL_DAMAGE);
-
-		if (critRoll) {
-			context.fireEvent(SPELL_CRIT);
-		}
-	}
-
-	public static void fireSpellHealEvent(Unit caster, Unit target, Spell spell, boolean directHeal, boolean critRoll, Context parentContext) {
-		var context = new EventContext(caster, target, spell, parentContext);
-
-		context.heal = true;
-		context.directHeal = directHeal;
-		context.critRoll = critRoll;
-
-		context.fireEvent(SPELL_HEAL);
-
-		if (critRoll) {
-			context.fireEvent(SPELL_CRIT);
-		}
-	}
-
-	public static void fireManaGainedEvent(Unit caster, Unit target, Spell spell, Context parentContext) {
-		var context = new EventContext(caster, target, spell, parentContext);
-
-		context.fireEvent(MANA_GAINED);
-	}
-
-	public static void fireManaLostEvent(Unit caster, Unit target, Spell spell, Context parentContext) {
-		var context = new EventContext(caster, target, spell, parentContext);
-
-		context.fireEvent(MANA_DRAINED);
-	}
-
-	public static void fireStacksMaxed(EffectInstance effect, Context parentContext) {
-		var context = getEffectEventContext(effect, parentContext);
-
-		context.fireEvent(STACKS_MAXED, effect);
-	}
-
-	public static void fireCountersMaxed(EffectInstance effect, Context parentContext) {
-		var context = getEffectEventContext(effect, parentContext);
-
-		context.fireEvent(COUNTERS_MAXED, effect);
-	}
-
-	public static void fireEffectEnded(EffectInstance effect, Context parentContext) {
-		var context = getEffectEventContext(effect, parentContext);
-
-		context.fireEvent(EFFECT_ENDED);
-	}
-
-	public static void firePetUnsummoned(Unit caster, Pet pet, Spell spell, Context parentContext) {
-		var context = new EventContext(caster, pet, spell, parentContext);
-
-		context.fireEvent(PET_GONE);
-	}
-
-	public static void firePetDismissed(Unit caster, Pet pet, Spell spell, Context parentContext) {
-		var context = new EventContext(caster, pet, spell, parentContext);
-
-		context.fireEvent(PET_GONE);
-	}
-
-	public static void firePetSacrificed(Unit caster, Pet pet, Spell spell, Context parentContext) {
-		var context = new EventContext(caster, pet, spell, parentContext);
-
-		context.fireEvent(PET_GONE);
-	}
-
-	public static void firePetDied(Unit caster, Pet pet, Spell spell, Context parentContext) {
-		var context = new EventContext(caster, pet, spell, parentContext);
-
-		context.fireEvent(PET_GONE);
-	}
-
-	private static EventContext getEffectEventContext(EffectInstance effect, Context parentContext) {
-		return new EventContext(effect.getOwner(), effect.getTarget(), effect.getSourceSpell(), parentContext);
-	}
-
-	public static void fireTargetDied(Unit caster, Unit target, Spell spell, Context parentContext) {
-		var context = new EventContext(caster, target, spell, parentContext);
-
-		context.fireEvent(TARGET_DIED);
-	}
-
-	private void fireEvent(EventType eventType, EffectInstance effect) {
-		for (var event : effect.getEvents()) {
-			if (event.types().contains(eventType)) {
-				performEventActions(event, effect);
-			}
-		}
-	}
-
-	private void fireEvent(EventType eventType) {
-		var eventEntries = collectEvents(eventType);
-
+	public void fireEvent() {
 		for (var entry : eventEntries) {
 			processEvent(entry);
 		}
-	}
-
-	private List<EventAndEffect> collectEvents(EventType eventType) {
-		var list = new ArrayList<EventAndEffect>();
-
-		new EventCollector(eventType, caster, list).solveAll();
-
-		if (target != null && target != caster) {
-			new EventCollector(eventType, target, list).solveAll();
-		}
-
-		return list;
 	}
 
 	private void processEvent(EventAndEffect entry) {
@@ -312,35 +177,5 @@ public class EventContext {
 			case ItemSource ignored -> triggeredSpell;
 			case null, default -> null;
 		};
-	}
-
-	private record EventAndEffect(Event event, Effect effect, Unit effectTarget) {}
-
-	private static class EventCollector extends AbstractEffectCollector.OnlyEffects {
-		final EventType eventType;
-		final Unit unit;
-		final List<EventAndEffect> list;
-
-		EventCollector(EventType eventType, Unit unit, List<EventAndEffect> list) {
-			super(unit);
-			this.eventType = eventType;
-			this.unit = unit;
-			this.list = list;
-		}
-
-		@Override
-		public void addEffect(Effect effect, int stackCount) {
-			if (effect.hasAugmentedAbilities()) {
-				return;
-			}
-
-			var events = effect.getEvents();
-
-			for (var event : events) {
-				if (event.types().contains(eventType)) {
-					list.add(new EventAndEffect(event, effect, unit));
-				}
-			}
-		}
 	}
 }
