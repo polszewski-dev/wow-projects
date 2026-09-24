@@ -54,7 +54,7 @@ public interface CharacterCalculationService {
 
 	EffectDurationSnapshot getEffectDurationSnapshot(Character character, Spell spell, ApplyEffect command, AccumulatedDurationStats durationStats, AccumulatedReceivedEffectStats receivedEffectStats);
 
-	AnyDuration getSummonDuration(Character character, Spell spell, SummonPet command);
+	AnyDuration getSummonDuration(Character character, Spell spell, AnyDuration baseDuration);
 
 	DirectSpellComponentSnapshot getDirectSpellDamageSnapshot(Character character, Spell spell, Character target, DealDamageDirectly command);
 

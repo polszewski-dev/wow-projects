@@ -430,8 +430,8 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	}
 
 	@Override
-	public AnyDuration getSummonDuration(Spell spell, SummonPet command) {
-		return getCharacterCalculationService().getSummonDuration(this, spell, command);
+	public AnyDuration getSummonDuration(Spell spell, AnyDuration commandDuration) {
+		return getCharacterCalculationService().getSummonDuration(this, spell, commandDuration);
 	}
 
 	@Override

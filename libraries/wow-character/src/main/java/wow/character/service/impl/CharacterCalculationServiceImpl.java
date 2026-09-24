@@ -461,11 +461,9 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public AnyDuration getSummonDuration(Character character, Spell spell, SummonPet command) {
-		var commandDuration = command.duration();
-
-		if (commandDuration.isInfinite()) {
-			return commandDuration;
+	public AnyDuration getSummonDuration(Character character, Spell spell, AnyDuration baseDuration) {
+		if (baseDuration.isInfinite()) {
+			return baseDuration;
 		}
 
 		var conditionArgs = AttributeConditionArgs.forSpell(character, spell, null);
@@ -473,7 +471,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 
 		accumulateEffects(character, durationStats);
 
-		var baseDurationSeconds = ((Duration) commandDuration).getSeconds();
+		var baseDurationSeconds = ((Duration) baseDuration).getSeconds();
 		var duration = durationStats.getDuration();
 		var durationPct = durationStats.getDurationPct();
 
