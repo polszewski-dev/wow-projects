@@ -144,6 +144,10 @@ class EventConditionParserTest {
 					new IsTargetingOthers()
 			),
 			testData(
+					"CasterIsOwner",
+					new CasterIsOwner()
+			),
+			testData(
 					"Owner.Health% < 35",
 					new OwnerHealthPctLessThan(35)
 			),

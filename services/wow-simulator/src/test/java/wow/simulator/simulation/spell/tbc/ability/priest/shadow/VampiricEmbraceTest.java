@@ -1,6 +1,7 @@
 package wow.simulator.simulation.spell.tbc.ability.priest.shadow;
 
 import org.junit.jupiter.api.Test;
+import wow.simulator.model.time.Time;
 import wow.simulator.simulation.spell.tbc.TbcPriestSpellSimulationTest;
 import wow.test.commons.TalentNames;
 
@@ -42,7 +43,7 @@ class VampiricEmbraceTest extends TbcPriestSpellSimulationTest {
 	}
 
 	@Test
-	void mindBlastDamageIsConvertedToHealing() {
+	void mind_blast_damage_is_converted_to_healing() {
 		player.cast(VAMPIRIC_EMBRACE);
 		player.cast(MIND_BLAST);
 
@@ -58,7 +59,7 @@ class VampiricEmbraceTest extends TbcPriestSpellSimulationTest {
 	}
 
 	@Test
-	void shadowWordPainDamageIsConvertedToHealing() {
+	void shadow_word_pain_damage_is_converted_to_healing() {
 		player.cast(VAMPIRIC_EMBRACE);
 		player.cast(SHADOW_WORD_PAIN);
 
@@ -94,17 +95,20 @@ class VampiricEmbraceTest extends TbcPriestSpellSimulationTest {
 	}
 
 	@Test
-	void healthGainedFromMindBlast() {
+	void health_gained_from_mind_blast() {
 		player.cast(VAMPIRIC_EMBRACE);
 		player.cast(MIND_BLAST);
 
 		updateUntil(60);
 
 		assertHealthGained(VAMPIRIC_EMBRACE, player, getPercentOf(15, MIND_BLAST_INFO.damage()));
+		assertHealthGained(VAMPIRIC_EMBRACE, player2, getPercentOf(15, MIND_BLAST_INFO.damage()));
+		assertHealthGained(VAMPIRIC_EMBRACE, player3, 0);
+		assertHealthGained(VAMPIRIC_EMBRACE, player4, 0);
 	}
 
 	@Test
-	void healthGainedFromShadowWordPain() {
+	void health_gained_from_shadow_word_pain() {
 		player.cast(VAMPIRIC_EMBRACE);
 		player.cast(SHADOW_WORD_PAIN);
 
@@ -118,6 +122,46 @@ class VampiricEmbraceTest extends TbcPriestSpellSimulationTest {
 		assertHealthGained(3, VAMPIRIC_EMBRACE, player, tickDamage + 1);
 		assertHealthGained(4, VAMPIRIC_EMBRACE, player, tickDamage + 1);
 		assertHealthGained(5, VAMPIRIC_EMBRACE, player, tickDamage + 1);
+
+		assertHealthGained(0, VAMPIRIC_EMBRACE, player2, tickDamage);
+		assertHealthGained(1, VAMPIRIC_EMBRACE, player2, tickDamage + 1);
+		assertHealthGained(2, VAMPIRIC_EMBRACE, player2, tickDamage + 1);
+		assertHealthGained(3, VAMPIRIC_EMBRACE, player2, tickDamage + 1);
+		assertHealthGained(4, VAMPIRIC_EMBRACE, player2, tickDamage + 1);
+		assertHealthGained(5, VAMPIRIC_EMBRACE, player2, tickDamage + 1);
+
+		assertHealthGained(VAMPIRIC_EMBRACE, player3, 0);
+		assertHealthGained(VAMPIRIC_EMBRACE, player4, 0);
+	}
+
+	@Test
+	void players_shadow_damage_triggers_healing() {
+		player.cast(VAMPIRIC_EMBRACE);
+		player.cast(MIND_BLAST);
+
+		updateUntil(60);
+
+		var mindBlastHealing = 109;
+
+		assertHealthGained(VAMPIRIC_EMBRACE, player, mindBlastHealing);
+		assertHealthGained(VAMPIRIC_EMBRACE, player2, mindBlastHealing);
+		assertHealthGained(VAMPIRIC_EMBRACE, player3, 0);
+		assertHealthGained(VAMPIRIC_EMBRACE, player4, 0);
+	}
+
+	@Test
+	void other_party_members_shadow_damage_does_not_trigger_healing() {
+		player.cast(VAMPIRIC_EMBRACE);
+
+		player2.idleUntil(Time.at(2));
+		player2.cast(MIND_BLAST);
+
+		updateUntil(60);
+
+		assertHealthGained(VAMPIRIC_EMBRACE, player, 0);
+		assertHealthGained(VAMPIRIC_EMBRACE, player2, 0);
+		assertHealthGained(VAMPIRIC_EMBRACE, player3, 0);
+		assertHealthGained(VAMPIRIC_EMBRACE, player4, 0);
 	}
 
 	@Override
@@ -131,5 +175,7 @@ class VampiricEmbraceTest extends TbcPriestSpellSimulationTest {
 
 		player.disbandParty();
 		player.invite(player2);
+
+		setTargetForAllPlayers(target);
 	}
 }

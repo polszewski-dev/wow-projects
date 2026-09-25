@@ -7,8 +7,7 @@ import wow.test.commons.TalentNames;
 
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
-import static wow.test.commons.AbilityNames.FROSTBOLT;
-import static wow.test.commons.AbilityNames.PRESENCE_OF_MIND;
+import static wow.test.commons.AbilityNames.*;
 
 /**
  * User: POlszewski
@@ -60,6 +59,43 @@ class PresenceOfMindTest extends TbcMageSpellSimulationTest {
 				at(180)
 						.cooldownExpired(player, PRESENCE_OF_MIND)
 		);
+	}
+
+	@Test
+	void instant_frostbolt_receives_bonus_from_expirinc_arcane_power() {
+		enableTalent(TalentNames.ARCANE_POWER);
+
+		player.cast(FROSTBOLT);
+
+		player.cast(ARCANE_POWER);
+		player.cast(FROSTBOLT);
+		player.cast(FROSTBOLT);
+		player.cast(FROSTBOLT);
+		player.cast(FROSTBOLT);
+		player.cast(FROSTBOLT);
+
+		player.cast(PRESENCE_OF_MIND);
+		player.cast(FROSTBOLT);
+
+		player.cast(FROSTBOLT);
+
+		updateUntil(30);
+
+		//normal
+		assertDamageDone(0, FROSTBOLT_INFO, target, player, 0, 0);
+
+		// arcane power
+		assertDamageDone(1, FROSTBOLT_INFO, target, player, 0, 30);
+		assertDamageDone(2, FROSTBOLT_INFO, target, player, 0, 30);
+		assertDamageDone(3, FROSTBOLT_INFO, target, player, 0, 30);
+		assertDamageDone(4, FROSTBOLT_INFO, target, player, 0, 30);
+		assertDamageDone(5, FROSTBOLT_INFO, target, player, 0, 30);
+
+		// pom + arcane power
+		assertDamageDone(6, FROSTBOLT_INFO, target, player, 0, 30);
+
+		// normal
+		assertDamageDone(7, FROSTBOLT_INFO, target, player, 0, 0);
 	}
 
 	@Override

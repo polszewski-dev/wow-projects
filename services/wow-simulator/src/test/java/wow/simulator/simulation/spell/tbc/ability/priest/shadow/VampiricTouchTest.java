@@ -3,6 +3,7 @@ package wow.simulator.simulation.spell.tbc.ability.priest.shadow;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import wow.simulator.model.time.Time;
 import wow.simulator.simulation.spell.tbc.TbcPriestSpellSimulationTest;
 import wow.test.commons.TalentNames;
 
@@ -59,7 +60,7 @@ class VampiricTouchTest extends TbcPriestSpellSimulationTest {
 	}
 
 	@Test
-	void mindBlastDamageIsConvertedToMana() {
+	void mind_blast_damage_is_converted_to_mana() {
 		player.cast(VAMPIRIC_TOUCH);
 		player.cast(MIND_BLAST);
 
@@ -95,7 +96,7 @@ class VampiricTouchTest extends TbcPriestSpellSimulationTest {
 	}
 
 	@Test
-	void shadowWordPainDamageIsConvertedToMana() {
+	void shadow_word_pain_damage_is_converted_to_mana() {
 		player.cast(VAMPIRIC_TOUCH);
 		player.cast(SHADOW_WORD_PAIN);
 
@@ -151,15 +152,50 @@ class VampiricTouchTest extends TbcPriestSpellSimulationTest {
 		assertDamageDone(VAMPIRIC_TOUCH_INFO, spellDamage);
 	}
 
+	@Test
+	void players_shadow_damage_triggers_mana_gain() {
+		player.cast(VAMPIRIC_TOUCH);
+		player.cast(MIND_BLAST);
+
+		updateUntil(60);
+
+		var vampiricTouchManaGain = 32;
+		var mindBlastManaGain = 36;
+
+		assertManaGained(VAMPIRIC_TOUCH, player, vampiricTouchManaGain + mindBlastManaGain);
+		assertManaGained(VAMPIRIC_TOUCH, player2, vampiricTouchManaGain + mindBlastManaGain);
+		assertManaGained(VAMPIRIC_TOUCH, player3, 0);
+		assertManaGained(VAMPIRIC_TOUCH, player4, 0);
+	}
+
+	@Test
+	void other_party_members_shadow_damage_does_not_trigger_mana_gain() {
+		player.cast(VAMPIRIC_TOUCH);
+
+		player2.idleUntil(Time.at(2));
+		player2.cast(MIND_BLAST);
+
+		updateUntil(60);
+
+		var vampiricTouchManaGain = 32;
+
+		assertManaGained(VAMPIRIC_TOUCH, player, vampiricTouchManaGain);
+		assertManaGained(VAMPIRIC_TOUCH, player2, vampiricTouchManaGain);
+		assertManaGained(VAMPIRIC_TOUCH, player3, 0);
+		assertManaGained(VAMPIRIC_TOUCH, player4, 0);
+	}
+
 	@Override
 	protected void afterSetUp() {
 		enableTalent(TalentNames.VAMPIRIC_TOUCH);
 
-		setMana(player2, 0);
-		setMana(player3, 0);
-		setMana(player4, 0);
+		setMana(player2, 1000);
+		setMana(player3, 1000);
+		setMana(player4, 1000);
 
 		player.disbandParty();
 		player.invite(player2);
+
+		setTargetForAllPlayers(target);
 	}
 }

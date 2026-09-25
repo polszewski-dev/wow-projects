@@ -39,16 +39,12 @@ public class EventConditionArgs {
 	private boolean normalMeleeAttack;
 	private boolean specialAttack;
 
+	private Character effectOwner;
+
 	public static EventConditionArgs forSpell(Character caster, Spell spell, Character target) {
 		Objects.requireNonNull(caster);
 		Objects.requireNonNull(spell);
 		return new EventConditionArgs(caster, spell, target, ActionType.SPELL);
-	}
-
-	public static EventConditionArgs forSpellTarget(Character target, Spell spell) {
-		Objects.requireNonNull(target);
-		Objects.requireNonNull(spell);
-		return new EventConditionArgs(target, spell, null, ActionType.SPELL);
 	}
 
 	public SpellSchool getSpellSchool() {

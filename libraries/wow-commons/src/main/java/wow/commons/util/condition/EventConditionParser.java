@@ -181,7 +181,8 @@ public class EventConditionParser extends ConditionParser<EventCondition, String
 				entry("CanCrit", CAN_CRIT),
 				entry("HadNoCrit", HAD_NO_CRIT),
 				entry("HadCrit", HAD_CRIT),
-				entry("TargetingOthers", IS_TARGETING_OTHERS)
+				entry("TargetingOthers", IS_TARGETING_OTHERS),
+				entry("CasterIsOwner", CASTER_IS_OWNER)
 		);
 	}
 }

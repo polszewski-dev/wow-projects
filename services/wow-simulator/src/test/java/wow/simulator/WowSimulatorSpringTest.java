@@ -180,7 +180,11 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	}
 
 	protected void assertDamageDone(int eventIdx, String abilityName, Unit target, double expectedAmount) {
-		var totalDamage = handler.getDamageDone(eventIdx, abilityName, target, player);
+		assertDamageDone(eventIdx, abilityName, target, player, expectedAmount);
+	}
+
+	protected void assertDamageDone(int eventIdx, String abilityName, Unit target, Unit caster, double expectedAmount) {
+		var totalDamage = handler.getDamageDone(eventIdx, abilityName, target, caster);
 
 		assertThat(Math.abs(totalDamage - (int) expectedAmount)).isLessThanOrEqualTo(1);
 	}
@@ -191,6 +195,10 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 
 	protected void assertDamageDone(int eventIdx, String abilityName, double expectedBaseAmount, int pctIncrease) {
 		assertDamageDone(eventIdx, abilityName, target, increaseByPct(expectedBaseAmount, pctIncrease));
+	}
+
+	protected void assertDamageDone(int eventIdx, SpellInfo spellInfo, Unit target, Unit caster, int sp, int pctIncrease) {
+		assertDamageDone(eventIdx, spellInfo.name(), target, caster, increaseByPct(spellInfo.damage(sp), pctIncrease));
 	}
 
 	protected void assertDamageDone(SpellInfo spellInfo, Unit target, int sp) {

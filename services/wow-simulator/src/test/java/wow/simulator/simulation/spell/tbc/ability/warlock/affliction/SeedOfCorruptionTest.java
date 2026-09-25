@@ -76,11 +76,11 @@ class SeedOfCorruptionTest extends TbcWarlockSpellSimulationTest {
 						.decreasedResource(882, MANA, player, SEED_OF_CORRUPTION)
 						.effectApplied(SEED_OF_CORRUPTION, target, 18),
 				at(5)
-						.decreasedResource(382, HEALTH, target, SEED_OF_CORRUPTION),
+						.decreasedResource(424, HEALTH, target, SEED_OF_CORRUPTION),
 				at(8)
-						.decreasedResource(382, HEALTH, target, SEED_OF_CORRUPTION),
+						.decreasedResource(424, HEALTH, target, SEED_OF_CORRUPTION),
 				at(11)
-						.decreasedResource(383, HEALTH, target, SEED_OF_CORRUPTION)
+						.decreasedResource(424, HEALTH, target, SEED_OF_CORRUPTION)
 						.effectRemoved(SEED_OF_CORRUPTION, target)
 						.decreasedResource(1420, HEALTH, target2, SEED_OF_CORRUPTION)
 						.decreasedResource(1420, HEALTH, target3, SEED_OF_CORRUPTION)

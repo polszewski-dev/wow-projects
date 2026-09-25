@@ -1,10 +1,12 @@
 package wow.simulator.simulation.spell.tbc.talent.warlock.destruction;
 
 import org.junit.jupiter.api.Test;
+import wow.simulator.model.time.Time;
 import wow.simulator.simulation.spell.tbc.talent.warlock.TbcWarlockTalentSimulationTest;
 
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
+import static wow.simulator.simulation.spell.tbc.TbcSpellInfos.SHADOW_BOLT_INFO;
 import static wow.simulator.util.EffectType.TALENT;
 import static wow.test.commons.AbilityNames.CORRUPTION;
 import static wow.test.commons.AbilityNames.SHADOW_BOLT;
@@ -24,8 +26,6 @@ class ImprovedShadowBoltTest extends TbcWarlockTalentSimulationTest {
 	@Test
 	void isbIsAppliedAfterCrit() {
 		critsOnlyOnFollowingRolls(0);
-
-		enableTalent(IMPROVED_SHADOW_BOLT);
 
 		player.cast(SHADOW_BOLT);
 
@@ -50,8 +50,6 @@ class ImprovedShadowBoltTest extends TbcWarlockTalentSimulationTest {
 	@Test
 	void sbDecreasesIsbChargesToZero() {
 		critsOnlyOnFollowingRolls(0);
-
-		enableTalent(IMPROVED_SHADOW_BOLT);
 
 		player.cast(SHADOW_BOLT);
 		player.cast(SHADOW_BOLT);
@@ -116,8 +114,6 @@ class ImprovedShadowBoltTest extends TbcWarlockTalentSimulationTest {
 	void overwritingIsb() {
 		critsOnlyOnFollowingRolls(0, 1);
 
-		enableTalent(IMPROVED_SHADOW_BOLT);
-
 		player.cast(SHADOW_BOLT);
 		player.cast(SHADOW_BOLT);
 
@@ -155,7 +151,6 @@ class ImprovedShadowBoltTest extends TbcWarlockTalentSimulationTest {
 		critsOnlyOnFollowingRolls(0);
 
 		enableTalent(IMPROVED_CORRUPTION);
-		enableTalent(IMPROVED_SHADOW_BOLT);
 
 		player.cast(SHADOW_BOLT);
 		player.cast(CORRUPTION);
@@ -195,5 +190,39 @@ class ImprovedShadowBoltTest extends TbcWarlockTalentSimulationTest {
 						.decreasedResource(180, HEALTH, target, CORRUPTION)
 						.effectExpired(CORRUPTION, target)
 		);
+	}
+
+	@Test
+	void players_second_shadowbolt_has_its_damage_increased() {
+		critsOnlyOnFollowingRolls(0);
+
+		player.cast(SHADOW_BOLT);
+		player.cast(SHADOW_BOLT);
+
+		updateUntil(30);
+
+		assertDamageDone(0, SHADOW_BOLT_INFO, target, player, 0, 50);//crit
+		assertDamageDone(1, SHADOW_BOLT_INFO, target, player, 0, 20);//non crit + bonus
+	}
+
+	@Test
+	void other_players_shadowbolt_has_its_damage_increased() {
+		critsOnlyOnFollowingRolls(0);
+
+		player.cast(SHADOW_BOLT);
+
+		player2.idleUntil(Time.at(1));
+		player2.cast(SHADOW_BOLT);
+
+		updateUntil(30);
+
+		assertDamageDone(SHADOW_BOLT_INFO, target, player2, 0, 20);
+	}
+
+	@Override
+	protected void afterSetUp() {
+		enableTalent(IMPROVED_SHADOW_BOLT);
+
+		setTargetForAllPlayers(target);
 	}
 }

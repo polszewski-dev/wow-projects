@@ -235,6 +235,14 @@ public abstract class SpellSimulationTest extends WowSimulatorSpringTest impleme
 		}
 	}
 
+	protected void setTargetForAllPlayers(Unit newTarget) {
+		player.setTarget(newTarget);
+		player2.setTarget(newTarget);
+		player3.setTarget(newTarget);
+		player4.setTarget(newTarget);
+		player5.setTarget(newTarget);
+	}
+
 	protected void assertStamina(Unit unit, int expected) {
 		assertThat(unit.getStats().getStamina()).isEqualTo(expected);
 	}

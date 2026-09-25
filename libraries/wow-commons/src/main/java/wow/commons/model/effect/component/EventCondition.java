@@ -33,6 +33,7 @@ public sealed interface EventCondition extends Condition {
 	HadNoCrit HAD_NO_CRIT = new HadNoCrit();
 	HadCrit HAD_CRIT = new HadCrit();
 	IsTargetingOthers IS_TARGETING_OTHERS = new IsTargetingOthers();
+	CasterIsOwner CASTER_IS_OWNER = new CasterIsOwner();
 
 	static EventCondition of(ActionType actionType) {
 		return new ActionTypeCondition(actionType);
@@ -202,6 +203,8 @@ public sealed interface EventCondition extends Condition {
 	record HadCrit() implements EventCondition {}
 
 	record IsTargetingOthers() implements EventCondition {}
+
+	record CasterIsOwner() implements EventCondition {}
 
 	record OwnerHealthPctLessThan(double value) implements EventCondition {}
 

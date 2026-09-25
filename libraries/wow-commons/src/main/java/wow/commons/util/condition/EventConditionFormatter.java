@@ -70,6 +70,9 @@ public class EventConditionFormatter extends ConditionFormatter<EventCondition> 
 			case IsTargetingOthers() ->
 					getMiscCondition(condition);
 
+			case CasterIsOwner() ->
+					getMiscCondition(condition);
+
 			case Operator ignored ->
 					throw new IllegalArgumentException();
 

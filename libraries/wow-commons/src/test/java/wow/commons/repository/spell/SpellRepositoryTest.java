@@ -568,7 +568,6 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 
 	@ParameterizedTest
 	@CsvSource({
-			"1230212, Corruption+Immolate",
 			"1223065, Lightning Shield"
 	})
 	void effect_augmented_abilities_are_correct(int effectId, String expectedStr) {

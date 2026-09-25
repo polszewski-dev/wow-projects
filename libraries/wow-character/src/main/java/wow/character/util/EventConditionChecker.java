@@ -74,6 +74,9 @@ public final class EventConditionChecker {
 					args.getTarget() != null &&
 					args.getTarget() != args.getCaster();
 
+			case CasterIsOwner() ->
+					args.getCaster() == args.getEffectOwner();
+
 			case Operator operator ->
 					checkConditionOperator(operator, args);
 

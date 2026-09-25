@@ -6,7 +6,6 @@ import wow.commons.model.effect.component.EventType;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.Cost;
 import wow.commons.model.spell.Spell;
-import wow.commons.util.CollectionUtil;
 import wow.simulator.log.GameLog;
 import wow.simulator.model.context.Context;
 import wow.simulator.model.context.EventAndEffect;
@@ -41,6 +40,7 @@ public class EventBus {
 		getGameLog().spellHit(owner, target, spell);
 
 		fireSpellHitEvent(target, spell, parentContext);
+		target.getEventBus().fireSpellHitTakenEvent(owner, spell, parentContext);
 	}
 
 	public void spellResisted(Spell spell, Unit target, Context parentContext) {
@@ -69,9 +69,11 @@ public class EventBus {
 
 	public void spellDamage(Spell spell, Unit target, boolean direct, boolean crit, Context parentContext) {
 		fireSpellDamageEvent(target, spell, direct, crit, parentContext);
+		target.getEventBus().fireSpellDamageTakenEvent(owner, spell, direct, crit, parentContext);
 
 		if (crit) {
 			fireSpellDamageCritEvent(target, spell, direct, parentContext);
+			target.getEventBus().fireSpellDamageCritTakenEvent(owner, spell, direct, parentContext);
 		}
 	}
 
@@ -176,7 +178,11 @@ public class EventBus {
 	}
 
 	public void effectEnded(EffectInstance effectInstance, Context parentContext) {
-		fireEffectEnded(effectInstance, parentContext);
+		var target = effectInstance.getTarget();
+
+		if (target != null) {
+			target.getEventBus().fireEffectEnded(effectInstance, parentContext);
+		}
 	}
 
 	public void effectStacksMaxed(EffectInstance effectInstance, Context parentContext) {
@@ -204,6 +210,12 @@ public class EventBus {
 		context.fireEvent();
 	}
 
+	private void fireSpellHitTakenEvent(Unit caster, Spell spell, Context parentContext) {
+		var context = getEventContext(SPELL_HIT_TAKEN, caster, spell, parentContext);
+
+		context.fireEvent();
+	}
+
 	private void fireSpellResistedEvent(Unit target, Spell spell, Context parentContext) {
 		var context = getEventContext(SPELL_RESISTED, target, spell, parentContext);
 
@@ -226,8 +238,28 @@ public class EventBus {
 		context.fireEvent();
 	}
 
+	private void fireSpellDamageTakenEvent(Unit caster, Spell spell, boolean directDamage, boolean critRoll, Context parentContext) {
+		var context = getTakenEventContext(SPELL_DAMAGE_TAKEN, caster, spell, parentContext);
+
+		context.setDamage(true);
+		context.setDirectDamage(directDamage);
+		context.setCritRoll(critRoll);
+
+		context.fireEvent();
+	}
+
 	private void fireSpellDamageCritEvent(Unit target, Spell spell, boolean directDamage, Context parentContext) {
 		var context = getEventContext(SPELL_CRIT, target, spell, parentContext);
+
+		context.setDamage(true);
+		context.setDirectDamage(directDamage);
+		context.setCritRoll(true);
+
+		context.fireEvent();
+	}
+
+	private void fireSpellDamageCritTakenEvent(Unit caster, Spell spell, boolean directDamage, Context parentContext) {
+		var context = getTakenEventContext(SPELL_CRIT_TAKEN, caster, spell, parentContext);
 
 		context.setDamage(true);
 		context.setDirectDamage(directDamage);
@@ -293,15 +325,21 @@ public class EventBus {
 	}
 
 	private void fireEffectEnded(EffectInstance effect, Context parentContext) {
-		var context = getEventContext(EFFECT_ENDED, effect.getTarget(), effect.getSourceSpell(), parentContext);
+		var context = getTakenEventContext(EFFECT_ENDED, effect.getOwner(), effect.getSourceSpell(), parentContext);
 
 		context.fireEvent();
 	}
 
 	private EventContext getEventContext(EventType eventType, Unit target, Spell spell, Context parentContext) {
-		var eventEntries = getEvents(eventType, target);
+		var eventEntries = getEvents(eventType);
 
 		return new EventContext(owner, target, spell, parentContext, eventEntries);
+	}
+
+	private EventContext getTakenEventContext(EventType eventType, Unit caster, Spell spell, Context parentContext) {
+		var eventEntries = getEvents(eventType);
+
+		return new EventContext(caster, owner, spell, parentContext, eventEntries);
 	}
 
 	private EventContext getEffectEventContext(EventType eventType, EffectInstance effect, Context parentContext) {
@@ -317,16 +355,8 @@ public class EventBus {
 		return collector.list;
 	}
 
-	public List<EventAndEffect> getEvents(EventType eventType, Unit target) {
-		var ownerEvents = this.collectEvents(eventType);
-
-		if (target != null && target != owner) {
-			var targetEvents = target.getEventBus().collectEvents(eventType);
-
-			return CollectionUtil.join(ownerEvents, targetEvents);
-		}
-
-		return ownerEvents;
+	public List<EventAndEffect> getEvents(EventType eventType) {
+		return collectEvents(eventType);
 	}
 
 	private List<EventAndEffect> collectEvents(EventType eventType) {
@@ -356,9 +386,16 @@ public class EventBus {
 
 			for (var event : events) {
 				if (event.types().contains(eventType)) {
-					list.add(new EventAndEffect(event, effect, owner));
+					list.add(new EventAndEffect(event, effect, getEffectOwner(effect)));
 				}
 			}
+		}
+
+		private Unit getEffectOwner(Effect effect) {
+			if (effect instanceof EffectInstance effectInstance) {
+				return effectInstance.getOwner();
+			}
+			return owner;
 		}
 	}
 }

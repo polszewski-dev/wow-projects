@@ -60,7 +60,8 @@ public class EventContext {
 
 	private boolean meetsAllConditions(EventAndEffect entry) {
 		var event = entry.event();
-		var args = getConditionArgs(entry.effectTarget());
+		var effectOwner = entry.effectOwner();
+		var args = getConditionArgs(effectOwner);
 
 		return check(event.condition(), args);
 	}
@@ -81,11 +82,10 @@ public class EventContext {
 		return caster.getRng().eventRoll(event.chance(), event);
 	}
 
-	private EventConditionArgs getConditionArgs(Unit unit) {
-		var args = unit == caster
-				? EventConditionArgs.forSpell(caster, spell, target)
-				: EventConditionArgs.forSpellTarget(target, spell);
+	private EventConditionArgs getConditionArgs(Unit effectOwner) {
+		var args = EventConditionArgs.forSpell(caster, spell, target);
 
+		args.setEffectOwner(effectOwner);
 		args.setHostileSpell(target != null && Unit.areHostile(caster, target));
 
 		if (spell.hasDamagingComponent()) {
@@ -125,8 +125,8 @@ public class EventContext {
 					((EffectInstance) effect).removeCharge();
 			case REMOVE_CHARGE_AND_TRIGGER_SPELL ->
 					triggerSpell(event, effect, true);
-			case INCREASE_THIS_EFFECT_BY_PCT ->
-					increaseThisEffect(event, (EffectInstance) effect);
+			case INCREASE_CASTERS_EFFECT_ON_TARGET_BY_PCT ->
+					increaseCastersEffectOnTarget(event);
 			case INCREASE_COUNTERS_BY_LAST_DAMAGE_DONE ->
 					increaseCountersByLastDamageDone((EffectInstance) effect);
 		}
@@ -159,15 +159,13 @@ public class EventContext {
 		effect.addCounters(lastDamageDone);
 	}
 
-	private void increaseThisEffect(Event event, EffectInstance effect) {
+	private void increaseCastersEffectOnTarget(Event event) {
 		var effectIncreasePct = Objects.requireNonNull(event.actionParameters().value());
-		var abilityId = event.actionParameters().abilityId();
+		var abilityId = Objects.requireNonNull(event.actionParameters().abilityId());
 
-		if (abilityId != null && !effect.matches(abilityId)) {
-			return;
-		}
+		var optionalEffect = target.getEffect(abilityId, caster);
 
-		effect.increaseEffect(effectIncreasePct);
+		optionalEffect.ifPresent(effect -> effect.increaseEffect(effectIncreasePct));
 	}
 
 	private Spell getSourceSpellOverride(Effect effect, Spell triggeredSpell) {
