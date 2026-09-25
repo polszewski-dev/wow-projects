@@ -7,7 +7,6 @@ import wow.test.commons.TalentNames;
 
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
-import static wow.simulator.util.CalcUtils.getPercentOf;
 import static wow.test.commons.AbilityNames.*;
 
 /**
@@ -101,8 +100,8 @@ class VampiricEmbraceTest extends TbcPriestSpellSimulationTest {
 
 		updateUntil(60);
 
-		assertHealthGained(VAMPIRIC_EMBRACE, player, getPercentOf(15, MIND_BLAST_INFO.damage()));
-		assertHealthGained(VAMPIRIC_EMBRACE, player2, getPercentOf(15, MIND_BLAST_INFO.damage()));
+		assertHealthGained(VAMPIRIC_EMBRACE, player, MIND_BLAST_INFO.percentOfDamage(15));
+		assertHealthGained(VAMPIRIC_EMBRACE, player2, MIND_BLAST_INFO.percentOfDamage(15));
 		assertHealthGained(VAMPIRIC_EMBRACE, player3, 0);
 		assertHealthGained(VAMPIRIC_EMBRACE, player4, 0);
 	}
@@ -114,7 +113,7 @@ class VampiricEmbraceTest extends TbcPriestSpellSimulationTest {
 
 		updateUntil(60);
 
-		var tickDamage = getPercentOf(15, SHADOW_WORD_PAIN_INFO.tickDamage());
+		var tickDamage = SHADOW_WORD_PAIN_INFO.percentOfTickDamage(15);
 
 		assertHealthGained(0, VAMPIRIC_EMBRACE, player, tickDamage);
 		assertHealthGained(1, VAMPIRIC_EMBRACE, player, tickDamage + 1);

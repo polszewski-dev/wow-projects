@@ -20,7 +20,7 @@ class T1P8BonusTest extends TbcWarlockSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertManaPaid(SHADOW_BOLT, player, SHADOW_BOLT_INFO.manaCost(), -15);
+		assertManaPaid(SHADOW_BOLT_INFO, player, -15);
 	}
 
 	@Override

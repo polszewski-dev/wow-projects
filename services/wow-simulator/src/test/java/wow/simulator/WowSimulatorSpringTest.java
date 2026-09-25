@@ -155,10 +155,6 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		assertThat(filtered).isEqualTo(eventList(expected));
 	}
 
-	protected void assertDamageDone(String abilityName, Unit target, double expectedAmount) {
-		assertDamageDone(abilityName, target, player, expectedAmount);
-	}
-
 	protected void assertDamageDone(String abilityName, Unit target, Unit caster, double expectedAmount) {
 		var totalDamage = handler.getDamageDone(abilityName, target, caster);
 
@@ -168,19 +164,35 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	}
 
 	protected void assertDamageDone(String abilityName, double expectedAmount) {
-		assertDamageDone(abilityName, target, expectedAmount);
+		assertDamageDone(abilityName, target, player, expectedAmount);
+	}
+
+	protected void assertDamageDone(String abilityName, Unit target, double expectedAmount) {
+		assertDamageDone(abilityName, target, player, expectedAmount);
 	}
 
 	protected void assertDamageDone(String abilityName, Unit target, double expectedBaseAmount, int pctIncrease) {
-		assertDamageDone(abilityName, target, increaseByPct(expectedBaseAmount, pctIncrease));
+		assertDamageDone(abilityName, target, player, increaseByPct(expectedBaseAmount, pctIncrease));
 	}
 
 	protected void assertDamageDone(String abilityName, double expectedBaseAmount, int pctIncrease) {
-		assertDamageDone(abilityName, target, increaseByPct(expectedBaseAmount, pctIncrease));
+		assertDamageDone(abilityName, target, player, increaseByPct(expectedBaseAmount, pctIncrease));
 	}
 
-	protected void assertDamageDone(int eventIdx, String abilityName, Unit target, double expectedAmount) {
-		assertDamageDone(eventIdx, abilityName, target, player, expectedAmount);
+	protected void assertDamageDone(SpellInfo spellInfo, Unit target, int sp) {
+		assertDamageDone(spellInfo.name(), target, player, spellInfo.damage(sp));
+	}
+
+	protected void assertDamageDone(SpellInfo spellInfo, Unit target, int sp, int pctIncrease) {
+		assertDamageDone(spellInfo.name(), target, player, spellInfo.damageIncreasedByPct(sp, pctIncrease));
+	}
+
+	protected void assertDamageDone(SpellInfo spellInfo, Unit target, Unit caster, int sp, int pctIncrease) {
+		assertDamageDone(spellInfo.name(), target, caster, spellInfo.damageIncreasedByPct(sp, pctIncrease));
+	}
+
+	protected void assertDamageDone(SpellInfo spellInfo, int sp) {
+		assertDamageDone(spellInfo.name(), target, player, spellInfo.damage(sp));
 	}
 
 	protected void assertDamageDone(int eventIdx, String abilityName, Unit target, Unit caster, double expectedAmount) {
@@ -189,32 +201,20 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		assertThat(Math.abs(totalDamage - (int) expectedAmount)).isLessThanOrEqualTo(1);
 	}
 
+	protected void assertDamageDone(int eventIdx, String abilityName, Unit target, double expectedAmount) {
+		assertDamageDone(eventIdx, abilityName, target, player, expectedAmount);
+	}
+
 	protected void assertDamageDone(int eventIdx, String abilityName, double expectedAmount) {
-		assertDamageDone(eventIdx, abilityName, target, expectedAmount);
+		assertDamageDone(eventIdx, abilityName, target, player, expectedAmount);
 	}
 
 	protected void assertDamageDone(int eventIdx, String abilityName, double expectedBaseAmount, int pctIncrease) {
-		assertDamageDone(eventIdx, abilityName, target, increaseByPct(expectedBaseAmount, pctIncrease));
+		assertDamageDone(eventIdx, abilityName, target, player, increaseByPct(expectedBaseAmount, pctIncrease));
 	}
 
 	protected void assertDamageDone(int eventIdx, SpellInfo spellInfo, Unit target, Unit caster, int sp, int pctIncrease) {
-		assertDamageDone(eventIdx, spellInfo.name(), target, caster, increaseByPct(spellInfo.damage(sp), pctIncrease));
-	}
-
-	protected void assertDamageDone(SpellInfo spellInfo, Unit target, int sp) {
-		assertDamageDone(spellInfo.name(), target, spellInfo.damage(sp));
-	}
-
-	protected void assertDamageDone(SpellInfo spellInfo, Unit target, int sp, int pctIncrease) {
-		assertDamageDone(spellInfo, target, player, sp, pctIncrease);
-	}
-
-	protected void assertDamageDone(SpellInfo spellInfo, Unit target, Unit caster, int sp, int pctIncrease) {
-		assertDamageDone(spellInfo.name(), target, caster, increaseByPct(spellInfo.damage(sp), pctIncrease));
-	}
-
-	protected void assertDamageDone(SpellInfo spellInfo, int sp) {
-		assertDamageDone(spellInfo, target, sp);
+		assertDamageDone(eventIdx, spellInfo.name(), target, caster, spellInfo.damageIncreasedByPct(sp, pctIncrease));
 	}
 
 	protected void assertHealthGained(String spellName, Unit target, double expectedAmount) {
@@ -227,14 +227,14 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		assertHealthGained(abilityName, target, increaseByPct(expectedBaseAmount, pctIncrease));
 	}
 
+	protected void assertHealthGained(SpellInfo spellInfo, Unit target, int sp) {
+		assertHealthGained(spellInfo.name(), target, spellInfo.damage(sp));
+	}
+
 	protected void assertHealthGained(int eventIdx, String spellName, Unit target, double expectedAmount) {
 		var totalHealthGained = handler.getHealthGained(eventIdx, spellName, target);
 
 		assertThat(totalHealthGained).isEqualTo((int) expectedAmount);
-	}
-
-	protected void assertHealthGained(SpellInfo spellInfo, Unit target, int sp) {
-		assertHealthGained(spellInfo.name(), target, spellInfo.damage(sp));
 	}
 
 	protected void assertManaPaid(String abilityName, Unit target, double expectedAmount) {
@@ -243,12 +243,12 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		assertThat(totalManaPaid).isEqualTo((int) expectedAmount);
 	}
 
-	protected void assertManaPaid(String abilityName, Unit target, double expectedBaseAmount, int pctIncrease) {
-		assertManaPaid(abilityName, target, increaseByPct(expectedBaseAmount, pctIncrease));
+	protected void assertManaPaid(SpellInfo spellInfo, Unit target) {
+		assertManaPaid(spellInfo.name(), target, spellInfo.manaCost());
 	}
 
 	protected void assertManaPaid(SpellInfo spellInfo, Unit target, int pctIncrease) {
-		assertManaPaid(spellInfo.name(), target, spellInfo.manaCost(), pctIncrease);
+		assertManaPaid(spellInfo.name(), target, spellInfo.manaCostIncreasedByPct(pctIncrease));
 	}
 
 	protected void assertManaGained(String abilityName, Unit target, double expectedAmount) {
@@ -261,14 +261,14 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		assertManaGained(abilityName, target, increaseByPct(expectedBaseAmount, pctIncrease));
 	}
 
-	protected void assertCastTime(String abilityName, double expectedCastTime) {
-		assertCastTime(abilityName, player, expectedCastTime);
-	}
-
 	protected void assertCastTime(String abilityName, Unit caster, double expectedCastTime) {
 		var actualCastTime = handler.getCastTime(abilityName, caster);
 
 		assertThat(actualCastTime).isEqualTo(expectedCastTime, PRECISION);
+	}
+
+	protected void assertCastTime(String abilityName, double expectedCastTime) {
+		assertCastTime(abilityName, player, expectedCastTime);
 	}
 
 	protected void assertCastTimeIsReducedBy(SpellInfo spellInfo, Unit caster, double reduction) {
@@ -283,9 +283,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	}
 
 	protected void assertEffectDuration(String abilityName, Unit target, double duration) {
-		var actualEffectDuration = handler.getEffectDuration(abilityName, target);
-
-		assertThat(actualEffectDuration).isEqualTo(Duration.seconds(duration));
+		assertEffectDuration(abilityName, target, Duration.seconds(duration));;
 	}
 
 	protected void assertEffectDuration(String abilityName, Unit target, Duration duration) {

@@ -5,7 +5,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 import wow.simulator.simulation.spell.tbc.talent.warlock.TbcWarlockTalentSimulationTest;
 
 import static wow.simulator.simulation.spell.tbc.TbcSpellInfos.SHADOW_BOLT_INFO;
-import static wow.simulator.util.CalcUtils.getPercentOf;
 import static wow.test.commons.AbilityNames.SHADOW_BOLT;
 import static wow.test.commons.TalentNames.SOUL_LEECH;
 
@@ -41,7 +40,7 @@ class SoulLeechTest extends TbcWarlockTalentSimulationTest {
 
 		updateUntil(30);
 
-		assertHealthGained(SOUL_LEECH, player, getPercentOf(20, SHADOW_BOLT_INFO.damage()));
+		assertHealthGained(SOUL_LEECH, player, SHADOW_BOLT_INFO.percentOfDamage(20));
 	}
 
 	@Override

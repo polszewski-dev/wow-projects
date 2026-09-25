@@ -24,7 +24,7 @@ class T5P2BonusTest extends TbcPriestSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertManaPaid(SHADOW_WORD_DEATH, player, SHADOW_WORD_DEATH_INFO.manaCost());
+		assertManaPaid(SHADOW_WORD_DEATH_INFO, player);
 		assertManaPaid(MIND_BLAST, player, MIND_BLAST_INFO.manaCost() - 150);
 	}
 

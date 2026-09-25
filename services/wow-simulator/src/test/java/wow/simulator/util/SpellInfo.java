@@ -1,6 +1,7 @@
 package wow.simulator.util;
 
 import static wow.simulator.util.CalcUtils.getPercentOf;
+import static wow.simulator.util.CalcUtils.increaseByPct;
 
 /**
  * User: POlszewski
@@ -47,6 +48,18 @@ public record SpellInfo(String name, Direct direct, Periodic periodic, int manaC
 		return damage(0, sp);
 	}
 
+	public double damageIncreasedByPct(int sp, int pctIncrease) {
+		return increaseByPct(damage(sp), pctIncrease);
+	}
+
+	public double percentOfDamage(int pct) {
+		return getPercentOf(pct, damage());
+	}
+
+	public double percentOfTickDamage(int pct) {
+		return getPercentOf(pct, tickDamage());
+	}
+
 	public double damage(double coeffBonus, int sp) {
 		return (direct != null ? direct.damage(coeffBonus, sp) : 0) + (periodic != null ? periodic.damage(coeffBonus, sp) : 0);
 	}
@@ -65,6 +78,10 @@ public record SpellInfo(String name, Direct direct, Periodic periodic, int manaC
 
 	public double duration() {
 		return periodic.duration();
+	}
+
+	public int manaCostIncreasedByPct(int pctIncrease) {
+		return increaseByPct(manaCost, pctIncrease);
 	}
 
 	private static double getSpellDmg(int min, int max, double coeff, int sd) {

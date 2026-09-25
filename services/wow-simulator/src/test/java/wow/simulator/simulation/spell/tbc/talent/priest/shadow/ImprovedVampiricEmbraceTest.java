@@ -7,7 +7,6 @@ import wow.test.commons.TalentNames;
 
 import static wow.simulator.simulation.spell.tbc.TbcSpellInfos.MIND_BLAST_INFO;
 import static wow.simulator.simulation.spell.tbc.TbcSpellInfos.SHADOW_WORD_PAIN_INFO;
-import static wow.simulator.util.CalcUtils.getPercentOf;
 import static wow.test.commons.AbilityNames.*;
 import static wow.test.commons.TalentNames.IMPROVED_VAMPIRIC_EMBRACE;
 
@@ -30,7 +29,7 @@ class ImprovedVampiricEmbraceTest extends TbcPriestTalentSimulationTest {
 
 		updateUntil(60);
 
-		var totalHealing = getPercentOf(15 + 5 * rank, MIND_BLAST_INFO.damage());
+		var totalHealing = MIND_BLAST_INFO.percentOfDamage(15 + 5 * rank);
 
 		assertHealthGained(VAMPIRIC_EMBRACE, player, totalHealing);
 	}
@@ -45,7 +44,7 @@ class ImprovedVampiricEmbraceTest extends TbcPriestTalentSimulationTest {
 
 		updateUntil(60);
 
-		var totalHealing = getPercentOf(15 + 5 * rank, SHADOW_WORD_PAIN_INFO.damage());
+		var totalHealing = SHADOW_WORD_PAIN_INFO.percentOfDamage(15 + 5 * rank);
 
 		assertHealthGained(VAMPIRIC_EMBRACE, player, totalHealing);
 	}

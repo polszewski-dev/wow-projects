@@ -86,7 +86,7 @@ class PowerInfusionTest extends TbcPriestSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertManaPaid(MIND_BLAST, player, MIND_BLAST_INFO.manaCost(), -20);
+		assertManaPaid(MIND_BLAST_INFO, player, -20);
 	}
 
 	@Override

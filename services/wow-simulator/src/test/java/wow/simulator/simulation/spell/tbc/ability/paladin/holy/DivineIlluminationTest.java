@@ -42,7 +42,7 @@ class DivineIlluminationTest extends TbcPaladinSpellSimulationTest {
 
 		updateUntil(30);
 
-		assertManaPaid(CONSECRATION, player, CONSECRATION_INFO.manaCost(), -50);
+		assertManaPaid(CONSECRATION_INFO, player, -50);
 	}
 
 	@Override

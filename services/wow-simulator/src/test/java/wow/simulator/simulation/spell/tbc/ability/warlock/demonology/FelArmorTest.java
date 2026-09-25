@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
 
 import static wow.commons.model.spell.ResourceType.MANA;
-import static wow.simulator.util.CalcUtils.increaseByPct;
 import static wow.test.commons.AbilityNames.*;
 
 /**
@@ -56,7 +55,7 @@ class FelArmorTest extends TbcWarlockSpellSimulationTest {
 		updateUntil(30);
 
 		var expectedDamage = DRAIN_LIFE_INFO.damage(100);
-		var expectedHealing = increaseByPct(expectedDamage, 20);
+		var expectedHealing = DRAIN_LIFE_INFO.damageIncreasedByPct(100, 20);
 
 		assertDamageDone(DRAIN_LIFE, expectedDamage);
 		assertHealthGained(DRAIN_LIFE, player, expectedHealing);
@@ -73,7 +72,7 @@ class FelArmorTest extends TbcWarlockSpellSimulationTest {
 		updateUntil(60);
 
 		var expectedDamage = SIPHON_LIFE_INFO.damage(100);
-		var expectedHealing = increaseByPct(expectedDamage, 20);
+		var expectedHealing = SIPHON_LIFE_INFO.damageIncreasedByPct(100, 20);
 
 		assertDamageDone(SIPHON_LIFE, expectedDamage);
 		assertHealthGained(SIPHON_LIFE, player, expectedHealing);

@@ -71,6 +71,21 @@ class ElementalMasteryTest extends TbcShamanSpellSimulationTest {
 		assertLastCritChance(100);
 	}
 
+	@Test
+	void crit_bonus_applied_twice_if_second_spell_is_instant() {
+		player.cast(ELEMENTAL_MASTERY);
+		player.cast(LIGHTNING_BOLT);
+		player.cast(EARTH_SHOCK);
+		player.cast(LIGHTNING_BOLT);
+
+		updateUntil(30);
+
+		assertDamageDone(0, LIGHTNING_BOLT_INFO, target, player, 0, 50);//crit
+		assertDamageDone(1, LIGHTNING_BOLT_INFO, target, player, 0, 0);
+
+		assertDamageDone(EARTH_SHOCK_INFO, target, player, 0, 50);//crit
+	}
+
 	@Override
 	protected void afterSetUp() {
 		enableTalent(TalentNames.ELEMENTAL_MASTERY);
