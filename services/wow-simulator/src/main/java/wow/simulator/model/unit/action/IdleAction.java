@@ -7,17 +7,9 @@ import wow.simulator.model.unit.Unit;
  * User: POlszewski
  * Date: 2023-08-10
  */
-public class IdleAction extends UnitAction {
-	private final AnyTime end;
-
-	public IdleAction(Unit owner, AnyTime end) {
+public abstract class IdleAction extends UnitAction {
+	protected IdleAction(Unit owner) {
 		super(owner);
-		this.end = end;
-	}
-
-	@Override
-	protected void setUp() {
-		on(end, () -> {});
 	}
 
 	@Override
@@ -25,7 +17,9 @@ public class IdleAction extends UnitAction {
 		return false;
 	}
 
-	public boolean endIsInInfinity() {
-		return end.isInInfinity();
+	public abstract boolean endIsInInfinity();
+
+	protected void setUpEmptyStep(AnyTime end) {
+		on(end, () -> {});
 	}
 }

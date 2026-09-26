@@ -31,10 +31,7 @@ import wow.simulator.model.rng.Rng;
 import wow.simulator.model.time.AnyTime;
 import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.*;
-import wow.simulator.model.unit.action.CastSpellAction;
-import wow.simulator.model.unit.action.IdleAction;
-import wow.simulator.model.unit.action.ImmediateAction;
-import wow.simulator.model.unit.action.UnitAction;
+import wow.simulator.model.unit.action.*;
 import wow.simulator.script.ScriptExecutor;
 import wow.simulator.script.ScriptParams;
 import wow.simulator.simulation.SimulationContext;
@@ -260,12 +257,12 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 
 	@Override
 	public void idleUntil(AnyTime time) {
-		enqueueAction(new IdleAction(this, time));
+		enqueueAction(new IdleUntilAction(this, time));
 	}
 
 	@Override
 	public void idleFor(Duration duration) {
-		idleUntil(now().add(duration));
+		enqueueAction(new IdleForAction(this, duration));
 	}
 
 	@Override
