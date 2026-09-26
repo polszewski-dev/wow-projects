@@ -282,6 +282,16 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 		});
 	}
 
+	public void channelAction(Ability ability, List<EffectInstance> appliedEffects) {
+		if (appliedEffects.isEmpty()) {
+			return;
+		}
+
+		var channelAction = new ChannelSpellAction(this, ability, appliedEffects.getFirst());
+
+		replaceCurrentAction(channelAction);
+	}
+
 	@Override
 	public void triggerGcd(Duration duration) {
 		triggerCooldown(GCD, duration);

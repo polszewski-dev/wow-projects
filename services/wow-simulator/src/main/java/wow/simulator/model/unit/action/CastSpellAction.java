@@ -4,12 +4,9 @@ import lombok.Getter;
 import wow.commons.model.Duration;
 import wow.commons.model.spell.Ability;
 import wow.simulator.model.context.SpellCastContext;
-import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.unit.PrimaryTarget;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.unit.impl.UnitImpl;
-
-import java.util.List;
 
 /**
  * User: POlszewski
@@ -23,7 +20,6 @@ public class CastSpellAction extends UnitAction {
 	private PrimaryTarget primaryTarget;
 
 	private SpellCastContext castContext;
-	private List<EffectInstance> appliedEffects = List.of();
 
 	public CastSpellAction(Unit owner, Ability ability, Unit target) {
 		super(owner);
@@ -47,13 +43,7 @@ public class CastSpellAction extends UnitAction {
 
 	@Override
 	protected void onFinished() {
-		if (ability.isChanneled() && !appliedEffects.isEmpty()) {
-			var channelAction = new ChannelSpellAction(owner, ability, appliedEffects.getFirst());
-
-			((UnitImpl) owner).replaceCurrentAction(channelAction);
-		} else {
-			((UnitImpl) owner).actionTerminated(this);
-		}
+		((UnitImpl) owner).actionTerminated(this);
 	}
 
 	@Override
@@ -78,6 +68,7 @@ public class CastSpellAction extends UnitAction {
 				() -> {
 					onEndCast();
 					paySpellCost();
+					fireSpellCastEvent();
 					resolveSpell();
 				}
 		);
@@ -94,7 +85,6 @@ public class CastSpellAction extends UnitAction {
 	private void paySpellCost() {
 		castContext.paySpellCost();
 		removeEffectRemovedOnHit();
-		owner.getEventBus().spellCast(ability, primaryTarget.getSingleTarget(), castContext);
 	}
 
 	private void removeEffectRemovedOnHit() {
@@ -106,10 +96,14 @@ public class CastSpellAction extends UnitAction {
 		}
 	}
 
+	private void fireSpellCastEvent() {
+		owner.getEventBus().spellCast(ability, primaryTarget.getSingleTarget(), castContext);
+	}
+
 	private void resolveSpell() {
 		var spellResolutionContext = castContext.createSpellResolutionContext(this);
 
-		this.appliedEffects = spellResolutionContext.resolveCastSpell();
+		spellResolutionContext.resolveCastSpell();
 	}
 
 	public String getAbilityName() {

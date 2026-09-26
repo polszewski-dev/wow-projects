@@ -8,6 +8,7 @@ import wow.commons.model.character.PetType;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.EffectAugmentations;
 import wow.commons.model.effect.EffectSource;
+import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.Spell;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.effect.impl.NonPeriodicEffectInstance;
@@ -15,6 +16,7 @@ import wow.simulator.model.effect.impl.PeriodicEffectInstance;
 import wow.simulator.model.unit.TargetResolver;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.unit.action.CastSpellAction;
+import wow.simulator.model.unit.impl.UnitImpl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,10 +46,10 @@ public class SpellResolutionContext extends Context {
 		this.action = action;
 	}
 
-	public List<EffectInstance> resolveCastSpell() {
+	public void resolveCastSpell() {
 		var effectSource = new AbilitySource(action.getAbility());
 
-		return resolveSpell(effectSource);
+		resolveSpell(effectSource);
 	}
 
 	public void resolveTriggeredSpell(Effect sourceEffect) {
@@ -56,10 +58,9 @@ public class SpellResolutionContext extends Context {
 		resolveSpell(effectSource);
 	}
 
-	private List<EffectInstance> resolveSpell(EffectSource effectSource) {
+	private void resolveSpell(EffectSource effectSource) {
 		executeDirectCommands();
-
-		return applyEffects(effectSource);
+		applyEffects(effectSource);
 	}
 
 	private void executeDirectCommands() {
@@ -193,16 +194,14 @@ public class SpellResolutionContext extends Context {
 		return valueParam != null ? valueParam : command.ratio().value();
 	}
 
-	private List<EffectInstance> applyEffects(EffectSource effectSource) {
-		var appliedEffects = new ArrayList<EffectInstance>();
-
+	private void applyEffects(EffectSource effectSource) {
 		for (var command : spell.getApplyEffectCommands()) {
-			var appliedEffect = applyEffect(command, effectSource);
+			var appliedEffects = applyEffect(command, effectSource);
 
-			appliedEffects.addAll(appliedEffect);
+			if (spell instanceof Ability ability && ability.isChanneled()) {
+				((UnitImpl) caster).channelAction(ability, appliedEffects);
+			}
 		}
-
-		return appliedEffects;
 	}
 
 	private List<EffectInstance> applyEffect(ApplyEffect command, EffectSource effectSource) {
