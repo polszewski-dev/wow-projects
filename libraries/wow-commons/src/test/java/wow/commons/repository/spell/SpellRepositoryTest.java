@@ -311,20 +311,6 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 	}
 
 	@ParameterizedTest
-	@CsvSource({
-			"Conflagrate, 6, Immolate",
-			"Incinerate, 2, ",
-	})
-	void effect_removed_on_hit_is_correct(String name, int rank, String expectedStr) {
-		var ability = getClassAbility(name, rank, TBC_P5);
-
-		var actual = ability.getEffectRemovedOnHit();
-		var expected = expectedStr != null ? AbilityId.of(expectedStr) : null;
-
-		assertThat(actual).isEqualTo(expected);
-	}
-
-	@ParameterizedTest
 	@MethodSource("getDirectComponentData")
 	void direct_component_is_correct(DirectComponentData data) {
 		var name = data.abilityName;
@@ -865,7 +851,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		var computedPrimaryTarget = getPrimaryTarget(ability);
 
 		if (computedPrimaryTarget != null && primaryTarget != computedPrimaryTarget) {
-			System.err.printf("%s - %s <> %s%n", ability, primaryTarget, computedPrimaryTarget);
+			return "Incorrect primary target: %s - %s <> %s%n".formatted(ability, primaryTarget, computedPrimaryTarget);
 		}
 
 		for (var applyEffectCommand : ability.getApplyEffectCommands()) {
@@ -966,7 +952,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		}
 
 		if (singleTargets.size() == 1) {
-			return translate(singleTargets.getFirst().type());
+			return translate(singleTargets.getFirst());
 		}
 
 		throw new IllegalArgumentException("Can't compute primary target for " + ability);
@@ -984,11 +970,13 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		};
 	}
 
-	private List<SpellTarget> getSingleTargets(Ability ability) {
+	private List<SpellTargetType> getSingleTargets(Ability ability) {
 		var targets = ability.getTargets();
 
 		return targets.stream()
 				.filter(SpellTarget::isSingle)
+				.map(SpellTarget::type)
+				.distinct()
 				.toList();
 	}
 

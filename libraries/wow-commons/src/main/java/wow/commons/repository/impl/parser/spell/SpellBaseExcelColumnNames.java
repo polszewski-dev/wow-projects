@@ -26,7 +26,7 @@ public final class SpellBaseExcelColumnNames {
 	public static final String BOLT = "bolt";
 	public static final String SCHOOL = "school";
 	public static final String PRIMARY_TARGET = "primary target";
-	public static final String EFFECT_REMOVED_ON_HIT = "effect removed on hit";
+	public static final String EFFECT_NAME = "effect name";
 	public static final String TARGET_CONDITION = "target condition";
 	public static final String DIRECT_TYPE = "type";
 	public static final String DIRECT_MIN = "min";

@@ -165,6 +165,8 @@ public interface Unit extends Character, SimulationContextSource {
 
 	void removeEffect(AbilityId abilityId, Unit owner);
 
+	void removeEffect(String effectName, Unit owner);
+
 	void removeEffect(String effectName);
 
 	Optional<EffectInstance> getEffect(AbilityId abilityId, Unit owner);

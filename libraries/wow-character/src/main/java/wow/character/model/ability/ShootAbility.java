@@ -76,11 +76,6 @@ public class ShootAbility implements Ability {
 	}
 
 	@Override
-	public AbilityId getEffectRemovedOnHit() {
-		return ability.getEffectRemovedOnHit();
-	}
-
-	@Override
 	public int getRank() {
 		return ability.getRank();
 	}

@@ -20,8 +20,6 @@ public interface Ability extends Spell, CharacterRestricted {
 
 	int getRange();
 
-	AbilityId getEffectRemovedOnHit();
-
 	default Duration getCastTime() {
 		return getCastInfo().castTime();
 	}

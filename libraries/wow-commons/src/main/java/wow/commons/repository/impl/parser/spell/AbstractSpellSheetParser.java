@@ -134,7 +134,6 @@ public abstract class AbstractSpellSheetParser extends AbstractSpellBaseSheetPar
 	private final ExcelColumn colRange = column(RANGE);
 	private final ExcelColumn colBolt = column(BOLT);
 	private final ExcelColumn colPrimaryTarget = column(PRIMARY_TARGET);
-	private final ExcelColumn colEffectRemovedOnHit = column(EFFECT_REMOVED_ON_HIT);
 
 	protected void initAbility(AbilityImpl ability) {
 		initSpell(ability);
@@ -144,7 +143,6 @@ public abstract class AbstractSpellSheetParser extends AbstractSpellBaseSheetPar
 		var primaryTarget = colPrimaryTarget.getEnum(PrimaryTargetType::parse, null);
 		var castInfo = getCastInfo(ability instanceof ActivatedAbility);
 		var range = colRange.getInteger();
-		var effectRemovedOnHit = colEffectRemovedOnHit.getEnum(AbilityId::parse, null);
 		var characterRestriction = getRestriction();
 
 		ability.setAbilityId(abilityId);
@@ -152,7 +150,6 @@ public abstract class AbstractSpellSheetParser extends AbstractSpellBaseSheetPar
 		ability.setPrimaryTarget(primaryTarget);
 		ability.setCastInfo(castInfo);
 		ability.setRange(range);
-		ability.setEffectRemovedOnHit(effectRemovedOnHit);
 		ability.setCharacterRestriction(characterRestriction);
 	}
 
@@ -253,6 +250,9 @@ public abstract class AbstractSpellSheetParser extends AbstractSpellBaseSheetPar
 
 			case RESET_TREE_COOLDOWNS ->
 					getResetTreeCooldowns(prefix);
+
+			case REMOVE_EFFECT ->
+					getRemoveEffect(prefix);
 
 			default ->
 					throw new IllegalArgumentException(type.name());
@@ -397,6 +397,16 @@ public abstract class AbstractSpellSheetParser extends AbstractSpellBaseSheetPar
 		var tree = colTree.prefixed(prefix).getEnum(TalentTree::parse);
 
 		return new ResetTreeCooldowns(target, condition, tree);
+	}
+
+	private final ExcelColumn colEffectName = column(EFFECT_NAME);
+
+	private RemoveEffect getRemoveEffect(String prefix) {
+		var target = getTarget(prefix);
+		var condition = getTargetCondition(prefix);
+		var effectName = colEffectName.prefixed(prefix).getString();
+
+		return new RemoveEffect(target, condition, effectName);
 	}
 
 	private int getAmount(String prefix) {

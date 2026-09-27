@@ -256,6 +256,18 @@ public sealed interface ComponentCommand {
 		}
 	}
 
+	record RemoveEffect(
+			SpellTarget target,
+			SpellTargetCondition condition,
+			String effectName
+	) implements DirectCommand {
+		public RemoveEffect {
+			Objects.requireNonNull(target);
+			Objects.requireNonNull(condition);
+			Objects.requireNonNull(effectName);
+		}
+	}
+
 	enum From {
 		DAMAGE,
 		HEAL,

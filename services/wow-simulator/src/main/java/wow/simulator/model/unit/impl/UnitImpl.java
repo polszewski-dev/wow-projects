@@ -655,6 +655,11 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	}
 
 	@Override
+	public void removeEffect(String effectName, Unit owner) {
+		effects.removeEffect(effectName, owner);
+	}
+
+	@Override
 	public void removeEffect(String effectName) {
 		effects.removeEffect(effectName);
 	}

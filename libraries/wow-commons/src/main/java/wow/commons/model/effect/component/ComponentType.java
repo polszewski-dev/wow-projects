@@ -25,7 +25,8 @@ public enum ComponentType {
 	UNSUMMON,
 	SACRIFICE,
 	COUNTER_DAMAGE,
-	RESET_TREE_COOLDOWNS
+	RESET_TREE_COOLDOWNS,
+	REMOVE_EFFECT
 	;
 
 	public static ComponentType parse(String value) {

@@ -84,16 +84,6 @@ public class CastSpellAction extends UnitAction {
 
 	private void paySpellCost() {
 		castContext.paySpellCost();
-		removeEffectRemovedOnHit();
-	}
-
-	private void removeEffectRemovedOnHit() {
-		var effectRemovedOnHit = ability.getEffectRemovedOnHit();
-
-		if (effectRemovedOnHit != null) {
-			primaryTarget.requireSingleTarget()
-					.removeEffect(effectRemovedOnHit, owner);
-		}
 	}
 
 	private void fireSpellCastEvent() {

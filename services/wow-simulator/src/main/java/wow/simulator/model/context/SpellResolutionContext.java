@@ -123,6 +123,9 @@ public class SpellResolutionContext extends Context {
 			case ResetTreeCooldowns command ->
 					resetTreeCooldowns(command, target);
 
+			case RemoveEffect command ->
+					removeEffect(command, target);
+
 			default ->
 					throw new UnsupportedOperationException();
 		}
@@ -196,6 +199,10 @@ public class SpellResolutionContext extends Context {
 		var exceptAbilityId = spell instanceof Ability ability ? ability.getAbilityId() : null;
 
 		target.resetCooldowns(command.tree(), exceptAbilityId);
+	}
+
+	private void removeEffect(RemoveEffect command, Unit target) {
+		target.removeEffect(command.effectName(), caster);
 	}
 
 	@Override

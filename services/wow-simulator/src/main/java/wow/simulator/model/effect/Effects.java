@@ -102,6 +102,10 @@ public abstract class Effects implements SimulationContextSource, EffectCollecti
 		getEffect(abilityId, owner).ifPresent(this::removeEffect);
 	}
 
+	public void removeEffect(String effectName, Unit owner) {
+		getEffect(effectName, owner).ifPresent(this::removeEffect);
+	}
+
 	public void removeEffect(String effectName) {
 		getEffect(effectName).ifPresent(this::removeEffect);
 	}
