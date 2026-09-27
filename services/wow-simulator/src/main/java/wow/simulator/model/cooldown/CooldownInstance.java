@@ -2,7 +2,11 @@ package wow.simulator.model.cooldown;
 
 import lombok.Getter;
 import wow.commons.model.Duration;
+import wow.commons.model.spell.AbilityCooldownId;
+import wow.commons.model.spell.AbilityId;
+import wow.commons.model.spell.ClassAbility;
 import wow.commons.model.spell.CooldownId;
+import wow.commons.model.talent.TalentTree;
 import wow.simulator.model.action.Action;
 import wow.simulator.model.time.Time;
 import wow.simulator.model.unit.Unit;
@@ -83,5 +87,29 @@ public class CooldownInstance extends Action implements SimulationContextSource 
 	@Override
 	public SimulationContext getSimulationContext() {
 		return owner.getSimulationContext();
+	}
+
+	public boolean matches(TalentTree tree) {
+		var abilityId = getAbilityId();
+
+		if (abilityId == null) {
+			return false;
+		}
+
+		var ability = owner.getAbility(abilityId).orElseThrow();
+
+		return ability instanceof ClassAbility classAbility && classAbility.getTalentTree() == tree;
+	}
+
+	public boolean matches(AbilityId abilityId) {
+		return getAbilityId() == abilityId;
+	}
+
+	private AbilityId getAbilityId() {
+		if (cooldownId instanceof AbilityCooldownId abilityCooldownId) {
+			return abilityCooldownId.abilityId();
+		}
+
+		return null;
 	}
 }

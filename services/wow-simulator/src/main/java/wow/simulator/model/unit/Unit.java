@@ -9,6 +9,7 @@ import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.character.PetType;
 import wow.commons.model.spell.*;
+import wow.commons.model.talent.TalentTree;
 import wow.simulator.model.context.Context;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.event.EventBus;
@@ -193,6 +194,8 @@ public interface Unit extends Character, SimulationContextSource {
 	void triggerCooldown(Ability ability, Duration actualDuration);
 
 	void triggerCooldown(CooldownId cooldownId, Duration actualDuration);
+
+	void resetCooldowns(TalentTree tree, AbilityId exceptAbilityId);
 
 	void regen(Duration sinceLastRegen);
 

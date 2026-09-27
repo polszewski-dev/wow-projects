@@ -120,6 +120,9 @@ public class SpellResolutionContext extends Context {
 			case SacrificePet ignored ->
 					sacrificePet(target);
 
+			case ResetTreeCooldowns command ->
+					resetTreeCooldowns(command, target);
+
 			default ->
 					throw new UnsupportedOperationException();
 		}
@@ -187,6 +190,12 @@ public class SpellResolutionContext extends Context {
 		this.sacrificedPetType = target.getActivePetType();
 
 		target.sacrificePet(spell, this);
+	}
+
+	private void resetTreeCooldowns(ResetTreeCooldowns command, Unit target) {
+		var exceptAbilityId = spell instanceof Ability ability ? ability.getAbilityId() : null;
+
+		target.resetCooldowns(command.tree(), exceptAbilityId);
 	}
 
 	@Override

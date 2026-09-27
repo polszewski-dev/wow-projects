@@ -251,6 +251,9 @@ public abstract class AbstractSpellSheetParser extends AbstractSpellBaseSheetPar
 			case SACRIFICE ->
 					getSacrificePet(prefix);
 
+			case RESET_TREE_COOLDOWNS ->
+					getResetTreeCooldowns(prefix);
+
 			default ->
 					throw new IllegalArgumentException(type.name());
 		};
@@ -386,6 +389,14 @@ public abstract class AbstractSpellSheetParser extends AbstractSpellBaseSheetPar
 		var condition = getTargetCondition(prefix);
 
 		return new SacrificePet(target, condition);
+	}
+
+	private ResetTreeCooldowns getResetTreeCooldowns(String prefix) {
+		var target = getTarget(prefix);
+		var condition = getTargetCondition(prefix);
+		var tree = colTree.prefixed(prefix).getEnum(TalentTree::parse);
+
+		return new ResetTreeCooldowns(target, condition, tree);
 	}
 
 	private int getAmount(String prefix) {

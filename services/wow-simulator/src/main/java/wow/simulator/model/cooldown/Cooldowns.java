@@ -4,6 +4,7 @@ import wow.commons.model.Duration;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.CooldownId;
+import wow.commons.model.talent.TalentTree;
 import wow.simulator.model.action.Action;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.unit.action.UnitAction;
@@ -102,6 +103,16 @@ public class Cooldowns implements SimulationContextSource {
 
 		for (var cooldown : existingCooldowns) {
 			cooldown.interrupt();
+		}
+	}
+
+	public void reset(TalentTree tree, AbilityId exceptAbilityId) {
+		var existingCooldowns = List.copyOf(cooldownsById.values());
+
+		for (var cooldown : existingCooldowns) {
+			if (cooldown.matches(tree) && !cooldown.matches(exceptAbilityId)) {
+				cooldown.interrupt();
+			}
 		}
 	}
 }

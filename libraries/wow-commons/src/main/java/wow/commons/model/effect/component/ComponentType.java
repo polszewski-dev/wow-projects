@@ -24,7 +24,9 @@ public enum ComponentType {
 	SUMMON,
 	UNSUMMON,
 	SACRIFICE,
-	COUNTER_DAMAGE;
+	COUNTER_DAMAGE,
+	RESET_TREE_COOLDOWNS
+	;
 
 	public static ComponentType parse(String value) {
 		return EnumUtil.parse(value, values());

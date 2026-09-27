@@ -5,6 +5,7 @@ import wow.commons.model.Percent;
 import wow.commons.model.character.PetType;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.spell.*;
+import wow.commons.model.talent.TalentTree;
 import wow.commons.util.EnumUtil;
 
 import java.util.Objects;
@@ -240,6 +241,18 @@ public sealed interface ComponentCommand {
 		public SacrificePet {
 			Objects.requireNonNull(target);
 			Objects.requireNonNull(condition);
+		}
+	}
+
+	record ResetTreeCooldowns(
+			SpellTarget target,
+			SpellTargetCondition condition,
+			TalentTree tree
+	) implements DirectCommand {
+		public ResetTreeCooldowns {
+			Objects.requireNonNull(target);
+			Objects.requireNonNull(condition);
+			Objects.requireNonNull(tree);
 		}
 	}
 

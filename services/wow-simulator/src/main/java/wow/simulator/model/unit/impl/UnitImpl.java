@@ -751,6 +751,11 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	}
 
 	@Override
+	public void resetCooldowns(TalentTree tree, AbilityId exceptAbilityId) {
+		cooldowns.reset(tree, exceptAbilityId);
+	}
+
+	@Override
 	public void regen(Duration sinceLastRegen) {
 		var snapshot = getCharacterCalculationService().getRegenSnapshot(this);
 		var sinceLastManaSpent = getSinceLastManaSpent();
