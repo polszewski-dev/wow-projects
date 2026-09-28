@@ -146,7 +146,7 @@ public class EventContext {
 		}
 
 		var targetResolver = TargetResolver.ofTarget(caster, target);
-		var resolutionContext = new SpellResolutionContext(caster, triggeredSpell, targetResolver, parentContext, null);
+		var resolutionContext = new SpellResolutionContext(caster, triggeredSpell, targetResolver, parentContext);
 
 		resolutionContext.setSourceSpellOverride(getSourceSpellOverride(effect, triggeredSpell));
 		resolutionContext.setValueParam(event.actionParameters().value());

@@ -15,7 +15,6 @@ import wow.simulator.model.effect.impl.NonPeriodicEffectInstance;
 import wow.simulator.model.effect.impl.PeriodicEffectInstance;
 import wow.simulator.model.unit.TargetResolver;
 import wow.simulator.model.unit.Unit;
-import wow.simulator.model.unit.action.CastSpellAction;
 import wow.simulator.model.unit.impl.UnitImpl;
 
 import java.util.ArrayList;
@@ -33,34 +32,34 @@ import static wow.commons.model.spell.component.ComponentCommand.*;
  */
 public class SpellResolutionContext extends Context {
 	private final TargetResolver targetResolver;
-	private final CastSpellAction action;
 	private final Map<Unit, Boolean> hitRollByUnit = new HashMap<>();
 	@Setter
 	private Double valueParam;
 
 	private PetType sacrificedPetType;
 
-	public SpellResolutionContext(Unit caster, Spell spell, TargetResolver targetResolver, Context parentContext, CastSpellAction action) {
+	private EffectSource effectSource;
+
+	public SpellResolutionContext(Unit caster, Spell spell, TargetResolver targetResolver, Context parentContext) {
 		super(caster, spell, parentContext);
 		this.targetResolver = targetResolver;
-		this.action = action;
 	}
 
 	public void resolveCastSpell() {
-		var effectSource = new AbilitySource(action.getAbility());
+		this.effectSource = new AbilitySource((Ability) spell);
 
-		resolveSpell(effectSource);
+		resolveSpell();
 	}
 
 	public void resolveTriggeredSpell(Effect sourceEffect) {
-		var effectSource = sourceEffect.getSource();
+		this.effectSource = sourceEffect.getSource();
 
-		resolveSpell(effectSource);
+		resolveSpell();
 	}
 
-	private void resolveSpell(EffectSource effectSource) {
+	private void resolveSpell() {
 		executeDirectCommands();
-		applyEffects(effectSource);
+		applyEffects();
 	}
 
 	private void executeDirectCommands() {
@@ -70,11 +69,15 @@ public class SpellResolutionContext extends Context {
 	}
 
 	private boolean hitRollOnlyOnce(Unit target) {
-		if (action == null || Unit.areFriendly(caster, target)) {
+		if (isTriggeredSpell() || Unit.areFriendly(caster, target)) {
 			return true;
 		}
 
 		return hitRollByUnit.computeIfAbsent(target, this::hitRoll);
+	}
+
+	private boolean isTriggeredSpell() {
+		return !(spell instanceof Ability);
 	}
 
 	private boolean critRoll(double critChancePct) {
@@ -210,9 +213,9 @@ public class SpellResolutionContext extends Context {
 		return valueParam != null ? valueParam : command.ratio().value();
 	}
 
-	private void applyEffects(EffectSource effectSource) {
+	private void applyEffects() {
 		for (var command : spell.getApplyEffectCommands()) {
-			var appliedEffects = applyEffect(command, effectSource);
+			var appliedEffects = applyEffect(command);
 
 			if (spell instanceof Ability ability && ability.isChanneled()) {
 				((UnitImpl) caster).channelAction(ability, appliedEffects);
@@ -220,7 +223,7 @@ public class SpellResolutionContext extends Context {
 		}
 	}
 
-	private List<EffectInstance> applyEffect(ApplyEffect command, EffectSource effectSource) {
+	private List<EffectInstance> applyEffect(ApplyEffect command) {
 		if (command.target().hasType(GROUND)) {
 			var groundEffect = putPeriodicEffectOnTheGround(command);
 
@@ -232,7 +235,7 @@ public class SpellResolutionContext extends Context {
 		targetResolver.forEachTarget(
 				command,
 				effectTarget -> {
-					var appliedEffect = applyEffect(command, effectTarget, effectSource);
+					var appliedEffect = applyEffect(command, effectTarget);
 
 					if (appliedEffect != null) {
 						appliedEffects.add(appliedEffect);
@@ -243,13 +246,13 @@ public class SpellResolutionContext extends Context {
 		return appliedEffects;
 	}
 
-	private EffectInstance applyEffect(ApplyEffect command, Unit target, EffectSource effectSource) {
+	private EffectInstance applyEffect(ApplyEffect command, Unit target) {
 		if (!checkSecondaryCondition(command, target) || !hitRollOnlyOnce(target)) {
 			return null;
 		}
 
 		var replacementMode = command.replacementMode();
-		var appliedEffect = createEffect(command, target, effectSource);
+		var appliedEffect = createEffect(command, target);
 		var augmentations = getEffectAugmentations(appliedEffect);
 
 		appliedEffect.augment(augmentations);
@@ -257,7 +260,7 @@ public class SpellResolutionContext extends Context {
 		return appliedEffect;
 	}
 
-	private EffectInstance createEffect(ApplyEffect command, Unit target, EffectSource effectSource) {
+	private EffectInstance createEffect(ApplyEffect command, Unit target) {
 		var durationSnapshot = caster.getEffectDurationSnapshot(spell, target, command);
 		var duration = durationSnapshot.getDuration();
 		var tickInterval = durationSnapshot.getTickInterval();
@@ -314,7 +317,7 @@ public class SpellResolutionContext extends Context {
 				command.numStacks(),
 				command.numCharges(),
 				getNumCounters(command),
-				new AbilitySource(action.getAbility()),
+				effectSource,
 				getSourceSpell(),
 				this
 		);

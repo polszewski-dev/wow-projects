@@ -91,9 +91,7 @@ public class CastSpellAction extends UnitAction {
 	}
 
 	private void resolveSpell() {
-		var spellResolutionContext = castContext.createSpellResolutionContext(this);
-
-		spellResolutionContext.resolveCastSpell();
+		castContext.resolveCastSpell();
 	}
 
 	public String getAbilityName() {
