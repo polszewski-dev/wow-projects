@@ -13,6 +13,7 @@ import wow.commons.model.spell.Spell;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.effect.impl.NonPeriodicEffectInstance;
 import wow.simulator.model.effect.impl.PeriodicEffectInstance;
+import wow.simulator.model.unit.PrimaryTarget;
 import wow.simulator.model.unit.TargetResolver;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.unit.impl.UnitImpl;
@@ -31,7 +32,7 @@ import static wow.commons.model.spell.component.ComponentCommand.*;
  * Date: 2023-11-02
  */
 public class SpellResolutionContext extends Context {
-	private final TargetResolver targetResolver;
+	private TargetResolver targetResolver;
 	private final Map<Unit, Boolean> hitRollByUnit = new HashMap<>();
 	@Setter
 	private Double valueParam;
@@ -40,24 +41,28 @@ public class SpellResolutionContext extends Context {
 
 	private EffectSource effectSource;
 
-	public SpellResolutionContext(Unit caster, Spell spell, TargetResolver targetResolver, Context parentContext) {
+	public SpellResolutionContext(Unit caster, Spell spell, Context parentContext) {
 		super(caster, spell, parentContext);
+	}
+
+	public void resolveCastSpell(PrimaryTarget primaryTarget) {
+		var targetResolver = primaryTarget.getTargetResolver(caster);
+		var effectSource = new AbilitySource((Ability) spell);
+
+		resolveSpell(targetResolver, effectSource);
+	}
+
+	public void resolveTriggeredSpell(Unit target, Effect sourceEffect) {
+		var targetResolver = TargetResolver.ofTarget(caster, target);
+		var effectSource = sourceEffect.getSource();
+
+		resolveSpell(targetResolver, effectSource);
+	}
+
+	private void resolveSpell(TargetResolver targetResolver, EffectSource effectSource) {
 		this.targetResolver = targetResolver;
-	}
+		this.effectSource = effectSource;
 
-	public void resolveCastSpell() {
-		this.effectSource = new AbilitySource((Ability) spell);
-
-		resolveSpell();
-	}
-
-	public void resolveTriggeredSpell(Effect sourceEffect) {
-		this.effectSource = sourceEffect.getSource();
-
-		resolveSpell();
-	}
-
-	private void resolveSpell() {
 		executeDirectCommands();
 		applyEffects();
 	}

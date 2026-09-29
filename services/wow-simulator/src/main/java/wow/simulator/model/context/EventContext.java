@@ -10,7 +10,6 @@ import wow.commons.model.effect.component.EventAction;
 import wow.commons.model.spell.CooldownId;
 import wow.commons.model.spell.Spell;
 import wow.simulator.model.effect.EffectInstance;
-import wow.simulator.model.unit.TargetResolver;
 import wow.simulator.model.unit.Unit;
 
 import java.util.List;
@@ -145,12 +144,11 @@ public class EventContext {
 			((EffectInstance) effect).removeCharge();
 		}
 
-		var targetResolver = TargetResolver.ofTarget(caster, target);
-		var resolutionContext = new SpellResolutionContext(caster, triggeredSpell, targetResolver, parentContext);
+		var resolutionContext = new SpellResolutionContext(caster, triggeredSpell, parentContext);
 
 		resolutionContext.setSourceSpellOverride(getSourceSpellOverride(effect, triggeredSpell));
 		resolutionContext.setValueParam(event.actionParameters().value());
-		resolutionContext.resolveTriggeredSpell(effect);
+		resolutionContext.resolveTriggeredSpell(target, effect);
 	}
 
 	private void increaseCountersByLastDamageDone(EffectInstance effect) {

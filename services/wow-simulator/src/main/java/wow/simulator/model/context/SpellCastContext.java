@@ -6,7 +6,6 @@ import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.ActivatedAbility;
 import wow.commons.model.spell.GroupCooldownId;
 import wow.simulator.model.unit.PrimaryTarget;
-import wow.simulator.model.unit.TargetResolver;
 import wow.simulator.model.unit.Unit;
 
 /**
@@ -17,14 +16,12 @@ public class SpellCastContext extends Context {
 	private final SpellCastSnapshot snapshot;
 	private final Ability ability;
 	private final PrimaryTarget primaryTarget;
-	private final TargetResolver targetResolver;
 
 	public SpellCastContext(Unit caster, Ability ability, PrimaryTarget primaryTarget) {
 		super(caster, ability, null);
 		this.snapshot = caster.getSpellCastSnapshot(ability, primaryTarget.getSingleTarget());
 		this.ability = ability;
 		this.primaryTarget = primaryTarget;
-		this.targetResolver = primaryTarget.getTargetResolver(caster);
 	}
 
 	public Duration getGcd() {
@@ -67,8 +64,8 @@ public class SpellCastContext extends Context {
 	}
 
 	public void resolveCastSpell() {
-		var spellResolutionContext = new SpellResolutionContext(caster, ability, targetResolver, this);
+		var spellResolutionContext = new SpellResolutionContext(caster, ability, this);
 
-		spellResolutionContext.resolveCastSpell();
+		spellResolutionContext.resolveCastSpell(primaryTarget);
 	}
 }
