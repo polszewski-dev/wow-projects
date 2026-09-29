@@ -85,15 +85,13 @@ public class SpellResolutionContext extends Context {
 	}
 
 	private void directComponentAction(DirectCommand command) {
-		var lastValueSnapshot = getLastValueSnapshot();
-
 		targetResolver.forEachTarget(
 				command,
-				componentTarget -> directComponentAction(command, componentTarget, lastValueSnapshot)
+				componentTarget -> directComponentAction(command, componentTarget)
 		);
 	}
 
-	private void directComponentAction(DirectCommand directCommand, Unit target, LastValueSnapshot last) {
+	private void directComponentAction(DirectCommand directCommand, Unit target) {
 		if (!checkSecondaryCondition(directCommand, target)) {
 			return;
 		}
@@ -112,7 +110,7 @@ public class SpellResolutionContext extends Context {
 					directManaGain(command, target);
 
 			case Copy command ->
-					copy(command, target, last, true);
+					copy(command, target, true);
 
 			case SummonPet command ->
 					summonPet(command, target);

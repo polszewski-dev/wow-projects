@@ -60,7 +60,7 @@ public class EffectUpdateContext extends Context {
 					periodicPctOfTotalManaGain(tickNo, numStacks, command, target);
 
 			case Copy command ->
-					copy(command, target, getLastValueSnapshot(), false);
+					copy(command, target, false);
 
 			case DealCounterDamagePeriodically command ->
 					dealCounterDamagePeriodically(tickNo, command, target);

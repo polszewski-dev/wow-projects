@@ -28,9 +28,13 @@ public abstract class Context implements SimulationContextSource {
 
 	private int lastManaPaid;
 	private int lastHealthPaid;
+	@Setter
 	private int lastDamageDone;
+	@Setter
 	private int lastHealingDone;
+	@Setter
 	private int lastManaRestored;
+	@Setter
 	private int lastManaLost;
 
 	@Setter
@@ -75,8 +79,8 @@ public abstract class Context implements SimulationContextSource {
 		target.decreaseMana(amount, direct, crit, caster, spell, this);
 	}
 
-	protected void copy(Copy copy, Unit target, LastValueSnapshot last, boolean direct) {
-		var from = getFrom(copy, last);
+	protected void copy(Copy copy, Unit target, boolean direct) {
+		var from = getFrom(copy);
 		var ratioPct = getRatioPct(copy);
 
 		switch (copy.to()) {
@@ -94,13 +98,13 @@ public abstract class Context implements SimulationContextSource {
 		}
 	}
 
-	private int getFrom(Copy copy, LastValueSnapshot last) {
+	private int getFrom(Copy copy) {
 		return switch (copy.from()) {
-			case DAMAGE -> last.damageDone;
-			case MANA_LOSS -> last.manaLost;
-			case HEALTH_PAID -> last.parentHealthPaid;
-			case PARENT_DAMAGE -> last.parentDamageDone;
-			case PARENT_MANA_GAIN -> last.parentManaGained;
+			case DAMAGE -> lastDamageDone;
+			case MANA_LOSS -> lastManaLost;
+			case HEALTH_PAID -> parentContext.lastHealthPaid;
+			case PARENT_DAMAGE -> parentContext.lastDamageDone;
+			case PARENT_MANA_GAIN -> parentContext.lastManaRestored;
 			default -> throw new IllegalArgumentException(copy.from().name());
 		};
 	}
@@ -179,40 +183,6 @@ public abstract class Context implements SimulationContextSource {
 
 	protected int roundValue(double value, Unit target) {
 		return getRootContext().getRoundingReminder(spell, target).roundValue(value);
-	}
-
-	protected record LastValueSnapshot(
-			int damageDone,
-			int parentDamageDone,
-			int parentHealthPaid,
-			int manaLost,
-			int parentManaGained
-	) {}
-
-	protected LastValueSnapshot getLastValueSnapshot() {
-		return new LastValueSnapshot(
-				this.getLastDamageDone(),
-				parentContext.getLastDamageDone(),
-				parentContext.getLastHealthPaid(),
-				this.getLastManaLost(),
-				parentContext.getLastManaRestored()
-		);
-	}
-
-	public void setLastDamageDone(int lastDamageDone) {
-		this.lastDamageDone = lastDamageDone;
-	}
-
-	public void setLastHealingDone(int lastHealingDone) {
-		this.lastHealingDone = lastHealingDone;
-	}
-
-	public void setLastManaRestored(int lastManaRestored) {
-		this.lastManaRestored = lastManaRestored;
-	}
-
-	public void setLastManaLost(int lastManaLost) {
-		this.lastManaLost = lastManaLost;
 	}
 
 	@Override
