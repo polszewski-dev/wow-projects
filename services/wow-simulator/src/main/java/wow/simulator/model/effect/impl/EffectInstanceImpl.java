@@ -22,6 +22,7 @@ import wow.simulator.model.unit.impl.UnitImpl;
 import wow.simulator.simulation.SimulationContext;
 import wow.simulator.util.IdGenerator;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -54,8 +55,7 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	@Getter
 	private boolean removed;
 	private boolean deferEvents;
-	private boolean fireStacksMaxed;
-	private boolean fireCountersMaxed;
+	private List<Runnable> deferredEvents = List.of();
 
 	private Runnable onEffectFinished;
 
@@ -254,28 +254,41 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	}
 
 	private void fireStacksMaxed() {
-		if (getStatus() == ActionStatus.CREATED || deferEvents) {
-			this.fireStacksMaxed = true;
-		} else if (getStatus() == ActionStatus.IN_PROGRESS) {
-			owner.getEventBus().effectStacksMaxed(this, effectUpdateContext);
-		}
+		eventAction(this::fireStacksMaxedImmediately);
 	}
 
 	private void fireCountersMaxed() {
+		eventAction(this::fireCountersMaxedImmediately);
+	}
+
+	private void eventAction(Runnable event) {
 		if (getStatus() == ActionStatus.CREATED || deferEvents) {
-			this.fireCountersMaxed = true;
+			addDeferredEvent(event);
 		} else if (getStatus() == ActionStatus.IN_PROGRESS) {
-			owner.getEventBus().effectCountersMaxed(this, effectUpdateContext);
+			event.run();
 		}
 	}
 
+	private void fireStacksMaxedImmediately() {
+		owner.getEventBus().effectStacksMaxed(this, effectUpdateContext);
+	}
+
+	private void fireCountersMaxedImmediately() {
+		owner.getEventBus().effectCountersMaxed(this, effectUpdateContext);
+	}
+
+	private void addDeferredEvent(Runnable event) {
+		if (deferredEvents.isEmpty()) {
+			deferredEvents = new ArrayList<>();
+		}
+		deferredEvents.add(event);
+	}
+
 	private void fireDeferredEvents() {
-		if (fireStacksMaxed) {
-			owner.getEventBus().effectStacksMaxed(this, effectUpdateContext);
+		for (var deferredEvent : deferredEvents) {
+			deferredEvent.run();
 		}
-		if (fireCountersMaxed) {
-			owner.getEventBus().effectCountersMaxed(this, effectUpdateContext);
-		}
+
 		this.deferEvents = false;
 	}
 
