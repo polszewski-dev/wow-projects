@@ -195,7 +195,7 @@ public class EventBus {
 		return owner.getGameLog();
 	}
 
-	private Spell getSourceSpell(Context parentContext, Spell spell) {
+	private Spell getSourceSpell(CommandContext parentContext, Spell spell) {
 		if (parentContext != null) {
 			return parentContext.getSourceSpell();
 		}

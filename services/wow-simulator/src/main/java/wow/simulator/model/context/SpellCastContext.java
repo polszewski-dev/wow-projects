@@ -15,9 +15,9 @@ import wow.simulator.model.unit.Unit;
  * Date: 2023-08-13
  */
 public class SpellCastContext extends Context {
-	private final SpellCastSnapshot snapshot;
 	private final Ability ability;
 	private final PrimaryTarget primaryTarget;
+	private final SpellCastSnapshot snapshot;
 
 	@Getter
 	private int lastManaPaid;
@@ -26,9 +26,9 @@ public class SpellCastContext extends Context {
 
 	public SpellCastContext(Unit caster, Ability ability, PrimaryTarget primaryTarget) {
 		super(caster, ability, null);
-		this.snapshot = caster.getSpellCastSnapshot(ability, primaryTarget.getSingleTarget());
 		this.ability = ability;
 		this.primaryTarget = primaryTarget;
+		this.snapshot = caster.getSpellCastSnapshot(ability, primaryTarget.getSingleTarget());
 	}
 
 	public Duration getGcd() {

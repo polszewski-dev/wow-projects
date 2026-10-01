@@ -3,6 +3,7 @@ package wow.simulator.model.context;
 import lombok.Getter;
 import lombok.Setter;
 import wow.commons.model.spell.Spell;
+import wow.commons.model.spell.TriggeredSpell;
 import wow.commons.model.spell.component.ComponentCommand;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.util.RoundingReminder;
@@ -28,6 +29,9 @@ public abstract class CommandContext extends Context {
 	private int lastManaRestored;
 	@Setter
 	private int lastManaLost;
+
+	@Setter
+	private Spell sourceSpellOverride;
 
 	protected CommandContext(Unit caster, Spell spell, Context parentContext) {
 		super(caster, spell, parentContext);
@@ -144,5 +148,15 @@ public abstract class CommandContext extends Context {
 				new SpellAndTarget(spell, target),
 				x -> new RoundingReminder()
 		);
+	}
+
+	public Spell getSourceSpell() {
+		if (sourceSpellOverride != null) {
+			return sourceSpellOverride;
+		}
+		if (spell instanceof TriggeredSpell) {
+			return parentContext.spell;
+		}
+		return spell;
 	}
 }
