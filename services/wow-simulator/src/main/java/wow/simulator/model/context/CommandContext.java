@@ -16,6 +16,8 @@ import java.util.Map;
  * Date: 2026-10-01
  */
 public abstract class CommandContext extends Context {
+	protected final Context parentContext;
+
 	private record SpellAndTarget(Spell spell, Unit target) {}
 
 	private Map<SpellAndTarget, RoundingReminder> roundingRemindersBySpellTarget;
@@ -34,7 +36,8 @@ public abstract class CommandContext extends Context {
 	private Spell sourceSpellOverride;
 
 	protected CommandContext(Unit caster, Spell spell, Context parentContext) {
-		super(caster, spell, parentContext);
+		super(caster, spell);
+		this.parentContext = parentContext;
 	}
 
 	public boolean hitRoll(Unit target) {

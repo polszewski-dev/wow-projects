@@ -15,12 +15,9 @@ public abstract class Context implements SimulationContextSource {
 	protected final Unit caster;
 	protected final Spell spell;
 
-	protected final Context parentContext;
-
-	protected Context(Unit caster, Spell spell, Context parentContext) {
+	protected Context(Unit caster, Spell spell) {
 		this.caster = caster;
 		this.spell = spell;
-		this.parentContext = parentContext;
 	}
 
 	@Override

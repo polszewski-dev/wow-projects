@@ -25,7 +25,7 @@ public class SpellCastContext extends Context {
 	private int lastHealthPaid;
 
 	public SpellCastContext(Unit caster, Ability ability, PrimaryTarget primaryTarget) {
-		super(caster, ability, null);
+		super(caster, ability);
 		this.ability = ability;
 		this.primaryTarget = primaryTarget;
 		this.snapshot = caster.getSpellCastSnapshot(ability, primaryTarget.getSingleTarget());
