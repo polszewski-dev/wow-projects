@@ -10,6 +10,7 @@ import wow.commons.model.Percent;
 import wow.commons.model.character.PetType;
 import wow.commons.model.spell.*;
 import wow.commons.model.talent.TalentTree;
+import wow.simulator.model.context.CommandContext;
 import wow.simulator.model.context.Context;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.event.EventBus;
@@ -145,13 +146,13 @@ public interface Unit extends Character, SimulationContextSource {
 
 	void setAllResourcesToMax();
 
-	void increaseHealth(int amount, boolean direct, boolean crit, Unit caster, Spell spell, Context parentContext);
+	void increaseHealth(int amount, boolean direct, boolean crit, Unit caster, Spell spell, CommandContext parentContext);
 
-	void decreaseHealth(int amount, boolean direct, boolean crit, Unit caster, Spell spell, Context parentContext);
+	void decreaseHealth(int amount, boolean direct, boolean crit, Unit caster, Spell spell, CommandContext parentContext);
 
-	void increaseMana(int amount, boolean direct, boolean crit, Unit caster, Spell spell, Context parentContext);
+	void increaseMana(int amount, boolean direct, boolean crit, Unit caster, Spell spell, CommandContext parentContext);
 
-	void decreaseMana(int amount, boolean direct, boolean crit, Unit caster, Spell spell, Context parentContext);
+	void decreaseMana(int amount, boolean direct, boolean crit, Unit caster, Spell spell, CommandContext parentContext);
 
 	void addEffect(EffectInstance effect, EffectReplacementMode replacementMode);
 

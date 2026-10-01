@@ -18,7 +18,7 @@ import static wow.commons.model.spell.component.ComponentCommand.*;
  * User: POlszewski
  * Date: 2023-11-04
  */
-public class EffectUpdateContext extends Context {
+public class EffectUpdateContext extends CommandContext {
 	private final EffectInstance effect;
 	private final PeriodicComponent periodicComponent;
 	private final TargetResolver targetResolver;

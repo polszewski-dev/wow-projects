@@ -31,7 +31,7 @@ import static wow.commons.model.spell.component.ComponentCommand.*;
  * User: POlszewski
  * Date: 2023-11-02
  */
-public class SpellResolutionContext extends Context {
+public class SpellResolutionContext extends CommandContext {
 	private TargetResolver targetResolver;
 	private final Map<Unit, Boolean> hitRollByUnit = new HashMap<>();
 	@Setter
@@ -331,7 +331,7 @@ public class SpellResolutionContext extends Context {
 
 		return switch (counterParams.scaling()) {
 			case DEFAULT -> counterParams.number();
-			case LAST_DAMAGE_DONE_PCT -> (int) (counterParams.number() * parentContext.getLastDamageDone() / 100.0);
+			case LAST_DAMAGE_DONE_PCT -> (int) (counterParams.number() * ((CommandContext) parentContext).getLastDamageDone() / 100.0);
 		};
 	}
 

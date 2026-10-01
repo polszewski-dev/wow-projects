@@ -20,6 +20,7 @@ import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
 import wow.commons.model.spell.*;
 import wow.commons.model.talent.TalentTree;
+import wow.simulator.model.context.CommandContext;
 import wow.simulator.model.context.Context;
 import wow.simulator.model.cooldown.CooldownInstance;
 import wow.simulator.model.cooldown.Cooldowns;
@@ -543,7 +544,7 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	}
 
 	@Override
-	public void increaseHealth(int amount, boolean direct, boolean crit, Unit caster, Spell spell, Context parentContext) {
+	public void increaseHealth(int amount, boolean direct, boolean crit, Unit caster, Spell spell, CommandContext parentContext) {
 		putInCombat(caster, this);
 
 		int actualAmount = getResources().increaseHealth(amount);
@@ -556,7 +557,7 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	}
 
 	@Override
-	public void decreaseHealth(int amount, boolean direct, boolean crit, Unit caster, Spell spell, Context parentContext) {
+	public void decreaseHealth(int amount, boolean direct, boolean crit, Unit caster, Spell spell, CommandContext parentContext) {
 		putInCombat(caster, this);
 
 		int actualAmount = getResources().decreaseHealth(amount);
@@ -583,7 +584,7 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	}
 
 	@Override
-	public void increaseMana(int amount, boolean direct, boolean crit, Unit caster, Spell spell, Context parentContext) {
+	public void increaseMana(int amount, boolean direct, boolean crit, Unit caster, Spell spell, CommandContext parentContext) {
 		putInCombat(caster, this);
 
 		int actualAmount = getResources().increaseMana(amount);
@@ -596,7 +597,7 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	}
 
 	@Override
-	public void decreaseMana(int amount, boolean direct, boolean crit, Unit caster, Spell spell, Context parentContext) {
+	public void decreaseMana(int amount, boolean direct, boolean crit, Unit caster, Spell spell, CommandContext parentContext) {
 		putInCombat(caster, this);
 
 		int actualAmount = getResources().decreaseMana(amount);

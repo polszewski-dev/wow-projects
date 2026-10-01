@@ -152,7 +152,7 @@ public class EventContext {
 	}
 
 	private void increaseCountersByLastDamageDone(EffectInstance effect) {
-		var lastDamageDone = parentContext.getLastDamageDone();
+		var lastDamageDone = ((CommandContext) parentContext).getLastDamageDone();
 
 		effect.addCounters(lastDamageDone);
 	}

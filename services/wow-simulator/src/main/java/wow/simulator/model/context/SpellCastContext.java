@@ -1,6 +1,8 @@
 package wow.simulator.model.context;
 
+import lombok.Getter;
 import wow.character.model.snapshot.SpellCastSnapshot;
+import wow.character.model.snapshot.SpellCostSnapshot;
 import wow.commons.model.Duration;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.ActivatedAbility;
@@ -16,6 +18,11 @@ public class SpellCastContext extends Context {
 	private final SpellCastSnapshot snapshot;
 	private final Ability ability;
 	private final PrimaryTarget primaryTarget;
+
+	@Getter
+	private int lastManaPaid;
+	@Getter
+	private int lastHealthPaid;
 
 	public SpellCastContext(Unit caster, Ability ability, PrimaryTarget primaryTarget) {
 		super(caster, ability, null);
@@ -42,6 +49,18 @@ public class SpellCastContext extends Context {
 
 			caster.triggerCooldown(ability, cooldown);
 			setPaidCost(costSnapshot);
+		}
+	}
+
+	private void setPaidCost(SpellCostSnapshot costSnapshot) {
+		var cost = costSnapshot.getCostToPayUnreduced();
+
+		switch (cost.resourceType()) {
+			case MANA -> this.lastManaPaid = cost.amount();
+			case HEALTH -> this.lastHealthPaid = cost.amount();
+			default -> {
+				// ignored
+			}
 		}
 	}
 
