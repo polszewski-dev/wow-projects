@@ -92,7 +92,7 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	protected final void setUp() {
 		resetEndTime();
 		doSetUp();
-		checkIfStacksAreMaxed();
+		checkIfStacksAreMaxed(effectUpdateContext.getParentContext());
 	}
 
 	protected abstract void doSetUp();
@@ -202,21 +202,24 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 		}
 
 		this.deferEvents = true;
+
+		var parentContext = ((EffectInstanceImpl) newEffect).effectUpdateContext.getParentContext();
+
 		resetDuration();
-		addStacks(newEffect.getNumStacks());
-		addCounters(newEffect.getNumCounters());
+		addStacks(newEffect.getNumStacks(), parentContext);
+		addCounters(newEffect.getNumCounters(), parentContext);
 		getGameLog().effectStacked(this);
 		fireDeferredEvents();
 	}
 
 	@Override
-	public void addStack() {
+	public void addStack(Context parentContext) {
 		if (removed) {
 			return;
 		}
 
 		resetDuration();
-		addStacks(1);
+		addStacks(1, parentContext);
 		getGameLog().effectStacksIncreased(this);
 	}
 
@@ -226,39 +229,39 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 		endTime = now().add(duration);
 	}
 
-	private void addStacks(int stacksToAdd) {
+	private void addStacks(int stacksToAdd, Context parentContext) {
 		numStacks = Math.min(numStacks + stacksToAdd, getMaxStacks());
 
 		effectListChanged();
 
-		checkIfStacksAreMaxed();
+		checkIfStacksAreMaxed(parentContext);
 	}
 
 	@Override
-	public void addCounters(int countersToAdd) {
+	public void addCounters(int countersToAdd, Context parentContext) {
 		numCounters = Math.min(numCounters + countersToAdd, getMaxCounters());
 
-		checkIfCountersAreMaxed();
+		checkIfCountersAreMaxed(parentContext);
 	}
 
-	private void checkIfStacksAreMaxed() {
+	private void checkIfStacksAreMaxed(Context parentContext) {
 		if (effect.getMaxStacks() > 1 && numStacks == effect.getMaxStacks()) {
-			fireStacksMaxed();
+			fireStacksMaxed(parentContext);
 		}
 	}
 
-	private void checkIfCountersAreMaxed() {
+	private void checkIfCountersAreMaxed(Context parentContext) {
 		if (effect.getMaxCounters() > 1 && numCounters == effect.getMaxCounters()) {
-			fireCountersMaxed();
+			fireCountersMaxed(parentContext);
 		}
 	}
 
-	private void fireStacksMaxed() {
-		eventAction(this::fireStacksMaxedImmediately);
+	private void fireStacksMaxed(Context parentContext) {
+		eventAction(() -> fireStacksMaxedImmediately(parentContext));
 	}
 
-	private void fireCountersMaxed() {
-		eventAction(this::fireCountersMaxedImmediately);
+	private void fireCountersMaxed(Context parentContext) {
+		eventAction(() -> fireCountersMaxedImmediately(parentContext));
 	}
 
 	private void eventAction(Runnable event) {
@@ -269,12 +272,12 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 		}
 	}
 
-	private void fireStacksMaxedImmediately() {
-		owner.getEventBus().effectStacksMaxed(this, effectUpdateContext);
+	private void fireStacksMaxedImmediately(Context parentContext) {
+		owner.getEventBus().effectStacksMaxed(this, parentContext);
 	}
 
-	private void fireCountersMaxedImmediately() {
-		owner.getEventBus().effectCountersMaxed(this, effectUpdateContext);
+	private void fireCountersMaxedImmediately(Context parentContext) {
+		owner.getEventBus().effectCountersMaxed(this, parentContext);
 	}
 
 	private void addDeferredEvent(Runnable event) {
@@ -288,7 +291,7 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 		for (var deferredEvent : deferredEvents) {
 			deferredEvent.run();
 		}
-
+		deferredEvents = List.of();
 		this.deferEvents = false;
 	}
 

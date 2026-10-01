@@ -99,7 +99,7 @@ class MaxManaTest extends ResourceTest {
 	void increasing_effect_stacks_updates_max_mana() {
 		addEffect("Bonus Intellect");
 
-		runAt(10, () -> getEffect("Bonus Intellect").addStack());
+		runAt(10, () -> getEffect("Bonus Intellect").addStack(null));
 
 		updateUntil(60);
 

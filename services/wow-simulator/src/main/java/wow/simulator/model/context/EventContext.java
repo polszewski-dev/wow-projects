@@ -47,7 +47,7 @@ public class EventContext extends Context {
 			case REMOVE ->
 					((EffectInstance) effect).removeSelf();
 			case ADD_STACK ->
-					((EffectInstance) effect).addStack();
+					((EffectInstance) effect).addStack(this);
 			case REMOVE_STACK ->
 					((EffectInstance) effect).removeStack();
 			case REMOVE_CHARGE ->
@@ -84,7 +84,7 @@ public class EventContext extends Context {
 	private void increaseCountersByLastDamageDone() {
 		var lastDamageDone = getParentCommandContext().getLastDamageDone();
 
-		((EffectInstance) effect).addCounters(lastDamageDone);
+		((EffectInstance) effect).addCounters(lastDamageDone, this);
 	}
 
 	private void increaseCastersEffectOnTarget() {

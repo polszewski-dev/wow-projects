@@ -96,7 +96,7 @@ class MaxHealthTest extends ResourceTest {
 	void increasing_effect_stacks_updates_max_health() {
 		addEffect("Bonus Stamina");
 
-		runAt(10, () -> getEffect("Bonus Stamina").addStack());
+		runAt(10, () -> getEffect("Bonus Stamina").addStack(null));
 
 		updateUntil(60);
 

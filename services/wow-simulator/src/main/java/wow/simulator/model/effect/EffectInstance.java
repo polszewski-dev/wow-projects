@@ -5,6 +5,7 @@ import wow.commons.model.effect.Effect;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.Spell;
 import wow.commons.model.talent.TalentTree;
+import wow.simulator.model.context.Context;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.update.Updateable;
 import wow.simulator.simulation.SimulationContextSource;
@@ -40,7 +41,7 @@ public interface EffectInstance extends Effect, Updateable, SimulationContextSou
 
 	void removeSelf();
 
-	void addStack();
+	void addStack(Context parentContext);
 
 	void removeStack();
 
@@ -48,7 +49,7 @@ public interface EffectInstance extends Effect, Updateable, SimulationContextSou
 
 	void removeCharge();
 
-	void addCounters(int countersToAdd);
+	void addCounters(int countersToAdd, Context parentContext);
 
 	AnyDuration getDuration();
 
