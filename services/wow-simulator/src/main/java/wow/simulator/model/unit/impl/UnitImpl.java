@@ -21,7 +21,7 @@ import wow.commons.model.pve.Side;
 import wow.commons.model.spell.*;
 import wow.commons.model.talent.TalentTree;
 import wow.simulator.model.context.CommandContext;
-import wow.simulator.model.context.Context;
+import wow.simulator.model.context.SpellCastContext;
 import wow.simulator.model.cooldown.CooldownInstance;
 import wow.simulator.model.cooldown.Cooldowns;
 import wow.simulator.model.effect.EffectInstance;
@@ -383,7 +383,7 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	}
 
 	@Override
-	public SpellCostSnapshot paySpellCost(Ability ability, PrimaryTarget primaryTarget, Context parentContext) {
+	public SpellCostSnapshot paySpellCost(Ability ability, PrimaryTarget primaryTarget, SpellCastContext parentContext) {
 		var costSnapshot = getSpellCostSnapshot(ability, primaryTarget.getSingleTarget());
 		var cost = costSnapshot.getCostToPay();
 
@@ -888,7 +888,7 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	}
 
 	@Override
-	public void summonPet(PetType petType, AnyDuration baseDuration, Spell spell, Context parentContext) {
+	public void summonPet(PetType petType, AnyDuration baseDuration, Spell spell, CommandContext parentContext) {
 		dismissPet();
 
 		var pet = newPet(petType, spell);
@@ -932,21 +932,21 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	}
 
 	@Override
-	public void dismissPet(Spell spell, Context parentContext) {
+	public void dismissPet(Spell spell, CommandContext parentContext) {
 		var dismissedPet = cleanUpAfterPetIsGone();
 
 		eventBus.petDismissed(dismissedPet, spell, parentContext);
 	}
 
 	@Override
-	public void unsummonPet(Spell spell, Context parentContext) {
+	public void unsummonPet(Spell spell, CommandContext parentContext) {
 		var unsummonedPet = cleanUpAfterPetIsGone();
 
 		eventBus.petUnsummoned(unsummonedPet, spell, parentContext);
 	}
 
 	@Override
-	public void sacrificePet(Spell spell, Context parentContext) {
+	public void sacrificePet(Spell spell, CommandContext parentContext) {
 		if (getActivePet() == null) {
 			throw new IllegalStateException("No active pet for the sacrifice");
 		}

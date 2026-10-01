@@ -7,9 +7,7 @@ import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.Cost;
 import wow.commons.model.spell.Spell;
 import wow.simulator.log.GameLog;
-import wow.simulator.model.context.Context;
-import wow.simulator.model.context.EventAndEffect;
-import wow.simulator.model.context.EventContext;
+import wow.simulator.model.context.*;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.unit.Pet;
 import wow.simulator.model.unit.Unit;
@@ -32,24 +30,24 @@ public class EventBus {
 		this.owner = owner;
 	}
 
-	public void spellCast(Ability ability, Unit target, Context parentContext) {
+	public void spellCast(Ability ability, Unit target, SpellCastContext parentContext) {
 		fireSpellCastEvent(target, ability, parentContext);
 	}
 
-	public void spellHit(Spell spell, Unit target, Context parentContext) {
+	public void spellHit(Spell spell, Unit target, CommandContext parentContext) {
 		getGameLog().spellHit(owner, target, spell);
 
 		fireSpellHitEvent(target, spell, parentContext);
 		target.getEventBus().fireSpellHitTakenEvent(owner, spell, parentContext);
 	}
 
-	public void spellResisted(Spell spell, Unit target, Context parentContext) {
+	public void spellResisted(Spell spell, Unit target, CommandContext parentContext) {
 		getGameLog().spellResisted(owner, target, spell);
 
 		fireSpellResistedEvent(target, spell, parentContext);
 	}
 
-	public void costPaid(Ability ability, Cost cost, Context parentContext) {
+	public void costPaid(Ability ability, Cost cost, SpellCastContext parentContext) {
 		var actualAmount = cost.amount();
 
 		if (actualAmount > 0) {
@@ -59,7 +57,7 @@ public class EventBus {
 		}
 	}
 
-	public void spellHeal(Spell spell, Unit target, boolean direct, boolean crit, Context parentContext) {
+	public void spellHeal(Spell spell, Unit target, boolean direct, boolean crit, CommandContext parentContext) {
 		fireSpellHealEvent(target, spell, direct, crit, parentContext);
 
 		if (crit) {
@@ -67,7 +65,7 @@ public class EventBus {
 		}
 	}
 
-	public void spellDamage(Spell spell, Unit target, boolean direct, boolean crit, Context parentContext) {
+	public void spellDamage(Spell spell, Unit target, boolean direct, boolean crit, CommandContext parentContext) {
 		fireSpellDamageEvent(target, spell, direct, crit, parentContext);
 		target.getEventBus().fireSpellDamageTakenEvent(owner, spell, direct, crit, parentContext);
 
@@ -77,15 +75,15 @@ public class EventBus {
 		}
 	}
 
-	public void spellManaGain(Spell spell, Unit target, Context parentContext) {
+	public void spellManaGain(Spell spell, Unit target, CommandContext parentContext) {
 		fireManaGainedEvent(target, spell, parentContext);
 	}
 
-	public void spellManaLoss(Spell spell, Unit target, Context parentContext) {
+	public void spellManaLoss(Spell spell, Unit target, CommandContext parentContext) {
 		fireManaLostEvent(target, spell, parentContext);
 	}
 
-	public void healthIncreased(int amount, boolean direct, boolean crit, Unit caster, Spell spell, Context parentContext) {
+	public void healthIncreased(int amount, boolean direct, boolean crit, Unit caster, Spell spell, CommandContext parentContext) {
 		if (amount == 0) {
 			return;
 		}
@@ -97,7 +95,7 @@ public class EventBus {
 		}
 	}
 
-	public void healthDecreased(int amount, boolean direct, boolean crit, Unit caster, Spell spell, Context parentContext) {
+	public void healthDecreased(int amount, boolean direct, boolean crit, Unit caster, Spell spell, CommandContext parentContext) {
 		if (amount == 0) {
 			return;
 		}
@@ -109,7 +107,7 @@ public class EventBus {
 		}
 	}
 
-	public void manaIncreased(int amount, boolean direct, boolean crit, Unit caster, Spell spell, Context parentContext) {
+	public void manaIncreased(int amount, boolean direct, boolean crit, Unit caster, Spell spell, CommandContext parentContext) {
 		if (amount == 0) {
 			return;
 		}
@@ -121,7 +119,7 @@ public class EventBus {
 		}
 	}
 
-	public void manaDecreased(int amount, boolean direct, boolean crit, Unit caster, Spell spell, Context parentContext) {
+	public void manaDecreased(int amount, boolean direct, boolean crit, Unit caster, Spell spell, CommandContext parentContext) {
 		if (amount == 0) {
 			return;
 		}
@@ -147,7 +145,7 @@ public class EventBus {
 		firePetGone(pet, spell, parentContext);
 	}
 
-	public void petDismissed(Pet pet, Spell spell, Context parentContext) {
+	public void petDismissed(Pet pet, Spell spell, CommandContext parentContext) {
 		if (pet == null) {
 			return;
 		}
@@ -157,7 +155,7 @@ public class EventBus {
 		firePetGone(pet, spell, parentContext);
 	}
 
-	public void petUnsummoned(Pet pet, Spell spell, Context parentContext) {
+	public void petUnsummoned(Pet pet, Spell spell, CommandContext parentContext) {
 		if (pet == null) {
 			return;
 		}
@@ -167,7 +165,7 @@ public class EventBus {
 		firePetGone(pet, spell, parentContext);
 	}
 
-	public void petSacrificed(Pet pet, Spell spell, Context parentContext) {
+	public void petSacrificed(Pet pet, Spell spell, CommandContext parentContext) {
 		if (pet == null) {
 			return;
 		}
@@ -204,31 +202,31 @@ public class EventBus {
 		return spell;
 	}
 
-	private void fireSpellHitEvent(Unit target, Spell spell, Context parentContext) {
+	private void fireSpellHitEvent(Unit target, Spell spell, CommandContext parentContext) {
 		var context = getEventContext(SPELL_HIT, target, spell, parentContext);
 
 		context.fireEvent();
 	}
 
-	private void fireSpellHitTakenEvent(Unit caster, Spell spell, Context parentContext) {
+	private void fireSpellHitTakenEvent(Unit caster, Spell spell, CommandContext parentContext) {
 		var context = getEventContext(SPELL_HIT_TAKEN, caster, spell, parentContext);
 
 		context.fireEvent();
 	}
 
-	private void fireSpellResistedEvent(Unit target, Spell spell, Context parentContext) {
+	private void fireSpellResistedEvent(Unit target, Spell spell, CommandContext parentContext) {
 		var context = getEventContext(SPELL_RESISTED, target, spell, parentContext);
 
 		context.fireEvent();
 	}
 
-	private void fireSpellCastEvent(Unit target, Spell spell, Context parentContext) {
+	private void fireSpellCastEvent(Unit target, Spell spell, SpellCastContext parentContext) {
 		var context = getEventContext(SPELL_CAST, target, spell, parentContext);
 
 		context.fireEvent();
 	}
 
-	private void fireSpellDamageEvent(Unit target, Spell spell, boolean directDamage, boolean critRoll, Context parentContext) {
+	private void fireSpellDamageEvent(Unit target, Spell spell, boolean directDamage, boolean critRoll, CommandContext parentContext) {
 		var context = getEventContext(SPELL_DAMAGE, target, spell, parentContext);
 
 		context.setDamage(true);
@@ -238,7 +236,7 @@ public class EventBus {
 		context.fireEvent();
 	}
 
-	private void fireSpellDamageTakenEvent(Unit caster, Spell spell, boolean directDamage, boolean critRoll, Context parentContext) {
+	private void fireSpellDamageTakenEvent(Unit caster, Spell spell, boolean directDamage, boolean critRoll, CommandContext parentContext) {
 		var context = getTakenEventContext(SPELL_DAMAGE_TAKEN, caster, spell, parentContext);
 
 		context.setDamage(true);
@@ -248,7 +246,7 @@ public class EventBus {
 		context.fireEvent();
 	}
 
-	private void fireSpellDamageCritEvent(Unit target, Spell spell, boolean directDamage, Context parentContext) {
+	private void fireSpellDamageCritEvent(Unit target, Spell spell, boolean directDamage, CommandContext parentContext) {
 		var context = getEventContext(SPELL_CRIT, target, spell, parentContext);
 
 		context.setDamage(true);
@@ -258,7 +256,7 @@ public class EventBus {
 		context.fireEvent();
 	}
 
-	private void fireSpellDamageCritTakenEvent(Unit caster, Spell spell, boolean directDamage, Context parentContext) {
+	private void fireSpellDamageCritTakenEvent(Unit caster, Spell spell, boolean directDamage, CommandContext parentContext) {
 		var context = getTakenEventContext(SPELL_CRIT_TAKEN, caster, spell, parentContext);
 
 		context.setDamage(true);
@@ -268,7 +266,7 @@ public class EventBus {
 		context.fireEvent();
 	}
 
-	private void fireSpellHealEvent(Unit target, Spell spell, boolean directHeal, boolean critRoll, Context parentContext) {
+	private void fireSpellHealEvent(Unit target, Spell spell, boolean directHeal, boolean critRoll, CommandContext parentContext) {
 		var context = getEventContext(SPELL_HEAL, target, spell, parentContext);
 
 		context.setHeal(true);
@@ -278,7 +276,7 @@ public class EventBus {
 		context.fireEvent();
 	}
 
-	private void fireSpellHealCritEvent(Unit target, Spell spell, boolean directHeal, Context parentContext) {
+	private void fireSpellHealCritEvent(Unit target, Spell spell, boolean directHeal, CommandContext parentContext) {
 		var context = getEventContext(SPELL_CRIT, target, spell, parentContext);
 
 		context.setHeal(true);
@@ -288,13 +286,13 @@ public class EventBus {
 		context.fireEvent();
 	}
 
-	private void fireManaGainedEvent(Unit target, Spell spell, Context parentContext) {
+	private void fireManaGainedEvent(Unit target, Spell spell, CommandContext parentContext) {
 		var context = getEventContext(MANA_GAINED, target, spell, parentContext);
 
 		context.fireEvent();
 	}
 
-	private void fireManaLostEvent(Unit target, Spell spell, Context parentContext) {
+	private void fireManaLostEvent(Unit target, Spell spell, CommandContext parentContext) {
 		var context = getEventContext(MANA_DRAINED, target, spell, parentContext);
 
 		context.fireEvent();

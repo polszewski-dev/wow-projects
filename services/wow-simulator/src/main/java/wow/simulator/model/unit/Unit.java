@@ -11,7 +11,7 @@ import wow.commons.model.character.PetType;
 import wow.commons.model.spell.*;
 import wow.commons.model.talent.TalentTree;
 import wow.simulator.model.context.CommandContext;
-import wow.simulator.model.context.Context;
+import wow.simulator.model.context.SpellCastContext;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.event.EventBus;
 import wow.simulator.model.rng.Rng;
@@ -96,7 +96,7 @@ public interface Unit extends Character, SimulationContextSource {
 
 	boolean canCast(Ability ability, PrimaryTarget primaryTarget);
 
-	SpellCostSnapshot paySpellCost(Ability ability, PrimaryTarget primaryTarget, Context parentContext);
+	SpellCostSnapshot paySpellCost(Ability ability, PrimaryTarget primaryTarget, SpellCastContext parentContext);
 
 	SpellCastSnapshot getSpellCastSnapshot(AbilityId abilityId, Unit target);
 
@@ -208,13 +208,13 @@ public interface Unit extends Character, SimulationContextSource {
 	@Override
 	Unit getMaster();
 
-	void summonPet(PetType petType, AnyDuration baseDuration, Spell spell, Context parentContext);
+	void summonPet(PetType petType, AnyDuration baseDuration, Spell spell, CommandContext parentContext);
 
-	void dismissPet(Spell spell, Context parentContext);
+	void dismissPet(Spell spell, CommandContext parentContext);
 
-	void unsummonPet(Spell spell, Context parentContext);
+	void unsummonPet(Spell spell, CommandContext parentContext);
 
-	void sacrificePet(Spell spell, Context parentContext);
+	void sacrificePet(Spell spell, CommandContext parentContext);
 
 	UnitParty<? extends Unit> getParty();
 
