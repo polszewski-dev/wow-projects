@@ -8,9 +8,10 @@ import wow.commons.model.spell.AbilityId;
  */
 public record EventActionParameters(
 		Double value,
-		AbilityId abilityId
+		AbilityId abilityId,
+		TargetOverrideType targetOverrideType
 ) {
-	public static final EventActionParameters EMPTY = new EventActionParameters(null, null);
+	public static final EventActionParameters EMPTY = new EventActionParameters(null, null, null);
 
 	public static EventActionParameters parse(String string) {
 		return EventActionParametersParser.parse(string);
@@ -24,13 +25,13 @@ final class EventActionParametersParser {
 		}
 
 		if (string.matches("^\\d+$")) {
-			return new EventActionParameters(Double.valueOf(string), null);
+			return new EventActionParameters(Double.valueOf(string), null, null);
 		}
 
 		var abilityId = AbilityId.tryParse(string);
 
 		if (abilityId != null) {
-			return new EventActionParameters(null, abilityId);
+			return new EventActionParameters(null, abilityId, null);
 		}
 
 		return parseMap(string);
@@ -39,6 +40,7 @@ final class EventActionParametersParser {
 	private static EventActionParameters parseMap(String string) {
 		Double value = null;
 		AbilityId abilityId = null;
+		TargetOverrideType targetOverrideType = null;
 
 		for (var pair : string.split(",")) {
 			var fields = pair.split("=");
@@ -48,11 +50,12 @@ final class EventActionParametersParser {
 			switch (left) {
 				case "value" -> value = Double.valueOf(right);
 				case "ability" -> abilityId = AbilityId.parse(right);
+				case "target" -> targetOverrideType = TargetOverrideType.parse(right);
 				default -> throw new IllegalArgumentException(left);
 			}
 		}
 
-		return new EventActionParameters(value, abilityId);
+		return new EventActionParameters(value, abilityId, targetOverrideType);
 	}
 
 	private EventActionParametersParser() {}

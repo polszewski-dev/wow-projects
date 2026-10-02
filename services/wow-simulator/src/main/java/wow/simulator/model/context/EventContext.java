@@ -78,7 +78,21 @@ public class EventContext extends Context {
 
 		resolutionContext.setSourceSpellOverride(getSourceSpellOverride(triggeredSpell));
 		resolutionContext.setValueParam(event.actionParameters().value());
-		resolutionContext.resolveTriggeredSpell(target, effect);
+		resolutionContext.resolveTriggeredSpell(getTriggeredSpellTarget(), effect);
+	}
+
+	private Unit getTriggeredSpellTarget() {
+		var targetOverrideType = event.actionParameters().targetOverrideType();
+
+		return switch (targetOverrideType) {
+			case null -> target;
+
+			case PARENT_EVENT_TARGET -> {
+				var parentEventContext = (EventContext) getParentContext().getParentContext();
+
+				yield  parentEventContext.target;
+			}
+		};
 	}
 
 	private void increaseCountersByLastDamageDone() {

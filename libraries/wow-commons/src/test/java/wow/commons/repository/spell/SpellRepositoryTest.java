@@ -844,7 +844,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 		var componentSchool = getComponentSchool(spell);
 
 		if (!componentSchool.isEmpty() && !spellSchool.equals(componentSchool)) {
-			return "Wrong spell school, expected %s, was %s".formatted(spellSchool, componentSchool);
+			return "Wrong spell school: %s - expected %s, was %s".formatted(ability, spellSchool, componentSchool);
 		}
 
 		var primaryTarget = ability.getPrimaryTarget();
