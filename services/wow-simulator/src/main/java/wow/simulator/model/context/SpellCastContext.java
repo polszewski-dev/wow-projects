@@ -87,4 +87,16 @@ public class SpellCastContext extends Context {
 
 		spellResolutionContext.resolveCastSpell(primaryTarget);
 	}
+
+	@Override
+	public Context getParentContext() {
+		return null;
+	}
+
+	@Override
+	public String toString() {
+		return "%4s. SpellCastContext %s, caster: %s, target: %s".formatted(
+				serialNo, ability, caster, primaryTarget.getSingleTarget()
+		);
+	}
 }

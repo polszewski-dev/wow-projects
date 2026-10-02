@@ -346,4 +346,11 @@ public class SpellResolutionContext extends CommandContext {
 
 		return bonus != null && target.hasEffect(bonus.requiredEffect(), caster);
 	}
+
+	@Override
+	public String toString() {
+		return "%4s. SpellResolutionContext %s, caster: %s".formatted(
+				serialNo, spell, caster
+		);
+	}
 }

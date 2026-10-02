@@ -16,6 +16,7 @@ import java.util.Map;
  * Date: 2026-10-01
  */
 public abstract class CommandContext extends Context {
+	@Getter
 	protected final Context parentContext;
 
 	private record SpellAndTarget(Spell spell, Unit target) {}

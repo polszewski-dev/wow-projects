@@ -222,4 +222,11 @@ public class EffectUpdateContext extends CommandContext {
 				snapshot -> snapshot.increaseEffect(effectIncreasePct)
 		);
 	}
+
+	@Override
+	public String toString() {
+		return "%4s. EffectUpdateContext %s, caster: %s, target: %s".formatted(
+				serialNo, effect, caster, effect.getTarget()
+		);
+	}
 }
