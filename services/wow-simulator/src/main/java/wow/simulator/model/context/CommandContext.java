@@ -94,8 +94,8 @@ public abstract class CommandContext extends Context {
 			case DAMAGE -> lastDamageDone;
 			case MANA_LOSS -> lastManaLost;
 			case HEALTH_PAID -> ((SpellCastContext) parentContext).getLastHealthPaid();
-			case PARENT_DAMAGE -> ((CommandContext) parentContext).lastDamageDone;
-			case PARENT_MANA_GAIN -> ((CommandContext) parentContext).lastManaRestored;
+			case PARENT_DAMAGE -> getParentCommandContext().lastDamageDone;
+			case PARENT_MANA_GAIN -> getParentCommandContext().lastManaRestored;
 			default -> throw new IllegalArgumentException(copy.from().name());
 		};
 	}
@@ -133,13 +133,20 @@ public abstract class CommandContext extends Context {
 	}
 
 	protected int roundValue(double value, Unit target) {
-		return getRootContext().getRoundingReminder(spell, target).roundValue(value);
+		return getRootCommandContext().getRoundingReminder(spell, target).roundValue(value);
 	}
 
-	private CommandContext getRootContext() {
-		if (parentContext instanceof CommandContext parentCommandContext) {
-			return parentCommandContext.getRootContext();
+	private CommandContext getRootCommandContext() {
+		var contextTrace = contextTrace();
+
+		for (int i = contextTrace.size(); i-- > 0; ) {
+			var context = contextTrace.get(i);
+
+			if (context instanceof CommandContext commandContext) {
+				return commandContext;
+			}
 		}
+
 		return this;
 	}
 

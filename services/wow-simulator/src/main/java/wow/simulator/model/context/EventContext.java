@@ -1,6 +1,6 @@
 package wow.simulator.model.context;
 
-import lombok.RequiredArgsConstructor;
+import lombok.Getter;
 import lombok.Setter;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.component.Event;
@@ -18,15 +18,21 @@ import static wow.commons.model.effect.EffectSource.*;
  * User: POlszewski
  * Date: 2024-11-15
  */
-@RequiredArgsConstructor
 @Setter
-public class EventContext {
+public class EventContext extends Context {
 	private final Event event;
 	private final Effect effect;
-	private final Unit caster;
 	private final Unit target;
-	private final Spell spell;
+	@Getter
 	private final Context parentContext;
+
+	public EventContext(Event event, Effect effect, Unit caster, Unit target, Spell spell, Context parentContext) {
+		super(caster, spell);
+		this.event = event;
+		this.effect = effect;
+		this.target = target;
+		this.parentContext = parentContext;
+	}
 
 	public void fireEvent() {
 		for (var action : event.actions()) {
@@ -68,7 +74,7 @@ public class EventContext {
 			((EffectInstance) effect).removeCharge();
 		}
 
-		var resolutionContext = new SpellResolutionContext(caster, triggeredSpell, parentContext);
+		var resolutionContext = new SpellResolutionContext(caster, triggeredSpell, this);
 
 		resolutionContext.setSourceSpellOverride(getSourceSpellOverride(triggeredSpell));
 		resolutionContext.setValueParam(event.actionParameters().value());
@@ -76,7 +82,7 @@ public class EventContext {
 	}
 
 	private void increaseCountersByLastDamageDone() {
-		var lastDamageDone = ((CommandContext) parentContext).getLastDamageDone();
+		var lastDamageDone = getParentCommandContext().getLastDamageDone();
 
 		((EffectInstance) effect).addCounters(lastDamageDone);
 	}
@@ -97,5 +103,12 @@ public class EventContext {
 			case ItemSource ignored -> triggeredSpell;
 			case null, default -> null;
 		};
+	}
+
+	@Override
+	public String toString() {
+		return "%4s. EventContext %s, spell: %s, caster: %s, target: %s".formatted(
+				event.types().size() == 1 ? event.types().getFirst() : event.types(), serialNo, spell, caster, target
+		);
 	}
 }

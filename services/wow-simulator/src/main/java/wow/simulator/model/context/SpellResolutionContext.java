@@ -331,7 +331,7 @@ public class SpellResolutionContext extends CommandContext {
 
 		return switch (counterParams.scaling()) {
 			case DEFAULT -> counterParams.number();
-			case LAST_DAMAGE_DONE_PCT -> (int) (counterParams.number() * ((CommandContext) parentContext).getLastDamageDone() / 100.0);
+			case LAST_DAMAGE_DONE_PCT -> (int) (counterParams.number() * getParentCommandContext().getLastDamageDone() / 100.0);
 		};
 	}
 

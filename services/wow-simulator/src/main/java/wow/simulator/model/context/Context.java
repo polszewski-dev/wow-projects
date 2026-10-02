@@ -34,6 +34,20 @@ public abstract class Context implements SimulationContextSource {
 
 	public abstract Context getParentContext();
 
+	protected CommandContext getParentCommandContext() {
+		var parentContext = getParentContext();
+
+		if (parentContext == null) {
+			return null;
+		}
+
+		if (parentContext instanceof CommandContext commandContext) {
+			return commandContext;
+		}
+
+		return parentContext.getParentCommandContext();
+	}
+
 	public List<Context> contextTrace() {
 		var result = new ArrayList<Context>();
 
