@@ -7,7 +7,10 @@ import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.Cost;
 import wow.commons.model.spell.Spell;
 import wow.simulator.log.GameLog;
-import wow.simulator.model.context.*;
+import wow.simulator.model.context.CommandContext;
+import wow.simulator.model.context.Context;
+import wow.simulator.model.context.EventAndEffect;
+import wow.simulator.model.context.SpellCastContext;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.unit.Pet;
 import wow.simulator.model.unit.Unit;
@@ -203,147 +206,147 @@ public class EventBus {
 	}
 
 	private void fireSpellHitEvent(Unit target, Spell spell, CommandContext parentContext) {
-		var context = getEventContext(SPELL_HIT, target, spell, parentContext);
+		var context = getEventExecutor(SPELL_HIT, target, spell, parentContext);
 
-		context.fireEvent();
+		context.fireEvents();
 	}
 
 	private void fireSpellHitTakenEvent(Unit caster, Spell spell, CommandContext parentContext) {
-		var context = getEventContext(SPELL_HIT_TAKEN, caster, spell, parentContext);
+		var context = getEventExecutor(SPELL_HIT_TAKEN, caster, spell, parentContext);
 
-		context.fireEvent();
+		context.fireEvents();
 	}
 
 	private void fireSpellResistedEvent(Unit target, Spell spell, CommandContext parentContext) {
-		var context = getEventContext(SPELL_RESISTED, target, spell, parentContext);
+		var context = getEventExecutor(SPELL_RESISTED, target, spell, parentContext);
 
-		context.fireEvent();
+		context.fireEvents();
 	}
 
 	private void fireSpellCastEvent(Unit target, Spell spell, SpellCastContext parentContext) {
-		var context = getEventContext(SPELL_CAST, target, spell, parentContext);
+		var context = getEventExecutor(SPELL_CAST, target, spell, parentContext);
 
-		context.fireEvent();
+		context.fireEvents();
 	}
 
 	private void fireSpellDamageEvent(Unit target, Spell spell, boolean directDamage, boolean critRoll, CommandContext parentContext) {
-		var context = getEventContext(SPELL_DAMAGE, target, spell, parentContext);
+		var context = getEventExecutor(SPELL_DAMAGE, target, spell, parentContext);
 
 		context.setDamage(true);
 		context.setDirectDamage(directDamage);
 		context.setCritRoll(critRoll);
 
-		context.fireEvent();
+		context.fireEvents();
 	}
 
 	private void fireSpellDamageTakenEvent(Unit caster, Spell spell, boolean directDamage, boolean critRoll, CommandContext parentContext) {
-		var context = getTakenEventContext(SPELL_DAMAGE_TAKEN, caster, spell, parentContext);
+		var context = getTakenEventExecutor(SPELL_DAMAGE_TAKEN, caster, spell, parentContext);
 
 		context.setDamage(true);
 		context.setDirectDamage(directDamage);
 		context.setCritRoll(critRoll);
 
-		context.fireEvent();
+		context.fireEvents();
 	}
 
 	private void fireSpellDamageCritEvent(Unit target, Spell spell, boolean directDamage, CommandContext parentContext) {
-		var context = getEventContext(SPELL_CRIT, target, spell, parentContext);
+		var context = getEventExecutor(SPELL_CRIT, target, spell, parentContext);
 
 		context.setDamage(true);
 		context.setDirectDamage(directDamage);
 		context.setCritRoll(true);
 
-		context.fireEvent();
+		context.fireEvents();
 	}
 
 	private void fireSpellDamageCritTakenEvent(Unit caster, Spell spell, boolean directDamage, CommandContext parentContext) {
-		var context = getTakenEventContext(SPELL_CRIT_TAKEN, caster, spell, parentContext);
+		var context = getTakenEventExecutor(SPELL_CRIT_TAKEN, caster, spell, parentContext);
 
 		context.setDamage(true);
 		context.setDirectDamage(directDamage);
 		context.setCritRoll(true);
 
-		context.fireEvent();
+		context.fireEvents();
 	}
 
 	private void fireSpellHealEvent(Unit target, Spell spell, boolean directHeal, boolean critRoll, CommandContext parentContext) {
-		var context = getEventContext(SPELL_HEAL, target, spell, parentContext);
+		var context = getEventExecutor(SPELL_HEAL, target, spell, parentContext);
 
 		context.setHeal(true);
 		context.setDirectHeal(directHeal);
 		context.setCritRoll(critRoll);
 
-		context.fireEvent();
+		context.fireEvents();
 	}
 
 	private void fireSpellHealCritEvent(Unit target, Spell spell, boolean directHeal, CommandContext parentContext) {
-		var context = getEventContext(SPELL_CRIT, target, spell, parentContext);
+		var context = getEventExecutor(SPELL_CRIT, target, spell, parentContext);
 
 		context.setHeal(true);
 		context.setDirectHeal(directHeal);
 		context.setCritRoll(true);
 
-		context.fireEvent();
+		context.fireEvents();
 	}
 
 	private void fireManaGainedEvent(Unit target, Spell spell, CommandContext parentContext) {
-		var context = getEventContext(MANA_GAINED, target, spell, parentContext);
+		var context = getEventExecutor(MANA_GAINED, target, spell, parentContext);
 
-		context.fireEvent();
+		context.fireEvents();
 	}
 
 	private void fireManaLostEvent(Unit target, Spell spell, CommandContext parentContext) {
-		var context = getEventContext(MANA_DRAINED, target, spell, parentContext);
+		var context = getEventExecutor(MANA_DRAINED, target, spell, parentContext);
 
-		context.fireEvent();
+		context.fireEvents();
 	}
 
 	private void firePetGone(Pet pet, Spell spell, Context parentContext) {
-		var context = getEventContext(PET_GONE, pet, spell, parentContext);
+		var context = getEventExecutor(PET_GONE, pet, spell, parentContext);
 
-		context.fireEvent();
+		context.fireEvents();
 	}
 
 	private void fireTargetDied(Unit target, Spell spell, Context parentContext) {
-		var context = getEventContext(TARGET_DIED, target, spell, parentContext);
+		var context = getEventExecutor(TARGET_DIED, target, spell, parentContext);
 
-		context.fireEvent();
+		context.fireEvents();
 	}
 
 	private void fireStacksMaxed(EffectInstance effect, Context parentContext) {
-		var context = getEffectEventContext(STACKS_MAXED, effect, parentContext);
+		var context = getEffectEventExecutor(STACKS_MAXED, effect, parentContext);
 
-		context.fireEvent();
+		context.fireEvents();
 	}
 
 	private void fireCountersMaxed(EffectInstance effect, Context parentContext) {
-		var context = getEffectEventContext(COUNTERS_MAXED, effect, parentContext);
+		var context = getEffectEventExecutor(COUNTERS_MAXED, effect, parentContext);
 
-		context.fireEvent();
+		context.fireEvents();
 	}
 
 	private void fireEffectEnded(EffectInstance effect, Context parentContext) {
-		var context = getTakenEventContext(EFFECT_ENDED, effect.getOwner(), effect.getSourceSpell(), parentContext);
+		var context = getTakenEventExecutor(EFFECT_ENDED, effect.getOwner(), effect.getSourceSpell(), parentContext);
 
-		context.fireEvent();
+		context.fireEvents();
 	}
 
-	private EventContext getEventContext(EventType eventType, Unit target, Spell spell, Context parentContext) {
+	private EventExecutor getEventExecutor(EventType eventType, Unit target, Spell spell, Context parentContext) {
 		var eventEntries = getEvents(eventType);
 
-		return new EventContext(owner, target, spell, parentContext, eventEntries);
+		return new EventExecutor(owner, target, spell, parentContext, eventEntries);
 	}
 
-	private EventContext getTakenEventContext(EventType eventType, Unit caster, Spell spell, Context parentContext) {
+	private EventExecutor getTakenEventExecutor(EventType eventType, Unit caster, Spell spell, Context parentContext) {
 		var eventEntries = getEvents(eventType);
 
-		return new EventContext(caster, owner, spell, parentContext, eventEntries);
+		return new EventExecutor(caster, owner, spell, parentContext, eventEntries);
 	}
 
-	private EventContext getEffectEventContext(EventType eventType, EffectInstance effect, Context parentContext) {
+	private EventExecutor getEffectEventExecutor(EventType eventType, EffectInstance effect, Context parentContext) {
 		var eventEntries = getEvents(eventType, effect);
 
-		return new EventContext(owner, effect.getTarget(), effect.getSourceSpell(), parentContext, eventEntries);
+		return new EventExecutor(owner, effect.getTarget(), effect.getSourceSpell(), parentContext, eventEntries);
 	}
 
 	public List<EventAndEffect> getEvents(EventType eventType, EffectInstance effect) {

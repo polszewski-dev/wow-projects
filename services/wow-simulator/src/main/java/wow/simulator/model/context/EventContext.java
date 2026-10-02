@@ -2,8 +2,6 @@ package wow.simulator.model.context;
 
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import wow.character.util.EventConditionArgs;
-import wow.commons.model.attribute.PowerType;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.component.Event;
 import wow.commons.model.effect.component.EventAction;
@@ -12,10 +10,8 @@ import wow.commons.model.spell.Spell;
 import wow.simulator.model.effect.EffectInstance;
 import wow.simulator.model.unit.Unit;
 
-import java.util.List;
 import java.util.Objects;
 
-import static wow.character.util.EventConditionChecker.check;
 import static wow.commons.model.effect.EffectSource.*;
 
 /**
@@ -25,95 +21,23 @@ import static wow.commons.model.effect.EffectSource.*;
 @RequiredArgsConstructor
 @Setter
 public class EventContext {
+	private final Event event;
+	private final Effect effect;
 	private final Unit caster;
 	private final Unit target;
 	private final Spell spell;
 	private final Context parentContext;
-	private final List<EventAndEffect> eventEntries;
-	private boolean damage;
-	private boolean directDamage;
-	private boolean heal;
-	private boolean directHeal;
-	private boolean critRoll;
 
 	public void fireEvent() {
-		for (var entry : eventEntries) {
-			processEvent(entry);
-		}
-	}
-
-	private void processEvent(EventAndEffect entry) {
-		var event = entry.event();
-		var effect = entry.effect();
-
-		if (meetsAllConditions(entry) && !isOnCooldown(event) && eventRoll(event)) {
-			performEventActions(event, effect);
-		}
-	}
-
-	private void performEventActions(Event event, Effect effect) {
 		for (var action : event.actions()) {
-			performEventAction(action, event, effect);
+			performEventAction(action);
 		}
 	}
 
-	private boolean meetsAllConditions(EventAndEffect entry) {
-		var event = entry.event();
-		var effectOwner = entry.effectOwner();
-		var args = getConditionArgs(effectOwner);
-
-		return check(event.condition(), args);
-	}
-
-	private boolean isOnCooldown(Event event) {
-		var triggeredSpell = event.triggeredSpell();
-
-		if (triggeredSpell == null || !triggeredSpell.hasCooldown()) {
-			return false;
-		}
-
-		var cooldownId = CooldownId.of(triggeredSpell);
-
-		return caster.isOnCooldown(cooldownId);
-	}
-
-	private boolean eventRoll(Event event) {
-		return caster.getRng().eventRoll(event.chance(), event);
-	}
-
-	private EventConditionArgs getConditionArgs(Unit effectOwner) {
-		var args = EventConditionArgs.forSpell(caster, spell, target);
-
-		args.setEffectOwner(effectOwner);
-		args.setHostileSpell(target != null && Unit.areHostile(caster, target));
-
-		if (spell.hasDamagingComponent()) {
-			args.setPowerType(PowerType.SPELL_DAMAGE);
-		}
-
-		if (damage) {
-			args.setPowerType(PowerType.SPELL_DAMAGE);
-			args.setDirect(directDamage);
-			args.setPeriodic(!directDamage);
-			args.setCanCrit(directDamage);
-			args.setHadCrit(critRoll);
-		}
-
-		if (heal) {
-			args.setPowerType(PowerType.HEALING);
-			args.setDirect(directHeal);
-			args.setPeriodic(!directHeal);
-			args.setCanCrit(directHeal);
-			args.setHadCrit(critRoll);
-		}
-
-		return args;
-	}
-
-	private void performEventAction(EventAction action, Event event, Effect effect) {
+	private void performEventAction(EventAction action) {
 		switch (action) {
 			case TRIGGER_SPELL ->
-					triggerSpell(event, effect, false);
+					triggerSpell(false);
 			case REMOVE ->
 					((EffectInstance) effect).removeSelf();
 			case ADD_STACK ->
@@ -123,15 +47,15 @@ public class EventContext {
 			case REMOVE_CHARGE ->
 					((EffectInstance) effect).removeCharge();
 			case REMOVE_CHARGE_AND_TRIGGER_SPELL ->
-					triggerSpell(event, effect, true);
+					triggerSpell(true);
 			case INCREASE_CASTERS_EFFECT_ON_TARGET_BY_PCT ->
-					increaseCastersEffectOnTarget(event);
+					increaseCastersEffectOnTarget();
 			case INCREASE_COUNTERS_BY_LAST_DAMAGE_DONE ->
-					increaseCountersByLastDamageDone((EffectInstance) effect);
+					increaseCountersByLastDamageDone();
 		}
 	}
 
-	private void triggerSpell(Event event, Effect effect, boolean removeCharge) {
+	private void triggerSpell(boolean removeCharge) {
 		var triggeredSpell = event.triggeredSpell();
 
 		if (triggeredSpell.hasCooldown()) {
@@ -146,27 +70,27 @@ public class EventContext {
 
 		var resolutionContext = new SpellResolutionContext(caster, triggeredSpell, parentContext);
 
-		resolutionContext.setSourceSpellOverride(getSourceSpellOverride(effect, triggeredSpell));
+		resolutionContext.setSourceSpellOverride(getSourceSpellOverride(triggeredSpell));
 		resolutionContext.setValueParam(event.actionParameters().value());
 		resolutionContext.resolveTriggeredSpell(target, effect);
 	}
 
-	private void increaseCountersByLastDamageDone(EffectInstance effect) {
+	private void increaseCountersByLastDamageDone() {
 		var lastDamageDone = ((CommandContext) parentContext).getLastDamageDone();
 
-		effect.addCounters(lastDamageDone);
+		((EffectInstance) effect).addCounters(lastDamageDone);
 	}
 
-	private void increaseCastersEffectOnTarget(Event event) {
+	private void increaseCastersEffectOnTarget() {
 		var effectIncreasePct = Objects.requireNonNull(event.actionParameters().value());
 		var abilityId = Objects.requireNonNull(event.actionParameters().abilityId());
 
-		var optionalEffect = target.getEffect(abilityId, caster);
+		var optionalEffectOnTarget = target.getEffect(abilityId, caster);
 
-		optionalEffect.ifPresent(effect -> effect.increaseEffect(effectIncreasePct));
+		optionalEffectOnTarget.ifPresent(effectOnTarget -> effectOnTarget.increaseEffect(effectIncreasePct));
 	}
 
-	private Spell getSourceSpellOverride(Effect effect, Spell triggeredSpell) {
+	private Spell getSourceSpellOverride(Spell triggeredSpell) {
 		return switch (effect.getSource()) {
 			case AbilitySource(var ability) -> ability;
 			case TalentSource ignored -> triggeredSpell;
