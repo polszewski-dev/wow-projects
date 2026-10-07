@@ -1,6 +1,5 @@
 package wow.simulator.script;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import wow.character.model.script.ScriptCompiler;
 import wow.character.model.script.ScriptSectionType;
@@ -15,7 +14,6 @@ import static wow.character.model.script.ScriptPathResolver.getScriptPath;
  * Date: 2025-12-13
  */
 @RequiredArgsConstructor
-@Getter
 public class SinglePassScriptExecutor {
 	private final List<ScriptCommandExecutor> commands;
 

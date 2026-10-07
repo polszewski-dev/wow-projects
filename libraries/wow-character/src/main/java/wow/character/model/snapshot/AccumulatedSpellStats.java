@@ -25,7 +25,7 @@ public class AccumulatedSpellStats extends AccumulatedBaseStats {
 
 	public AccumulatedSpellStats(AttributeConditionArgs conditionArgs) {
 		super(conditionArgs);
-		accumulateBaseStatInfo();
+		accumulateBaseCrit();
 	}
 
 	private AccumulatedSpellStats(AccumulatedSpellStats stats) {
@@ -43,7 +43,7 @@ public class AccumulatedSpellStats extends AccumulatedBaseStats {
 		this.critCoeffPct = stats.critCoeffPct;
 	}
 
-	private void accumulateBaseStatInfo() {
+	private void accumulateBaseCrit() {
 		var baseStatInfo = conditionArgs.getCaster().getBaseStatInfo();
 
 		critPct += baseStatInfo.getBaseSpellCritPct().value();

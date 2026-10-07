@@ -135,7 +135,7 @@ public class SpecialAbilitySolver {
 		var command = effectApplication.commands().getFirst();
 		var modifierAttributeList = command.effect().getModifierAttributeList();
 
-		if (modifierAttributeList == null) {
+		if (modifierAttributeList.isEmpty()) {
 			return false;
 		}
 

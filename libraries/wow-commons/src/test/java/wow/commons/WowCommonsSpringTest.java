@@ -53,7 +53,6 @@ public abstract class WowCommonsSpringTest {
 	}
 
 	protected static void assertModifier(Effect effect, List<Attribute> attributes) {
-		assertThat(effect.getModifierAttributeList()).isNotNull();
 		assertThat(effect.getModifierAttributeList()).isEqualTo(attributes);
 	}
 

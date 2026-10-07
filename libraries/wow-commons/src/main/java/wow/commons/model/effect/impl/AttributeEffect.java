@@ -33,10 +33,10 @@ public class AttributeEffect implements Effect {
 		Objects.requireNonNull(augmentedAbilities);
 		this.augmentedAbilities = augmentedAbilities;
 		this.modifierComponent = modifierComponent;
-		this.modifierAttributeList = (modifierComponent != null) ? modifierComponent.attributes().list() : null;
+		this.modifierAttributeList = (modifierComponent != null) ? modifierComponent.attributes().list() : List.of();
 		this.source = source;
 		this.description = description;
-		this.aura = modifierAttributeList != null && modifierAttributeList.stream().anyMatch(x -> x.target() == PARTY);
+		this.aura = modifierAttributeList.stream().anyMatch(x -> x.target() == PARTY);
 	}
 
 	public AttributeEffect(Attributes attributes) {

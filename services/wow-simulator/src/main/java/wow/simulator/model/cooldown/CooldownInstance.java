@@ -106,8 +106,8 @@ public class CooldownInstance extends Action implements SimulationContextSource 
 	}
 
 	private AbilityId getAbilityId() {
-		if (cooldownId instanceof AbilityCooldownId abilityCooldownId) {
-			return abilityCooldownId.abilityId();
+		if (cooldownId instanceof AbilityCooldownId(var abilityId)) {
+			return abilityId;
 		}
 
 		return null;

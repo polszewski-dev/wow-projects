@@ -48,7 +48,7 @@ public class EffectImpl implements Effect {
 	@Override
 	public List<Attribute> getModifierAttributeList() {
 		if (modifierComponent == null) {
-			return null;
+			return List.of();
 		}
 		return modifierComponent.attributes().list();
 	}

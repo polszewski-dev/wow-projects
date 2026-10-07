@@ -63,9 +63,7 @@ public abstract class AbstractScenario implements Scenario, SimulationCallback {
 	}
 
 	private void addHiddenEffects() {
-		raid.forEachMemberAndPet((Unit memberOrPet) -> {
-			addHiddenEffect(memberOrPet);
-		});
+		raid.forEachMemberAndPet((Unit memberOrPet) -> addHiddenEffect(memberOrPet));
 	}
 
 	private void addHiddenEffect(Unit memberOrPet) {

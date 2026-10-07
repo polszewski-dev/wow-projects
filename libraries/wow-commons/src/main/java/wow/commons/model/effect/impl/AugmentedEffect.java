@@ -163,7 +163,7 @@ public class AugmentedEffect implements Effect {
 	}
 
 	private List<Attribute> getScaledAttributes(double effectIncreasePct) {
-		if (effectIncreasePct == 0 || modifierAttributeList == null) {
+		if (effectIncreasePct == 0 || modifierAttributeList.isEmpty()) {
 			return modifierAttributeList;
 		}
 

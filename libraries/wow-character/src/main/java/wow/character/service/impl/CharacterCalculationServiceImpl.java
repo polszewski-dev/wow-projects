@@ -1139,10 +1139,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 		private void extractAugmentations(Effect effect) {
 			var modifierAttributeList = effect.getModifierAttributeList();
 
-			if (modifierAttributeList != null) {
-				extraModifiers.addAll(modifierAttributeList);
-			}
-
+			extraModifiers.addAll(modifierAttributeList);
 			extraStatConversions.addAll(effect.getStatConversions());
 			extraEvents.addAll(effect.getEvents());
 		}
@@ -1150,9 +1147,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 		private void checkForMatchingEffectIncreases(Effect effect, int stackCount) {
 			var modifierAttributeList = effect.getModifierAttributeList();
 
-			if (modifierAttributeList != null) {
-				accumulatedEffectIncreasePct.accumulateAttributes(modifierAttributeList, stackCount, ANY_TARGET);
-			}
+			accumulatedEffectIncreasePct.accumulateAttributes(modifierAttributeList, stackCount, ANY_TARGET);
 		}
 	}
 

@@ -483,7 +483,7 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 
 	@Override
 	public boolean hasResourceModifier() {
-		if (getModifierAttributeList() == null) {
+		if (getModifierAttributeList().isEmpty()) {
 			return false;
 		}
 

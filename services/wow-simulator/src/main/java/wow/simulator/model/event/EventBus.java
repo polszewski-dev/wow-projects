@@ -353,14 +353,11 @@ public class EventBus {
 		var collector = new EventCollector(eventType);
 
 		collector.addEffect(effect);
+
 		return collector.list;
 	}
 
 	public List<EventAndEffect> getEvents(EventType eventType) {
-		return collectEvents(eventType);
-	}
-
-	private List<EventAndEffect> collectEvents(EventType eventType) {
 		var collector = new EventCollector(eventType);
 
 		collector.solveAll();
