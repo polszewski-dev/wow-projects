@@ -1086,6 +1086,12 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 		return eventBus;
 	}
 
+	@Override
+	public void setScript(String script) {
+		super.setScript(script);
+		state.onScriptChanged();
+	}
+
 	@RequiredArgsConstructor
 	private static class AuraExcludingCollector implements EffectCollector {
 		private final EffectCollector collector;
@@ -1119,19 +1125,18 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 
 		void onActionEnqueued();
 
+		void onScriptChanged();
+
 		void setActive();
 
 		void setPassive();
 	}
 
 	private class ActiveState implements UnitState {
-		private final ScriptExecutor scriptExecutor;
+		private ScriptExecutor scriptExecutor;
 
 		ActiveState() {
-			var scriptPath = ScriptPathResolver.getScriptPath(UnitImpl.this);
-			var params = new ScriptParams(UnitImpl.this);
-
-			this.scriptExecutor = new ScriptExecutor(scriptPath, params);
+			onScriptChanged();
 		}
 
 		@Override
@@ -1142,6 +1147,14 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 		@Override
 		public void onActionEnqueued() {
 			// void
+		}
+
+		@Override
+		public void onScriptChanged() {
+			var scriptPath = ScriptPathResolver.getScriptPath(UnitImpl.this);
+			var params = new ScriptParams(UnitImpl.this);
+
+			this.scriptExecutor = new ScriptExecutor(scriptPath, params);
 		}
 
 		@Override
@@ -1165,6 +1178,11 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 		@Override
 		public void onActionEnqueued() {
 			interruptCurrentActionIfIdle();
+		}
+
+		@Override
+		public void onScriptChanged() {
+			// do nothing
 		}
 
 		@Override
