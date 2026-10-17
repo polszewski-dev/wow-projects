@@ -1,6 +1,7 @@
 package wow.simulator.model.unit.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import wow.character.model.character.BaseStatInfo;
 import wow.character.model.character.Character;
 import wow.character.model.character.CombatRatingInfo;
@@ -80,6 +81,9 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	private Consumer<Unit> onDeath;
 
 	private boolean inCombat;
+
+	@Setter
+	private Duration idleUntilNextActionDuration = Duration.seconds(1);
 
 	protected UnitImpl(
 			String name,
@@ -264,6 +268,11 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	@Override
 	public void idleFor(Duration duration) {
 		enqueueAction(new IdleForAction(this, duration));
+	}
+
+	@Override
+	public void idleUntilNextAction() {
+		idleFor(idleUntilNextActionDuration);
 	}
 
 	@Override

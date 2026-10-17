@@ -76,6 +76,8 @@ public interface Unit extends Character, SimulationContextSource {
 
 	void idleFor(Duration duration);
 
+	void idleUntilNextAction();
+
 	void immediateAction(Consumer<Unit> action);
 
 	void immediateAction(Runnable action);

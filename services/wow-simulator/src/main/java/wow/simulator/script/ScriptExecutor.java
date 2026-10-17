@@ -1,7 +1,6 @@
 package wow.simulator.script;
 
 import wow.character.model.script.ScriptCompiler;
-import wow.commons.model.Duration;
 import wow.simulator.script.command.ScriptCommandExecutor;
 
 import java.util.List;
@@ -35,9 +34,8 @@ public class ScriptExecutor {
 			command.execute();
 		} else {
 			var caster = params.caster();
-			var idleDuration = Duration.seconds(1);
 
-			caster.idleFor(idleDuration);
+			caster.idleUntilNextAction();
 		}
 	}
 
