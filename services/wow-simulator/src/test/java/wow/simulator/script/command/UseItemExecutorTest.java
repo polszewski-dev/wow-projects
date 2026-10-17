@@ -1,10 +1,12 @@
 package wow.simulator.script.command;
 
 import org.junit.jupiter.api.Test;
-import wow.simulator.model.time.Time;
+import wow.simulator.util.TestEvent;
 
 import static wow.commons.model.categorization.ItemSlot.TRINKET_1;
 import static wow.commons.model.categorization.ItemSlot.TRINKET_2;
+import static wow.test.commons.AbilityNames.SCRYERS_BLOODGEM;
+import static wow.test.commons.AbilityNames.SHIFTING_NAARU_SLIVER;
 
 /**
  * User: POlszewski
@@ -12,44 +14,29 @@ import static wow.commons.model.categorization.ItemSlot.TRINKET_2;
  */
 class UseItemExecutorTest extends CommandExecutorTest {
 	@Test
-	void allConditionsAreMet_Trinket1() {
-		var trinket1Executor = getUseItemExecutor(TRINKET_1);
+	void trinket1_used_when_available() {
+		simulate("/script/command/trinket-1.txt", 180);
 
-		snapshotAt(trinket1Executor, 0, 14, 15, 89, 90);
-
-		trinket1Executor.execute();
-
-		updateUntil(180);
-
-		assertResultAt(0, true);
-		assertResultAt(14, false);
-		assertResultAt(15, false);
-		assertResultAt(89, false);
-		assertResultAt(90, true);
+		assertEvents(
+				TestEvent::isBeginCast,
+				at(0).beginCast(player, SCRYERS_BLOODGEM),
+				at(90).beginCast(player, SCRYERS_BLOODGEM),
+				at(180).beginCast(player, SCRYERS_BLOODGEM)
+		);
 	}
 
 	@Test
-	void allConditionsAreMet_Trinke2_after_Trinket1() {
-		var trinket1Executor = getUseItemExecutor(TRINKET_1);
-		var trinket2Executor = getUseItemExecutor(TRINKET_2);
+	void both_trinkets_used_when_available() {
+		simulate("/script/command/trinket-1-and-2.txt", 180);
 
-		snapshotAt(trinket2Executor, 0, 14, 15, 16, 30, 104, 105);
-
-		trinket1Executor.execute();
-
-		player.idleUntil(Time.at(15));
-
-		trinket2Executor.execute();
-
-		updateUntil(180);
-
-		assertResultAt(0, true);
-		assertResultAt(14, false);
-		assertResultAt(15, true);
-		assertResultAt(16, false);
-		assertResultAt(30, false);
-		assertResultAt(104, false);
-		assertResultAt(105, true);
+		assertEvents(
+				TestEvent::isBeginCast,
+				at(0).beginCast(player, SCRYERS_BLOODGEM),
+				at(15).beginCast(player, SHIFTING_NAARU_SLIVER),
+				at(90).beginCast(player, SCRYERS_BLOODGEM),
+				at(105).beginCast(player, SHIFTING_NAARU_SLIVER),
+				at(180).beginCast(player, SCRYERS_BLOODGEM)
+		);
 	}
 
 	@Override
@@ -59,7 +46,4 @@ class UseItemExecutorTest extends CommandExecutorTest {
 		equip(SCRYERS_BLOODGEM, TRINKET_1);
 		equip(SHIFTING_NAARU_SLIVER, TRINKET_2);
 	}
-
-	static final String SCRYERS_BLOODGEM = "Scryer's Bloodgem";
-	static final String SHIFTING_NAARU_SLIVER = "Shifting Naaru Sliver";
 }

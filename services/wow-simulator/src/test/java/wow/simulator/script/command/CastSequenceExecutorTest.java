@@ -1,9 +1,11 @@
 package wow.simulator.script.command;
 
 import org.junit.jupiter.api.Test;
+import wow.simulator.util.TestEvent;
 
 import static wow.commons.model.categorization.ItemSlot.TRINKET_1;
 import static wow.test.commons.AbilityNames.CURSE_OF_AGONY;
+import static wow.test.commons.AbilityNames.SCRYERS_BLOODGEM;
 
 /**
  * User: POlszewski
@@ -11,71 +13,45 @@ import static wow.test.commons.AbilityNames.CURSE_OF_AGONY;
  */
 class CastSequenceExecutorTest extends CommandExecutorTest {
 	@Test
-	void both_commands_activated_at_the_same_time() {
-		var executor = getCastSequenceExecutor(
-				useItem(TRINKET_1),
-				castSpell(CURSE_OF_AGONY)
+	void both_trinket_and_coa_activated_at_the_same_time() {
+		simulate("/script/command/trinket-1-followed-by-coa.txt", 120);
+
+		assertEvents(
+				TestEvent::isBeginCast,
+				at(0)
+						.beginCast(player, SCRYERS_BLOODGEM)
+						.beginCast(player, CURSE_OF_AGONY),
+				at(90)
+						.beginCast(player, SCRYERS_BLOODGEM)
+						.beginCast(player, CURSE_OF_AGONY)
 		);
-
-		snapshotAt(executor, 0, 1, 24, 89, 90);
-
-		executor.execute();
-
-		updateUntil(120);
-
-		assertResultAt(0, true);
-		assertResultAt(1, false);
-		assertResultAt(24, false);
-		assertResultAt(89, false);
-		assertResultAt(90, true);
 	}
 
 	@Test
-	void trinket_activated_already() {
-		var executor = getCastSequenceExecutor(
-				useItem(TRINKET_1),
-				castSpell(CURSE_OF_AGONY)
+	void coa_activated_when_available_optionally_preceded_by_trinket() {
+		simulate("/script/command/optional-trinket-1-followed-by-coa.txt", 120);
+
+		assertEvents(
+				TestEvent::isBeginCast,
+				at(0)
+						.beginCast(player, SCRYERS_BLOODGEM)
+						.beginCast(player, CURSE_OF_AGONY),
+				at(24)
+						.beginCast(player, CURSE_OF_AGONY),
+				at(48)
+						.beginCast(player, CURSE_OF_AGONY),
+				at(72)
+						.beginCast(player, CURSE_OF_AGONY),
+				at(96)
+						.beginCast(player, SCRYERS_BLOODGEM)
+						.beginCast(player, CURSE_OF_AGONY)
 		);
-
-		var trinketExecutor = getUseItemExecutor(TRINKET_1);
-
-		snapshotAt(executor, 0, 1, 89, 90);
-
-		trinketExecutor.execute();
-
-		updateUntil(120);
-
-		assertResultAt(0, true);
-		assertResultAt(1, false);
-		assertResultAt(89, false);
-		assertResultAt(90, true);
-	}
-
-	@Test
-	void ability_activated_already() {
-		var executor = getCastSequenceExecutor(
-				useItem(TRINKET_1),
-				castSpell(CURSE_OF_AGONY)
-		);
-
-		var abilityExecutor = getCastSpellExecutor(CURSE_OF_AGONY);
-
-		snapshotAt(executor, 0, 1, 23, 24);
-
-		abilityExecutor.execute();
-
-		updateUntil(120);
-
-		assertResultAt(0, true);
-		assertResultAt(1, false);
-		assertResultAt(23, false);
-		assertResultAt(24, true);
 	}
 
 	@Override
 	protected void afterSetUp() {
+		super.afterSetUp();
+
 		equip(SCRYERS_BLOODGEM, TRINKET_1);
 	}
-
-	static final String SCRYERS_BLOODGEM = "Scryer's Bloodgem";
 }

@@ -54,9 +54,7 @@ public class CastSequenceExecutor extends ScriptCommandExecutor {
 
 	@Override
 	public void execute() {
-		if (toExecute == null) {
-			list.forEach(ScriptCommandExecutor::execute);
-		} else {
+		if (toExecute != null) {
 			toExecute.forEach(ScriptCommandExecutor::execute);
 			toExecute = null;
 		}

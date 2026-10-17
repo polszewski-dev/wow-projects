@@ -1,7 +1,8 @@
-package wow.simulator.script.command;
+package wow.simulator.script.condition;
 
 import org.junit.jupiter.api.Test;
 import wow.character.model.script.ScriptCommandConditionParser;
+import wow.simulator.script.command.ScriptConditionChecker;
 import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
 
 import java.util.Map;

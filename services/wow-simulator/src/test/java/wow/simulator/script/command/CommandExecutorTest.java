@@ -1,93 +1,29 @@
 package wow.simulator.script.command;
 
-import wow.commons.model.categorization.ItemSlot;
-import wow.commons.model.spell.AbilityId;
-import wow.simulator.script.ScriptParams;
+import wow.commons.model.Duration;
+import wow.simulator.model.unit.impl.UnitImpl;
 import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
 
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static wow.character.model.script.ScriptCommand.*;
-import static wow.character.model.script.ScriptCommandCondition.EMPTY;
-import static wow.character.model.script.ScriptCommandTarget.DEFAULT;
+import static wow.simulator.constant.HiddenEffectNames.BONUS_HP5;
+import static wow.simulator.constant.HiddenEffectNames.BONUS_MP5;
 
 /**
  * User: POlszewski
  * Date: 2025-09-20
  */
 abstract class CommandExecutorTest extends TbcWarlockSpellSimulationTest {
-	CastSpell castSpell(String abilityName) {
-		return new CastSpell(
-				EMPTY,
-				AbilityId.of(abilityName),
-				DEFAULT,
-				false
-		);
+	void simulate(String script, double time) {
+		player.setScript(script);
+		player.setActive();
+
+		player.addHiddenEffect(BONUS_HP5, 5000);
+		player.addHiddenEffect(BONUS_MP5, 5000);
+
+		updateUntil(time);
 	}
 
-	CastSpellExecutor getCastSpellExecutor(String abilityName) {
-		var command = castSpell(abilityName);
-		var params = new ScriptParams(player);
-
-		return CastSpellExecutor.create(command, params);
-	}
-
-	CastSpellRank castSpellRank(String abilityName, int rank) {
-		return new CastSpellRank(
-				EMPTY,
-				abilityName,
-				rank,
-				DEFAULT,
-				false
-		);
-	}
-
-	CastSpellRankExecutor getCastSpellRankExecutor(String abilityName, int rank) {
-		var command = castSpellRank(abilityName, rank);
-		var params = new ScriptParams(player);
-
-		return CastSpellRankExecutor.create(command, params);
-	}
-
-	UseItemExecutor getUseItemExecutor(ItemSlot itemSlot) {
-		var command = useItem(itemSlot);
-		var params = new ScriptParams(player);
-
-		return UseItemExecutor.create(command, params);
-	}
-
-	UseItem useItem(ItemSlot itemSlot) {
-		return new UseItem(
-				EMPTY,
-				itemSlot,
-				DEFAULT,
-				false
-		);
-	}
-
-	CastSequenceExecutor getCastSequenceExecutor(ComposableCommand... commands) {
-		var castSequence = new CastSequence(List.of(commands));
-		var params = new ScriptParams(player);
-
-		return CastSequenceExecutor.create(castSequence, params);
-	}
-
-	double getCastTime(String abilityName) {
-		return player.getAbility(AbilityId.of(abilityName)).orElseThrow().getCastTime().getSeconds();
-	}
-
-	private final TestSnapshots<Boolean> allConditionsAreMetSnapshots = new TestSnapshots<>();
-
-	void snapshotAt(ScriptCommandExecutor executor, double... times) {
-		allConditionsAreMetSnapshots.makeSnapshotsAt(executor::allConditionsAreMet, times);
-	}
-
-	void assertResultAt(double time, boolean expectedValue) {
-		var actualValue = allConditionsAreMetSnapshots.get(time);
-
-		assertThat(actualValue)
-				.withFailMessage("at time = %s allConditionsAreMet should return: %s".formatted(time, expectedValue))
-				.isEqualTo(expectedValue);
+	@Override
+	protected void afterSetUp() {
+		((UnitImpl) player).setIdleUntilNextActionDuration(Duration.seconds(0.5));
 	}
 }
