@@ -201,13 +201,13 @@ class SeedOfCorruptionTest extends TbcWarlockSpellSimulationTest {
 				at(77.5).beginCast(player, SEED_OF_CORRUPTION, 2),
 				at(79.5).beginCast(player, SEED_OF_CORRUPTION, 2),
 				at(81.5).beginCast(player, SHADOW_BOLT, 3),
-				at(84.5).beginCast(player, SHADOW_BOLT, 3),
-				at(87.5).beginCast(player, SEED_OF_CORRUPTION, 2),
-				at(89.5).beginCast(player, SEED_OF_CORRUPTION, 2),
-				at(91.5).beginCast(player, SEED_OF_CORRUPTION, 2),
-				at(93.5).beginCast(player, SEED_OF_CORRUPTION, 2),
-				at(95.5).beginCast(player, SEED_OF_CORRUPTION, 2),
-				at(97.5).beginCast(player, SHADOWBURN)
+				at(84.5).beginCast(player, SEED_OF_CORRUPTION, 2),
+				at(86.5).beginCast(player, SEED_OF_CORRUPTION, 2),
+				at(88.5).beginCast(player, SEED_OF_CORRUPTION, 2),
+				at(90.5).beginCast(player, SEED_OF_CORRUPTION, 2),
+				at(92.5).beginCast(player, SEED_OF_CORRUPTION, 2),
+				at(94.5).beginCast(player, SHADOWBURN),
+				at(96).beginCast(player, SEED_OF_CORRUPTION, 2)
 		);
 	}
 }

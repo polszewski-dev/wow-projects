@@ -168,7 +168,8 @@ public abstract class Effects implements SimulationContextSource, EffectCollecti
 	}
 
 	public Stream<EffectInstance> getStream() {
-		return effectsById.values().stream();
+		return effectsById.values().stream()
+				.filter(x -> !x.isTerminated());
 	}
 
 	private void attach(EffectInstanceImpl effect) {
