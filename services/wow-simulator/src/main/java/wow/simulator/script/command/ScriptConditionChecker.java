@@ -1,6 +1,5 @@
 package wow.simulator.script.command;
 
-import lombok.RequiredArgsConstructor;
 import wow.character.model.script.ScriptCommandCondition;
 import wow.commons.model.Duration;
 import wow.commons.model.InfiniteDuration;
@@ -16,11 +15,18 @@ import static wow.character.model.script.ScriptCommandCondition.*;
  * User: POlszewski
  * Date: 2025-10-07
  */
-@RequiredArgsConstructor
 public class ScriptConditionChecker {
 	private final Unit caster;
 	private final Ability ability;
+	private final Unit primaryTarget;
 	private final Unit target;
+
+	public ScriptConditionChecker(Unit caster, Ability ability, Unit primaryTarget) {
+		this.caster = caster;
+		this.ability = ability;
+		this.primaryTarget = primaryTarget;
+		this.target = caster.getTarget();
+	}
 
 	public boolean check(ScriptCommandCondition condition) {
 		return switch (condition) {
@@ -93,13 +99,13 @@ public class ScriptConditionChecker {
 	}
 
 	private double getCastTime(AbilityId abilityId) {
-		var snapshot = caster.getSpellCastSnapshot(abilityId, target);
+		var snapshot = caster.getSpellCastSnapshot(abilityId, primaryTarget);
 
 		return snapshot.getCastTime();
 	}
 
 	private double getFullDuration(AbilityId abilityId) {
-		var snapshot = caster.getEffectDurationSnapshot(abilityId, target);
+		var snapshot = caster.getEffectDurationSnapshot(abilityId, primaryTarget);
 
 		return switch (snapshot.getDuration()) {
 			case Duration duration -> duration.getSeconds();

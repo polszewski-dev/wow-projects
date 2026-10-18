@@ -1,0 +1,5 @@
+
+
+@	Rotation
+
+	[~(3 <= 2 | 2 <= 1)] Fel Armor

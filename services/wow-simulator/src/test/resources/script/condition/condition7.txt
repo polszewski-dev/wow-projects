@@ -1,0 +1,5 @@
+
+
+@	Rotation
+
+	[FullDuration >= 1800] Fel Armor

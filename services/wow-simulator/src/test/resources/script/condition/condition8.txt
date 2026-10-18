@@ -1,0 +1,5 @@
+
+
+@	Rotation
+
+	[RemainingCooldown(Fel Armor) <= 0] Fel Armor

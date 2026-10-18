@@ -1,0 +1,5 @@
+
+
+@	Rotation
+
+	[Target.Mana% >= 0] Fel Armor

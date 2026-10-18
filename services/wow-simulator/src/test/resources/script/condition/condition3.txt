@@ -1,0 +1,5 @@
+
+
+@	Rotation
+
+	[Health% > 0] Fel Armor

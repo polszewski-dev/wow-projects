@@ -1,0 +1,5 @@
+
+
+@	Rotation
+
+	[Mana% > 0] Fel Armor

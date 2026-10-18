@@ -24,6 +24,9 @@ public class UnitResource implements SimulationContextSource {
 	private int max;
 
 	public Percent getPercent() {
+		if (max == 0) {
+			return Percent.ZERO;
+		}
 		return Percent.of(100.0 * current / max);
 	}
 

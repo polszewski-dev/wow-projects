@@ -1,0 +1,5 @@
+
+
+@	Rotation
+
+	[~Caster.HasEffect(* Armor)] Fel Armor

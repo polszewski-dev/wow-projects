@@ -1,68 +1,33 @@
 package wow.simulator.script.condition;
 
-import org.junit.jupiter.api.Test;
-import wow.character.model.script.ScriptCommandConditionParser;
-import wow.simulator.script.command.ScriptConditionChecker;
-import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+import wow.simulator.script.ScriptTest;
+import wow.simulator.util.TestEvent;
 
-import java.util.Map;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static wow.test.commons.AbilityNames.CURSE_OF_AGONY;
-import static wow.test.commons.AbilityNames.CURSE_OF_DOOM;
+import static wow.test.commons.AbilityNames.FEL_ARMOR;
 
 /**
  * User: POlszewski
  * Date: 2025-10-08
  */
-class ScriptConditionCheckerTest extends TbcWarlockSpellSimulationTest {
-	@Test
-	void after_CoD_hits_condition_is_met() {
-		snapshotAt(0.1, "Target.HasEffect(Curse of *)", CURSE_OF_DOOM);
+class ScriptConditionCheckerTest extends ScriptTest {
+	@ParameterizedTest
+	@MethodSource("getScriptNames")
+	void simple_conditions_are_true(String scriptName) {
+		simulate(scriptName, 1);
 
-		player.cast(CURSE_OF_DOOM);
-
-		updateUntil(120);
-
-		assertResultAt(0.1, true);
+		assertEvents(
+				TestEvent::isBeginCast,
+				at(0).beginCast(player, FEL_ARMOR)
+		);
 	}
 
-	@Test
-	void after_CoD_misses_CoA_can_be_casted() {
-		missesOnlyOnFollowingRolls(0);
-
-		snapshotAt(1.4, "Target.HasEffect(Curse of *)", CURSE_OF_AGONY);
-		snapshotAt(1.6, "Target.HasEffect(Curse of *)", CURSE_OF_AGONY);
-
-		player.cast(CURSE_OF_DOOM);
-		player.cast(CURSE_OF_AGONY);
-
-		updateUntil(120);
-
-		assertResultAt(1.4, false);
-		assertResultAt(1.6, true);
-	}
-
-	final TestSnapshots<Boolean> checkConditionSnapshots = new TestSnapshots<>();
-
-	void snapshotAt(double time, String condition, String abilityName) {
-		checkConditionSnapshots.makeSnapshotsAt(() -> checkCondition(condition, abilityName), time);
-	}
-
-	void assertResultAt(double time, boolean expectedValue) {
-		var actualValue = checkConditionSnapshots.get(time);
-
-		assertThat(actualValue)
-				.withFailMessage("at time = %s allConditionsAreMet should return: %s".formatted(time, expectedValue))
-				.isEqualTo(expectedValue);
-	}
-
-	boolean checkCondition(String condition, String abilityName) {
-		var conditionParser = new ScriptCommandConditionParser(condition, Map.of());
-		var parsedCondition = conditionParser.parse();
-		var ability = player.getAbility(abilityName).orElseThrow();
-		var conditionChecker = new ScriptConditionChecker(player, ability, player.getTarget());
-
-		return conditionChecker.check(parsedCondition);
+	static Stream<String> getScriptNames() {
+		return IntStream.rangeClosed(1, 15)
+				.mapToObj("/script/condition/condition%s.txt"::formatted);
 	}
 }

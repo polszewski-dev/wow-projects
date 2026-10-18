@@ -1,0 +1,5 @@
+
+
+@	Rotation
+
+	[~Target.HasEffect(Curse of *)] Fel Armor

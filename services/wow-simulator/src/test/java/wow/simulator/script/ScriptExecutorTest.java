@@ -1,18 +1,15 @@
 package wow.simulator.script;
 
 import org.junit.jupiter.api.Test;
-import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
 import wow.simulator.util.TestEvent;
 
-import static wow.simulator.constant.HiddenEffectNames.BONUS_HP5;
-import static wow.simulator.constant.HiddenEffectNames.BONUS_MP5;
 import static wow.test.commons.AbilityNames.*;
 
 /**
  * User: POlszewski
  * Date: 2025-09-20
  */
-class ScriptExecutorTest extends TbcWarlockSpellSimulationTest {
+class ScriptExecutorTest extends ScriptTest {
 	@Test
 	void cast_dots_and_then_SB() {
 		simulate("/script/executor-test.txt", 60);
@@ -132,16 +129,6 @@ class ScriptExecutorTest extends TbcWarlockSpellSimulationTest {
 						.beginCast(player, AMPLIFY_CURSE)
 						.beginCast(player, CURSE_OF_DOOM)
 		);
-	}
-
-	void simulate(String script, int time) {
-		player.setScript(script);
-		player.setActive();
-
-		player.addHiddenEffect(BONUS_HP5, 5000);
-		player.addHiddenEffect(BONUS_MP5, 5000);
-
-		updateUntil(time);
 	}
 
 	boolean onlyCurses(TestEvent testEvent) {

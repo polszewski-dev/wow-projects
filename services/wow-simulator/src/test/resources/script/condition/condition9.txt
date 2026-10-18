@@ -1,0 +1,5 @@
+
+
+@	Rotation
+
+	[RemainingSimulationDuration < 2] Fel Armor
