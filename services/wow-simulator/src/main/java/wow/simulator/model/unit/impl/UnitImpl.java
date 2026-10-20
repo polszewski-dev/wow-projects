@@ -61,7 +61,7 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 
 	protected final UnitId id = ID_GENERATOR.newId();
 
-	private final UnitResources resources = new UnitResources(this);
+	private final UnitResources resources = new UnitResources();
 	protected final Effects effects = new UnitEffects(this);
 	private final Cooldowns cooldowns = new Cooldowns(this);
 	private final EventBus eventBus = new EventBus(this);

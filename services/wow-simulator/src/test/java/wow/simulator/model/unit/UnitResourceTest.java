@@ -57,7 +57,7 @@ class UnitResourceTest extends WowSimulatorSpringTest {
 
 	@Test
 	void canPayHealth() {
-		var health = new UnitResource(HEALTH, player);
+		var health = new UnitResource(HEALTH);
 
 		health.set(500, 1000);
 
@@ -71,7 +71,7 @@ class UnitResourceTest extends WowSimulatorSpringTest {
 
 	@Test
 	void canPayMana() {
-		var mana = new UnitResource(MANA, player);
+		var mana = new UnitResource(MANA);
 
 		mana.set(500, 1000);
 
@@ -85,7 +85,7 @@ class UnitResourceTest extends WowSimulatorSpringTest {
 
 	@Test
 	void payHealth() {
-		var health = new UnitResource(HEALTH, player);
+		var health = new UnitResource(HEALTH);
 
 		health.set(500, 1000);
 
@@ -97,7 +97,7 @@ class UnitResourceTest extends WowSimulatorSpringTest {
 
 	@Test
 	void payMana() {
-		var health = new UnitResource(MANA, player);
+		var health = new UnitResource(MANA);
 
 		health.set(500, 1000);
 
@@ -111,8 +111,6 @@ class UnitResourceTest extends WowSimulatorSpringTest {
 
 	@BeforeEach
 	void setUp() {
-		createSimulation();
-		createDefaultUnits();
-		resource = new UnitResource(HEALTH, player);
+		resource = new UnitResource(HEALTH);
 	}
 }

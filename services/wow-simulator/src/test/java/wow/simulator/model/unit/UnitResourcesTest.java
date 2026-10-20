@@ -158,6 +158,6 @@ class UnitResourcesTest extends WowSimulatorSpringTest {
 	void setUp() {
 		createSimulation();
 		createDefaultUnits();
-		resources = new UnitResources(player);
+		resources = new UnitResources();
 	}
 }

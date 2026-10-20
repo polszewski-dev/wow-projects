@@ -4,8 +4,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import wow.commons.model.Percent;
 import wow.commons.model.spell.ResourceType;
-import wow.simulator.simulation.SimulationContext;
-import wow.simulator.simulation.SimulationContextSource;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
@@ -17,9 +15,8 @@ import static wow.commons.model.spell.ResourceType.HEALTH;
  */
 @RequiredArgsConstructor
 @Getter
-public class UnitResource implements SimulationContextSource {
+public class UnitResource {
 	private final ResourceType type;
-	private final Unit owner;
 	private int current;
 	private int max;
 
@@ -86,10 +83,5 @@ public class UnitResource implements SimulationContextSource {
 		if (amount < 0) {
 			throw new IllegalArgumentException("Unexpected negative value: " + amount);
 		}
-	}
-
-	@Override
-	public SimulationContext getSimulationContext() {
-		return owner.getSimulationContext();
 	}
 }

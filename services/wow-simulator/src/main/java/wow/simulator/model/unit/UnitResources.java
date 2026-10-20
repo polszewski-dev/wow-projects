@@ -3,8 +3,6 @@ package wow.simulator.model.unit;
 import wow.commons.model.Percent;
 import wow.commons.model.spell.Cost;
 import wow.commons.model.spell.ResourceType;
-import wow.simulator.simulation.SimulationContext;
-import wow.simulator.simulation.SimulationContextSource;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -16,15 +14,12 @@ import static wow.commons.model.spell.ResourceType.MANA;
  * User: POlszewski
  * Date: 2023-08-12
  */
-public class UnitResources implements SimulationContextSource {
-	private final Unit owner;
-
+public class UnitResources {
 	private final Map<ResourceType, UnitResource> resourceMap = new EnumMap<>(ResourceType.class);
 
-	public UnitResources(Unit owner) {
-		this.owner = owner;
-		add(new UnitResource(HEALTH, owner));
-		add(new UnitResource(MANA, owner));
+	public UnitResources() {
+		add(new UnitResource(HEALTH));
+		add(new UnitResource(MANA));
 	}
 
 	public Percent getHealthPercent() {
@@ -110,10 +105,5 @@ public class UnitResources implements SimulationContextSource {
 
 	private UnitResource get(ResourceType type) {
 		return resourceMap.get(type);
-	}
-
-	@Override
-	public SimulationContext getSimulationContext() {
-		return owner.getSimulationContext();
 	}
 }

@@ -5,8 +5,6 @@ import wow.character.util.SpellTargetConditionChecker;
 import wow.commons.model.spell.SpellTarget;
 import wow.commons.model.spell.SpellTargets;
 import wow.commons.model.spell.component.ComponentCommand;
-import wow.simulator.simulation.SimulationContext;
-import wow.simulator.simulation.SimulationContextSource;
 
 import java.util.Collection;
 import java.util.List;
@@ -19,7 +17,7 @@ import static wow.commons.model.spell.SpellTargetType.FRIENDS_PARTY;
  * User: POlszewski
  * Date: 2023-11-02
  */
-public class TargetResolver implements SimulationContextSource {
+public class TargetResolver {
 	private final Unit self;
 	private Unit friend;
 	private Unit enemy;
@@ -153,10 +151,5 @@ public class TargetResolver implements SimulationContextSource {
 			default ->
 					throw new IllegalArgumentException(spellTarget.type() + "");
 		};
-	}
-
-	@Override
-	public SimulationContext getSimulationContext() {
-		return self.getSimulationContext();
 	}
 }
