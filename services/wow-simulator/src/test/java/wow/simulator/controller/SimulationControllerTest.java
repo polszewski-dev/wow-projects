@@ -60,7 +60,7 @@ class SimulationControllerTest extends WowSimulatorSpringTest {
 	public void setUp() {
 		createSimulation();
 		createDefaultUnits();
-		getCharacterService().applyDefaultCharacterTemplate(player);
+		characterService.applyDefaultCharacterTemplate(player);
 	}
 
 	RaidDTO getRaidDTO(Player player) {

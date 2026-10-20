@@ -38,9 +38,9 @@ class SimulationTest extends WowSimulatorSpringTest {
 
 	@Test
 	void delayedAction() {
-		List<String> result = new ArrayList<>();
+		var result = new ArrayList<String>();
 
-		simulation.delayedAction(Duration.seconds(5), () -> result.add(getClock().now() + ""));
+		simulation.delayedAction(Duration.seconds(5), () -> result.add(clock.now() + ""));
 
 		simulation.updateUntil(Time.at(4));
 
@@ -53,7 +53,7 @@ class SimulationTest extends WowSimulatorSpringTest {
 
 	@Test
 	void getRemainingTime() {
-		List<Duration> remainingTimes = new ArrayList<>();
+		var remainingTimes = new ArrayList<Duration>();
 
 		simulation.add(new Action(clock) {
 			@Override

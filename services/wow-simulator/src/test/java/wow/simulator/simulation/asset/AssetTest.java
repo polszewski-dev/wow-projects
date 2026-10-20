@@ -42,7 +42,7 @@ public abstract class AssetTest extends WowSimulatorSpringTest {
 
 		if (assetPlayerTalentLink != null) {
 			partyAsset.getTalents().loadFromTalentLink(assetPlayerTalentLink);
-			getCharacterService().updateAfterRestrictionChange(partyAsset);
+			characterService.updateAfterRestrictionChange(partyAsset);
 		}
 
 		partyAsset.getAssets().setNames(enabledAssets);

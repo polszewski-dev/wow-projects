@@ -231,7 +231,7 @@ class StatisticsGatheringHandlerTest extends WowSimulatorSpringTest {
 
 	Optional<Spell> getSpell(CooldownStats stats) {
 		var spellId = stats.getSpellId(player);
-		return getSpellRepository().getSpell(spellId, player.getPhaseId());
+		return spellRepository.getSpell(spellId, player.getPhaseId());
 	}
 
 	SpellInfo getSpellInfo(String name) {

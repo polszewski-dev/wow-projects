@@ -1,6 +1,5 @@
 package wow.simulator;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.assertj.core.data.Offset;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,6 +8,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import wow.character.model.equipment.EquippableItem;
+import wow.character.service.CharacterCalculationService;
+import wow.character.service.CharacterService;
 import wow.commons.model.Duration;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.character.CharacterClassId;
@@ -17,10 +18,10 @@ import wow.commons.model.character.RaceId;
 import wow.commons.model.item.Enchant;
 import wow.commons.model.item.ItemId;
 import wow.commons.model.pve.PhaseId;
+import wow.commons.repository.item.EnchantRepository;
+import wow.commons.repository.item.ItemRepository;
 import wow.commons.repository.pve.PhaseRepository;
 import wow.commons.repository.spell.SpellRepository;
-import wow.simulator.config.SimulatorContext;
-import wow.simulator.config.SimulatorContextSource;
 import wow.simulator.log.GameLog;
 import wow.simulator.model.action.Action;
 import wow.simulator.model.time.Clock;
@@ -65,16 +66,24 @@ import static wow.simulator.util.CalcUtils.increaseByPct;
 		"classpath:wow-simulator.properties",
 		"classpath:application.properties"
 })
-@Getter
-public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
+public abstract class WowSimulatorSpringTest {
 	@Autowired
-	protected SimulatorContext simulatorContext;
+	protected CharacterService characterService;
+	
+	@Autowired
+	CharacterCalculationService characterCalculationService;
 
 	@Autowired
 	private PhaseRepository phaseRepository;
 
 	@Autowired
-	private SpellRepository spellRepository;
+	protected SpellRepository spellRepository;
+
+	@Autowired
+	private ItemRepository itemRepository;
+
+	@Autowired
+	private EnchantRepository enchantRepository;
 
 	@Autowired
 	private SimulatorService simulationService;
@@ -83,7 +92,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		var clock = new Clock();
 		var gameLog = new GameLog();
 		var scheduler = new Scheduler(clock);
-		return new SimulationContext(clock, gameLog, () -> rng, scheduler, getCharacterService(), getCharacterCalculationService(), getSpellRepository());
+		return new SimulationContext(clock, gameLog, () -> rng, scheduler, characterService, characterCalculationService, spellRepository);
 	}
 
 	protected PlayerImpl getNakedPlayer(PlayerConfig playerConfig, String name) {
@@ -93,11 +102,11 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	protected PlayerImpl getNakedPlayer(CharacterClassId characterClassId, RaceId raceId, String name) {
 		int level = getLevel();
 
-		var player = getCharacterService().createPlayerCharacter(
+		var player = characterService.createPlayerCharacter(
 				name, characterClassId, raceId, level, phaseId, PlayerImpl::new
 		);
 
-		getCharacterService().updateAfterRestrictionChange(player);
+		characterService.updateAfterRestrictionChange(player);
 
 		simulationContext.shareSimulationContext(player);
 
@@ -118,7 +127,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	protected NonPlayer getEnemy(String name, CreatureType enemyType) {
 		int level = getLevel();
 
-		var enemy = getCharacterService().createNonPlayerCharacter(
+		var enemy = characterService.createNonPlayerCharacter(
 				name, enemyType, level + enemyLevelDiff, phaseId, NonPlayerImpl::new
 		);
 
@@ -315,12 +324,12 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	}
 
 	protected void equip(Unit unit, String itemName) {
-		var item = getItemRepository().getItem(itemName, unit.getPhaseId()).orElseThrow();
+		var item = itemRepository.getItem(itemName, unit.getPhaseId()).orElseThrow();
 		unit.equip(new EquippableItem(item));
 	}
 
 	protected void equip(Unit unit, String itemName, String enchantName) {
-		var item = getItemRepository().getItem(itemName, unit.getPhaseId()).orElseThrow();
+		var item = itemRepository.getItem(itemName, unit.getPhaseId()).orElseThrow();
 		var enchant = getEnchant(unit, enchantName);
 		unit.equip(new EquippableItem(item).enchant(enchant));
 	}
@@ -329,7 +338,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 		if (enchantName == null) {
 			return null;
 		}
-		return getEnchantRepository().getEnchant(enchantName, unit.getPhaseId()).orElseThrow();
+		return enchantRepository.getEnchant(enchantName, unit.getPhaseId()).orElseThrow();
 	}
 
 	protected void equip(String itemName, ItemSlot itemSlot) {
@@ -337,7 +346,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	}
 
 	protected void equip(Unit unit, String itemName, ItemSlot itemSlot) {
-		var item = getItemRepository().getItem(itemName, unit.getPhaseId()).orElseThrow();
+		var item = itemRepository.getItem(itemName, unit.getPhaseId()).orElseThrow();
 		unit.equip(new EquippableItem(item), itemSlot);
 	}
 
@@ -346,7 +355,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 	}
 
 	protected void equip(Unit unit, int itemId, ItemSlot itemSlot) {
-		var item = getItemRepository().getItem(ItemId.of(itemId), unit.getPhaseId()).orElseThrow();
+		var item = itemRepository.getItem(ItemId.of(itemId), unit.getPhaseId()).orElseThrow();
 		unit.equip(new EquippableItem(item), itemSlot);
 	}
 
@@ -356,7 +365,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 
 	protected void enableTalent(Player player, String name, int rank) {
 		player.getTalents().enable(name, rank);
-		getCharacterService().updateAfterRestrictionChange(player);
+		characterService.updateAfterRestrictionChange(player);
 	}
 
 	protected void enableTalent(String name) {
@@ -365,7 +374,7 @@ public abstract class WowSimulatorSpringTest implements SimulatorContextSource {
 
 	protected void enableTalent(Player player, String name) {
 		player.getTalents().enableMaxRank(name);
-		getCharacterService().updateAfterRestrictionChange(player);
+		characterService.updateAfterRestrictionChange(player);
 	}
 
 	protected void addSpBonus(int amount) {

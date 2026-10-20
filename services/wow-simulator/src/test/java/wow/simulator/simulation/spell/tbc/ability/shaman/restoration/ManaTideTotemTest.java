@@ -73,6 +73,6 @@ class ManaTideTotemTest extends TbcShamanSpellSimulationTest {
 	protected void afterSetUp() {
 		enableTalent(TalentNames.MANA_TIDE_TOTEM);
 
-		getCharacterService().equipGearSet(player4, "Wowhead TBC P5 BiS");
+		characterService.equipGearSet(player4, "Wowhead TBC P5 BiS");
 	}
 }
