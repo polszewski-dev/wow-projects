@@ -37,19 +37,17 @@ public class Scheduler {
 	}
 
 	public void add(Time time, Runnable runnable) {
-		if (clock.timeInThePast(time)) {
-			throw new IllegalArgumentException("Time %s is in the past (now = %s)".formatted(time, clock.now()));
-		}
+		requireNotInThePast(time);
+
 		var delay = time.subtract(clock.now());
+
 		add(delay, runnable);
 	}
 
 	private void schedule(Action action) {
 		var nextUpdateTime = action.getNextUpdateTime().orElseThrow();
 
-		if (clock.timeInThePast(nextUpdateTime)) {
-			throw new IllegalArgumentException();
-		}
+		requireNotInThePast(nextUpdateTime);
 
 		actionsByTime
 				.computeIfAbsent(nextUpdateTime, x -> new ArrayList<>())
@@ -129,6 +127,12 @@ public class Scheduler {
 				action.interrupt();
 				action.onRemovedFromQueue();
 			}
+		}
+	}
+
+	private void requireNotInThePast(AnyTime time) {
+		if (clock.timeInThePast(time)) {
+			throw new IllegalArgumentException("Time %s is in the past (now = %s)".formatted(time, clock.now()));
 		}
 	}
 }
