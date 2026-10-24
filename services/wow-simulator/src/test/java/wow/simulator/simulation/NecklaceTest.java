@@ -3,8 +3,6 @@ package wow.simulator.simulation;
 import org.junit.jupiter.api.Test;
 import wow.simulator.simulation.spell.SpellSimulationTest;
 
-import java.util.List;
-
 import static wow.test.commons.AbilityNames.CHAIN_OF_THE_TWILIGHT_OWL;
 import static wow.test.commons.AbilityNames.EYE_OF_THE_NIGHT;
 
@@ -18,9 +16,7 @@ class NecklaceTest extends SpellSimulationTest {
 		equip(player2, "Chain of the Twilight Owl");
 		equip(player3, "Eye of the Night");
 
-		var scenario = getScenario(120);
-
-		scenario.execute(player.getRaid(), target, List.of(handler));
+		executeScenario(120);
 
 		assertEvents(
 				event -> event.isBeginCast() || event.isEffect(),

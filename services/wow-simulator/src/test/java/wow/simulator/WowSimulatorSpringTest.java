@@ -377,6 +377,10 @@ public abstract class WowSimulatorSpringTest {
 		characterService.updateAfterRestrictionChange(player);
 	}
 
+	protected void enableAsset(Player player, String name) {
+		player.getAssets().enable(name);
+	}
+
 	protected void addSpBonus(int amount) {
 		addSpBonus(player, amount);
 	}
@@ -605,6 +609,20 @@ public abstract class WowSimulatorSpringTest {
 
 	protected TestScenario getScenario(double duration) {
 		return new TestScenario(Duration.seconds(duration), this::getSimulationContext, simulationService);
+	}
+
+	protected void executeScenario(double duration) {
+		executeScenario(duration, List.of(target));
+	}
+
+	protected void executeScenario(double duration, List<Unit> targets) {
+		var scenario = getScenario(duration);
+
+		scenario.execute(
+				player.getRaid(),
+				targets,
+				List.of(handler)
+		);
 	}
 
 	protected void instaKill(Unit caster, Unit target) {

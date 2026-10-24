@@ -53,13 +53,7 @@ public abstract class AssetTest extends WowSimulatorSpringTest {
 
 		afterSetUp();
 
-		var scenario = getScenario(SIMULATION_DURATION);
-
-		scenario.execute(
-				player.getRaid(),
-				player.getTarget(),
-				List.of(handler)
-		);
+		executeScenario(SIMULATION_DURATION);
 	}
 
 	protected void setDefaults() {}

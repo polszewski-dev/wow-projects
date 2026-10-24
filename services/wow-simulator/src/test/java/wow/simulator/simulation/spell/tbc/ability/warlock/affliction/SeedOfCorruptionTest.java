@@ -179,13 +179,7 @@ class SeedOfCorruptionTest extends TbcWarlockSpellSimulationTest {
 
 		player.setScript("warlock-soc-spam");
 
-		var scenario = getScenario(40);
-
-		scenario.execute(
-				player.getRaid(),
-				List.of(target, target2, target3, target4, target5),
-				List.of(handler)
-		);
+		executeScenario(40, List.of(target, target2, target3, target4, target5));
 
 		assertEvents(
 				TestEvent::isBeginCast,

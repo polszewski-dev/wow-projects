@@ -57,7 +57,7 @@ class ResetAfterCombatTest extends WowSimulatorSpringTest {
 	void resetting_player_unsummons_pet() {
 		setupObjects();
 
-		player.getAssets().enable(IMP);
+		enableAsset(player, IMP);
 
 		executeScenario();
 
