@@ -17,8 +17,8 @@
 	Corruption
 	Immolate
 	Shadow Bolt
-	Shadowburn
 	Shoot
+	Shadowburn
 
 
 @	CanNotPayManaCost

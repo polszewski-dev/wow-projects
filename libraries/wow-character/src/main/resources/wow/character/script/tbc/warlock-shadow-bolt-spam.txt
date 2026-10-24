@@ -10,8 +10,8 @@
 	Trinket2
 
 	Shadow Bolt
-	Shadowburn
 	Shoot
+	Shadowburn
 
 
 @	CanNotPayManaCost

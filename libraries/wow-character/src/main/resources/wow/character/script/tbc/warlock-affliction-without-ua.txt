@@ -18,8 +18,8 @@
 	Immolate
 	Siphon Life
 	Shadow Bolt
-	Shadowburn
 	Shoot
+	Shadowburn
 
 
 @	CanNotPayManaCost

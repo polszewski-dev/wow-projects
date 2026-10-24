@@ -2,13 +2,11 @@ package wow.simulator.simulation.spell.tbc.ability.warlock.affliction;
 
 import org.junit.jupiter.api.Test;
 import wow.simulator.simulation.spell.tbc.TbcWarlockSpellSimulationTest;
-import wow.simulator.util.TestEvent;
-
-import java.util.List;
 
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
-import static wow.test.commons.AbilityNames.*;
+import static wow.test.commons.AbilityNames.SEED_OF_CORRUPTION;
+import static wow.test.commons.AbilityNames.SHADOW_BOLT;
 
 /**
  * User: POlszewski
@@ -170,38 +168,6 @@ class SeedOfCorruptionTest extends TbcWarlockSpellSimulationTest {
 						.decreasedResource(1200, HEALTH, target3, SEED_OF_CORRUPTION)
 						.decreasedResource(1200, HEALTH, target4, SEED_OF_CORRUPTION)
 						.decreasedResource(1200, HEALTH, target5, SEED_OF_CORRUPTION)
-		);
-	}
-
-	@Test
-	void soc_spam_script() {
-		enableTalent(SHADOWBURN);
-
-		player.setScript("warlock-soc-spam");
-
-		executeScenario(40, List.of(target, target2, target3, target4, target5));
-
-		assertEvents(
-				TestEvent::isBeginCast,
-				at(60).beginCast(player, SEED_OF_CORRUPTION, 2),
-				at(62).beginCast(player, SEED_OF_CORRUPTION, 2),
-				at(64).beginCast(player, SEED_OF_CORRUPTION, 2),
-				at(66).beginCast(player, SEED_OF_CORRUPTION, 2),
-				at(68).beginCast(player, SEED_OF_CORRUPTION, 2),
-				at(70).beginCast(player, SHADOWBURN),
-				at(71.5).beginCast(player, SEED_OF_CORRUPTION, 2),
-				at(73.5).beginCast(player, SEED_OF_CORRUPTION, 2),
-				at(75.5).beginCast(player, SEED_OF_CORRUPTION, 2),
-				at(77.5).beginCast(player, SEED_OF_CORRUPTION, 2),
-				at(79.5).beginCast(player, SEED_OF_CORRUPTION, 2),
-				at(81.5).beginCast(player, SHADOW_BOLT, 3),
-				at(84.5).beginCast(player, SEED_OF_CORRUPTION, 2),
-				at(86.5).beginCast(player, SEED_OF_CORRUPTION, 2),
-				at(88.5).beginCast(player, SEED_OF_CORRUPTION, 2),
-				at(90.5).beginCast(player, SEED_OF_CORRUPTION, 2),
-				at(92.5).beginCast(player, SEED_OF_CORRUPTION, 2),
-				at(94.5).beginCast(player, SHADOWBURN),
-				at(96).beginCast(player, SEED_OF_CORRUPTION, 2)
 		);
 	}
 }

@@ -9,6 +9,8 @@ import wow.simulator.model.unit.Pet;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.script.ScriptParams;
 
+import java.util.List;
+
 /**
  * User: POlszewski
  * Date: 2026-09-22
@@ -78,7 +80,7 @@ public abstract class AbstractCastExecutor extends ComposableExecutor {
 			return false;
 		}
 
-		if (!ability.hasDamagingPeriodicComponent()) {
+		if (!ability.hasDamagingPeriodicComponent() || canIgnorePeriodicComponent(ability)) {
 			return true;
 		}
 
@@ -96,6 +98,12 @@ public abstract class AbstractCastExecutor extends ComposableExecutor {
 
 		return castTime.add(effectDuration).compareTo(remainingSimulationTime) <= 0;
 	}
+
+	private boolean canIgnorePeriodicComponent(Ability ability) {
+		return ABILITIES_WITH_IGNORABLE_PERIODIC_COMPONENT.contains(ability.getName());
+	}
+
+	private static final List<String> ABILITIES_WITH_IGNORABLE_PERIODIC_COMPONENT = List.of("Fireball");
 
 	private AnyDuration getEffectDuration(Unit actualCaster, Ability ability, Unit target) {
 		if (ability.getName().equals("Seed of Corruption")) {

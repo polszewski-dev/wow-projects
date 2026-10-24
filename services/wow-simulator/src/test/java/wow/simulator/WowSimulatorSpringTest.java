@@ -164,6 +164,18 @@ public abstract class WowSimulatorSpringTest {
 		assertThat(filtered).isEqualTo(eventList(expected));
 	}
 
+	protected void assertBeginCastEvents(TestEventListBuilder... expected) {
+		assertEvents(TestEvent::isBeginCast, expected);
+	}
+
+	protected TestEventListBuilder beginCast(double time, String abilityName) {
+		return beginCast(time, abilityName, 0);
+	}
+
+	protected TestEventListBuilder beginCast(double time, String abilityName, double castTime) {
+		return at(time).beginCast(player, abilityName, castTime);
+	}
+
 	protected void assertDamageDone(String abilityName, Unit target, Unit caster, double expectedAmount) {
 		var totalDamage = handler.getDamageDone(abilityName, target, caster);
 
@@ -379,6 +391,23 @@ public abstract class WowSimulatorSpringTest {
 
 	protected void enableAsset(Player player, String name) {
 		player.getAssets().enable(name);
+	}
+
+	protected void enableAsset(String name) {
+		enableAsset(player, name);
+	}
+
+	protected void enableTalents(Player player, String talentLink) {
+		player.getTalents().loadFromTalentLink(talentLink);
+		characterService.updateAfterRestrictionChange(player);
+	}
+
+	protected void enableTalents(String talentLink) {
+		enableTalents(player, talentLink);
+	}
+
+	protected void setScript(String scriptName) {
+		player.setScript(scriptName);
 	}
 
 	protected void addSpBonus(int amount) {

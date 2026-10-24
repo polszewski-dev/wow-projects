@@ -14,9 +14,10 @@
 	? Amplify Curse >>= [noCurse & coaCond] Curse of Agony
 	Corruption
 	Immolate
+	Siphon Life
 	Shadow Bolt
-	Shadowburn
 	Shoot
+	Shadowburn
 
 
 @	CanNotPayManaCost

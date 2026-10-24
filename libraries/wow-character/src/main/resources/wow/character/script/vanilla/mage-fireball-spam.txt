@@ -5,5 +5,7 @@
 	Trinket1
 	Trinket2
 
+    Combustion
 	Fireball
 	Shoot
+	Fire Blast

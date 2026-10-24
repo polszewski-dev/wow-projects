@@ -8,7 +8,6 @@
 	Trinket1
 	Trinket2
 
-	Vampiric Touch
 	Shadow Word: Pain
 	Devouring Plague
 	Starshards

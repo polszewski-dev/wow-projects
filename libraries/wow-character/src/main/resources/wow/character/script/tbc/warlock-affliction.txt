@@ -12,16 +12,15 @@
 	Trinket1
 	Trinket2
 
-	Amplify Curse
-	[noCurse] Curse of Doom
-	[noCurse & coaCond] Curse of Agony
+	? Amplify Curse >>= [noCurse] Curse of Doom
+	? Amplify Curse >>= [noCurse & coaCond] Curse of Agony
 	Unstable Affliction
 	Corruption
 	Immolate
 	Siphon Life
 	Shadow Bolt
-	Shadowburn
 	Shoot
+	Shadowburn
 
 
 @	CanNotPayManaCost

@@ -13,8 +13,8 @@
 	[noCurse] Curse of Doom
 	[noCurse & coaCond] Curse of Agony
 	Shadow Bolt
-	Shadowburn
 	Shoot
+	Shadowburn
 
 
 @	CanNotPayManaCost
