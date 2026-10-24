@@ -28,6 +28,8 @@ public interface Spell extends Described, TimeRestricted {
 
 	boolean isBolt();
 
+	boolean isNonBinary();
+
 	DirectComponent getDirectComponent();
 
 	default List<DirectCommand> getDirectCommands() {

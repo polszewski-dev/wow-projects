@@ -107,7 +107,12 @@ public class ShootAbility implements Ability {
 
 	@Override
 	public boolean isBolt() {
-		return true;
+		return ability.isBolt();
+	}
+
+	@Override
+	public boolean isNonBinary() {
+		return ability.isNonBinary();
 	}
 
 	@Override

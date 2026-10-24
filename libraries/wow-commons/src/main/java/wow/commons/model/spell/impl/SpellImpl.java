@@ -24,6 +24,7 @@ public abstract class SpellImpl implements Spell {
 	private SpellSchool school;
 	private Duration cooldown;
 	private boolean bolt;
+	private boolean nonBinary;
 	private DirectComponent directComponent;
 	private EffectApplication effectApplication;
 	private boolean hasDamagingComponent;
