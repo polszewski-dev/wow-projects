@@ -1,0 +1,16 @@
+
+@	let scorchCond = AssetEnabled(Improved Scorch) & (Target.NumStacksOfAny(Fire Vulnerability) < 5 | Target.RemainingEffectDurationOfAny(Fire Vulnerability) <= 3)
+
+@	Rotation
+
+    [scorchCond] Scorch
+
+	Destruction Potion
+	Berserking
+	Trinket1
+	Trinket2
+
+    Combustion
+	Fireball
+	Shoot
+	Fire Blast

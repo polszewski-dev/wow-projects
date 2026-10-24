@@ -101,6 +101,12 @@ public class ScriptCommandConditionParser extends ConditionParser<ScriptCommandC
 			return canCastMoreBeforeSimulationEnds;
 		}
 
+		var assetEnabled = parseAssetEnabled(value);
+
+		if (assetEnabled != null) {
+			return assetEnabled;
+		}
+
 		throw new IllegalArgumentException("Invalid condition: " + value);
 	}
 
@@ -150,6 +156,18 @@ public class ScriptCommandConditionParser extends ConditionParser<ScriptCommandC
 			return remainingCooldown;
 		}
 
+		var numAnyStacks = parseTargetNumAnyStacks(value);
+
+		if (numAnyStacks != null) {
+			return numAnyStacks;
+		}
+
+		var targetRemainingAnyEffectDuration = parseTargetRemainingAnyEffectDuration(value);
+
+		if (targetRemainingAnyEffectDuration != null) {
+			return targetRemainingAnyEffectDuration;
+		}
+
 		return null;
 	}
 
@@ -170,8 +188,20 @@ public class ScriptCommandConditionParser extends ConditionParser<ScriptCommandC
 		return extractSingleValue(value, "CanCastMoreBeforeSimulationEnds\\((.+)\\)", x -> new CanCastMoreBeforeSimulationEnds(AbilityId.of(x)));
 	}
 
+	private AssetEnabled parseAssetEnabled(String value) {
+		return extractSingleValue(value, "AssetEnabled\\((.+)\\)", AssetEnabled::new);
+	}
+
 	private RemainingCooldown parseRemainingCooldown(String value) {
 		return extractSingleValue(value, "RemainingCooldown\\((.+)\\)", x -> new RemainingCooldown(AbilityId.of(x)));
+	}
+
+	private TargetNumStacksOfAny parseTargetNumAnyStacks(String value) {
+		return extractSingleValue(value, "Target\\.NumStacksOfAny\\((.+)\\)", TargetNumStacksOfAny::new);
+	}
+
+	private TargetRemainingEffectDurationOfAny parseTargetRemainingAnyEffectDuration(String value) {
+		return extractSingleValue(value, "Target\\.RemainingEffectDurationOfAny\\((.+)\\)", TargetRemainingEffectDurationOfAny::new);
 	}
 
 	private <T> T extractSingleValue(String value, String regex, Function<String, T> mapper) {

@@ -169,11 +169,19 @@ public abstract class WowSimulatorSpringTest {
 	}
 
 	protected TestEventListBuilder beginCast(double time, String abilityName) {
-		return beginCast(time, abilityName, 0);
+		return beginCast(time, player, abilityName, 0);
 	}
 
 	protected TestEventListBuilder beginCast(double time, String abilityName, double castTime) {
-		return at(time).beginCast(player, abilityName, castTime);
+		return beginCast(time, player, abilityName, castTime);
+	}
+
+	protected TestEventListBuilder beginCast(double time, Unit caster, String abilityName) {
+		return beginCast(time, caster, abilityName, 0);
+	}
+
+	protected TestEventListBuilder beginCast(double time, Unit caster, String abilityName, double castTime) {
+		return at(time).beginCast(caster, abilityName, castTime);
 	}
 
 	protected void assertDamageDone(String abilityName, Unit target, Unit caster, double expectedAmount) {
@@ -407,6 +415,10 @@ public abstract class WowSimulatorSpringTest {
 	}
 
 	protected void setScript(String scriptName) {
+		setScript(player, scriptName);
+	}
+
+	protected void setScript(Player player, String scriptName) {
 		player.setScript(scriptName);
 	}
 

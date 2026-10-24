@@ -55,6 +55,10 @@ class ScriptCommandConditionParserTest {
 					new CanCastMoreBeforeSimulationEnds(CURSE_OF_DOOM)
 			),
 			testData(
+					"AssetEnabled(Improved Scorch)",
+					new AssetEnabled("Improved Scorch")
+			),
+			testData(
 					"Health < 100",
 					new LessThan(new CasterHealth(), new Constant(100))
 			),
@@ -90,6 +94,20 @@ class ScriptCommandConditionParserTest {
 					new LessThan(
 							new RemainingCooldown(CURSE_OF_DOOM),
 							new Constant(30)
+					)
+			),
+			testData(
+					"Target.NumStacksOfAny(Fire Vulnerability) < 5",
+					new LessThan(
+							new TargetNumStacksOfAny("Fire Vulnerability"),
+							new Constant(5)
+					)
+			),
+			testData(
+					"Target.RemainingEffectDurationOfAny(Fire Vulnerability) < 5",
+					new LessThan(
+							new TargetRemainingEffectDurationOfAny("Fire Vulnerability"),
+							new Constant(5)
 					)
 			),
 			testData(

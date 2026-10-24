@@ -95,6 +95,12 @@ public sealed interface ScriptCommandCondition extends Condition {
 		}
 	}
 
+	record AssetEnabled(String assetName) implements ScriptCommandCondition {
+		public AssetEnabled {
+			Objects.requireNonNull(assetName);
+		}
+	}
+
 	sealed interface Expression {}
 
 	record Constant(double value) implements Expression {}
@@ -116,6 +122,18 @@ public sealed interface ScriptCommandCondition extends Condition {
 	record RemainingCooldown(AbilityId abilityId) implements Expression {
 		public RemainingCooldown {
 			Objects.requireNonNull(abilityId);
+		}
+	}
+
+	record TargetNumStacksOfAny(String effectName) implements Expression {
+		public TargetNumStacksOfAny {
+			Objects.requireNonNull(effectName);
+		}
+	}
+
+	record TargetRemainingEffectDurationOfAny(String effectName) implements Expression {
+		public TargetRemainingEffectDurationOfAny {
+			Objects.requireNonNull(effectName);
 		}
 	}
 

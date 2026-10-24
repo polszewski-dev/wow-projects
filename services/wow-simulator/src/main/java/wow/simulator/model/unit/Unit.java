@@ -186,7 +186,11 @@ public interface Unit extends Character, SimulationContextSource {
 
 	Optional<AnyDuration> getRemainingEffectDuration(String effectName, Unit caster);
 
+	Optional<AnyDuration> getRemainingEffectDuration(String effectName);
+
 	Optional<AnyDuration> getRemainingEffectDuration(Ability ability, Unit caster);
+
+	int getNumStacks(String effectName);
 
 	boolean isOnCooldown(AbilityId abilityId);
 

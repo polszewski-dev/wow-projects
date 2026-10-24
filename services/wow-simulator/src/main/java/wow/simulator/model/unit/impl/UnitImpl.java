@@ -716,9 +716,20 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	}
 
 	@Override
+	public Optional<AnyDuration> getRemainingEffectDuration(String effectName) {
+		return getEffect(effectName)
+				.map(EffectInstance::getRemainingDuration);
+	}
+
+	@Override
 	public Optional<AnyDuration> getRemainingEffectDuration(Ability ability, Unit caster) {
 		return getEffect(ability.getAbilityId(), caster)
 				.map(EffectInstance::getRemainingDuration);
+	}
+
+	@Override
+	public int getNumStacks(String effectName) {
+		return effects.getNumStacks(effectName);
 	}
 
 	@Override

@@ -1,10 +1,12 @@
 package wow.simulator.script.command;
 
 import wow.character.model.script.ScriptCommandCondition;
+import wow.commons.model.AnyDuration;
 import wow.commons.model.Duration;
 import wow.commons.model.InfiniteDuration;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.AbilityId;
+import wow.simulator.model.unit.Player;
 import wow.simulator.model.unit.Unit;
 
 import java.util.regex.Pattern;
@@ -61,6 +63,9 @@ public class ScriptConditionChecker {
 
 			case CanCastMoreBeforeSimulationEnds(var abilityId) ->
 					canCastMoreBeforeSimulationEnds(abilityId);
+
+			case AssetEnabled(var assetName) ->
+					caster instanceof Player player && player.getAssets().has(assetName);
 		};
 	}
 
@@ -95,6 +100,12 @@ public class ScriptConditionChecker {
 
 			case RemainingSimulationDuration() ->
 					getRemainingSimulationDuration();
+
+			case TargetNumStacksOfAny(var effectName) ->
+					target.getNumStacks(effectName);
+			
+			case TargetRemainingEffectDurationOfAny(var effectName) ->
+					getRemainingAnyEffectDuration(effectName);
 		};
 	}
 
@@ -107,10 +118,7 @@ public class ScriptConditionChecker {
 	private double getFullDuration(AbilityId abilityId) {
 		var snapshot = caster.getEffectDurationSnapshot(abilityId, primaryTarget);
 
-		return switch (snapshot.getDuration()) {
-			case Duration duration -> duration.getSeconds();
-			case InfiniteDuration() -> Double.MAX_VALUE;
-		};
+		return getSeconds(snapshot.getDuration());
 	}
 
 	private double getRemainingCooldown(AbilityId abilityId) {
@@ -121,6 +129,12 @@ public class ScriptConditionChecker {
 		return caster.getSimulation().getRemainingTime().getSeconds();
 	}
 
+	private double getRemainingAnyEffectDuration(String effectName) {
+		var effectDuration = target.getRemainingEffectDuration(effectName).orElse(Duration.ZERO);
+
+		return getSeconds(effectDuration);
+	}
+
 	private boolean canCastMoreBeforeSimulationEnds(AbilityId abilityId) {
 		return getRemainingCooldown(abilityId) + getCastTime(abilityId) + getFullDuration(abilityId) < getRemainingSimulationDuration();
 	}
@@ -129,5 +143,12 @@ public class ScriptConditionChecker {
 		var realRegex = "^" + regex.replace("*", ".*") + "$";
 
 		return Pattern.compile(realRegex);
+	}
+
+	private static double getSeconds(AnyDuration anyDuration) {
+		return switch (anyDuration) {
+			case Duration duration -> duration.getSeconds();
+			case InfiniteDuration() -> Double.MAX_VALUE;
+		};
 	}
 }

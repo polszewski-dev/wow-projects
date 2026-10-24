@@ -160,6 +160,12 @@ public abstract class Effects implements SimulationContextSource, EffectCollecti
 				.count();
 	}
 
+	public int getNumStacks(String effectName) {
+		return getEffect(effectName)
+				.map(EffectInstance::getNumStacks)
+				.orElse(0);
+	}
+
 	@Override
 	public void collectEffects(EffectCollector collector) {
 		for (var effect : effectsById.values()) {
