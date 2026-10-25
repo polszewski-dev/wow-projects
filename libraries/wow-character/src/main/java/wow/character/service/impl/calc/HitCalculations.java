@@ -28,10 +28,10 @@ public class HitCalculations extends Calculations {
 	public static double getSpellHitPct(Character caster, Spell spell, Character target) {
 		var hitStats = getAccumulatedHitStats(caster, spell, target);
 
-		return getSpellHitPct(caster, spell, target, hitStats);
+		return getSpellHitPct(caster, target, hitStats);
 	}
 
-	public static double getSpellHitPct(Character caster, Spell spell, Character target, AccumulatedHitStats hitStats) {
+	public static double getSpellHitPct(Character caster, Character target, AccumulatedHitStats hitStats) {
 		var levelDifference = Character.getLevelDifference(caster, target);
 
 		return getSpellHitPct(caster, hitStats, levelDifference);

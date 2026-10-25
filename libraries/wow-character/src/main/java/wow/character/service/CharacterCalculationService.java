@@ -48,7 +48,7 @@ public interface CharacterCalculationService {
 
 	double getSpellHitPct(Character caster, Spell spell, Character target);
 
-	double getSpellHitPct(Character caster, Spell spell, Character target, AccumulatedHitStats hitStats);
+	double getSpellHitPct(Character caster, Character target, AccumulatedHitStats hitStats);
 
 	EffectDurationSnapshot getEffectDurationSnapshot(Character caster, Spell spell, Character target, ApplyEffect command);
 
@@ -60,13 +60,13 @@ public interface CharacterCalculationService {
 
 	DirectSpellComponentSnapshot getDirectHealingSnapshot(Character caster, Spell spell, Character target, HealDirectly command);
 
-	DirectSpellComponentSnapshot getDirectSpellComponentSnapshot(Character caster, Spell spell, Character target, ChangeHealthDirectly command, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats);
+	DirectSpellComponentSnapshot getDirectSpellComponentSnapshot(Character caster, ChangeHealthDirectly command, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats);
 
 	PeriodicSpellComponentSnapshot getPeriodicSpellDamageSnapshot(Character caster, Spell spell, Character target, DealDamagePeriodically command);
 
 	PeriodicSpellComponentSnapshot getPeriodicHealingSnapshot(Character caster, Spell spell, Character target, HealPeriodically command);
 
-	PeriodicSpellComponentSnapshot getPeriodicComponentSnapshot(Character caster, Spell spell, Character target, ChangeHealthPeriodically command, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats);
+	PeriodicSpellComponentSnapshot getPeriodicComponentSnapshot(ChangeHealthPeriodically command, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats);
 
 	RegenSnapshot getRegenSnapshot(Character character);
 
@@ -78,5 +78,5 @@ public interface CharacterCalculationService {
 
 	double getCopiedAmountAsHeal(Character caster, Spell spell, Character target, int amount, double ratioPct);
 
-	double getCopiedAmountAsManaGain(Character caster, Spell spell, Character target, int amount, double ratioPct);
+	double getCopiedAmountAsManaGain(Character caster, Spell spell, int amount, double ratioPct);
 }

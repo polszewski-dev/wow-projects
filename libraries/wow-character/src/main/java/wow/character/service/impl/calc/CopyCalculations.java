@@ -33,7 +33,7 @@ public class CopyCalculations extends Calculations {
 		return multiplyByRatio(amount + healingTaken, ratioPct + copyIncreasePct, healingTakenPct);
 	}
 
-	public static double getCopiedAmountAsManaGain(Character caster, Spell spell, Character target, int amount, double ratioPct) {
+	public static double getCopiedAmountAsManaGain(Character caster, Spell spell, int amount, double ratioPct) {
 		var copyIncreasePct = getCopiedAmountIncreasePct(caster, spell);
 
 		return multiplyByRatio(amount, ratioPct + copyIncreasePct, 0);

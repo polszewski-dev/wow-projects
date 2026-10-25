@@ -216,7 +216,7 @@ public class CalculationServiceImpl implements CalculationService {
 	private void calculateDamagingSpellStats(Player player, Ability ability, AccumulatedDamagingAbilityStats abilityStats, Character target, Snapshot snapshot) {
 		var cast = characterCalculationService.getSpellCastSnapshot(player, ability, abilityStats.getCast());
 		var cost = characterCalculationService.getSpellCostSnapshot(player, ability, abilityStats.getCost());
-		var hitPct = characterCalculationService.getSpellHitPct(player, ability, target, abilityStats.getHit());
+		var hitPct = characterCalculationService.getSpellHitPct(player, target, abilityStats.getHit());
 
 		snapshot.setCast(cast);
 		snapshot.setCost(cost);
@@ -225,14 +225,14 @@ public class CalculationServiceImpl implements CalculationService {
 		var targetStats = abilityStats.getTarget();
 
 		if (abilityStats.getDirectCommand() != null) {
-			var direct = characterCalculationService.getDirectSpellComponentSnapshot(player, ability, target, abilityStats.getDirectCommand(), abilityStats.getDirect(), targetStats);
+			var direct = characterCalculationService.getDirectSpellComponentSnapshot(player, abilityStats.getDirectCommand(), abilityStats.getDirect(), targetStats);
 
 			snapshot.setDirect(direct);
 		}
 
 		if (!ability.getApplyEffectCommands().isEmpty()) {
 			var command = ability.getApplyEffectCommands().getFirst();
-			var periodic = characterCalculationService.getPeriodicComponentSnapshot(player, ability, target, abilityStats.getPeriodicCommand(), abilityStats.getPeriodic(), targetStats);
+			var periodic = characterCalculationService.getPeriodicComponentSnapshot(abilityStats.getPeriodicCommand(), abilityStats.getPeriodic(), targetStats);
 			var effectDuration = characterCalculationService.getEffectDurationSnapshot(player, ability, command, abilityStats.getEffectDuration(), abilityStats.getReceivedEffectStats());
 
 			snapshot.setPeriodic(periodic);

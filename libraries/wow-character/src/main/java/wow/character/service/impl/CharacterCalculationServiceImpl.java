@@ -103,8 +103,8 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public double getSpellHitPct(Character caster, Spell spell, Character target, AccumulatedHitStats hitStats) {
-		return HitCalculations.getSpellHitPct(caster, spell, target, hitStats);
+	public double getSpellHitPct(Character caster, Character target, AccumulatedHitStats hitStats) {
+		return HitCalculations.getSpellHitPct(caster, target, hitStats);
 	}
 
 	@Override
@@ -133,8 +133,8 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public DirectSpellComponentSnapshot getDirectSpellComponentSnapshot(Character caster, Spell spell, Character target, ChangeHealthDirectly command, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats) {
-		return DirectComponentCalculations.getDirectSpellComponentSnapshot(caster, spell, target, command, spellStats, targetStats);
+	public DirectSpellComponentSnapshot getDirectSpellComponentSnapshot(Character caster, ChangeHealthDirectly command, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats) {
+		return DirectComponentCalculations.getDirectSpellComponentSnapshot(caster, command, spellStats, targetStats);
 	}
 
 	@Override
@@ -148,8 +148,8 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public PeriodicSpellComponentSnapshot getPeriodicComponentSnapshot(Character caster, Spell spell, Character target, ChangeHealthPeriodically command, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats) {
-		return PeriodicComponentCalculations.getPeriodicComponentSnapshot(caster, spell, target, command, spellStats, targetStats);
+	public PeriodicSpellComponentSnapshot getPeriodicComponentSnapshot(ChangeHealthPeriodically command, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats) {
+		return PeriodicComponentCalculations.getPeriodicComponentSnapshot(command, spellStats, targetStats);
 	}
 
 	@Override
@@ -178,7 +178,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public double getCopiedAmountAsManaGain(Character caster, Spell spell, Character target, int amount, double ratioPct) {
-		return CopyCalculations.getCopiedAmountAsManaGain(caster, spell, target, amount, ratioPct);
+	public double getCopiedAmountAsManaGain(Character caster, Spell spell, int amount, double ratioPct) {
+		return CopyCalculations.getCopiedAmountAsManaGain(caster, spell, amount, ratioPct);
 	}
 }

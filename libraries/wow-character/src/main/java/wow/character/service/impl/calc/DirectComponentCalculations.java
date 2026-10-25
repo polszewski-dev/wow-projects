@@ -7,17 +7,17 @@ import wow.character.model.snapshot.DirectSpellComponentSnapshot;
 import wow.character.util.AttributeConditionArgs;
 import wow.commons.model.attribute.PowerType;
 import wow.commons.model.spell.Spell;
-import wow.commons.model.spell.component.ComponentCommand;
 
 import static wow.commons.model.attribute.PowerType.HEALING;
 import static wow.commons.model.attribute.PowerType.SPELL_DAMAGE;
+import static wow.commons.model.spell.component.ComponentCommand.*;
 
 /**
  * User: POlszewski
  * Date: 2026-10-25
  */
 public class DirectComponentCalculations extends ComponentCalculations {
-	public static AccumulatedSpellStats newAccumulatedDirectComponentStats(Character caster, Spell spell, Character target, PowerType powerType, ComponentCommand.ChangeHealthDirectly command) {
+	public static AccumulatedSpellStats newAccumulatedDirectComponentStats(Character caster, Spell spell, Character target, PowerType powerType, ChangeHealthDirectly command) {
 		var conditionArgs = AttributeConditionArgs.forSpell(caster, spell, target, powerType, command.school());
 
 		conditionArgs.setDirect(true);
@@ -25,29 +25,29 @@ public class DirectComponentCalculations extends ComponentCalculations {
 		return newAccumulatedSpellStats(conditionArgs);
 	}
 
-	private static AccumulatedSpellStats getAccumulatedDirectComponentStats(Character caster, Spell spell, Character target, PowerType powerType, ComponentCommand.ChangeHealthDirectly command) {
+	private static AccumulatedSpellStats getAccumulatedDirectComponentStats(Character caster, Spell spell, Character target, PowerType powerType, ChangeHealthDirectly command) {
 		var spellStats = newAccumulatedDirectComponentStats(caster, spell, target, powerType, command);
 
 		accumulateEffects(caster, spellStats);
 		return spellStats;
 	}
 
-	public static DirectSpellComponentSnapshot getDirectSpellDamageSnapshot(Character caster, Spell spell, Character target, ComponentCommand.DealDamageDirectly command) {
+	public static DirectSpellComponentSnapshot getDirectSpellDamageSnapshot(Character caster, Spell spell, Character target, DealDamageDirectly command) {
 		return getDirectSpellComponentSnapshot(caster, spell, target, command, SPELL_DAMAGE);
 	}
 
-	public static DirectSpellComponentSnapshot getDirectHealingSnapshot(Character caster, Spell spell, Character target, ComponentCommand.HealDirectly command) {
+	public static DirectSpellComponentSnapshot getDirectHealingSnapshot(Character caster, Spell spell, Character target, HealDirectly command) {
 		return getDirectSpellComponentSnapshot(caster, spell, target, command, HEALING);
 	}
 
-	private static DirectSpellComponentSnapshot getDirectSpellComponentSnapshot(Character caster, Spell spell, Character target, ComponentCommand.ChangeHealthDirectly command, PowerType powerType) {
+	private static DirectSpellComponentSnapshot getDirectSpellComponentSnapshot(Character caster, Spell spell, Character target, ChangeHealthDirectly command, PowerType powerType) {
 		var spellStats = getAccumulatedDirectComponentStats(caster, spell, target, powerType, command);
 		var targetStats = getAccumulatedTargetStats(spell, target, powerType, command.school());
 
-		return getDirectSpellComponentSnapshot(caster, spell, target, command, spellStats, targetStats);
+		return getDirectSpellComponentSnapshot(caster, command, spellStats, targetStats);
 	}
 
-	public static DirectSpellComponentSnapshot getDirectSpellComponentSnapshot(Character caster, Spell spell, Character target, ComponentCommand.ChangeHealthDirectly command, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats) {
+	public static DirectSpellComponentSnapshot getDirectSpellComponentSnapshot(Character caster, ChangeHealthDirectly command, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats) {
 		var snapshot = new DirectSpellComponentSnapshot(command);
 
 		var critPct = getSpellCritPct(caster, spellStats, targetStats);

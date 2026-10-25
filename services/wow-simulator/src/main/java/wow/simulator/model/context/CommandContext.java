@@ -119,7 +119,7 @@ public abstract class CommandContext extends Context {
 	}
 
 	private void copyAsManaGain(Unit target, int value, double ratioPct, boolean direct) {
-		var manaGain = getCharacterCalculationService().getCopiedAmountAsManaGain(caster, getSourceSpell(), target, value, ratioPct);
+		var manaGain = getCharacterCalculationService().getCopiedAmountAsManaGain(caster, getSourceSpell(), value, ratioPct);
 		var roundedManaGain = roundValue(manaGain, target);
 
 		increaseMana(target, roundedManaGain, direct, false);
