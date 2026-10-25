@@ -7,8 +7,12 @@ import wow.commons.util.ObjectCache;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import static wow.commons.util.parser.ParserUtil.parseMultipleValues;
 
@@ -475,7 +479,7 @@ public abstract class ConditionParser<T extends Condition, E> {
 	private record PrimitiveNode(String value) implements Node {}
 
 	protected String parseFunctionArgument(String name, String value) {
-		var regex = name + "\\((.+)\\)";
+		var regex = Pattern.quote(name) + "\\((.+)\\)";
 		var result = parseMultipleValues(regex, value);
 
 		if (result.isEmpty()) {
@@ -497,5 +501,41 @@ public abstract class ConditionParser<T extends Condition, E> {
 		}
 
 		return mapper.apply(argument);
+	}
+
+	protected static class ParseChain<R> {
+		private final Function<String, R>[] functions;
+
+		@SafeVarargs
+		public ParseChain(Function<String, R>... functions) {
+			this.functions = functions;
+		}
+
+		public Optional<R> tryParse(String value) {
+			return Stream.of(functions)
+					.map(function -> function.apply(value))
+					.filter(Objects::nonNull)
+					.findFirst();
+		}
+	}
+
+	protected <R> Function<String, R> parseConstant(String constant, Supplier<R> supplier) {
+		return value -> value.equals(constant) ? supplier.get() : null;
+	}
+
+	protected <R> Function<String, R> parseConstant(String constant, R result) {
+		return value -> value.equals(constant) ? result : null;
+	}
+
+	protected <R, X> Function<String, R> parseAndTransform(Function<String, X> parse, Function<X, R> transform) {
+		return value -> {
+			var parsed = parse.apply(value);
+
+			if (parsed != null) {
+				return transform.apply(parsed);
+			}
+
+			return null;
+		};
 	}
 }

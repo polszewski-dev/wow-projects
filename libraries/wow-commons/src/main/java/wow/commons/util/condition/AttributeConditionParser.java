@@ -19,6 +19,7 @@ import java.util.Map;
 
 import static java.util.Map.entry;
 import static wow.commons.model.attribute.AttributeCondition.*;
+import static wow.commons.util.condition.AttributeConditionStrings.*;
 
 /**
  * User: POlszewski
@@ -54,98 +55,28 @@ public class AttributeConditionParser extends ConditionParser<AttributeCondition
 			return EMPTY;
 		}
 
-		var actionType = ActionType.tryParse(value);
-
-		if (actionType != null) {
-			return of(actionType);
-		}
-
-		var powerType = PowerType.tryParse(value);
-
-		if (powerType != null) {
-			return of(powerType);
-		}
-
-		var talentTree = TalentTree.tryParse(value);
-
-		if (talentTree != null) {
-			return of(talentTree);
-		}
-
-		var spellSchool = SpellSchool.tryParse(value);
-
-		if (spellSchool != null) {
-			return of(spellSchool);
-		}
-
-		var abilityId = AbilityId.tryParse(value);
-
-		if (abilityId != null) {
-			return of(abilityId);
-		}
-
-		var abilityCategory = AbilityCategory.tryParse(value);
-
-		if (abilityCategory != null) {
-			return of(abilityCategory);
-		}
-
-		var petType = PetType.tryParse(value);
-
-		if (petType != null) {
-			return of(petType);
-		}
-
-		var creatureType = CreatureType.tryParse(value);
-
-		if (creatureType != null) {
-			return of(creatureType);
-		}
-
-		var effectCategory = EffectCategory.tryParse(value);
-
-		if (effectCategory != null) {
-			return of(effectCategory);
-		}
-
-		var effectName = tryParseEffectName(value);
-
-		if (effectName != null) {
-			return effectName;
-		}
-
-		var ownerHasEffect = tryParseOwnerHasEffect(value);
-
-		if (ownerHasEffect != null) {
-			return ownerHasEffect;
-		}
-
-		var weaponSubType = WeaponSubType.tryParse(value);
-
-		if (weaponSubType != null) {
-			return of(weaponSubType);
-		}
-
-		var professionId = ProfessionId.tryParse(value);
-
-		if (professionId != null) {
-			return of(professionId);
-		}
-
-		var movementType = MovementType.tryParse(value);
-
-		if (movementType != null) {
-			return of(movementType);
-		}
-
-		var miscCondition = MISC_CONDITIONS.get(value);
-
-		if (miscCondition != null) {
-			return miscCondition;
-		}
-
-		throw new IllegalArgumentException("Unknown condition: " + value);
+		return basicConditionChain
+				.tryParse(value)
+				.orElseThrow(() -> new IllegalArgumentException("Unknown condition: " + value));
 	}
+
+	private final ParseChain<AttributeCondition> basicConditionChain = new ParseChain<>(
+			parseAndTransform(ActionType::tryParse, AttributeCondition::of),
+			parseAndTransform(PowerType::tryParse, AttributeCondition::of),
+			parseAndTransform(TalentTree::tryParse, AttributeCondition::of),
+			parseAndTransform(SpellSchool::tryParse, AttributeCondition::of),
+			parseAndTransform(AbilityId::tryParse, AttributeCondition::of),
+			parseAndTransform(AbilityCategory::tryParse, AttributeCondition::of),
+			parseAndTransform(PetType::tryParse, AttributeCondition::of),
+			parseAndTransform(CreatureType::tryParse, AttributeCondition::of),
+			parseAndTransform(EffectCategory::tryParse, AttributeCondition::of),
+			this::tryParseEffectName,
+			this::tryParseOwnerHasEffect,
+			parseAndTransform(WeaponSubType::tryParse, AttributeCondition::of),
+			parseAndTransform(ProfessionId::tryParse, AttributeCondition::of),
+			parseAndTransform(MovementType::tryParse, AttributeCondition::of),
+			MISC_CONDITIONS::get
+	);
 
 	@Override
 	protected AttributeCondition getEmptyCondition() {
@@ -185,23 +116,14 @@ public class AttributeConditionParser extends ConditionParser<AttributeCondition
 		return parseStringArgument(value, EFFECT_NAME, EffectNameCondition::new);
 	}
 
-	static final String OWNER_HEALTH_PCT = "Owner.Health%";
-	static final String OWNER_HAS_EFFECT = "Owner.HasEffect";
-	static final String TARGET_HEALTH_PCT = "Target.Health%";
-	static final String EFFECT_NAME = "EffectName";
-
-	static final Map<String, AttributeCondition> MISC_CONDITIONS;
-
-	static {
-		MISC_CONDITIONS = Map.ofEntries(
-				entry("Direct", IS_DIRECT),
-				entry("Periodic", IS_PERIODIC),
-				entry("HasHealingComponent", HAS_HEALING_COMPONENT),
-				entry("IsInstantCast", IS_INSTANT_CAST),
-				entry("HasCastTime", HAS_CAST_TIME),
-				entry("HasCastTimeUnder10Sec", HAS_CAST_TIME_UNDER_10_SEC),
-				entry("HadCrit", HAD_CRIT),
-				entry("HasPet", HAS_PET)
-		);
-	}
+	static final Map<String, AttributeCondition> MISC_CONDITIONS = Map.ofEntries(
+			entry(DIRECT, new IsDirect()),
+			entry(PERIODIC, new IsPeriodic()),
+			entry(HAS_HEALING_COMPONENT, new HasHealingComponent()),
+			entry(IS_INSTANT_CAST, new IsInstantCast()),
+			entry(HAS_CAST_TIME, new HasCastTime()),
+			entry(HAS_CAST_TIME_UNDER_10_SEC, new HasCastTimeUnder10Sec()),
+			entry(HAD_CRIT, new HadCrit()),
+			entry(HAS_PET, new HasPet())
+	);
 }

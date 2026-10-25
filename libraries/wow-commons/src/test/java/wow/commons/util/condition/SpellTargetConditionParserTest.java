@@ -86,11 +86,11 @@ class SpellTargetConditionParserTest {
 			),
 			testData(
 					"Friendly",
-					FRIENDLY
+					new Friendly()
 			),
 			testData(
 					"Hostile",
-					HOSTILE
+					new Hostile()
 			),
 			testData(
 					"Imp, Voidwalker, Succubus, Incubus, Felhunter, Felguard",

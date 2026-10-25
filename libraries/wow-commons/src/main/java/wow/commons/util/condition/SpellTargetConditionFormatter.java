@@ -5,10 +5,7 @@ import wow.commons.model.spell.SpellTargetCondition;
 import java.util.List;
 
 import static wow.commons.model.spell.SpellTargetCondition.*;
-import static wow.commons.util.condition.SpellTargetConditionParser.FRIENDLY;
-import static wow.commons.util.condition.SpellTargetConditionParser.HAS_PET;
-import static wow.commons.util.condition.SpellTargetConditionParser.HOSTILE;
-import static wow.commons.util.condition.SpellTargetConditionParser.*;
+import static wow.commons.util.condition.SpellTargetConditionStrings.*;
 
 /**
  * User: POlszewski

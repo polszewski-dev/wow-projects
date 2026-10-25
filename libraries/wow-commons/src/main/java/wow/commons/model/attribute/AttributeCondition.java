@@ -25,15 +25,6 @@ import static wow.commons.util.condition.AttributeConditionParser.parseCondition
 public sealed interface AttributeCondition extends Condition {
 	EmptyCondition EMPTY = new EmptyCondition();
 
-	IsDirect IS_DIRECT = new IsDirect();
-	IsPeriodic IS_PERIODIC = new IsPeriodic();
-	HasHealingComponent HAS_HEALING_COMPONENT = new HasHealingComponent();
-	IsInstantCast IS_INSTANT_CAST = new IsInstantCast();
-	HasCastTime HAS_CAST_TIME = new HasCastTime();
-	HasCastTimeUnder10Sec HAS_CAST_TIME_UNDER_10_SEC = new HasCastTimeUnder10Sec();
-	HadCrit HAD_CRIT = new HadCrit();
-	HasPet HAS_PET = new HasPet();
-
 	static AttributeCondition of(ActionType actionType) {
 		return new ActionTypeCondition(actionType);
 	}

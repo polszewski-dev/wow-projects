@@ -47,6 +47,7 @@ import static wow.commons.model.pve.PhaseId.TBC_P5;
 import static wow.commons.model.spell.ResourceType.HEALTH;
 import static wow.commons.model.spell.ResourceType.MANA;
 import static wow.commons.model.spell.SpellSchool.*;
+import static wow.commons.model.spell.SpellTargetCondition.*;
 import static wow.commons.model.spell.SpellTargetType.*;
 import static wow.commons.model.spell.component.ComponentCommand.*;
 import static wow.test.commons.AbilityNames.*;
@@ -331,7 +332,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 						List.of(
 								new DealDamageDirectly(
 										SpellTargets.ENEMY,
-										SpellTargetCondition.EMPTY,
+										EMPTY,
 										new Coefficient(new Percent(85.71), SHADOW),
 										544,
 										607,
@@ -343,7 +344,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 						List.of(
 								new DealDamageDirectly(
 										SpellTargets.ENEMY,
-										SpellTargetCondition.EMPTY,
+										EMPTY,
 										coefficient(71.43, FIRE),
 										444,
 										514,
@@ -355,7 +356,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 						List.of(
 								new Copy(
 										SpellTargets.SELF,
-										SpellTargetCondition.EMPTY,
+										EMPTY,
 										null,
 										From.HEALTH_PAID,
 										To.MANA_GAIN,
@@ -367,7 +368,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 						List.of(
 								new DealDamageDirectly(
 										SpellTargets.ANY,
-										SpellTargetCondition.HOSTILE,
+										new Hostile(),
 										coefficient(42.85, HOLY),
 										721,
 										779,
@@ -375,7 +376,7 @@ class SpellRepositoryTest extends WowCommonsSpringTest {
 								),
 								new HealDirectly(
 										SpellTargets.ANY,
-										SpellTargetCondition.FRIENDLY,
+										new Friendly(),
 										coefficient(42.85, HOLY),
 										913,
 										987,

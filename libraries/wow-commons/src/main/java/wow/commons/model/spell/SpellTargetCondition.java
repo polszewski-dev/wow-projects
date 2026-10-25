@@ -16,12 +16,6 @@ import java.util.Objects;
 public sealed interface SpellTargetCondition extends Condition {
 	Empty EMPTY = new Empty();
 
-	Friendly FRIENDLY = new Friendly();
-
-	Hostile HOSTILE = new Hostile();
-
-	HasPet HAS_PET = new HasPet();
-
 	static SpellTargetCondition of(CreatureType creatureType) {
 		return new IsCreatureType(creatureType);
 	}

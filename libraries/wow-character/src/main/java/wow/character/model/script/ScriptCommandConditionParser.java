@@ -1,14 +1,12 @@
 package wow.character.model.script;
 
-import wow.commons.model.spell.AbilityId;
 import wow.commons.util.condition.ConditionParser;
-import wow.commons.util.parser.ParserUtil;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
 
 import static wow.character.model.script.ScriptCommandCondition.*;
+import static wow.character.model.script.ScriptCommandConditionStrings.*;
 
 /**
  * User: POlszewski
@@ -83,32 +81,17 @@ public class ScriptCommandConditionParser extends ConditionParser<ScriptCommandC
 			return transform(macro);
 		}
 
-		var casterHasEffect = parseCasterHasEffect(value);
-
-		if (casterHasEffect != null) {
-			return casterHasEffect;
-		}
-
-		var targetHasEffect = parseTargetHasEffect(value);
-
-		if (targetHasEffect != null) {
-			return targetHasEffect;
-		}
-
-		var canCastMoreBeforeSimulationEnds = parseCanCastMoreBeforeSimulationEnds(value);
-
-		if (canCastMoreBeforeSimulationEnds != null) {
-			return canCastMoreBeforeSimulationEnds;
-		}
-
-		var assetEnabled = parseAssetEnabled(value);
-
-		if (assetEnabled != null) {
-			return assetEnabled;
-		}
-
-		throw new IllegalArgumentException("Invalid condition: " + value);
+		return basicConditionChain
+				.tryParse(value)
+				.orElseThrow(() -> new IllegalArgumentException("Invalid condition: " + value));
 	}
+
+	private final ParseChain<ScriptCommandCondition> basicConditionChain = new ParseChain<>(
+			this::parseCasterHasEffect,
+			this::parseTargetHasEffect,
+			this::parseCanCastMoreBeforeSimulationEnds,
+			this::parseAssetEnabled
+	);
 
 	@Override
 	protected Expression getBasicExpression(String value) {
@@ -118,58 +101,22 @@ public class ScriptCommandConditionParser extends ConditionParser<ScriptCommandC
 			return expressionTransform(macro);
 		}
 
-		if (value.equals("Health")) {
-			return new CasterHealth();
-		}
-
-		if (value.equals("Mana")) {
-			return new CasterMana();
-		}
-
-		if (value.equals("Health%")) {
-			return new CasterHealthPct();
-		}
-
-		if (value.equals("Mana%")) {
-			return new CasterManaPct();
-		}
-
-		if (value.equals("Target.Health%")) {
-			return new TargetHealthPct();
-		}
-
-		if (value.equals("Target.Mana%")) {
-			return new TargetManaPct();
-		}
-
-		if (value.equals("FullDuration")) {
-			return new FullDuration();
-		}
-
-		if (value.equals("RemainingSimulationDuration")) {
-			return new RemainingSimulationDuration();
-		}
-
-		var remainingCooldown = parseRemainingCooldown(value);
-
-		if (remainingCooldown != null) {
-			return remainingCooldown;
-		}
-
-		var numAnyStacks = parseTargetNumAnyStacks(value);
-
-		if (numAnyStacks != null) {
-			return numAnyStacks;
-		}
-
-		var targetRemainingAnyEffectDuration = parseTargetRemainingAnyEffectDuration(value);
-
-		if (targetRemainingAnyEffectDuration != null) {
-			return targetRemainingAnyEffectDuration;
-		}
-
-		return null;
+		return basicExpressionChain.tryParse(value).orElse(null);
 	}
+
+	private final ParseChain<Expression> basicExpressionChain = new ParseChain<>(
+			parseConstant(CASTER_HEALTH, CasterHealth::new),
+			parseConstant(CASTER_MANA, CasterMana::new),
+			parseConstant(CASTER_HEALTH_PCT, CasterHealthPct::new),
+			parseConstant(CASTER_MANA_PCT, CasterManaPct::new),
+			parseConstant(TARGET_HEALTH_PCT, TargetHealthPct::new),
+			parseConstant(TARGET_MANA_PCT, TargetManaPct::new),
+			parseConstant(FULL_DURATION, FullDuration::new),
+			parseConstant(REMAINING_SIMULATION_DURATION, RemainingSimulationDuration::new),
+			this::parseRemainingCooldown,
+			this::parseTargetNumAnyStacks,
+			this::parseTargetRemainingAnyEffectDuration
+	);
 
 	@Override
 	protected Constant getConstant(double value) {
@@ -177,47 +124,31 @@ public class ScriptCommandConditionParser extends ConditionParser<ScriptCommandC
 	}
 
 	private CasterHasEffect parseCasterHasEffect(String value) {
-		return extractSingleValue(value, "Caster\\.HasEffect\\((.+)\\)", CasterHasEffect::new);
+		return parseStringArgument(value, CASTER_HAS_EFFECT, CasterHasEffect::new);
 	}
 
 	private TargetHasEffect parseTargetHasEffect(String value) {
-		return extractSingleValue(value, "Target\\.HasEffect\\((.+)\\)", TargetHasEffect::new);
+		return parseStringArgument(value, TARGET_HAS_EFFECT, TargetHasEffect::new);
 	}
 
 	private CanCastMoreBeforeSimulationEnds parseCanCastMoreBeforeSimulationEnds(String value) {
-		return extractSingleValue(value, "CanCastMoreBeforeSimulationEnds\\((.+)\\)", x -> new CanCastMoreBeforeSimulationEnds(AbilityId.of(x)));
+		return parseAbilityIdArgument(value, CAN_CAST_MORE_BEFORE_SIMULATION_ENDS, CanCastMoreBeforeSimulationEnds::new);
 	}
 
 	private AssetEnabled parseAssetEnabled(String value) {
-		return extractSingleValue(value, "AssetEnabled\\((.+)\\)", AssetEnabled::new);
+		return parseStringArgument(value, ASSET_ENABLED, AssetEnabled::new);
 	}
 
 	private RemainingCooldown parseRemainingCooldown(String value) {
-		return extractSingleValue(value, "RemainingCooldown\\((.+)\\)", x -> new RemainingCooldown(AbilityId.of(x)));
+		return parseAbilityIdArgument(value, REMAINING_COOLDOWN, RemainingCooldown::new);
 	}
 
 	private TargetNumStacksOfAny parseTargetNumAnyStacks(String value) {
-		return extractSingleValue(value, "Target\\.NumStacksOfAny\\((.+)\\)", TargetNumStacksOfAny::new);
+		return parseStringArgument(value, TARGET_NUM_STACKS_OF_ANY, TargetNumStacksOfAny::new);
 	}
 
 	private TargetRemainingEffectDurationOfAny parseTargetRemainingAnyEffectDuration(String value) {
-		return extractSingleValue(value, "Target\\.RemainingEffectDurationOfAny\\((.+)\\)", TargetRemainingEffectDurationOfAny::new);
-	}
-
-	private <T> T extractSingleValue(String value, String regex, Function<String, T> mapper) {
-		var parseResult = ParserUtil.parseMultipleValues(regex, value);
-
-		if (parseResult.isEmpty()) {
-			return null;
-		}
-
-		var groupValue = parseResult.get(0).trim();
-
-		if (groupValue.isEmpty()) {
-			return null;
-		}
-
-		return mapper.apply(groupValue);
+		return parseStringArgument(value, TARGET_REMAINING_EFFECT_DURATION_OF_ANY, TargetRemainingEffectDurationOfAny::new);
 	}
 
 	@Override

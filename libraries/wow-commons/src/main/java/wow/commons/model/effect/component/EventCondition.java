@@ -21,20 +21,6 @@ import static wow.commons.util.condition.EventConditionParser.parseCondition;
 public sealed interface EventCondition extends Condition {
 	EmptyCondition EMPTY = new EmptyCondition();
 
-	IsDirect IS_DIRECT = new IsDirect();
-	IsPeriodic IS_PERIODIC = new IsPeriodic();
-	IsHostileSpell IS_HOSTILE_SPELL = new IsHostileSpell();
-	IsNormalMeleeAttack IS_NORMAL_MELEE_ATTACK = new IsNormalMeleeAttack();
-	IsSpecialAttack IS_SPECIAL_ATTACK = new IsSpecialAttack();
-	HasManaCost HAS_MANA_COST = new HasManaCost();
-	HasCastTime HAS_CAST_TIME = new HasCastTime();
-	HasCastTimeUnder10Sec HAS_CAST_TIME_UNDER_10_SEC = new HasCastTimeUnder10Sec();
-	CanCrit CAN_CRIT = new CanCrit();
-	HadNoCrit HAD_NO_CRIT = new HadNoCrit();
-	HadCrit HAD_CRIT = new HadCrit();
-	IsTargetingOthers IS_TARGETING_OTHERS = new IsTargetingOthers();
-	CasterIsOwner CASTER_IS_OWNER = new CasterIsOwner();
-
 	static EventCondition of(ActionType actionType) {
 		return new ActionTypeCondition(actionType);
 	}

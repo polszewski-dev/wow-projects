@@ -185,7 +185,7 @@ class EventConditionParserTest {
 			),
 			testData(
 					"Healing & Direct",
-					and(EventConditions.HEALING, EventCondition.IS_DIRECT)
+					and(EventConditions.HEALING, new IsDirect())
 			),
 			testData(
 					"Shadow | Frost",

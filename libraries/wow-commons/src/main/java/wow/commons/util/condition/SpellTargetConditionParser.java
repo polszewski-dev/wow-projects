@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.function.DoubleFunction;
 
 import static wow.commons.model.spell.SpellTargetCondition.*;
+import static wow.commons.util.condition.SpellTargetConditionStrings.*;
 
 /**
  * User: POlszewski
@@ -50,50 +51,21 @@ public class SpellTargetConditionParser extends ConditionParser<SpellTargetCondi
 			return EMPTY;
 		}
 
-		var creatureType = CreatureType.tryParse(value);
-
-		if (creatureType != null) {
-			return SpellTargetCondition.of(creatureType);
-		}
-
-		var petType = PetType.tryParse(value);
-
-		if (petType != null) {
-			return SpellTargetCondition.of(petType);
-		}
-
-		var hasEffect = tryParseHasEffect(value);
-
-		if (hasEffect != null) {
-			return hasEffect;
-		}
-
-		var formType = FormType.tryParse(value);
-
-		if (formType != null) {
-			return SpellTargetCondition.of(formType);
-		}
-
-		if (FRIENDLY.equalsIgnoreCase(value)) {
-			return SpellTargetCondition.FRIENDLY;
-		}
-
-		if (HOSTILE.equalsIgnoreCase(value)) {
-			return SpellTargetCondition.HOSTILE;
-		}
-
-		if (HAS_PET.equalsIgnoreCase(value)) {
-			return SpellTargetCondition.HAS_PET;
-		}
-
-		var sacrificed = tryParseSacrificed(value);
-
-		if (sacrificed != null) {
-			return sacrificed;
-		}
-
-		throw new IllegalArgumentException("Unknown condition: " + value);
+		return basicConditionChain
+				.tryParse(value)
+				.orElseThrow(() -> new IllegalArgumentException("Unknown condition: " + value));
 	}
+
+	private final ParseChain<SpellTargetCondition> basicConditionChain = new ParseChain<>(
+			parseAndTransform(CreatureType::tryParse, SpellTargetCondition::of),
+			parseAndTransform(PetType::tryParse, SpellTargetCondition::of),
+			this::tryParseHasEffect,
+			parseAndTransform(FormType::tryParse, SpellTargetCondition::of),
+			parseConstant(FRIENDLY, new Friendly()),
+			parseConstant(HOSTILE, new Hostile()),
+			parseConstant(HAS_PET, new HasPet()),
+			this::tryParseSacrificed
+	);
 
 	@Override
 	protected SpellTargetCondition getEmptyCondition() {
@@ -156,12 +128,4 @@ public class SpellTargetConditionParser extends ConditionParser<SpellTargetCondi
 	private SacrificedPet tryParseSacrificed(String value) {
 		return parseStringArgument(value, SACRIFICED, argument -> new SacrificedPet(PetType.parse(argument)));
 	}
-
-	static final String HAS_EFFECT = "HasEffect";
-	static final String HEALTH_PCT = "Health%";
-	static final String CLASS = "Class";
-	static final String FRIENDLY = "Friendly";
-	static final String HOSTILE = "Hostile";
-	static final String HAS_PET = "HasPet";
-	static final String SACRIFICED = "Sacrificed";
 }

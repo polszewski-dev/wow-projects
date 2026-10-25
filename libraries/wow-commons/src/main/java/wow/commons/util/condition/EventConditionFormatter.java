@@ -8,7 +8,8 @@ import java.util.Map;
 import static wow.commons.model.effect.component.EventCondition.EmptyCondition;
 import static wow.commons.model.effect.component.EventCondition.Operator;
 import static wow.commons.model.effect.component.EventCondition.Operator.*;
-import static wow.commons.util.condition.EventConditionParser.*;
+import static wow.commons.util.condition.EventConditionParser.MISC_CONDITIONS;
+import static wow.commons.util.condition.EventConditionStrings.*;
 
 /**
  * User: POlszewski

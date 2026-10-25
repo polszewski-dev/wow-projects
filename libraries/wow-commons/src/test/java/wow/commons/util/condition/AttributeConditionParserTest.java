@@ -186,11 +186,11 @@ class AttributeConditionParserTest {
 			),
 			testData(
 					"Healing & Direct",
-					and(AttributeConditions.HEALING, IS_DIRECT)
+					and(AttributeConditions.HEALING, new IsDirect())
 			),
 			testData(
 					"Healing & Periodic",
-					and(AttributeConditions.HEALING, IS_PERIODIC)
+					and(AttributeConditions.HEALING, new IsPeriodic())
 			),
 			testData(
 					"Shadow | Frost",

@@ -20,26 +20,16 @@ public class AbsorptionConditionParser extends ConditionParser<AbsorptionConditi
 
 	@Override
 	protected AbsorptionCondition getBasicCondition(String value) {
-		var actionType = ActionType.tryParse(value);
-
-		if (actionType != null) {
-			return AbsorptionCondition.of(actionType);
-		}
-
-		var powerType = PowerType.tryParse(value);
-
-		if (powerType != null) {
-			return AbsorptionCondition.of(powerType);
-		}
-
-		var spellSchool = SpellSchool.tryParse(value);
-
-		if (spellSchool != null) {
-			return AbsorptionCondition.of(spellSchool);
-		}
-
-		throw new IllegalArgumentException("Unknown condition: " + value);
+		return basicConditionChain
+				.tryParse(value)
+				.orElseThrow(() -> new IllegalArgumentException("Unknown condition: " + value));
 	}
+
+	private final ParseChain<AbsorptionCondition> basicConditionChain = new ParseChain<>(
+			parseAndTransform(ActionType::tryParse, AbsorptionCondition::of),
+			parseAndTransform(PowerType::tryParse, AbsorptionCondition::of),
+			parseAndTransform(SpellSchool::tryParse, AbsorptionCondition::of)
+	);
 
 	@Override
 	protected AbsorptionCondition getEmptyCondition() {

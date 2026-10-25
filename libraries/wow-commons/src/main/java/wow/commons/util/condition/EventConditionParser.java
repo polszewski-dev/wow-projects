@@ -14,6 +14,7 @@ import java.util.Map;
 
 import static java.util.Map.entry;
 import static wow.commons.model.effect.component.EventCondition.*;
+import static wow.commons.util.condition.EventConditionStrings.*;
 
 /**
  * User: POlszewski
@@ -49,74 +50,24 @@ public class EventConditionParser extends ConditionParser<EventCondition, String
 			return EMPTY;
 		}
 
-		var actionType = ActionType.tryParse(value);
-
-		if (actionType != null) {
-			return of(actionType);
-		}
-
-		var powerType = PowerType.tryParse(value);
-
-		if (powerType != null) {
-			return of(powerType);
-		}
-
-		var talentTree = TalentTree.tryParse(value);
-
-		if (talentTree != null) {
-			return of(talentTree);
-		}
-
-		var spellSchool = SpellSchool.tryParse(value);
-
-		if (spellSchool != null) {
-			return of(spellSchool);
-		}
-
-		var abilityId = AbilityId.tryParse(value);
-
-		if (abilityId != null) {
-			return of(abilityId);
-		}
-
-		var abilityCategory = AbilityCategory.tryParse(value);
-
-		if (abilityCategory != null) {
-			return of(abilityCategory);
-		}
-
-		var creatureType = CreatureType.tryParse(value);
-
-		if (creatureType != null) {
-			return of(creatureType);
-		}
-
-		var ownerHasEffect = tryParseOwnerHasEffect(value);
-
-		if (ownerHasEffect != null) {
-			return ownerHasEffect;
-		}
-
-		var ownerIsChanneling = tryParseOwnerIsChanneling(value);
-
-		if (ownerIsChanneling != null) {
-			return ownerIsChanneling;
-		}
-
-		var hasXFaction = tryParseHasXFaction(value);
-
-		if (hasXFaction != null) {
-			return hasXFaction;
-		}
-
-		var miscCondition = MISC_CONDITIONS.get(value);
-
-		if (miscCondition != null) {
-			return miscCondition;
-		}
-
-		throw new IllegalArgumentException("Unknown condition: " + value);
+		return basicConditionChain
+				.tryParse(value)
+				.orElseThrow(() -> new IllegalArgumentException("Unknown condition: " + value));
 	}
+
+	private final ParseChain<EventCondition> basicConditionChain = new ParseChain<>(
+			parseAndTransform(ActionType::tryParse, EventCondition::of),
+			parseAndTransform(PowerType::tryParse, EventCondition::of),
+			parseAndTransform(TalentTree::tryParse, EventCondition::of),
+			parseAndTransform(SpellSchool::tryParse, EventCondition::of),
+			parseAndTransform(AbilityId::tryParse, EventCondition::of),
+			parseAndTransform(AbilityCategory::tryParse, EventCondition::of),
+			parseAndTransform(CreatureType::tryParse, EventCondition::of),
+			this::tryParseOwnerHasEffect,
+			this::tryParseOwnerIsChanneling,
+			this::tryParseHasXFaction,
+			MISC_CONDITIONS::get
+	);
 
 	@Override
 	protected EventCondition getEmptyCondition() {
@@ -158,31 +109,19 @@ public class EventConditionParser extends ConditionParser<EventCondition, String
 		return parseStringArgument(value, HAS_X_FACTION, HasXFaction::new);
 	}
 
-	static final String OWNER_HAS_EFFECT = "Owner.HasEffect";
-	static final String OWNER_IS_CHANNELING = "Owner.IsChanneling";
-
-	static final String OWNER_HEALTH_PCT = "Owner.Health%";
-	static final String TARGET_HEALTH_PCT = "Target.Health%";
-
-	static final String HAS_X_FACTION = "HasXFaction";
-
-	static final Map<String, EventCondition> MISC_CONDITIONS;
-
-	static {
-		MISC_CONDITIONS = Map.ofEntries(
-				entry("Direct", IS_DIRECT),
-				entry("Periodic", IS_PERIODIC),
-				entry("HostileSpell", IS_HOSTILE_SPELL),
-				entry("NormalMeleeAttack", IS_NORMAL_MELEE_ATTACK),
-				entry("SpecialAttack", IS_SPECIAL_ATTACK),
-				entry("HasManaCost", HAS_MANA_COST),
-				entry("HasCastTime", HAS_CAST_TIME),
-				entry("HasCastTimeUnder10Sec", HAS_CAST_TIME_UNDER_10_SEC),
-				entry("CanCrit", CAN_CRIT),
-				entry("HadNoCrit", HAD_NO_CRIT),
-				entry("HadCrit", HAD_CRIT),
-				entry("TargetingOthers", IS_TARGETING_OTHERS),
-				entry("CasterIsOwner", CASTER_IS_OWNER)
-		);
-	}
+	static final Map<String, EventCondition> MISC_CONDITIONS = Map.ofEntries(
+			entry(DIRECT, new IsDirect()),
+			entry(PERIODIC, new IsPeriodic()),
+			entry(HOSTILE_SPELL, new IsHostileSpell()),
+			entry(NORMAL_MELEE_ATTACK, new IsNormalMeleeAttack()),
+			entry(SPECIAL_ATTACK, new IsSpecialAttack()),
+			entry(HAS_MANA_COST, new HasManaCost()),
+			entry(HAS_CAST_TIME, new HasCastTime()),
+			entry(HAS_CAST_TIME_UNDER_10_SEC, new HasCastTimeUnder10Sec()),
+			entry(CAN_CRIT, new CanCrit()),
+			entry(HAD_NO_CRIT, new HadNoCrit()),
+			entry(HAD_CRIT, new HadCrit()),
+			entry(TARGETING_OTHERS, new IsTargetingOthers()),
+			entry(CASTER_IS_OWNER, new CasterIsOwner())
+	);
 }

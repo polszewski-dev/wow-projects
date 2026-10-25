@@ -6,7 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import static wow.commons.model.attribute.AttributeCondition.*;
-import static wow.commons.util.condition.AttributeConditionParser.*;
+import static wow.commons.util.condition.AttributeConditionParser.MISC_CONDITIONS;
+import static wow.commons.util.condition.AttributeConditionStrings.*;
 
 /**
  * User: POlszewski
