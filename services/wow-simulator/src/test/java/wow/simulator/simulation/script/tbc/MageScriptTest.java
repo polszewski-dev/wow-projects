@@ -1,4 +1,4 @@
-package wow.simulator.simulation.script.tbc.mage;
+package wow.simulator.simulation.script.tbc;
 
 import org.junit.jupiter.api.Test;
 import wow.simulator.simulation.spell.tbc.TbcMageSpellSimulationTest;

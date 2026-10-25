@@ -1,7 +1,7 @@
-package wow.simulator.simulation.script.tbc.shaman;
+package wow.simulator.simulation.script.vanilla;
 
 import org.junit.jupiter.api.Test;
-import wow.simulator.simulation.spell.tbc.TbcShamanSpellSimulationTest;
+import wow.simulator.simulation.spell.vanilla.VanillaShamanSpellSimulationTest;
 
 import static wow.test.commons.AbilityNames.LIGHTNING_BOLT;
 
@@ -9,10 +9,10 @@ import static wow.test.commons.AbilityNames.LIGHTNING_BOLT;
  * User: POlszewski
  * Date: 2026-10-23
  */
-class ShamanScriptTest extends TbcShamanSpellSimulationTest {
+class ShamanScriptTest extends VanillaShamanSpellSimulationTest {
 	@Test
 	void lightning_bolt_spam() {
-		enableTalents("https://www.wowhead.com/tbc/talent-calc/shaman/55003105100213351051--05105301005");
+		enableTalents("https://www.wowhead.com/classic/talent-calc/shaman/550001552002151-5-55000301");
 
 		setScript("shaman-lightning-bolt-spam");
 

@@ -1,4 +1,4 @@
-package wow.simulator.simulation.script.vanilla.warlock;
+package wow.simulator.simulation.script.vanilla;
 
 import org.junit.jupiter.api.Test;
 import wow.simulator.simulation.spell.vanilla.VanillaWarlockSpellSimulationTest;

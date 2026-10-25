@@ -1,7 +1,7 @@
-package wow.simulator.simulation.script.vanilla.druid;
+package wow.simulator.simulation.script.tbc;
 
 import org.junit.jupiter.api.Test;
-import wow.simulator.simulation.spell.vanilla.VanillaDruidSpellSimulationTest;
+import wow.simulator.simulation.spell.tbc.TbcDruidSpellSimulationTest;
 
 import static wow.test.commons.AbilityNames.WRATH;
 
@@ -9,10 +9,10 @@ import static wow.test.commons.AbilityNames.WRATH;
  * User: POlszewski
  * Date: 2026-10-23
  */
-class DruidScriptTest extends VanillaDruidSpellSimulationTest {
+class DruidScriptTest extends TbcDruidSpellSimulationTest {
 	@Test
 	void wrath_spam() {
-		enableTalents("https://www.wowhead.com/classic/talent-calc/druid/5000500302551351--505103101");
+		enableTalents("https://www.wowhead.com/tbc/talent-calc/druid/510022312503135231351--500233");
 
 		setScript("druid-wrath-spam");
 
