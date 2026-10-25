@@ -57,15 +57,15 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public AccumulatedCastStats newAccumulatedCastStats(Character character, Ability ability, Character target) {
-		var conditionArgs = AttributeConditionArgs.forSpell(character, ability, target);
+	public AccumulatedCastStats newAccumulatedCastStats(Character caster, Ability ability, Character target) {
+		var conditionArgs = AttributeConditionArgs.forSpell(caster, ability, target);
 
 		return new AccumulatedCastStats(conditionArgs);
 	}
 
 	@Override
-	public AccumulatedCostStats newAccumulatedCostStats(Character character, Ability ability, Character target) {
-		var conditionArgs = AttributeConditionArgs.forSpell(character, ability, target);
+	public AccumulatedCostStats newAccumulatedCostStats(Character caster, Ability ability, Character target) {
+		var conditionArgs = AttributeConditionArgs.forSpell(caster, ability, target);
 
 		return new AccumulatedCostStats(conditionArgs);
 	}
@@ -78,15 +78,15 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public AccumulatedHitStats newAccumulatedHitStats(Character character, Spell spell, Character target) {
-		var conditionArgs = AttributeConditionArgs.forSpellDamage(character, spell, target, null);
+	public AccumulatedHitStats newAccumulatedHitStats(Character caster, Spell spell, Character target) {
+		var conditionArgs = AttributeConditionArgs.forSpellDamage(caster, spell, target, null);
 
 		return new AccumulatedHitStats(conditionArgs);
 	}
 
 	@Override
-	public AccumulatedDurationStats newAccumulatedDurationStats(Character character, Spell spell, Character target, ApplyEffect command) {
-		var conditionArgs = AttributeConditionArgs.forSpell(character, spell, target);
+	public AccumulatedDurationStats newAccumulatedDurationStats(Character caster, Spell spell, Character target, ApplyEffect command) {
+		var conditionArgs = AttributeConditionArgs.forSpell(caster, spell, target);
 
 		conditionArgs.setAppliedEffect(command.effect());
 
@@ -103,8 +103,8 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public AccumulatedSpellStats newAccumulatedDirectComponentStats(Character character, Spell spell, Character target, PowerType powerType, ChangeHealthDirectly command) {
-		var conditionArgs = AttributeConditionArgs.forSpell(character, spell, target, powerType, command.school());
+	public AccumulatedSpellStats newAccumulatedDirectComponentStats(Character caster, Spell spell, Character target, PowerType powerType, ChangeHealthDirectly command) {
+		var conditionArgs = AttributeConditionArgs.forSpell(caster, spell, target, powerType, command.school());
 
 		conditionArgs.setDirect(true);
 
@@ -112,8 +112,8 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public AccumulatedSpellStats newAccumulatedPeriodicComponentStats(Character character, Spell spell, Character target, PowerType powerType, PeriodicCommand command) {
-		var conditionArgs = AttributeConditionArgs.forSpell(character, spell, target, powerType, command.school());
+	public AccumulatedSpellStats newAccumulatedPeriodicComponentStats(Character caster, Spell spell, Character target, PowerType powerType, PeriodicCommand command) {
+		var conditionArgs = AttributeConditionArgs.forSpell(caster, spell, target, powerType, command.school());
 
 		conditionArgs.setPeriodic(true);
 
@@ -176,24 +176,24 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public SpellCastSnapshot getSpellCastSnapshot(Character character, Ability ability, Character target) {
-		var castStats = getAccumulatedCastStats(character, ability, target);
+	public SpellCastSnapshot getSpellCastSnapshot(Character caster, Ability ability, Character target) {
+		var castStats = getAccumulatedCastStats(caster, ability, target);
 
-		return getSpellCastSnapshot(character, ability, castStats);
+		return getSpellCastSnapshot(caster, ability, castStats);
 	}
 
-	private AccumulatedCastStats getAccumulatedCastStats(Character character, Ability ability, Character target) {
-		var castStats = newAccumulatedCastStats(character, ability, target);
+	private AccumulatedCastStats getAccumulatedCastStats(Character caster, Ability ability, Character target) {
+		var castStats = newAccumulatedCastStats(caster, ability, target);
 
-		accumulateEffects(character, castStats);
+		accumulateEffects(caster, castStats);
 		return castStats;
 	}
 
 	@Override
-	public SpellCastSnapshot getSpellCastSnapshot(Character character, Ability ability, AccumulatedCastStats castStats) {
+	public SpellCastSnapshot getSpellCastSnapshot(Character caster, Ability ability, AccumulatedCastStats castStats) {
 		var snapshot = new SpellCastSnapshot();
 
-		var hastePct = getHastePct(character, castStats);
+		var hastePct = getHastePct(caster, castStats);
 		var castTime = getCastTime(ability, castStats, hastePct);
 		var gcd = getGcd(hastePct);
 
@@ -204,16 +204,16 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 		return snapshot;
 	}
 
-	private double getHastePct(Character character, AccumulatedCastStats castStats) {
-		return getHastePct(character, castStats.getHastePct(), castStats.getHasteRating());
+	private double getHastePct(Character caster, AccumulatedCastStats castStats) {
+		return getHastePct(caster, castStats.getHastePct(), castStats.getHasteRating());
 	}
 
-	private double getHastePct(Character character, AccumulatedDurationStats durationStats) {
-		return getHastePct(character, durationStats.getHastePct(), durationStats.getHasteRating());
+	private double getHastePct(Character caster, AccumulatedDurationStats durationStats) {
+		return getHastePct(caster, durationStats.getHastePct(), durationStats.getHasteRating());
 	}
 
-	private double getHastePct(Character character, double hastePct, double hasteRating) {
-		var cr = character.getCombatRatingInfo();
+	private double getHastePct(Character caster, double hastePct, double hasteRating) {
+		var cr = caster.getCombatRatingInfo();
 		var ratingHastePct = hasteRating / cr.getSpellHaste();
 
 		return hastePct + ratingHastePct;
@@ -241,32 +241,32 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public SpellCostSnapshot getSpellCostSnapshot(Character character, Ability ability, Character target) {
+	public SpellCostSnapshot getSpellCostSnapshot(Character caster, Ability ability, Character target) {
 		if (ability.getCost() == null) {
 			return null;
 		}
 
-		var costStats = getAccumulatedCostStats(character, ability, target);
+		var costStats = getAccumulatedCostStats(caster, ability, target);
 
-		return getSpellCostSnapshot(character, ability, costStats);
+		return getSpellCostSnapshot(caster, ability, costStats);
 	}
 
-	private AccumulatedCostStats getAccumulatedCostStats(Character character, Ability ability, Character target) {
-		var costStats = newAccumulatedCostStats(character, ability, target);
+	private AccumulatedCostStats getAccumulatedCostStats(Character caster, Ability ability, Character target) {
+		var costStats = newAccumulatedCostStats(caster, ability, target);
 
-		accumulateEffects(character, costStats);
+		accumulateEffects(caster, costStats);
 		return costStats;
 	}
 
 	@Override
-	public SpellCostSnapshot getSpellCostSnapshot(Character character, Ability ability, AccumulatedCostStats costStats) {
+	public SpellCostSnapshot getSpellCostSnapshot(Character caster, Ability ability, AccumulatedCostStats costStats) {
 		if (ability.getCost() == null) {
 			return null;
 		}
 
 		var snapshot = new SpellCostSnapshot();
 
-		var costUnreduced = getCost(character, ability, costStats);
+		var costUnreduced = getCost(caster, ability, costStats);
 		var cost = (int)(costUnreduced * (1 - costStats.getCostReductionPct() / 100));
 		var cooldown = getCooldown(ability, costStats);
 
@@ -278,12 +278,12 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 		return snapshot;
 	}
 
-	private int getCost(Character character, Ability ability, AccumulatedCostStats costStats) {
+	private int getCost(Character caster, Ability ability, AccumulatedCostStats costStats) {
 		var cost = ability.getCost();
 		var result = (double) cost.amount();
 
 		if (!cost.baseStatPct().isZero()) {
-			var baseStatValue = character.getBaseStatValue(cost.resourceType());
+			var baseStatValue = caster.getBaseStatValue(cost.resourceType());
 			var pct = cost.baseStatPct().getCoefficient();
 
 			result += baseStatValue * pct;
@@ -312,38 +312,38 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public double getSpellHitPct(Character character, Spell spell, Character target) {
-		var hitStats = getAccumulatedHitStats(character, spell, target);
+	public double getSpellHitPct(Character caster, Spell spell, Character target) {
+		var hitStats = getAccumulatedHitStats(caster, spell, target);
 
-		return getSpellHitPct(character, spell, target, hitStats);
+		return getSpellHitPct(caster, spell, target, hitStats);
 	}
 
-	private AccumulatedHitStats getAccumulatedHitStats(Character character, Spell spell, Character target) {
-		var hitStats = newAccumulatedHitStats(character, spell, target);
+	private AccumulatedHitStats getAccumulatedHitStats(Character caster, Spell spell, Character target) {
+		var hitStats = newAccumulatedHitStats(caster, spell, target);
 
-		accumulateEffects(character, hitStats);
+		accumulateEffects(caster, hitStats);
 		return hitStats;
 	}
 
 	@Override
-	public double getSpellHitPct(Character character, Spell spell, Character target, AccumulatedHitStats hitStats) {
-		var levelDifference = Character.getLevelDifference(character, target);
+	public double getSpellHitPct(Character caster, Spell spell, Character target, AccumulatedHitStats hitStats) {
+		var levelDifference = Character.getLevelDifference(caster, target);
 
-		return getSpellHitPct(character, hitStats, levelDifference);
+		return getSpellHitPct(caster, hitStats, levelDifference);
 	}
 
-	private double getSpellHitPct(Character character, AccumulatedHitStats hitStats, int levelDifference) {
-		var totalHit = getSpellHitPctBonus(character, hitStats);
+	private double getSpellHitPct(Character caster, AccumulatedHitStats hitStats, int levelDifference) {
+		var totalHit = getSpellHitPctBonus(caster, hitStats);
 
-		var gameVersion = character.getGameVersion();
+		var gameVersion = caster.getGameVersion();
 		var baseSpellHitChancePct = gameVersion.getBaseSpellHitChancePct(levelDifference);
 		var maxSpellHitChancePct = gameVersion.getMaxPveSpellHitChancePct();
 
 		return clamp(baseSpellHitChancePct + totalHit, 0, maxSpellHitChancePct);
 	}
 
-	private double getSpellHitPctBonus(Character character, AccumulatedHitStats hitStats) {
-		var cr = character.getCombatRatingInfo();
+	private double getSpellHitPctBonus(Character caster, AccumulatedHitStats hitStats) {
+		var cr = caster.getCombatRatingInfo();
 		var ratingHit = hitStats.getHitRating() / cr.getSpellHit();
 		var pctHit = hitStats.getHitPct();
 
@@ -351,17 +351,17 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public EffectDurationSnapshot getEffectDurationSnapshot(Character character, Spell spell, Character target, ApplyEffect command) {
-		var durationStats = getAccumulatedDurationStats(character, spell, target, command);
+	public EffectDurationSnapshot getEffectDurationSnapshot(Character caster, Spell spell, Character target, ApplyEffect command) {
+		var durationStats = getAccumulatedDurationStats(caster, spell, target, command);
 		var receivedEffectStats = getAccumulatedReceivedEffectStats(spell, target, command);
 
-		return getEffectDurationSnapshot(character, spell, command, durationStats, receivedEffectStats);
+		return getEffectDurationSnapshot(caster, spell, command, durationStats, receivedEffectStats);
 	}
 
-	private AccumulatedDurationStats getAccumulatedDurationStats(Character character, Spell spell, Character target, ApplyEffect command) {
-		var durationStats = newAccumulatedDurationStats(character, spell, target, command);
+	private AccumulatedDurationStats getAccumulatedDurationStats(Character caster, Spell spell, Character target, ApplyEffect command) {
+		var durationStats = newAccumulatedDurationStats(caster, spell, target, command);
 
-		accumulateEffects(character, durationStats);
+		accumulateEffects(caster, durationStats);
 		return durationStats;
 	}
 
@@ -377,9 +377,9 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public EffectDurationSnapshot getEffectDurationSnapshot(Character character, Spell spell, ApplyEffect command, AccumulatedDurationStats durationStats, AccumulatedReceivedEffectStats receivedEffectStats) {
+	public EffectDurationSnapshot getEffectDurationSnapshot(Character caster, Spell spell, ApplyEffect command, AccumulatedDurationStats durationStats, AccumulatedReceivedEffectStats receivedEffectStats) {
 		if (spell instanceof Ability ability && ability.isChanneled()) {
-			return getChanneledEffectDurationSnapshot(character, command, durationStats, receivedEffectStats);
+			return getChanneledEffectDurationSnapshot(caster, command, durationStats, receivedEffectStats);
 		}
 
 		var tickInterval = command.effect().getTickInterval();
@@ -391,7 +391,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 		}
 	}
 
-	private EffectDurationSnapshot getChanneledEffectDurationSnapshot(Character character, ApplyEffect command, AccumulatedDurationStats durationStats, AccumulatedReceivedEffectStats receivedEffectStats) {
+	private EffectDurationSnapshot getChanneledEffectDurationSnapshot(Character caster, ApplyEffect command, AccumulatedDurationStats durationStats, AccumulatedReceivedEffectStats receivedEffectStats) {
 		var effect = command.effect();
 
 		var baseDuration = (Duration) command.duration();
@@ -401,7 +401,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 		var numTicks = durationMillis / baseTickIntervalMillis;
 		var numTicksNotRounded = (double) durationMillis / baseTickIntervalMillis;
 
-		var hastePct = getHastePct(character, durationStats);
+		var hastePct = getHastePct(caster, durationStats);
 		var tickIntervalMillis = (long) getActualCastTime(baseTickIntervalMillis, hastePct);
 		var channelTimeMillis = (long) (tickIntervalMillis * numTicksNotRounded);
 
@@ -461,15 +461,15 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public AnyDuration getSummonDuration(Character character, Spell spell, AnyDuration baseDuration) {
+	public AnyDuration getSummonDuration(Character caster, Spell spell, AnyDuration baseDuration) {
 		if (baseDuration.isInfinite()) {
 			return baseDuration;
 		}
 
-		var conditionArgs = AttributeConditionArgs.forSpell(character, spell, null);
+		var conditionArgs = AttributeConditionArgs.forSpell(caster, spell, null);
 		var durationStats = new AccumulatedDurationStats(conditionArgs);
 
-		accumulateEffects(character, durationStats);
+		accumulateEffects(caster, durationStats);
 
 		var baseDurationSeconds = ((Duration) baseDuration).getSeconds();
 		var duration = durationStats.getDuration();
@@ -481,26 +481,26 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public DirectSpellComponentSnapshot getDirectSpellDamageSnapshot(Character character, Spell spell, Character target, DealDamageDirectly command) {
-		return getDirectSpellComponentSnapshot(character, spell, target, command, SPELL_DAMAGE);
+	public DirectSpellComponentSnapshot getDirectSpellDamageSnapshot(Character caster, Spell spell, Character target, DealDamageDirectly command) {
+		return getDirectSpellComponentSnapshot(caster, spell, target, command, SPELL_DAMAGE);
 	}
 
 	@Override
-	public DirectSpellComponentSnapshot getDirectHealingSnapshot(Character character, Spell spell, Character target, HealDirectly command) {
-		return getDirectSpellComponentSnapshot(character, spell, target, command, HEALING);
+	public DirectSpellComponentSnapshot getDirectHealingSnapshot(Character caster, Spell spell, Character target, HealDirectly command) {
+		return getDirectSpellComponentSnapshot(caster, spell, target, command, HEALING);
 	}
 
-	private DirectSpellComponentSnapshot getDirectSpellComponentSnapshot(Character character, Spell spell, Character target, ChangeHealthDirectly command, PowerType powerType) {
-		var spellStats = getAccumulatedDirectComponentStats(character, spell, target, powerType, command);
+	private DirectSpellComponentSnapshot getDirectSpellComponentSnapshot(Character caster, Spell spell, Character target, ChangeHealthDirectly command, PowerType powerType) {
+		var spellStats = getAccumulatedDirectComponentStats(caster, spell, target, powerType, command);
 		var targetStats = getAccumulatedTargetStats(spell, target, powerType, command.school());
 
-		return getDirectSpellComponentSnapshot(character, spell, target, command, spellStats, targetStats);
+		return getDirectSpellComponentSnapshot(caster, spell, target, command, spellStats, targetStats);
 	}
 
-	private AccumulatedSpellStats getAccumulatedDirectComponentStats(Character character, Spell spell, Character target, PowerType powerType, ChangeHealthDirectly command) {
-		var spellStats = newAccumulatedDirectComponentStats(character, spell, target, powerType, command);
+	private AccumulatedSpellStats getAccumulatedDirectComponentStats(Character caster, Spell spell, Character target, PowerType powerType, ChangeHealthDirectly command) {
+		var spellStats = newAccumulatedDirectComponentStats(caster, spell, target, powerType, command);
 
-		accumulateEffects(character, spellStats);
+		accumulateEffects(caster, spellStats);
 		return spellStats;
 	}
 
@@ -512,10 +512,10 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public DirectSpellComponentSnapshot getDirectSpellComponentSnapshot(Character character, Spell spell, Character target, ChangeHealthDirectly command, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats) {
+	public DirectSpellComponentSnapshot getDirectSpellComponentSnapshot(Character caster, Spell spell, Character target, ChangeHealthDirectly command, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats) {
 		var snapshot = new DirectSpellComponentSnapshot(command);
 
-		var critPct = getSpellCritPct(character, spellStats, targetStats);
+		var critPct = getSpellCritPct(caster, spellStats, targetStats);
 		var critCoeff = getSpellCritCoeff(spellStats);
 		var amount = getSpellAmount(spellStats, targetStats);
 		var amountPct = getSpellAmountPct(spellStats, targetStats);
@@ -535,31 +535,31 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public PeriodicSpellComponentSnapshot getPeriodicSpellDamageSnapshot(Character character, Spell spell, Character target, DealDamagePeriodically command) {
-		return getPeriodicComponentSnapshot(character, spell, target, command, SPELL_DAMAGE);
+	public PeriodicSpellComponentSnapshot getPeriodicSpellDamageSnapshot(Character caster, Spell spell, Character target, DealDamagePeriodically command) {
+		return getPeriodicComponentSnapshot(caster, spell, target, command, SPELL_DAMAGE);
 	}
 
 	@Override
-	public PeriodicSpellComponentSnapshot getPeriodicHealingSnapshot(Character character, Spell spell, Character target, HealPeriodically command) {
-		return getPeriodicComponentSnapshot(character, spell, target, command, HEALING);
+	public PeriodicSpellComponentSnapshot getPeriodicHealingSnapshot(Character caster, Spell spell, Character target, HealPeriodically command) {
+		return getPeriodicComponentSnapshot(caster, spell, target, command, HEALING);
 	}
 
-	private PeriodicSpellComponentSnapshot getPeriodicComponentSnapshot(Character character, Spell spell, Character target, ChangeHealthPeriodically command, PowerType powerType) {
-		var spellStats = getAccumulatedPeriodicComponentStats(character, spell, target, powerType, command);
+	private PeriodicSpellComponentSnapshot getPeriodicComponentSnapshot(Character caster, Spell spell, Character target, ChangeHealthPeriodically command, PowerType powerType) {
+		var spellStats = getAccumulatedPeriodicComponentStats(caster, spell, target, powerType, command);
 		var targetStats = getAccumulatedTargetStats(spell, target, powerType, command.school());
 
-		return getPeriodicComponentSnapshot(character, spell, target, command, spellStats, targetStats);
+		return getPeriodicComponentSnapshot(caster, spell, target, command, spellStats, targetStats);
 	}
 
-	private AccumulatedSpellStats getAccumulatedPeriodicComponentStats(Character character, Spell spell, Character target, PowerType powerType, PeriodicCommand command) {
-		var spellStats = newAccumulatedPeriodicComponentStats(character, spell, target, powerType, command);
+	private AccumulatedSpellStats getAccumulatedPeriodicComponentStats(Character caster, Spell spell, Character target, PowerType powerType, PeriodicCommand command) {
+		var spellStats = newAccumulatedPeriodicComponentStats(caster, spell, target, powerType, command);
 
-		accumulateEffects(character, spellStats);
+		accumulateEffects(caster, spellStats);
 		return spellStats;
 	}
 
 	@Override
-	public PeriodicSpellComponentSnapshot getPeriodicComponentSnapshot(Character character, Spell spell, Character target, ChangeHealthPeriodically command, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats) {
+	public PeriodicSpellComponentSnapshot getPeriodicComponentSnapshot(Character caster, Spell spell, Character target, ChangeHealthPeriodically command, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats) {
 		var snapshot = new PeriodicSpellComponentSnapshot(command);
 
 		var amount = getSpellAmount(spellStats, targetStats);
@@ -679,12 +679,12 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public EffectAugmentations getEffectAugmentations(Character character, Spell spell, Character target) {
+	public EffectAugmentations getEffectAugmentations(Character caster, Spell spell, Character target) {
 		if (!(spell instanceof Ability ability)) {
 			return EffectAugmentations.EMPTY;
 		}
 
-		var collector = new EffectAugmentationCollector(character, ability, target);
+		var collector = new EffectAugmentationCollector(caster, ability, target);
 
 		collector.solveAll();
 
@@ -697,8 +697,8 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public double getCopiedAmountAsDamage(Character character, Spell spell, Character target, int amount, double ratioPct) {
-		var copyIncreasePct = getCopiedAmountIncreasePct(character, spell);
+	public double getCopiedAmountAsDamage(Character caster, Spell spell, Character target, int amount, double ratioPct) {
+		var copyIncreasePct = getCopiedAmountIncreasePct(caster, spell);
 		var targetStats = getAccumulatedTargetStats(spell, target, SPELL_DAMAGE, spell.getSchool());
 		var damageTaken = targetStats.getAmountTaken();
 		var damageTakenPct = targetStats.getAmountTakenPct();
@@ -707,8 +707,8 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public double getCopiedAmountAsHeal(Character character, Spell spell, Character target, int amount, double ratioPct) {
-		var copyIncreasePct = getCopiedAmountIncreasePct(character, spell);
+	public double getCopiedAmountAsHeal(Character caster, Spell spell, Character target, int amount, double ratioPct) {
+		var copyIncreasePct = getCopiedAmountIncreasePct(caster, spell);
 		var targetStats = getAccumulatedTargetStats(spell, target, HEALING, spell.getSchool());
 		var healingTaken = targetStats.getAmountTaken();
 		var healingTakenPct = targetStats.getAmountTakenPct();
@@ -717,21 +717,21 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public double getCopiedAmountAsManaGain(Character character, Spell spell, Character target, int amount, double ratioPct) {
-		var copyIncreasePct = getCopiedAmountIncreasePct(character, spell);
+	public double getCopiedAmountAsManaGain(Character caster, Spell spell, Character target, int amount, double ratioPct) {
+		var copyIncreasePct = getCopiedAmountIncreasePct(caster, spell);
 
 		return multiplyByRatio(amount, ratioPct + copyIncreasePct, 0);
 	}
 
-	private double getCopiedAmountIncreasePct(Character character, Spell spell) {
+	private double getCopiedAmountIncreasePct(Character caster, Spell spell) {
 		if (!(spell instanceof Ability ability)) {
 			return 0;
 		}
 
-		var args = AttributeConditionArgs.forSpell(character, ability, null);
+		var args = AttributeConditionArgs.forSpell(caster, ability, null);
 		var accumulatedCopyPct = new AccumulatedSingleStat(COPY_PCT, args);
 
-		accumulateEffects(character, accumulatedCopyPct);
+		accumulateEffects(caster, accumulatedCopyPct);
 
 		return accumulatedCopyPct.totalValue;
 	}
@@ -740,55 +740,55 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 		return value * max(ratioPct / 100.0, 0) * max(1 + increasePct / 100.0, 0);
 	}
 
-	private Map<SpellSchool, Integer> getSpellDamageBySchool(Character character) {
+	private Map<SpellSchool, Integer> getSpellDamageBySchool(Character caster) {
 		return magicSpellSchoolsStream().collect(Collectors.toMap(
 				Function.identity(),
-				school -> getSpellDamage(character, school)
+				school -> getSpellDamage(caster, school)
 		));
 	}
 
-	private Map<SpellSchool, Double> getSpellDamagePctBySchool(Character character) {
+	private Map<SpellSchool, Double> getSpellDamagePctBySchool(Character caster) {
 		return magicSpellSchoolsStream().collect(Collectors.toMap(
 				Function.identity(),
-				school -> getSpellDamagePct(character, school)
+				school -> getSpellDamagePct(caster, school)
 		));
 	}
 
-	private double getSpellDamagePct(Character character, SpellSchool school) {
-		return getSpellPctAmount(character, SPELL_DAMAGE, school);
+	private double getSpellDamagePct(Character caster, SpellSchool school) {
+		return getSpellPctAmount(caster, SPELL_DAMAGE, school);
 	}
 
-	private double getSpellPctAmount(Character character, PowerType powerType, SpellSchool school) {
-		var conditionArgs = AttributeConditionArgs.forAnySpell(character, powerType, school);
+	private double getSpellPctAmount(Character caster, PowerType powerType, SpellSchool school) {
+		var conditionArgs = AttributeConditionArgs.forAnySpell(caster, powerType, school);
 		var spellStats = new AccumulatedSpellStats(conditionArgs);
 
-		accumulateEffects(character, spellStats);
+		accumulateEffects(caster, spellStats);
 		return spellStats.getAmountPct();
 	}
 
-	private int getSpellDamage(Character character) {
-		return getSpellDamage(character, null);
+	private int getSpellDamage(Character caster) {
+		return getSpellDamage(caster, null);
 	}
 
-	private int getSpellDamage(Character character, SpellSchool school) {
-		return getSpellAmount(character, SPELL_DAMAGE, school);
+	private int getSpellDamage(Character caster, SpellSchool school) {
+		return getSpellAmount(caster, SPELL_DAMAGE, school);
 	}
 
-	private int getSpellHealing(Character character) {
-		return getSpellAmount(character, HEALING, null);
+	private int getSpellHealing(Character caster) {
+		return getSpellAmount(caster, HEALING, null);
 	}
 
-	private int getSpellAmount(Character character, PowerType powerType, SpellSchool school) {
-		var conditionArgs = AttributeConditionArgs.forAnySpell(character, powerType, school);
+	private int getSpellAmount(Character caster, PowerType powerType, SpellSchool school) {
+		var conditionArgs = AttributeConditionArgs.forAnySpell(caster, powerType, school);
 		var spellStats = new AccumulatedSpellStats(conditionArgs);
 
-		accumulateEffects(character, spellStats);
+		accumulateEffects(caster, spellStats);
 		return (int) spellStats.getPower();
 	}
 
-	private double getSpellCritPct(Character character, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats) {
-		var baseStatInfo = character.getBaseStatInfo();
-		var cr = character.getCombatRatingInfo();
+	private double getSpellCritPct(Character caster, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats) {
+		var baseStatInfo = caster.getBaseStatInfo();
+		var cr = caster.getCombatRatingInfo();
 
 		var intellect = (int) spellStats.getTotalIntellect();
 		var intCrit = intellect / baseStatInfo.getIntellectPerCritPct();
@@ -1119,11 +1119,11 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 		List<StatConversion> extraStatConversions = new ArrayList<>();
 		List<Event> extraEvents = new ArrayList<>();
 
-		EffectAugmentationCollector(Character character, Ability ability, Character target) {
-			super(character);
+		EffectAugmentationCollector(Character caster, Ability ability, Character target) {
+			super(caster);
 			this.ability = ability;
 			this.target = target;
-			var args = AttributeConditionArgs.forSpell(character, ability, null);
+			var args = AttributeConditionArgs.forSpell(caster, ability, null);
 			this.accumulatedEffectIncreasePct = new AccumulatedSingleStat(EFFECT_PCT, args);
 		}
 
