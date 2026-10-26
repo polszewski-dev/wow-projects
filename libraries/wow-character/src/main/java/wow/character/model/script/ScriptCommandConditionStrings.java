@@ -16,6 +16,12 @@ final class ScriptCommandConditionStrings {
 	static final String CASTER_MANA_PCT 						= "Mana%";
 	static final String TARGET_HEALTH_PCT 						= "Target.Health%";
 	static final String TARGET_MANA_PCT 						= "Target.Mana%";
+	static final String FOCUS_HEALTH_PCT 						= "Focus.Health%";
+	static final String FOCUS_MANA_PCT 							= "Focus.Mana%";
+	static final String PET_HEALTH_PCT 							= "Pet.Health%";
+	static final String PET_MANA_PCT 							= "Pet.Mana%";
+	static final String MASTER_HEALTH_PCT 						= "Master.Health%";
+	static final String MASTER_MANA_PCT 						= "Master.Mana%";
 	static final String FULL_DURATION 							= "FullDuration";
 	static final String REMAINING_SIMULATION_DURATION 			= "RemainingSimulationDuration";
 	static final String REMAINING_COOLDOWN 						= "RemainingCooldown";

@@ -92,6 +92,24 @@ public class ScriptConditionChecker {
 			case TargetManaPct() ->
 					target.getManaPct().value();
 
+			case FocusHealthPct() ->
+					caster.getFocus() != null ? caster.getFocus().getHealthPct().value() : 0;
+
+			case FocusManaPct() ->
+					caster.getFocus() != null ? caster.getFocus().getManaPct().value() : 0;
+
+			case PetHealthPct() ->
+					caster.getActivePet() != null ? caster.getActivePet().getHealthPct().value() : 0;
+
+			case PetManaPct() ->
+					caster.getActivePet() != null ? caster.getActivePet().getManaPct().value() : 0;
+
+			case MasterHealthPct() ->
+					caster.getMaster().getHealthPct().value();
+
+			case MasterManaPct() ->
+					caster.getMaster().getManaPct().value();
+
 			case FullDuration() ->
 					getFullDuration(ability.getAbilityId());
 

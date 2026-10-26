@@ -83,6 +83,30 @@ class ScriptCommandConditionParserTest {
 					new LessThan(new TargetManaPct(), new Constant(30))
 			),
 			testData(
+					"Focus.Health% < 30",
+					new LessThan(new FocusHealthPct(), new Constant(30))
+			),
+			testData(
+					"Focus.Mana% < 30",
+					new LessThan(new FocusManaPct(), new Constant(30))
+			),
+			testData(
+					"Pet.Health% < 30",
+					new LessThan(new PetHealthPct(), new Constant(30))
+			),
+			testData(
+					"Pet.Mana% < 30",
+					new LessThan(new PetManaPct(), new Constant(30))
+			),
+			testData(
+					"Master.Health% < 30",
+					new LessThan(new MasterHealthPct(), new Constant(30))
+			),
+			testData(
+					"Master.Mana% < 30",
+					new LessThan(new MasterManaPct(), new Constant(30))
+			),
+			testData(
 					"FullDuration < 30",
 					new LessThan(
 							new FullDuration(),

@@ -117,6 +117,18 @@ public sealed interface ScriptCommandCondition extends Condition {
 
 	record TargetManaPct() implements Expression {}
 
+	record FocusHealthPct() implements Expression {}
+
+	record FocusManaPct() implements Expression {}
+
+	record PetHealthPct() implements Expression {}
+
+	record PetManaPct() implements Expression {}
+
+	record MasterHealthPct() implements Expression {}
+
+	record MasterManaPct() implements Expression {}
+
 	record FullDuration() implements Expression {}
 
 	record RemainingCooldown(AbilityId abilityId) implements Expression {
