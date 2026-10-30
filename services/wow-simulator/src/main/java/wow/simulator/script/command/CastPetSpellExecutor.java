@@ -4,6 +4,8 @@ import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.AbilityId;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.script.ScriptParams;
+import wow.simulator.script.prediction.PredictedState;
+import wow.simulator.script.prediction.PresentState;
 
 import static wow.character.model.script.ScriptCommand.CastPetSpell;
 
@@ -29,8 +31,16 @@ public class CastPetSpellExecutor extends DynamicExecutor {
 	}
 
 	@Override
-	public boolean allConditionsAreMet() {
-		return getActualCaster() != null && getAbility() != null && super.allConditionsAreMet();
+	public boolean allConditionsAreMet(PredictedState currentState) {
+		return getActualCaster() != null && getAbility() != null && super.allConditionsAreMet(currentState);
+	}
+
+	@Override
+	public void execute() {
+		caster.petCast(
+				this::getAbility,
+				this::getTarget
+		);
 	}
 
 	@Override
@@ -43,15 +53,14 @@ public class CastPetSpellExecutor extends DynamicExecutor {
 	}
 
 	@Override
-	public void execute() {
-		caster.petCast(
-				this::getAbility,
-				this::getTarget
-		);
+	protected Ability getAbility() {
+		return getActualCaster().getAbility(abilityId).orElse(null);
 	}
 
 	@Override
-	protected Ability getAbility() {
-		return getActualCaster().getAbility(abilityId).orElse(null);
+	protected PresentState getPresentState() {
+		var actualCaster = getActualCaster();
+
+		return actualCaster != null ? new PresentState(actualCaster) : null;
 	}
 }

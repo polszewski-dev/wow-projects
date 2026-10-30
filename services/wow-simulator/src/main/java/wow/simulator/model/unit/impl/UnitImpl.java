@@ -408,12 +408,6 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	}
 
 	@Override
-	public SpellCastSnapshot getSpellCastSnapshot(AbilityId abilityId, Unit target) {
-		var ability = getAbility(abilityId).orElseThrow();
-		return getSpellCastSnapshot(ability, target);
-	}
-
-	@Override
 	public SpellCastSnapshot getSpellCastSnapshot(Ability ability, Unit target) {
 		return getCharacterCalculationService().getSpellCastSnapshot(this, ability, target);
 	}
@@ -425,14 +419,6 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	@Override
 	public double getSpellHitPct(Spell spell, Unit target) {
 		return getCharacterCalculationService().getSpellHitPct(this, spell, target);
-	}
-
-	@Override
-	public EffectDurationSnapshot getEffectDurationSnapshot(AbilityId abilityId, Unit target) {
-		var ability = getAbility(abilityId).orElseThrow();
-		var command = ability.getApplyEffectCommands().getFirst();
-
-		return getEffectDurationSnapshot(ability, target, command);
 	}
 
 	@Override
@@ -657,11 +643,6 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 	@Override
 	public void removeEffect(EffectInstance effect) {
 		effects.removeEffect(effect);
-	}
-
-	@Override
-	public void removeEffect(AbilityId abilityId, Unit owner) {
-		effects.removeEffect(abilityId, owner);
 	}
 
 	@Override

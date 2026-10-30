@@ -100,13 +100,9 @@ public interface Unit extends Character, SimulationContextSource {
 
 	SpellCostSnapshot paySpellCost(Ability ability, PrimaryTarget primaryTarget, SpellCastContext parentContext);
 
-	SpellCastSnapshot getSpellCastSnapshot(AbilityId abilityId, Unit target);
-
 	SpellCastSnapshot getSpellCastSnapshot(Ability ability, Unit target);
 
 	double getSpellHitPct(Spell spell, Unit target);
-
-	EffectDurationSnapshot getEffectDurationSnapshot(AbilityId abilityId, Unit target);
 
 	EffectDurationSnapshot getEffectDurationSnapshot(Spell spell, Unit target);
 
@@ -165,8 +161,6 @@ public interface Unit extends Character, SimulationContextSource {
 	void addHiddenEffect(String effectName, int numStacks, AnyDuration duration, Spell sourceSpell);
 
 	void removeEffect(EffectInstance effect);
-
-	void removeEffect(AbilityId abilityId, Unit owner);
 
 	void removeEffect(String effectName, Unit owner);
 

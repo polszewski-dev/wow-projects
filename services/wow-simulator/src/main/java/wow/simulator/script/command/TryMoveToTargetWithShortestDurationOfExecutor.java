@@ -1,15 +1,11 @@
 package wow.simulator.script.command;
 
 import wow.character.model.script.ScriptCommandTarget;
-import wow.commons.model.AnyDuration;
-import wow.commons.model.Duration;
 import wow.commons.model.spell.Ability;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.script.ScriptParams;
+import wow.simulator.script.prediction.PredictedState;
 
-import java.util.Comparator;
-
-import static java.util.Comparator.comparing;
 import static wow.character.model.script.ScriptCommand.TryMoveToTargetWithShortestDurationOf;
 
 /**
@@ -32,35 +28,19 @@ public class TryMoveToTargetWithShortestDurationOfExecutor extends ComposableExe
 
 	@Override
 	public boolean isValid() {
-		return true;
+		return ability != null;
 	}
 
 	@Override
-	public boolean allConditionsAreMet() {
-		newTarget = getEnemyWithShortestEffectDuration();
+	public boolean allConditionsAreMet(PredictedState currentState) {
+		newTarget = currentState.getEnemyWithShortestEffectDuration(ability);
 
-		return newTarget != caster.getTarget();
+		return newTarget != null && newTarget != caster.getTarget();
 	}
 
 	@Override
 	public void execute() {
 		caster.setTarget(newTarget);
 		caster.emptyAction();
-	}
-
-	private Unit getEnemyWithShortestEffectDuration() {
-		var allEnemies = caster.getAllEnemies();
-
-		return allEnemies.stream()
-				.min(byShortestEffectDuration())
-				.orElseThrow();
-	}
-
-	private Comparator<Unit> byShortestEffectDuration() {
-		return comparing(this::getRemainingEffectDuration).thenComparing(Unit::getId);
-	}
-
-	private AnyDuration getRemainingEffectDuration(Unit enemy) {
-		return enemy.getRemainingEffectDuration(ability, caster).orElse(Duration.ZERO);
 	}
 }

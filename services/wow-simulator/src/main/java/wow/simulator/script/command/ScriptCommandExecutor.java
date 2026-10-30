@@ -3,6 +3,8 @@ package wow.simulator.script.command;
 import wow.character.model.script.ScriptCommand;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.script.ScriptParams;
+import wow.simulator.script.prediction.PredictedState;
+import wow.simulator.script.prediction.PresentState;
 
 import static wow.character.model.script.ScriptCommand.CastSequence;
 import static wow.character.model.script.ScriptCommand.ComposableCommand;
@@ -27,11 +29,21 @@ public abstract class ScriptCommandExecutor {
 
 	public abstract boolean isValid();
 
-	public abstract boolean allConditionsAreMet();
+	public final boolean allConditionsAreMet() {
+		var presentState = getPresentState();
+
+		return allConditionsAreMet(presentState);
+	}
+
+	public abstract boolean allConditionsAreMet(PredictedState currentState);
 
 	public abstract void execute();
 
 	protected Unit getActualCaster() {
 		return caster;
+	}
+
+	protected PresentState getPresentState() {
+		return new PresentState(caster);
 	}
 }

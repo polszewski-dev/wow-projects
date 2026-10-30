@@ -1,9 +1,7 @@
-package wow.simulator.script.command;
+package wow.simulator.script.prediction;
 
 import wow.character.model.script.ScriptCommandCondition;
-import wow.commons.model.Duration;
 import wow.commons.model.spell.Ability;
-import wow.commons.model.spell.AbilityId;
 import wow.simulator.model.unit.Player;
 import wow.simulator.model.unit.Unit;
 
@@ -16,16 +14,16 @@ import static wow.character.model.script.ScriptCommandCondition.*;
  * Date: 2025-10-07
  */
 public class ScriptConditionChecker {
+	private final PredictedState currentState;
 	private final Unit caster;
 	private final Ability ability;
 	private final Unit primaryTarget;
-	private final Unit target;
 
-	public ScriptConditionChecker(Unit caster, Ability ability, Unit primaryTarget) {
+	public ScriptConditionChecker(PredictedState currentState, Unit caster, Ability ability, Unit primaryTarget) {
+		this.currentState = currentState;
 		this.caster = caster;
 		this.ability = ability;
 		this.primaryTarget = primaryTarget;
-		this.target = caster.getTarget();
 	}
 
 	public boolean check(ScriptCommandCondition condition) {
@@ -54,13 +52,13 @@ public class ScriptConditionChecker {
 			case EmptyCondition() -> true;
 
 			case CasterHasEffect(var effectNamePattern) ->
-					caster.hasEffect(getPattern(effectNamePattern));
+					currentState.casterHasEffect(getPattern(effectNamePattern));
 
 			case TargetHasEffect(var effectNamePattern) ->
-					target.hasEffect(getPattern(effectNamePattern), caster);
+					currentState.targetHasEffect(getPattern(effectNamePattern));
 
 			case CanCastMoreBeforeSimulationEnds(var abilityId) ->
-					canCastMoreBeforeSimulationEnds(abilityId);
+					currentState.canCastMoreBeforeSimulationEnds(abilityId, primaryTarget);
 
 			case AssetEnabled(var assetName) ->
 					caster instanceof Player player && player.getAssets().has(assetName);
@@ -73,84 +71,56 @@ public class ScriptConditionChecker {
 					value;
 
 			case CasterHealth() ->
-					caster.getCurrentHealth();
+					currentState.getCasterHealth();
 
 			case CasterMana() ->
-					caster.getCurrentMana();
+					currentState.getCasterMana();
 
 			case CasterHealthPct() ->
-					caster.getHealthPct().value();
+					currentState.getCasterHealthPct();
 
 			case CasterManaPct() ->
-					caster.getManaPct().value();
+					currentState.getCasterManaPct();
 
 			case TargetHealthPct() ->
-					target.getHealthPct().value();
+					currentState.getTargetHealthPct();
 
 			case TargetManaPct() ->
-					target.getManaPct().value();
+					currentState.getTargetManaPct();
 
 			case FocusHealthPct() ->
-					caster.getFocus() != null ? caster.getFocus().getHealthPct().value() : 0;
+					currentState.getFocusHealthPct();
 
 			case FocusManaPct() ->
-					caster.getFocus() != null ? caster.getFocus().getManaPct().value() : 0;
+					currentState.getFocusManaPct();
 
 			case PetHealthPct() ->
-					caster.getActivePet() != null ? caster.getActivePet().getHealthPct().value() : 0;
+					currentState.getPetHealthPct();
 
 			case PetManaPct() ->
-					caster.getActivePet() != null ? caster.getActivePet().getManaPct().value() : 0;
+					currentState.getPetManaPct();
 
 			case MasterHealthPct() ->
-					caster.getMaster().getHealthPct().value();
+					currentState.getMasterHealthPct();
 
 			case MasterManaPct() ->
-					caster.getMaster().getManaPct().value();
+					currentState.getMasterManaPct();
 
 			case FullDuration() ->
-					getFullDuration(ability.getAbilityId());
+					currentState.getFullDuration(ability, primaryTarget);
 
 			case RemainingCooldown(var abilityId) ->
-					getRemainingCooldown(abilityId);
+					currentState.getRemainingCooldown(abilityId);
 
 			case RemainingSimulationDuration() ->
-					getRemainingSimulationDuration();
+					currentState.getRemainingSimulationDuration();
 
 			case TargetNumStacksOfAny(var effectName) ->
-					target.getNumStacks(effectName);
+					currentState.getNumStacksOfAnyOnTarget(effectName);
 			
 			case TargetRemainingEffectDurationOfAny(var effectName) ->
-					getRemainingAnyEffectDuration(effectName);
+					currentState.getRemainingEffectDurationOfAnyOnTarget(effectName);
 		};
-	}
-
-	private double getCastTime(AbilityId abilityId) {
-		var snapshot = caster.getSpellCastSnapshot(abilityId, primaryTarget);
-
-		return snapshot.getCastTime();
-	}
-
-	private double getFullDuration(AbilityId abilityId) {
-		var snapshot = caster.getEffectDurationSnapshot(abilityId, primaryTarget);
-
-		return snapshot.getDuration().getSeconds();
-	}
-
-	private double getRemainingCooldown(AbilityId abilityId) {
-		return caster.getRemainingCooldown(abilityId).getSeconds();
-	}
-
-	private double getRemainingSimulationDuration() {
-		return caster.getSimulation().getRemainingTime().getSeconds();
-	}
-
-	private double getRemainingAnyEffectDuration(String effectName) {
-		return target.getRemainingEffectDuration(effectName).orElse(Duration.ZERO).getSeconds();
-	}
-
-	private boolean canCastMoreBeforeSimulationEnds(AbilityId abilityId) {
-		return getRemainingCooldown(abilityId) + getCastTime(abilityId) + getFullDuration(abilityId) < getRemainingSimulationDuration();
 	}
 
 	private Pattern getPattern(String regex) {

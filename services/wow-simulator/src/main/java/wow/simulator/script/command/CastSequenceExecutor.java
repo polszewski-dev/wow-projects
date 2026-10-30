@@ -1,6 +1,7 @@
 package wow.simulator.script.command;
 
 import wow.simulator.script.ScriptParams;
+import wow.simulator.script.prediction.PredictedState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,18 +38,19 @@ public class CastSequenceExecutor extends ScriptCommandExecutor {
 	}
 
 	@Override
-	public boolean allConditionsAreMet() {
-		this.toExecute = getExecutors();
+	public boolean allConditionsAreMet(PredictedState currentState) {
+		this.toExecute = getExecutors(currentState);
 
 		return !toExecute.isEmpty();
 	}
 
-	private List<ComposableExecutor> getExecutors() {
+	private List<ComposableExecutor> getExecutors(PredictedState currentState) {
 		var result = new ArrayList<ComposableExecutor>();
 
 		for (var executor : list) {
-			if (executor.allConditionsAreMet()) {
+			if (executor.allConditionsAreMet(currentState)) {
 				result.add(executor);
+				currentState = currentState.afterExecuting(executor);
 			} else if (executor.isRequired()) {
 				return List.of();
 			}
