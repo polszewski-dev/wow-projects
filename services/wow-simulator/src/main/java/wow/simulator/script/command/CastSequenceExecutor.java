@@ -38,25 +38,27 @@ public class CastSequenceExecutor extends ScriptCommandExecutor {
 
 	@Override
 	public boolean allConditionsAreMet() {
-		this.toExecute = new ArrayList<>();
+		this.toExecute = getExecutors();
+
+		return !toExecute.isEmpty();
+	}
+
+	private List<ComposableExecutor> getExecutors() {
+		var result = new ArrayList<ComposableExecutor>();
 
 		for (var executor : list) {
 			if (executor.allConditionsAreMet()) {
-				toExecute.add(executor);
+				result.add(executor);
 			} else if (executor.isRequired()) {
-				toExecute = null;
-				return false;
+				return List.of();
 			}
 		}
 
-		return true;
+		return result;
 	}
 
 	@Override
 	public void execute() {
-		if (toExecute != null) {
-			toExecute.forEach(ScriptCommandExecutor::execute);
-			toExecute = null;
-		}
+		toExecute.forEach(ScriptCommandExecutor::execute);
 	}
 }
