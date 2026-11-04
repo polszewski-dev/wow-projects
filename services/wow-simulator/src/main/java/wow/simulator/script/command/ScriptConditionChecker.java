@@ -1,9 +1,7 @@
 package wow.simulator.script.command;
 
 import wow.character.model.script.ScriptCommandCondition;
-import wow.commons.model.AnyDuration;
 import wow.commons.model.Duration;
-import wow.commons.model.InfiniteDuration;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.AbilityId;
 import wow.simulator.model.unit.Player;
@@ -136,7 +134,7 @@ public class ScriptConditionChecker {
 	private double getFullDuration(AbilityId abilityId) {
 		var snapshot = caster.getEffectDurationSnapshot(abilityId, primaryTarget);
 
-		return getSeconds(snapshot.getDuration());
+		return snapshot.getDuration().getSeconds();
 	}
 
 	private double getRemainingCooldown(AbilityId abilityId) {
@@ -148,9 +146,7 @@ public class ScriptConditionChecker {
 	}
 
 	private double getRemainingAnyEffectDuration(String effectName) {
-		var effectDuration = target.getRemainingEffectDuration(effectName).orElse(Duration.ZERO);
-
-		return getSeconds(effectDuration);
+		return target.getRemainingEffectDuration(effectName).orElse(Duration.ZERO).getSeconds();
 	}
 
 	private boolean canCastMoreBeforeSimulationEnds(AbilityId abilityId) {
@@ -161,12 +157,5 @@ public class ScriptConditionChecker {
 		var realRegex = "^" + regex.replace("*", ".*") + "$";
 
 		return Pattern.compile(realRegex);
-	}
-
-	private static double getSeconds(AnyDuration anyDuration) {
-		return switch (anyDuration) {
-			case Duration duration -> duration.getSeconds();
-			case InfiniteDuration() -> Double.MAX_VALUE;
-		};
 	}
 }

@@ -21,6 +21,11 @@ public record InfiniteDuration() implements AnyDuration {
 	}
 
 	@Override
+	public double getSeconds() {
+		return Double.POSITIVE_INFINITY;
+	}
+
+	@Override
 	public int compareTo(AnyDuration anyDuration) {
 		if (anyDuration.isInfinite()) {
 			return 0;

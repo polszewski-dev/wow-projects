@@ -28,4 +28,6 @@ public sealed interface AnyDuration extends Comparable<AnyDuration> permits Dura
 	default boolean isFinite() {
 		return !isInfinite();
 	}
+
+	double getSeconds();
 }

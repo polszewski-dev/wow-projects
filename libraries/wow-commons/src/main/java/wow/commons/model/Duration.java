@@ -86,6 +86,7 @@ public record Duration(long millis) implements AnyDuration {
 		return new Duration(millis);
 	}
 
+	@Override
 	public double getSeconds() {
 		return millis / 1000.0;
 	}
