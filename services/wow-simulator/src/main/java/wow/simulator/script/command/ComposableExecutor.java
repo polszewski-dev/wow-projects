@@ -38,4 +38,8 @@ public abstract class ComposableExecutor extends ScriptCommandExecutor {
 			case TryMoveToTargetWithShortestDurationOf tryMoveToTargetWithShortestDurationOf -> TryMoveToTargetWithShortestDurationOfExecutor.create(tryMoveToTargetWithShortestDurationOf, params);
 		};
 	}
+
+	public boolean isRequired() {
+		return !optional;
+	}
 }

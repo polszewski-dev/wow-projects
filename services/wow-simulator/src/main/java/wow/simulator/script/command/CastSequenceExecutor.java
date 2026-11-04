@@ -23,7 +23,7 @@ public class CastSequenceExecutor extends ScriptCommandExecutor {
 	public static CastSequenceExecutor create(CastSequence castSequence, ScriptParams params) {
 		var list = castSequence.list().stream()
 				.map(command -> ComposableExecutor.create(command, params))
-				.filter(executor -> executor.isValid() || !executor.isOptional())
+				.filter(executor -> executor.isValid() || executor.isRequired())
 				.toList();
 
 		return new CastSequenceExecutor(list, params);
@@ -32,7 +32,7 @@ public class CastSequenceExecutor extends ScriptCommandExecutor {
 	@Override
 	public boolean isValid() {
 		return !list.isEmpty() &&
-				!list.getLast().isOptional() &&
+				list.getLast().isRequired() &&
 				list.stream().allMatch(ComposableExecutor::isValid);
 	}
 
@@ -43,7 +43,7 @@ public class CastSequenceExecutor extends ScriptCommandExecutor {
 		for (var executor : list) {
 			if (executor.allConditionsAreMet()) {
 				toExecute.add(executor);
-			} else if (!executor.isOptional()) {
+			} else if (executor.isRequired()) {
 				toExecute = null;
 				return false;
 			}
