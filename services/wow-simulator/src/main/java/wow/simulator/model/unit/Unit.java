@@ -88,6 +88,8 @@ public interface Unit extends Character, SimulationContextSource {
 
 	void interruptCurrentAction();
 
+	PrependActionsScope prependActionsScope();
+
 	boolean canCast(String abilityName);
 
 	boolean canCast(String abilityName, Unit target);

@@ -322,6 +322,15 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 		}
 	}
 
+	@Override
+	public PrependActionsScope prependActionsScope() {
+		return new PrependActionsScope(this);
+	}
+
+	public void setPendingActionQueueMode(PendingActionQueue.Mode mode) {
+		pendingActionQueue.setMode(mode);
+	}
+
 	private void interruptCurrentActionIfIdle() {
 		if (currentAction instanceof IdleAction idleAction && idleAction.endIsInInfinity()) {
 			interruptCurrentAction();
