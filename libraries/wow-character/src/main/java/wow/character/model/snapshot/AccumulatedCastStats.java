@@ -2,7 +2,7 @@ package wow.character.model.snapshot;
 
 import lombok.Getter;
 import wow.character.util.AttributeConditionChecker;
-import wow.commons.model.attribute.AttributeId;
+import wow.commons.model.attribute.Attribute;
 
 /**
  * User: POlszewski
@@ -28,19 +28,19 @@ public class AccumulatedCastStats extends AccumulatedPartialStats {
 	}
 
 	@Override
-	public void accumulateAttribute(AttributeId id, double value) {
-		switch (id) {
+	public void accumulateAttribute(Attribute attribute, double scaleFactor) {
+		switch (attribute.id()) {
 			case HASTE_RATING:
-				this.hasteRating += value;
+				this.hasteRating += getValue(attribute, scaleFactor);
 				break;
 			case HASTE_PCT:
-				this.hastePct += value;
+				this.hastePct += getValue(attribute, scaleFactor);
 				break;
 			case CAST_TIME:
-				this.castTime += value;
+				this.castTime += getValue(attribute, scaleFactor);
 				break;
 			case CAST_TIME_PCT:
-				this.castTimePct += value;
+				this.castTimePct += getValue(attribute, scaleFactor);
 				break;
 			default:
 				// ignore the rest

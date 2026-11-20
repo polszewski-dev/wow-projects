@@ -3,8 +3,6 @@ package wow.character.model.snapshot;
 import lombok.Getter;
 import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.attribute.Attribute;
-import wow.commons.model.attribute.AttributeCondition;
-import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.effect.component.StatConversion;
 import wow.commons.model.effect.component.StatConversionType;
 
@@ -33,26 +31,6 @@ public abstract class AccumulatedPartialStats extends AccumulatedStats {
 		this(stats.checker);
 	}
 
-	@Override
-	protected void accumulateAttribute(Attribute attribute, double scaleFactor) {
-		if(!checker.check(attribute.condition())) {
-			return;
-		}
-
-		var id = attribute.id();
-		var value = scaleFactor * attribute.getScaledValue(scalingParams);
-
-		accumulateAttribute(id, value);
-	}
-
-	public abstract void accumulateAttribute(AttributeId id, double value);
-
-	public void accumulateAttribute(AttributeId id, double value, AttributeCondition condition) {
-		if (checker.check(condition)) {
-			accumulateAttribute(id, value);
-		}
-	}
-
 	public void accumulateConvertedAttributes(List<StatConversion> statConversions) {
 		accumulateConvertedAttributes(statConversions, this);
 	}
@@ -78,5 +56,13 @@ public abstract class AccumulatedPartialStats extends AccumulatedStats {
 
 	protected double getValueFrom(StatConversionType type) {
 		throw new IllegalArgumentException("" + type);
+	}
+
+	protected double getValue(Attribute attribute, double scaleFactor) {
+		if (!checker.check(attribute.condition())) {
+			return 0;
+		}
+
+		return scaleFactor * attribute.getScaledValue(scalingParams);
 	}
 }

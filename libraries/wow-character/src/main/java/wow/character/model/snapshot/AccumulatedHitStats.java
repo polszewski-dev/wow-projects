@@ -2,7 +2,7 @@ package wow.character.model.snapshot;
 
 import lombok.Getter;
 import wow.character.util.AttributeConditionChecker;
-import wow.commons.model.attribute.AttributeId;
+import wow.commons.model.attribute.Attribute;
 import wow.commons.model.effect.component.StatConversionType;
 
 /**
@@ -25,13 +25,13 @@ public class AccumulatedHitStats extends AccumulatedPartialStats {
 	}
 
 	@Override
-	public void accumulateAttribute(AttributeId id, double value) {
-		switch (id) {
+	public void accumulateAttribute(Attribute attribute, double scaleFactor) {
+		switch (attribute.id()) {
 			case HIT_RATING:
-				this.hitRating += value;
+				this.hitRating += getValue(attribute, scaleFactor);
 				break;
 			case HIT_PCT:
-				this.hitPct += value;
+				this.hitPct += getValue(attribute, scaleFactor);
 				break;
 			default:
 				// ignore the rest

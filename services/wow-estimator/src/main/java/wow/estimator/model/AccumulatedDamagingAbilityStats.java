@@ -5,7 +5,6 @@ import lombok.Setter;
 import wow.character.model.snapshot.*;
 import wow.character.util.StatConversionConditionChecker;
 import wow.commons.model.attribute.Attribute;
-import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.AttributeScalingParams;
 import wow.commons.model.effect.component.StatConversion;
@@ -60,12 +59,20 @@ public class AccumulatedDamagingAbilityStats extends AccumulatedStats {
 	}
 
 	@Override
-	protected void accumulateAttribute(Attribute attribute, double scaleFactor) {
-		var id = attribute.id();
-		var value = scaleFactor * attribute.getScaledValue(scalingParams);
-		var condition = attribute.condition();
+	public void accumulateAttribute(Attribute attribute, double scaleFactor) {
+		cast.accumulateAttribute(attribute, scaleFactor);
+		cost.accumulateAttribute(attribute, scaleFactor);
+		hit.accumulateAttribute(attribute, scaleFactor);
 
-		accumulateAttribute(id, value, condition);
+		if (direct != null) {
+			direct.accumulateAttribute(attribute, scaleFactor);
+		}
+
+		if (periodic != null) {
+			periodic.accumulateAttribute(attribute, scaleFactor);
+			effectDuration.accumulateAttribute(attribute, scaleFactor);
+			receivedEffectStats.accumulateAttribute(attribute, scaleFactor);
+		}
 	}
 
 	private boolean toConditionMatches(StatConversion statConversion) {
@@ -75,24 +82,8 @@ public class AccumulatedDamagingAbilityStats extends AccumulatedStats {
 		return checker.check(statConversion);
 	}
 
-	public void accumulateAttribute(AttributeId id, double value, AttributeCondition condition) {
-		cast.accumulateAttribute(id, value, condition);
-		cost.accumulateAttribute(id, value, condition);
-		hit.accumulateAttribute(id, value, condition);
-
-		if (direct != null) {
-			direct.accumulateAttribute(id, value, condition);
-		}
-
-		if (periodic != null) {
-			periodic.accumulateAttribute(id, value, condition);
-			effectDuration.accumulateAttribute(id, value, condition);
-			receivedEffectStats.accumulateAttribute(id, value, condition);
-		}
-	}
-
 	public void increasePower(double value) {
-		accumulateAttribute(AttributeId.POWER, value, AttributeCondition.EMPTY);
+		accumulateAttribute(AttributeId.POWER, value);
 	}
 
 	public void solveStatConversions(List<StatConversion> statConversions) {

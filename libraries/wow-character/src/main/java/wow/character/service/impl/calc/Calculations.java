@@ -304,9 +304,9 @@ public abstract class Calculations {
 		}
 
 		@Override
-		public void accumulateAttribute(AttributeId id, double value) {
-			if (id == attributeId) {
-				this.totalValue += value;
+		public void accumulateAttribute(Attribute attribute, double scaleFactor) {
+			if (attribute.id() == attributeId) {
+				this.totalValue += getValue(attribute, scaleFactor);
 			}
 		}
 	}

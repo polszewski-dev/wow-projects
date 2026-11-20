@@ -2,7 +2,7 @@ package wow.character.model.snapshot;
 
 import lombok.Getter;
 import wow.character.util.AttributeConditionChecker;
-import wow.commons.model.attribute.AttributeId;
+import wow.commons.model.attribute.Attribute;
 import wow.commons.model.effect.component.StatConversionType;
 
 /**
@@ -50,57 +50,57 @@ public class AccumulatedSpellStats extends AccumulatedBaseStats {
 	}
 
 	@Override
-	public void accumulateAttribute(AttributeId id, double value) {
-		switch (id) {
+	public void accumulateAttribute(Attribute attribute, double scaleFactor) {
+		switch (attribute.id()) {
 			case DAMAGE:
 				if (isDamage) {
-					this.amount += value;
+					this.amount += getValue(attribute, scaleFactor);
 				}
 				break;
 			case DAMAGE_PCT:
 				if (isDamage) {
-					this.amountPct += value;
+					this.amountPct += getValue(attribute, scaleFactor);
 				}
 				break;
 			case HEALING:
 				if (isHealing) {
-					this.amount += value;
+					this.amount += getValue(attribute, scaleFactor);
 				}
 				break;
 			case HEALING_PCT:
 				if (isHealing) {
-					this.amountPct += value;
+					this.amountPct += getValue(attribute, scaleFactor);
 				}
 				break;
 			case EFFECT_PCT:
-				this.effectPct += value;
+				this.effectPct += getValue(attribute, scaleFactor);
 				break;
 			case POWER:
-				this.power += value;
+				this.power += getValue(attribute, scaleFactor);
 				break;
 			case POWER_PCT:
-				this.powerPct += value;
+				this.powerPct += getValue(attribute, scaleFactor);
 				break;
 			case POWER_COEFFICIENT_PCT:
-				this.powerCoeffPct += value;
+				this.powerCoeffPct += getValue(attribute, scaleFactor);
 				break;
 			case CRIT_RATING:
-				this.critRating += value;
+				this.critRating += getValue(attribute, scaleFactor);
 				break;
 			case CRIT_PCT:
-				this.critPct += value;
+				this.critPct += getValue(attribute, scaleFactor);
 				break;
 			case CRIT_EFFECT_PCT:
-				this.critEffectPct += value;
+				this.critEffectPct += getValue(attribute, scaleFactor);
 				break;
 			case CRIT_EFFECT_MULTIPLIER_PCT:
-				this.critEffectMultiplierPct += value;
+				this.critEffectMultiplierPct += getValue(attribute, scaleFactor);
 				break;
 			case CRIT_COEFF_PCT:
-				this.critCoeffPct += value;
+				this.critCoeffPct += getValue(attribute, scaleFactor);
 				break;
 			default:
-				super.accumulateAttribute(id, value);
+				super.accumulateAttribute(attribute, scaleFactor);
 		}
 	}
 

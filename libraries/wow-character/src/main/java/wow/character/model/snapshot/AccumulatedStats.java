@@ -1,7 +1,6 @@
 package wow.character.model.snapshot;
 
-import wow.commons.model.attribute.Attribute;
-import wow.commons.model.attribute.AttributeScalingParams;
+import wow.commons.model.attribute.*;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -25,5 +24,11 @@ public abstract class AccumulatedStats {
 		}
 	}
 
-	protected abstract void accumulateAttribute(Attribute attribute, double scaleFactor);
+	public abstract void accumulateAttribute(Attribute attribute, double scaleFactor);
+
+	public final void accumulateAttribute(AttributeId attributeId, double value) {
+		var attribute = new Attribute(AttributeTarget.OWNER, attributeId, value, AttributeCondition.EMPTY, AttributeScaling.NONE);
+
+		accumulateAttribute(attribute, 1);
+	}
 }

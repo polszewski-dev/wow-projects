@@ -2,7 +2,7 @@ package wow.character.model.snapshot;
 
 import lombok.Getter;
 import wow.character.util.AttributeConditionChecker;
-import wow.commons.model.attribute.AttributeId;
+import wow.commons.model.attribute.Attribute;
 
 /**
  * User: POlszewski
@@ -24,13 +24,13 @@ public class AccumulatedReceivedEffectStats extends AccumulatedPartialStats {
 	}
 
 	@Override
-	public void accumulateAttribute(AttributeId id, double value) {
-		switch (id) {
+	public void accumulateAttribute(Attribute attribute, double scaleFactor) {
+		switch (attribute.id()) {
 			case RECEIVED_EFFECT_DURATION:
-				this.receivedEffectDuration += value;
+				this.receivedEffectDuration += getValue(attribute, scaleFactor);
 				break;
 			case RECEIVED_EFFECT_DURATION_PCT:
-				this.receivedEffectDurationPct += value;
+				this.receivedEffectDurationPct += getValue(attribute, scaleFactor);
 				break;
 			default:
 				// ignore the rest

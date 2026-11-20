@@ -2,7 +2,7 @@ package wow.character.model.snapshot;
 
 import lombok.Getter;
 import wow.character.util.AttributeConditionChecker;
-import wow.commons.model.attribute.AttributeId;
+import wow.commons.model.attribute.Attribute;
 
 /**
  * User: POlszewski
@@ -34,31 +34,31 @@ public class AccumulatedRegenStats extends AccumulatedBaseStats {
 	}
 
 	@Override
-	public void accumulateAttribute(AttributeId id, double value) {
-		switch (id) {
+	public void accumulateAttribute(Attribute attribute, double scaleFactor) {
+		switch (attribute.id()) {
 			case HP5:
-				this.hp5 += value;
+				this.hp5 += getValue(attribute, scaleFactor);
 				break;
 			case MP5:
-				this.mp5 += value;
+				this.mp5 += getValue(attribute, scaleFactor);
 				break;
 			case HEALING_TAKEN_PCT:
-				this.healingTakenPct += value;
+				this.healingTakenPct += getValue(attribute, scaleFactor);
 				break;
 			case HEALTH_REGEN_PCT:
-				this.healthRegenPct += value;
+				this.healthRegenPct += getValue(attribute, scaleFactor);
 				break;
 			case MANA_REGEN_PCT:
-				this.manaRegenPct += value;
+				this.manaRegenPct += getValue(attribute, scaleFactor);
 				break;
 			case IN_COMBAT_HEALTH_REGEN_PCT:
-				this.inCombatHealthRegenPct += value;
+				this.inCombatHealthRegenPct += getValue(attribute, scaleFactor);
 				break;
 			case IN_COMBAT_MANA_REGEN_PCT:
-				this.inCombatManaRegenPct += value;
+				this.inCombatManaRegenPct += getValue(attribute, scaleFactor);
 				break;
 			default:
-				super.accumulateAttribute(id, value);
+				super.accumulateAttribute(attribute, scaleFactor);
 		}
 	}
 

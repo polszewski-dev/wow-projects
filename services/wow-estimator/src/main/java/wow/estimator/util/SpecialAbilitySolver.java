@@ -3,7 +3,6 @@ package wow.estimator.util;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import wow.character.util.EventConditionChecker;
-import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.component.Event;
 import wow.commons.model.effect.component.EventType;
@@ -158,7 +157,7 @@ public class SpecialAbilitySolver {
 			return false;
 		}
 
-		abilityStats.accumulateAttribute(CRIT_COEFF_PCT, extraCritCoeff, AttributeCondition.EMPTY);
+		abilityStats.accumulateAttribute(CRIT_COEFF_PCT, extraCritCoeff);
 
 		return true;
 	}

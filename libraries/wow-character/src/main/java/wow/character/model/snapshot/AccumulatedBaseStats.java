@@ -2,7 +2,7 @@ package wow.character.model.snapshot;
 
 import lombok.Getter;
 import wow.character.util.AttributeConditionChecker;
-import wow.commons.model.attribute.AttributeId;
+import wow.commons.model.attribute.Attribute;
 import wow.commons.model.effect.component.StatConversionType;
 
 /**
@@ -74,73 +74,73 @@ public class AccumulatedBaseStats extends AccumulatedPartialStats {
 	}
 
 	@Override
-	public void accumulateAttribute(AttributeId id, double value) {
-		switch (id) {
+	public void accumulateAttribute(Attribute attribute, double scaleFactor) {
+		switch (attribute.id()) {
 			case STRENGTH:
-				this.strength += value;
+				this.strength += getValue(attribute, scaleFactor);
 				break;
 			case STRENGTH_PCT:
-				this.strengthPct += value;
+				this.strengthPct += getValue(attribute, scaleFactor);
 				break;
 			case AGILITY:
-				this.agility += value;
+				this.agility += getValue(attribute, scaleFactor);
 				break;
 			case AGILITY_PCT:
-				this.agilityPct += value;
+				this.agilityPct += getValue(attribute, scaleFactor);
 				break;
 			case STAMINA:
-				this.stamina += value;
+				this.stamina += getValue(attribute, scaleFactor);
 				break;
 			case STAMINA_PCT:
-				this.staminaPct += value;
+				this.staminaPct += getValue(attribute, scaleFactor);
 				break;
 			case INTELLECT:
-				this.intellect += value;
+				this.intellect += getValue(attribute, scaleFactor);
 				break;
 			case INTELLECT_PCT:
-				this.intellectPct += value;
+				this.intellectPct += getValue(attribute, scaleFactor);
 				break;
 			case SPIRIT:
-				this.spirit += value;
+				this.spirit += getValue(attribute, scaleFactor);
 				break;
 			case SPIRIT_PCT:
-				this.spiritPct += value;
+				this.spiritPct += getValue(attribute, scaleFactor);
 				break;
 			case BASE_STATS:
-				this.baseStrength += value;
-				this.baseAgility += value;
-				this.baseStamina += value;
-				this.baseIntellect += value;
-				this.baseSpirit += value;
+				this.baseStrength += getValue(attribute, scaleFactor);
+				this.baseAgility += getValue(attribute, scaleFactor);
+				this.baseStamina += getValue(attribute, scaleFactor);
+				this.baseIntellect += getValue(attribute, scaleFactor);
+				this.baseSpirit += getValue(attribute, scaleFactor);
 				break;
 			case BASE_STATS_PCT:
-				this.baseStatsPct += value;
+				this.baseStatsPct += getValue(attribute, scaleFactor);
 				break;
 			case STATS:
-				this.strength += value;
-				this.agility += value;
-				this.stamina += value;
-				this.intellect += value;
-				this.spirit += value;
+				this.strength += getValue(attribute, scaleFactor);
+				this.agility += getValue(attribute, scaleFactor);
+				this.stamina += getValue(attribute, scaleFactor);
+				this.intellect += getValue(attribute, scaleFactor);
+				this.spirit += getValue(attribute, scaleFactor);
 				break;
 			case STATS_PCT:
-				this.strengthPct += value;
-				this.agilityPct += value;
-				this.staminaPct += value;
-				this.intellectPct += value;
-				this.spiritPct += value;
+				this.strengthPct += getValue(attribute, scaleFactor);
+				this.agilityPct += getValue(attribute, scaleFactor);
+				this.staminaPct += getValue(attribute, scaleFactor);
+				this.intellectPct += getValue(attribute, scaleFactor);
+				this.spiritPct += getValue(attribute, scaleFactor);
 				break;
 			case MAX_HEALTH:
-				this.maxHealth += value;
+				this.maxHealth += getValue(attribute, scaleFactor);
 				break;
 			case MAX_HEALTH_PCT:
-				this.maxHealthPct += value;
+				this.maxHealthPct += getValue(attribute, scaleFactor);
 				break;
 			case MAX_MANA:
-				this.maxMana += value;
+				this.maxMana += getValue(attribute, scaleFactor);
 				break;
 			case MAX_MANA_PCT:
-				this.maxManaPct += value;
+				this.maxManaPct += getValue(attribute, scaleFactor);
 				break;
 			default:
 				// ignore the rest

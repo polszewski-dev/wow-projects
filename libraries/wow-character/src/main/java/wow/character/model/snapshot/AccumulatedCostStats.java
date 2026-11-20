@@ -2,7 +2,7 @@ package wow.character.model.snapshot;
 
 import lombok.Getter;
 import wow.character.util.AttributeConditionChecker;
-import wow.commons.model.attribute.AttributeId;
+import wow.commons.model.attribute.Attribute;
 import wow.commons.model.effect.component.StatConversionType;
 import wow.commons.model.spell.ResourceType;
 
@@ -46,46 +46,46 @@ public class AccumulatedCostStats extends AccumulatedBaseStats {
 	}
 
 	@Override
-	public void accumulateAttribute(AttributeId id, double value) {
-		switch (id) {
+	public void accumulateAttribute(Attribute attribute, double scaleFactor) {
+		switch (attribute.id()) {
 			case MANA_COST:
-				this.manaCost += value;
+				this.manaCost += getValue(attribute, scaleFactor);
 				break;
 			case MANA_COST_PCT:
-				this.manaCostPct += value;
+				this.manaCostPct += getValue(attribute, scaleFactor);
 				break;
 			case ENERGY_COST:
-				this.energyCost += value;
+				this.energyCost += getValue(attribute, scaleFactor);
 				break;
 			case ENERGY_COST_PCT:
-				this.energyCostPct += value;
+				this.energyCostPct += getValue(attribute, scaleFactor);
 				break;
 			case RAGE_COST:
-				this.rageCost += value;
+				this.rageCost += getValue(attribute, scaleFactor);
 				break;
 			case RAGE_COST_PCT:
-				this.rageCostPct += value;
+				this.rageCostPct += getValue(attribute, scaleFactor);
 				break;
 			case HEALTH_COST:
-				this.healthCost += value;
+				this.healthCost += getValue(attribute, scaleFactor);
 				break;
 			case HEALTH_COST_PCT:
-				this.healthCostPct += value;
+				this.healthCostPct += getValue(attribute, scaleFactor);
 				break;
 			case COST_REDUCTION_CT:
-				this.costReductionPct += value;
+				this.costReductionPct += getValue(attribute, scaleFactor);
 				break;
 			case POWER:
-				this.power += value;
+				this.power += getValue(attribute, scaleFactor);
 				break;
 			case COOLDOWN:
-				this.cooldown += value;
+				this.cooldown += getValue(attribute, scaleFactor);
 				break;
 			case COOLDOWN_PCT:
-				this.cooldownPct += value;
+				this.cooldownPct += getValue(attribute, scaleFactor);
 				break;
 			default:
-				super.accumulateAttribute(id, value);
+				super.accumulateAttribute(attribute, scaleFactor);
 		}
 	}
 
