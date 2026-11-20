@@ -1,5 +1,9 @@
 package wow.character.util;
 
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import wow.character.model.character.Character;
+import wow.commons.model.character.PetType;
 import wow.commons.model.spell.SpellTargetCondition;
 
 import static wow.commons.model.spell.SpellTargetCondition.*;
@@ -8,11 +12,14 @@ import static wow.commons.model.spell.SpellTargetCondition.*;
  * User: POlszewski
  * Date: 2025-11-30
  */
+@RequiredArgsConstructor
 public final class SpellTargetConditionChecker {
-	public static boolean check(SpellTargetCondition condition, SpellTargetConditionArgs args) {
-		var caster = args.getCaster();
-		var target = args.getTarget();
+	private final Character caster;
+	private final Character target;
+	@Setter
+	private PetType sacrificedPetType;
 
+	public boolean check(SpellTargetCondition condition) {
 		return switch (condition) {
 			case Empty() ->
 					true;
@@ -54,21 +61,19 @@ public final class SpellTargetConditionChecker {
 					caster.getActivePetType() == petType;
 
 			case SacrificedPet(var petType) ->
-					args.getSacrificedPetType() == petType;
+					sacrificedPetType == petType;
 
 			case Or(var left, var right) ->
-					check(left, args) || check(right, args);
+					check(left) || check(right);
 
 			case And(var left, var right) ->
-					check(left, args) && check(right, args);
+					check(left) && check(right);
 
 			case Comma(var conditions) ->
-					conditions.stream().anyMatch(x -> check(x, args));
+					conditions.stream().anyMatch(this::check);
 
 			case Not(var innerCondition) ->
-					!check(innerCondition, args);
+					!check(innerCondition);
 		};
 	}
-
-	private SpellTargetConditionChecker() {}
 }

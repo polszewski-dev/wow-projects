@@ -3,7 +3,7 @@ package wow.character.service.impl.calc;
 import wow.character.model.character.Character;
 import wow.character.model.snapshot.AccumulatedCostStats;
 import wow.character.model.snapshot.SpellCostSnapshot;
-import wow.character.util.AttributeConditionArgs;
+import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.spell.Ability;
 
 /**
@@ -12,9 +12,9 @@ import wow.commons.model.spell.Ability;
  */
 public class CostCalculations extends Calculations {
 	public static AccumulatedCostStats newAccumulatedCostStats(Character caster, Ability ability, Character target) {
-		var conditionArgs = AttributeConditionArgs.forSpell(caster, ability, target);
+		var checker = AttributeConditionChecker.forSpell(caster, ability, target);
 
-		return new AccumulatedCostStats(conditionArgs);
+		return new AccumulatedCostStats(checker);
 	}
 
 	private static AccumulatedCostStats getAccumulatedCostStats(Character caster, Ability ability, Character target) {

@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import wow.character.WowCharacterSpringTest;
 import wow.character.model.character.BaseStatInfo;
-import wow.character.util.AttributeConditionArgs;
+import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeId;
 
@@ -210,12 +210,12 @@ class AccumulatedBaseStatsTest extends WowCharacterSpringTest {
 	@BeforeEach
 	void setUp() {
 		var caster = getPlayer();
-		var conditionArgs = AttributeConditionArgs.forBaseStats(caster);
+		var checker = AttributeConditionChecker.forBaseStats(caster);
 
-		this.baseStats = new AccumulatedBaseStats(conditionArgs);
+		this.baseStats = new AccumulatedBaseStats(checker);
 	}
 
 	private BaseStatInfo getBaseStatInfo() {
-		return baseStats.conditionArgs.getCaster().getBaseStatInfo();
+		return baseStats.checker.getCaster().getBaseStatInfo();
 	}
 }

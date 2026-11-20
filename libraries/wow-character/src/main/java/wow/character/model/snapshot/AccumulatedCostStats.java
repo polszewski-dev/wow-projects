@@ -1,7 +1,7 @@
 package wow.character.model.snapshot;
 
 import lombok.Getter;
-import wow.character.util.AttributeConditionArgs;
+import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.effect.component.StatConversionType;
 import wow.commons.model.spell.ResourceType;
@@ -25,8 +25,8 @@ public class AccumulatedCostStats extends AccumulatedBaseStats {
 	private double cooldown;
 	private double cooldownPct;
 
-	public AccumulatedCostStats(AttributeConditionArgs conditionArgs) {
-		super(conditionArgs);
+	public AccumulatedCostStats(AttributeConditionChecker checker) {
+		super(checker);
 	}
 
 	private AccumulatedCostStats(AccumulatedCostStats stats) {

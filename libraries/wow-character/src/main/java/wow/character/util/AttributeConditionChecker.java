@@ -1,129 +1,242 @@
 package wow.character.util;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import wow.character.model.character.Character;
 import wow.commons.model.attribute.AttributeCondition;
-import wow.commons.model.spell.Ability;
-import wow.commons.model.spell.ClassAbility;
+import wow.commons.model.attribute.AttributeScalingParams;
+import wow.commons.model.attribute.PowerType;
+import wow.commons.model.categorization.WeaponSubType;
+import wow.commons.model.effect.Effect;
+import wow.commons.model.spell.*;
+import wow.commons.model.talent.TalentTree;
+
+import java.util.Objects;
 
 import static wow.commons.model.attribute.AttributeCondition.*;
+import static wow.commons.model.attribute.PowerType.SPELL_DAMAGE;
+import static wow.commons.model.spell.ActionType.SPELL;
 
 
 /**
  * User: POlszewski
  * Date: 29.09.2024
  */
-public final class AttributeConditionChecker {
-	public static boolean check(AttributeCondition condition, AttributeConditionArgs args) {
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+@Getter
+@Setter
+public final class AttributeConditionChecker implements AttributeScalingParams {
+	private final Character caster;
+	private final Spell spell;
+	private final Character target;
+
+	private final ActionType actionType;
+	private final PowerType powerType;
+	private final SpellSchool spellSchool;
+
+	private boolean direct;
+	private boolean periodic;
+
+	private Effect appliedEffect;
+
+	private WeaponSubType weaponType;
+	private boolean hadCrit;
+
+	public AttributeConditionChecker withCaster(Character caster) {
+		var result = new AttributeConditionChecker(caster, spell, target, actionType, powerType, spellSchool);
+
+		result.direct = direct;
+		result.periodic = periodic;
+		result.appliedEffect = appliedEffect;
+		result.weaponType = weaponType;
+		result.hadCrit = hadCrit;
+
+		return result;
+	}
+
+	public static AttributeConditionChecker forAnySpell(Character caster) {
+		return forAnySpell(caster, null, null);
+	}
+
+	public static AttributeConditionChecker forAnySpell(Character caster, PowerType powerType, SpellSchool spellSchool) {
+		Objects.requireNonNull(caster);
+
+		return new AttributeConditionChecker(caster, null, null, SPELL, powerType, spellSchool);
+	}
+
+	public static AttributeConditionChecker forSpell(Character caster, Spell spell, Character target) {
+		return forSpell(caster, spell, target, null, null);
+	}
+
+	public static AttributeConditionChecker forSpell(Character caster, Spell spell, Character target, PowerType powerType, SpellSchool spellSchool) {
+		Objects.requireNonNull(caster);
+		Objects.requireNonNull(spell);
+
+		return new AttributeConditionChecker(caster, spell, target, SPELL, powerType, spellSchool);
+	}
+
+	public static AttributeConditionChecker forSpellDamage(Character caster, Spell spell, Character target, SpellSchool spellSchool) {
+		return forSpell(caster, spell, target, SPELL_DAMAGE, spellSchool);
+	}
+
+	public static AttributeConditionChecker forSpellTarget(Character target, Spell spell) {
+		return forSpellTarget(target, spell, null, null);
+	}
+
+	public static AttributeConditionChecker forSpellTarget(Character target, Spell spell, PowerType powerType, SpellSchool spellSchool) {
+		Objects.requireNonNull(target);
+		Objects.requireNonNull(spell);
+
+		return new AttributeConditionChecker(target, spell, null, SPELL, powerType, spellSchool);
+	}
+
+	public static AttributeConditionChecker forBaseStats(Character owner) {
+		Objects.requireNonNull(owner);
+
+		return new AttributeConditionChecker(owner, null, null, null, null, null);
+	}
+
+	public static AttributeConditionChecker forRegen(Character owner) {
+		Objects.requireNonNull(owner);
+
+		return new AttributeConditionChecker(owner, null, null, null, null, null);
+	}
+	
+	public boolean check(AttributeCondition condition) {
 		return switch (condition) {
 			case AbilityCategoryCondition(var abilityCategory) ->
-					args.getSpell() instanceof Ability a &&
+					spell instanceof Ability a &&
 					a.getCategory() == abilityCategory;
 
 			case AbilityIdCondition(var abilityId) ->
-					args.getSpell() instanceof Ability a &&
+					spell instanceof Ability a &&
 					a.getAbilityId().equals(abilityId);
 
-			case ActionTypeCondition(var actionType) ->
-					args.getActionType() == actionType;
+			case ActionTypeCondition(var actionTypeArg) ->
+					actionType == actionTypeArg;
 
 			case EffectCategoryCondition(var effectCategory) ->
-					args.getAppliedEffect() != null &&
-					args.getAppliedEffect().getCategory() == effectCategory;
+					appliedEffect != null &&
+					appliedEffect.getCategory() == effectCategory;
 
 			case EffectNameCondition(var effectName) ->
-					args.getAppliedEffect() != null &&
-					args.getAppliedEffect().getName().equals(effectName);
+					appliedEffect != null &&
+					appliedEffect.getName().equals(effectName);
 
 			case EmptyCondition() ->
 					true;
 
 			case HadCrit() ->
-					args.isHadCrit();
+					hadCrit;
 
 			case HasCastTime() ->
-					args.getSpell() instanceof Ability a &&
+					spell instanceof Ability a &&
 					a.getCastTime().isPositive();
 
 			case HasCastTimeUnder10Sec() ->
-					args.getSpell() instanceof Ability a &&
+					spell instanceof Ability a &&
 					a.getCastTime().getSeconds() < 10;
 
 			case HasHealingComponent() ->
-					args.getSpell() != null &&
-					args.getSpell().hasHealingComponent();
+					spell != null &&
+					spell.hasHealingComponent();
 
 			case HasPet() ->
-					args.getCaster().getActivePetType() != null;
+					caster.getActivePetType() != null;
 
 			case IsDirect() ->
-					args.isDirect();
+					direct;
 
 			case IsPeriodic() ->
-					args.isPeriodic();
+					periodic;
 
 			case IsInstantCast() ->
-					args.getSpell() instanceof Ability a &&
+					spell instanceof Ability a &&
 					a.getCastTime().isZero();
 
 			case MovementTypeCondition(var movementType) ->
-					args.getCaster().getMovementType() == movementType;
+					caster.getMovementType() == movementType;
 
 			case Operator operator ->
-					checkConditionOperator(operator, args);
+					checkConditionOperator(operator);
 
 			case OwnerHasEffect(var effectName) ->
-					args.getCaster().hasEffect(effectName);
+					caster.hasEffect(effectName);
 
 			case OwnerHealthPctLessThan(var value) ->
-					args.getCaster().getHealthPct().value() < value;
+					caster.getHealthPct().value() < value;
 
-			case PetTypeCondition(var petType) -> args.getCaster().getMaster().getActivePetType() == petType;
+			case PetTypeCondition(var petType) -> caster.getMaster().getActivePetType() == petType;
 
-			case PowerTypeCondition(var powerType) ->
-					args.getPowerType() == powerType;
+			case PowerTypeCondition(var powerTypeArg) ->
+					powerType == powerTypeArg;
 
 			case ProfessionCondition(var professionId) ->
-					args.getCaster().hasProfession(professionId);
+					caster.hasProfession(professionId);
 
-			case SpellSchoolCondition(var spellSchool) ->
-					args.getSpellSchool() == spellSchool;
+			case SpellSchoolCondition(var spellSchoolArg) ->
+					getSpellSchool() == spellSchoolArg;
 
 			case TargetHealthPctLessThan(var value) ->
-					args.getTarget() != null &&
-					args.getTarget().getHealthPct().value() < value;
+					target != null &&
+					target.getHealthPct().value() < value;
 
 			case TalentTreeCondition(var talentTree) ->
-					args.getSpell() instanceof ClassAbility a &&
+					spell instanceof ClassAbility a &&
 					a.getTalentTree() == talentTree;
 
 			case TargetTypeCondition(var creatureType) ->
-					args.getTarget() != null && args.getTarget().getCreatureType() == creatureType;
+					target != null && target.getCreatureType() == creatureType;
 
-			case WeaponTypeCondition(var weaponType) ->
-					args.getWeaponType() == weaponType;
+			case WeaponTypeCondition(var weaponTypeArg) ->
+					weaponType == weaponTypeArg;
 		};
 	}
 
-	private static boolean checkConditionOperator(Operator operator, AttributeConditionArgs args) {
+	private boolean checkConditionOperator(Operator operator) {
 		return switch (operator) {
 			case And(var left, var right) ->
-					check(left, args) && check(right, args);
+					check(left) && check(right);
 
 			case Or(var left, var right) ->
-					check(left, args) || check(right, args);
+					check(left) || check(right);
 
 			case Comma comma ->
-					checkComma(comma, args);
+					checkComma(comma);
 		};
 	}
 
-	private static boolean checkComma(Comma comma, AttributeConditionArgs args) {
+	private boolean checkComma(Comma comma) {
 		for (var condition : comma.conditions()) {
-			if (check(condition, args)) {
+			if (check(condition)) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	private AttributeConditionChecker() {}
+	private SpellSchool getSpellSchool() {
+		if (spellSchool != null) {
+			return spellSchool;
+		}
+		if (spell != null) {
+			return spell.getSchool();
+		}
+		return null;
+	}
+
+	@Override
+	public int getLevel() {
+		return caster.getLevel();
+	}
+
+	@Override
+	public int getNumberOfEffectsOnTarget(TalentTree tree) {
+		if (target == null) {
+			return 0;
+		}
+		return target.getNumberOfEffects(tree);
+	}
 }

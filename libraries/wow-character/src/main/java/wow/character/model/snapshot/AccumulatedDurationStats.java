@@ -1,7 +1,7 @@
 package wow.character.model.snapshot;
 
 import lombok.Getter;
-import wow.character.util.AttributeConditionArgs;
+import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.attribute.AttributeId;
 
 /**
@@ -15,8 +15,8 @@ public class AccumulatedDurationStats extends AccumulatedPartialStats {
 	private double hasteRating;
 	private double hastePct;
 
-	public AccumulatedDurationStats(AttributeConditionArgs conditionArgs) {
-		super(conditionArgs);
+	public AccumulatedDurationStats(AttributeConditionChecker checker) {
+		super(checker);
 	}
 
 	private AccumulatedDurationStats(AccumulatedDurationStats stats) {

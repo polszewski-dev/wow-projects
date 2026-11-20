@@ -2,7 +2,7 @@ package wow.character.service.impl.calc;
 
 import wow.character.model.character.Character;
 import wow.character.model.snapshot.*;
-import wow.character.util.AttributeConditionArgs;
+import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.attribute.PowerType;
 import wow.commons.model.spell.SpellSchool;
 
@@ -30,13 +30,13 @@ public class StatsSummaryCalculations extends Calculations {
 
 		var baseStatsSnapshot = getBaseStatsSnapshot(character);
 
-		var conditionArgs = AttributeConditionArgs.forAnySpell(character);
+		var checker = AttributeConditionChecker.forAnySpell(character);
 		var levelDifference = 3;
 
-		var castStats = new AccumulatedCastStats(conditionArgs);
-		var hitStats = new AccumulatedHitStats(conditionArgs);
-		var spellStats = new AccumulatedSpellStats(conditionArgs);
-		var targetStats = new AccumulatedTargetStats(conditionArgs);
+		var castStats = new AccumulatedCastStats(checker);
+		var hitStats = new AccumulatedHitStats(checker);
+		var spellStats = new AccumulatedSpellStats(checker);
+		var targetStats = new AccumulatedTargetStats(checker);
 
 		accumulateEffects(character, castStats);
 		accumulateEffects(character, hitStats);
@@ -96,16 +96,16 @@ public class StatsSummaryCalculations extends Calculations {
 	}
 
 	private static int getSpellAmount(Character caster, PowerType powerType, SpellSchool school) {
-		var conditionArgs = AttributeConditionArgs.forAnySpell(caster, powerType, school);
-		var spellStats = new AccumulatedSpellStats(conditionArgs);
+		var checker = AttributeConditionChecker.forAnySpell(caster, powerType, school);
+		var spellStats = new AccumulatedSpellStats(checker);
 
 		accumulateEffects(caster, spellStats);
 		return (int) spellStats.getPower();
 	}
 
 	private static double getSpellPctAmount(Character caster, PowerType powerType, SpellSchool school) {
-		var conditionArgs = AttributeConditionArgs.forAnySpell(caster, powerType, school);
-		var spellStats = new AccumulatedSpellStats(conditionArgs);
+		var checker = AttributeConditionChecker.forAnySpell(caster, powerType, school);
+		var spellStats = new AccumulatedSpellStats(checker);
 
 		accumulateEffects(caster, spellStats);
 		return spellStats.getAmountPct();

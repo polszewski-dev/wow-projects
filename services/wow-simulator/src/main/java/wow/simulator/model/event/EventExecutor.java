@@ -2,7 +2,7 @@ package wow.simulator.model.event;
 
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import wow.character.util.EventConditionArgs;
+import wow.character.util.EventConditionChecker;
 import wow.commons.model.attribute.PowerType;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.component.Event;
@@ -14,8 +14,6 @@ import wow.simulator.model.context.EventContext;
 import wow.simulator.model.unit.Unit;
 
 import java.util.List;
-
-import static wow.character.util.EventConditionChecker.check;
 
 /**
  * User: POlszewski
@@ -59,9 +57,9 @@ public class EventExecutor {
 	private boolean meetsAllConditions(EventAndEffect entry) {
 		var event = entry.event();
 		var effectOwner = entry.effectOwner();
-		var args = getConditionArgs(effectOwner);
+		var checker = getConditionChecker(effectOwner);
 
-		return check(event.condition(), args);
+		return checker.check(event.condition());
 	}
 
 	private boolean isOnCooldown(Event event) {
@@ -80,8 +78,8 @@ public class EventExecutor {
 		return caster.getRng().eventRoll(event.chance(), event);
 	}
 
-	private EventConditionArgs getConditionArgs(Unit effectOwner) {
-		var args = EventConditionArgs.forSpell(caster, spell, target);
+	private EventConditionChecker getConditionChecker(Unit effectOwner) {
+		var args = EventConditionChecker.forSpell(caster, spell, target);
 
 		args.setEffectOwner(effectOwner);
 		args.setHostileSpell(target != null && Unit.areHostile(caster, target));

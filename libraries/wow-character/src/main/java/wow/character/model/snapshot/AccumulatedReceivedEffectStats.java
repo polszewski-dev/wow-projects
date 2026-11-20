@@ -1,7 +1,7 @@
 package wow.character.model.snapshot;
 
 import lombok.Getter;
-import wow.character.util.AttributeConditionArgs;
+import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.attribute.AttributeId;
 
 /**
@@ -13,8 +13,8 @@ public class AccumulatedReceivedEffectStats extends AccumulatedPartialStats {
 	private double receivedEffectDuration;
 	private double receivedEffectDurationPct;
 
-	public AccumulatedReceivedEffectStats(AttributeConditionArgs conditionArgs) {
-		super(conditionArgs);
+	public AccumulatedReceivedEffectStats(AttributeConditionChecker checker) {
+		super(checker);
 	}
 
 	private AccumulatedReceivedEffectStats(AccumulatedReceivedEffectStats stats) {

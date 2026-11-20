@@ -3,7 +3,7 @@ package wow.character.model.snapshot;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import wow.character.WowCharacterSpringTest;
-import wow.character.util.AttributeConditionArgs;
+import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeId;
 
@@ -135,8 +135,8 @@ class AccumulatedCostStatsTest extends WowCharacterSpringTest {
 	void setUp() {
 		var caster = getPlayer();
 		var spell = caster.getAbility(SHADOW_BOLT).orElseThrow();
-		var conditionArgs = AttributeConditionArgs.forSpell(caster, spell, null);
+		var checker = AttributeConditionChecker.forSpell(caster, spell, null);
 
-		this.costStats = new AccumulatedCostStats(conditionArgs);
+		this.costStats = new AccumulatedCostStats(checker);
 	}
 }

@@ -4,7 +4,8 @@ import wow.character.model.character.Character;
 import wow.character.model.character.PetCharacter;
 import wow.character.model.snapshot.*;
 import wow.character.util.AbstractEffectCollector;
-import wow.character.util.AttributeConditionArgs;
+import wow.character.util.AttributeConditionChecker;
+import wow.character.util.StatConversionConditionChecker;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.effect.Effect;
@@ -18,7 +19,6 @@ import static java.lang.Math.max;
 import static wow.character.model.snapshot.AttributePredicates.OWNER_OR_AURAS;
 import static wow.character.model.snapshot.AttributePredicates.PET_ONLY;
 import static wow.character.service.impl.calc.BaseStatsCalculations.newAccumulatedBaseStats;
-import static wow.character.util.StatConversionConditionChecker.check;
 
 /**
  * User: POlszewski
@@ -195,8 +195,8 @@ public abstract class Calculations {
 				return;
 			}
 
-			var conditionArgs = stats.getConditionArgs().withCaster(master);
-			this.mastersSpellStats = new AccumulatedSpellStats(conditionArgs);
+			var checker = stats.getChecker().withCaster(master);
+			this.mastersSpellStats = new AccumulatedSpellStats(checker);
 
 			var masterConversionSolver = accumulateEffectsWithoutConversions(master, mastersSpellStats);
 
@@ -225,8 +225,8 @@ public abstract class Calculations {
 		}
 
 		private AccumulatedHitStats calcMasterHitStats() {
-			var masterConditionArgs = stats.getConditionArgs().withCaster(master);
-			var masterHitStats = new AccumulatedHitStats(masterConditionArgs);
+			var masterChecker = stats.getChecker().withCaster(master);
+			var masterHitStats = new AccumulatedHitStats(masterChecker);
 
 			accumulateEffects(master, masterHitStats, false);
 			return masterHitStats;
@@ -241,9 +241,10 @@ public abstract class Calculations {
 		}
 
 		private boolean toConditionMatches(StatConversion statConversion) {
-			var conditionArgs = stats.getConditionArgs();
+			var statsChecker = stats.getChecker();
+			var checker = new StatConversionConditionChecker(statsChecker.getActionType(), statsChecker.getPowerType());
 
-			return check(statConversion, conditionArgs);
+			return checker.check(statConversion);
 		}
 
 		private void addToTheCorrectList(StatConversion conversion) {
@@ -297,8 +298,8 @@ public abstract class Calculations {
 		private final AttributeId attributeId;
 		double totalValue;
 
-		AccumulatedSingleStat(AttributeId attributeId, AttributeConditionArgs conditionArgs) {
-			super(conditionArgs);
+		AccumulatedSingleStat(AttributeId attributeId, AttributeConditionChecker checker) {
+			super(checker);
 			this.attributeId = attributeId;
 		}
 

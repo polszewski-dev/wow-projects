@@ -1,7 +1,7 @@
 package wow.character.model.snapshot;
 
 import lombok.Getter;
-import wow.character.util.AttributeConditionArgs;
+import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.effect.component.StatConversionType;
 
@@ -32,8 +32,8 @@ public class AccumulatedBaseStats extends AccumulatedPartialStats {
 	private double maxMana;
 	private double maxManaPct;
 
-	public AccumulatedBaseStats(AttributeConditionArgs conditionArgs) {
-		super(conditionArgs);
+	public AccumulatedBaseStats(AttributeConditionChecker checker) {
+		super(checker);
 		accumulateBaseStatInfo();
 	}
 
@@ -62,7 +62,7 @@ public class AccumulatedBaseStats extends AccumulatedPartialStats {
 	}
 
 	private void accumulateBaseStatInfo() {
-		var baseStatInfo = conditionArgs.getCaster().getBaseStatInfo();
+		var baseStatInfo = checker.getCaster().getBaseStatInfo();
 
 		baseStrength += baseStatInfo.getBaseStrength();
 		baseAgility += baseStatInfo.getBaseAgility();

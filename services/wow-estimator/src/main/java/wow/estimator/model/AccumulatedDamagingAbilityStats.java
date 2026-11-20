@@ -3,6 +3,7 @@ package wow.estimator.model;
 import lombok.Getter;
 import lombok.Setter;
 import wow.character.model.snapshot.*;
+import wow.character.util.StatConversionConditionChecker;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.attribute.AttributeId;
@@ -12,7 +13,6 @@ import wow.commons.model.spell.Ability;
 
 import java.util.List;
 
-import static wow.character.util.StatConversionConditionChecker.check;
 import static wow.commons.model.spell.component.ComponentCommand.DealDamageDirectly;
 import static wow.commons.model.spell.component.ComponentCommand.DealDamagePeriodically;
 
@@ -69,7 +69,10 @@ public class AccumulatedDamagingAbilityStats extends AccumulatedStats {
 	}
 
 	private boolean toConditionMatches(StatConversion statConversion) {
-		return check(statConversion, direct.getConditionArgs());
+		var directChecker = direct.getChecker();
+		var checker = new StatConversionConditionChecker(directChecker.getActionType(), directChecker.getPowerType());
+
+		return checker.check(statConversion);
 	}
 
 	public void accumulateAttribute(AttributeId id, double value, AttributeCondition condition) {

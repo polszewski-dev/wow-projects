@@ -1,8 +1,14 @@
 package wow.character.util;
 
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import wow.character.model.character.Character;
+import wow.commons.model.attribute.PowerType;
 import wow.commons.model.effect.component.EventCondition;
-import wow.commons.model.spell.Ability;
-import wow.commons.model.spell.ClassAbility;
+import wow.commons.model.spell.*;
+
+import java.util.Objects;
 
 import static wow.commons.model.effect.component.EventCondition.*;
 import static wow.commons.model.spell.ResourceType.MANA;
@@ -12,126 +18,162 @@ import static wow.commons.model.spell.ResourceType.MANA;
  * User: POlszewski
  * Date: 29.09.2024
  */
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+@Setter
 public final class EventConditionChecker {
-	public static boolean check(EventCondition condition, EventConditionArgs args) {
+	private final Character caster;
+	private final Spell spell;
+	private final Character target;
+
+	private final ActionType actionType;
+	private PowerType powerType;
+
+	private boolean canCrit;
+	private boolean hadCrit;
+
+	private boolean direct;
+	private boolean periodic;
+
+	private SpellSchool spellSchool;
+
+	private boolean hostileSpell;
+	private boolean normalMeleeAttack;
+	private boolean specialAttack;
+
+	private Character effectOwner;
+
+	public static EventConditionChecker forSpell(Character caster, Spell spell, Character target) {
+		Objects.requireNonNull(caster);
+		Objects.requireNonNull(spell);
+		return new EventConditionChecker(caster, spell, target, ActionType.SPELL);
+	}
+
+	public boolean check(EventCondition condition) {
 		return switch (condition) {
 			case AbilityCategoryCondition(var abilityCategory) ->
-					args.getSpell() instanceof Ability a &&
+					spell instanceof Ability a &&
 					a.getCategory() == abilityCategory;
 
 			case AbilityIdCondition(var abilityId) ->
-					args.getSpell() instanceof Ability a &&
+					spell instanceof Ability a &&
 					a.getAbilityId().equals(abilityId);
 
-			case ActionTypeCondition(var actionType) ->
-					args.getActionType() == actionType;
+			case ActionTypeCondition(var actionTypeArg) ->
+					actionType == actionTypeArg;
 
 			case CanCrit() ->
-					args.isCanCrit();
+					canCrit;
 
 			case EmptyCondition() ->
 					true;
 
 			case HadNoCrit() ->
-					args.isCanCrit() && !args.isHadCrit();
+					canCrit && !hadCrit;
 
 			case HadCrit() ->
-					args.isCanCrit() && args.isHadCrit();
+					canCrit && hadCrit;
 
 			case HasCastTime() ->
-					args.getSpell() instanceof Ability a &&
+					spell instanceof Ability a &&
 					a.getCastTime().isPositive();
 
 			case HasCastTimeUnder10Sec() ->
-					args.getSpell() instanceof Ability a &&
+					spell instanceof Ability a &&
 					a.getCastTime().getSeconds() > 0 &&
 					a.getCastTime().getSeconds() < 10;
 
 			case HasManaCost() ->
-					args.getSpell() instanceof Ability a &&
+					spell instanceof Ability a &&
 					a.getCost() != null &&
 					a.getCost().resourceType() == MANA;
 
 			case HasXFaction(var factionName) ->
-					args.getCaster().hasExclusiveFaction(factionName);
+					caster.hasExclusiveFaction(factionName);
 
 			case IsDirect() ->
-					args.isDirect();
+					direct;
 
 			case IsHostileSpell() ->
-					args.isHostileSpell();
+					hostileSpell;
 
 			case IsNormalMeleeAttack() ->
-					args.isNormalMeleeAttack();
+					normalMeleeAttack;
 
 			case IsPeriodic() ->
-					args.isPeriodic();
+					periodic;
 
 			case IsSpecialAttack() ->
-					args.isSpecialAttack();
+					specialAttack;
 
 			case IsTargetingOthers() ->
-					args.getTarget() != null &&
-					args.getTarget() != args.getCaster();
+					target != null && target != caster;
 
 			case CasterIsOwner() ->
-					args.getCaster() == args.getEffectOwner();
+					caster == effectOwner;
 
 			case Operator operator ->
-					checkConditionOperator(operator, args);
+					checkConditionOperator(operator);
 
 			case OwnerHasEffectCondition(var effectName) ->
-					args.getCaster().hasEffect(effectName);
+					caster.hasEffect(effectName);
 
 			case OwnerHealthPctLessThan(var value) ->
-					args.getCaster().getHealthPct().value() < value;
+					caster.getHealthPct().value() < value;
 
 			case OwnerIsChannelingCondition(var abilityId) ->
-					args.getSpell() instanceof Ability a &&
+					spell instanceof Ability a &&
 					a.isChanneled() &&
 					a.getAbilityId().equals(abilityId);
 
-			case PowerTypeCondition(var powerType) ->
-					args.getPowerType() == powerType;
+			case PowerTypeCondition(var powerTypeArg) ->
+					powerType == powerTypeArg;
 
-			case SpellSchoolCondition(var spellSchool) ->
-					args.getSpellSchool() == spellSchool;
+			case SpellSchoolCondition(var spellSchoolArg) ->
+					getSpellSchool() == spellSchoolArg;
 
 			case TalentTreeCondition(var talentTree) ->
-					args.getSpell() instanceof ClassAbility a &&
+					spell instanceof ClassAbility a &&
 					a.getTalentTree() == talentTree;
 
 			case TargetHealthPctLessThan(var value) ->
-					args.getTarget() != null &&
-					args.getTarget().getHealthPct().value() < value;
+					target != null &&
+					target.getHealthPct().value() < value;
 
 			case TargetTypeCondition(var creatureType) ->
-					args.getTarget() != null &&
-					args.getTarget().getCreatureType() == creatureType;
+					target != null &&
+					target.getCreatureType() == creatureType;
 		};
 	}
 
-	private static boolean checkConditionOperator(Operator operator, EventConditionArgs args) {
+	private boolean checkConditionOperator(Operator operator) {
 		return switch (operator) {
 			case And(var left, var right) ->
-					check(left, args) && check(right, args);
+					check(left) && check(right);
 
 			case Or(var left, var right) ->
-					check(left, args) || check(right, args);
+					check(left) || check(right);
 
 			case Comma comma ->
-					checkComma(comma, args);
+					checkComma(comma);
 		};
 	}
 
-	private static boolean checkComma(Comma comma, EventConditionArgs args) {
+	private boolean checkComma(Comma comma) {
 		for (var condition : comma.conditions()) {
-			if (check(condition, args)) {
+			if (check(condition)) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	private EventConditionChecker() {}
+	private SpellSchool getSpellSchool() {
+		if (spellSchool != null) {
+			return spellSchool;
+		}
+		if (spell != null) {
+			return spell.getSchool();
+		}
+		return null;
+	}
 }

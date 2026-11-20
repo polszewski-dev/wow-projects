@@ -3,7 +3,7 @@ package wow.character.service.impl.calc;
 import wow.character.model.character.Character;
 import wow.character.model.snapshot.AccumulatedSpellStats;
 import wow.character.model.snapshot.AccumulatedTargetStats;
-import wow.character.util.AttributeConditionArgs;
+import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.attribute.PowerType;
 import wow.commons.model.spell.Coefficient;
 import wow.commons.model.spell.Spell;
@@ -16,14 +16,14 @@ import static java.lang.Math.clamp;
  * Date: 2026-10-25
  */
 public class ComponentCalculations extends Calculations {
-	static AccumulatedSpellStats newAccumulatedSpellStats(AttributeConditionArgs conditionArgs) {
-		return new AccumulatedSpellStats(conditionArgs);
+	static AccumulatedSpellStats newAccumulatedSpellStats(AttributeConditionChecker checker) {
+		return new AccumulatedSpellStats(checker);
 	}
 
 	public static AccumulatedTargetStats newAccumulatedTargetStats(Character target, Spell spell, PowerType powerType, SpellSchool school) {
-		var conditionArgs = AttributeConditionArgs.forSpellTarget(target, spell, powerType, school);
+		var checker = AttributeConditionChecker.forSpellTarget(target, spell, powerType, school);
 
-		return new AccumulatedTargetStats(conditionArgs);
+		return new AccumulatedTargetStats(checker);
 	}
 
 	static AccumulatedTargetStats getAccumulatedTargetStats(Spell spell, Character target, PowerType powerType, SpellSchool school) {

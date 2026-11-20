@@ -2,8 +2,7 @@ package wow.estimator.util;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
-import wow.character.util.EventConditionArgs;
-import wow.commons.model.Duration;
+import wow.character.util.EventConditionChecker;
 import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.component.Event;
@@ -15,7 +14,6 @@ import wow.estimator.model.*;
 import wow.estimator.repository.ProcInfoRepository;
 
 import static wow.character.model.snapshot.AttributePredicates.OWNER_OR_AURAS;
-import static wow.character.util.EventConditionChecker.check;
 import static wow.commons.model.attribute.AttributeId.CRIT_COEFF_PCT;
 import static wow.commons.model.effect.component.EventType.*;
 
@@ -109,8 +107,8 @@ public class SpecialAbilitySolver {
 		if (event.condition().isEmpty()) {
 			return true;
 		}
-		var args = EventConditionArgs.forSpell(player, ability, null);
-		return check(event.condition(), args);
+		var checker = EventConditionChecker.forSpell(player, ability, null);
+		return checker.check(event.condition());
 	}
 
 	private boolean hasDamagingSpellEvent(Event event) {
@@ -139,7 +137,7 @@ public class SpecialAbilitySolver {
 			return false;
 		}
 
-		var duration = ((Duration) command.duration()).getSeconds();
+		var duration = command.duration().getSeconds();
 		var cooldown = activatedAbility.getCooldown().getSeconds();
 		var uptime = cooldown != 0 ? duration / cooldown : 1;
 
@@ -208,7 +206,7 @@ public class SpecialAbilitySolver {
 
 		var castTime = snapshot.getEffectiveCastTime();
 
-		return getProcUptime(procChance, ((Duration) duration).getSeconds(), cooldown, castTime);
+		return getProcUptime(procChance, duration.getSeconds(), cooldown, castTime);
 	}
 
 	private double getProcUptime(double procChance, double duration, double internalCooldown, double castTime) {

@@ -2,7 +2,6 @@ package wow.simulator.model.context;
 
 import lombok.Setter;
 import wow.character.model.snapshot.RngStrategy;
-import wow.character.util.SpellTargetConditionArgs;
 import wow.character.util.SpellTargetConditionChecker;
 import wow.commons.model.character.PetType;
 import wow.commons.model.effect.Effect;
@@ -144,11 +143,11 @@ public class SpellResolutionContext extends CommandContext {
 			return true;
 		}
 
-		var args = new SpellTargetConditionArgs(caster, target);
+		var checker = new SpellTargetConditionChecker(caster, target);
 
-		args.setSacrificedPetType(sacrificedPetType);
+		checker.setSacrificedPetType(sacrificedPetType);
 
-		return SpellTargetConditionChecker.check(condition, args);
+		return checker.check(condition);
 	}
 
 	private void dealDirectDamage(DealDamageDirectly command, Unit target) {

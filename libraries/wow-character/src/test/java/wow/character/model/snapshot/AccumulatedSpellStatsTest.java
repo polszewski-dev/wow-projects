@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import wow.character.WowCharacterSpringTest;
 import wow.character.model.character.BaseStatInfo;
-import wow.character.util.AttributeConditionArgs;
+import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.pve.PhaseId;
@@ -154,12 +154,12 @@ class AccumulatedSpellStatsTest extends WowCharacterSpringTest {
 	void setUp() {
 		var caster = getPlayer();
 		var spell = caster.getAbility(SHADOW_BOLT).orElseThrow();
-		var conditionArgs = AttributeConditionArgs.forSpell(caster, spell, null, SPELL_DAMAGE, null);
+		var checker = AttributeConditionChecker.forSpell(caster, spell, null, SPELL_DAMAGE, null);
 
-		this.spellStats = new AccumulatedSpellStats(conditionArgs);
+		this.spellStats = new AccumulatedSpellStats(checker);
 	}
 
 	private BaseStatInfo getBaseStatInfo() {
-		return spellStats.conditionArgs.getCaster().getBaseStatInfo();
+		return spellStats.checker.getCaster().getBaseStatInfo();
 	}
 }

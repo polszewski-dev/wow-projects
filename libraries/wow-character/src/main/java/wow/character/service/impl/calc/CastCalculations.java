@@ -4,7 +4,7 @@ import wow.character.model.character.Character;
 import wow.character.model.snapshot.AccumulatedCastStats;
 import wow.character.model.snapshot.AccumulatedDurationStats;
 import wow.character.model.snapshot.SpellCastSnapshot;
-import wow.character.util.AttributeConditionArgs;
+import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.spell.Ability;
 
 import static java.lang.Math.max;
@@ -17,9 +17,9 @@ import static wow.commons.constant.SpellConstants.MIN_GCD;
  */
 public class CastCalculations extends Calculations {
 	public static AccumulatedCastStats newAccumulatedCastStats(Character caster, Ability ability, Character target) {
-		var conditionArgs = AttributeConditionArgs.forSpell(caster, ability, target);
+		var checker = AttributeConditionChecker.forSpell(caster, ability, target);
 
-		return new AccumulatedCastStats(conditionArgs);
+		return new AccumulatedCastStats(checker);
 	}
 
 	private static AccumulatedCastStats getAccumulatedCastStats(Character caster, Ability ability, Character target) {

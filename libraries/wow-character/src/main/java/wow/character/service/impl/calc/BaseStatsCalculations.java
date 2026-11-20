@@ -4,7 +4,7 @@ import wow.character.model.character.BaseStatInfo;
 import wow.character.model.character.Character;
 import wow.character.model.snapshot.AccumulatedBaseStats;
 import wow.character.model.snapshot.BaseStatsSnapshot;
-import wow.character.util.AttributeConditionArgs;
+import wow.character.util.AttributeConditionChecker;
 
 import static wow.commons.constant.SpellConstants.HEALTH_PER_STAMINA;
 import static wow.commons.constant.SpellConstants.MANA_PER_INTELLECT;
@@ -15,9 +15,9 @@ import static wow.commons.constant.SpellConstants.MANA_PER_INTELLECT;
  */
 public class BaseStatsCalculations extends Calculations {
 	public static AccumulatedBaseStats newAccumulatedBaseStats(Character character) {
-		var conditionArgs = AttributeConditionArgs.forBaseStats(character);
+		var checker = AttributeConditionChecker.forBaseStats(character);
 
-		return new AccumulatedBaseStats(conditionArgs);
+		return new AccumulatedBaseStats(checker);
 	}
 
 	private static AccumulatedBaseStats getAccumulatedBaseStats(Character character) {

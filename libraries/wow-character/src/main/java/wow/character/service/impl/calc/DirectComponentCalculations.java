@@ -4,7 +4,7 @@ import wow.character.model.character.Character;
 import wow.character.model.snapshot.AccumulatedSpellStats;
 import wow.character.model.snapshot.AccumulatedTargetStats;
 import wow.character.model.snapshot.DirectSpellComponentSnapshot;
-import wow.character.util.AttributeConditionArgs;
+import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.attribute.PowerType;
 import wow.commons.model.spell.Spell;
 
@@ -18,11 +18,11 @@ import static wow.commons.model.spell.component.ComponentCommand.*;
  */
 public class DirectComponentCalculations extends ComponentCalculations {
 	public static AccumulatedSpellStats newAccumulatedDirectComponentStats(Character caster, Spell spell, Character target, PowerType powerType, ChangeHealthDirectly command) {
-		var conditionArgs = AttributeConditionArgs.forSpell(caster, spell, target, powerType, command.school());
+		var checker = AttributeConditionChecker.forSpell(caster, spell, target, powerType, command.school());
 
-		conditionArgs.setDirect(true);
+		checker.setDirect(true);
 
-		return newAccumulatedSpellStats(conditionArgs);
+		return newAccumulatedSpellStats(checker);
 	}
 
 	private static AccumulatedSpellStats getAccumulatedDirectComponentStats(Character caster, Spell spell, Character target, PowerType powerType, ChangeHealthDirectly command) {

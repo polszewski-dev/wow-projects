@@ -1,7 +1,7 @@
 package wow.character.model.snapshot;
 
 import lombok.Getter;
-import wow.character.util.AttributeConditionArgs;
+import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.attribute.AttributeId;
 
 /**
@@ -15,8 +15,8 @@ public class AccumulatedTargetStats extends AccumulatedPartialStats {
 	private double powerTaken;
 	private double critTakenPct;
 
-	public AccumulatedTargetStats(AttributeConditionArgs conditionArgs) {
-		super(conditionArgs);
+	public AccumulatedTargetStats(AttributeConditionChecker checker) {
+		super(checker);
 	}
 
 	private AccumulatedTargetStats(AccumulatedTargetStats stats) {

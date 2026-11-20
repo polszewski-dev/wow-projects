@@ -1,7 +1,7 @@
 package wow.character.model.snapshot;
 
 import lombok.Getter;
-import wow.character.util.AttributeConditionArgs;
+import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.effect.component.StatConversionType;
 
@@ -14,8 +14,8 @@ public class AccumulatedHitStats extends AccumulatedPartialStats {
 	private double hitRating;
 	private double hitPct;
 
-	public AccumulatedHitStats(AttributeConditionArgs conditionArgs) {
-		super(conditionArgs);
+	public AccumulatedHitStats(AttributeConditionChecker checker) {
+		super(checker);
 	}
 
 	private AccumulatedHitStats(AccumulatedHitStats stats) {

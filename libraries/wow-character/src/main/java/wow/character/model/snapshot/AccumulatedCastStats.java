@@ -1,7 +1,7 @@
 package wow.character.model.snapshot;
 
 import lombok.Getter;
-import wow.character.util.AttributeConditionArgs;
+import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.attribute.AttributeId;
 
 /**
@@ -15,8 +15,8 @@ public class AccumulatedCastStats extends AccumulatedPartialStats {
 	private double castTime;
 	private double castTimePct;
 
-	public AccumulatedCastStats(AttributeConditionArgs conditionArgs) {
-		super(conditionArgs);
+	public AccumulatedCastStats(AttributeConditionChecker checker) {
+		super(checker);
 	}
 
 	private AccumulatedCastStats(AccumulatedCastStats stats) {

@@ -5,7 +5,7 @@ import wow.character.model.snapshot.AccumulatedDurationStats;
 import wow.character.model.snapshot.AccumulatedReceivedEffectStats;
 import wow.character.model.snapshot.EffectDurationSnapshot;
 import wow.character.util.AbstractEffectCollector;
-import wow.character.util.AttributeConditionArgs;
+import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.Duration;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.effect.Effect;
@@ -31,11 +31,11 @@ import static wow.commons.model.spell.component.ComponentCommand.ApplyEffect;
  */
 public class EffectCalculations extends Calculations {
 	public static AccumulatedDurationStats newAccumulatedDurationStats(Character caster, Spell spell, Character target, ApplyEffect command) {
-		var conditionArgs = AttributeConditionArgs.forSpell(caster, spell, target);
+		var checker = AttributeConditionChecker.forSpell(caster, spell, target);
 
-		conditionArgs.setAppliedEffect(command.effect());
+		checker.setAppliedEffect(command.effect());
 
-		return new AccumulatedDurationStats(conditionArgs);
+		return new AccumulatedDurationStats(checker);
 	}
 
 	private static AccumulatedDurationStats getAccumulatedDurationStats(Character caster, Spell spell, Character target, ApplyEffect command) {
@@ -46,11 +46,11 @@ public class EffectCalculations extends Calculations {
 	}
 
 	public static AccumulatedReceivedEffectStats newAccumulatedReceivedEffectStats(Character target, Spell spell, ApplyEffect command) {
-		var conditionArgs = AttributeConditionArgs.forSpellTarget(target, spell);
+		var checker = AttributeConditionChecker.forSpellTarget(target, spell);
 
-		conditionArgs.setAppliedEffect(command.effect());
+		checker.setAppliedEffect(command.effect());
 
-		return new AccumulatedReceivedEffectStats(conditionArgs);
+		return new AccumulatedReceivedEffectStats(checker);
 	}
 
 	private static AccumulatedReceivedEffectStats getAccumulatedReceivedEffectStats(Spell spell, Character target, ApplyEffect command) {
@@ -184,7 +184,7 @@ public class EffectCalculations extends Calculations {
 			super(caster);
 			this.ability = ability;
 			this.target = target;
-			var args = AttributeConditionArgs.forSpell(caster, ability, null);
+			var args = AttributeConditionChecker.forSpell(caster, ability, null);
 			this.accumulatedEffectIncreasePct = new AccumulatedSingleStat(EFFECT_PCT, args);
 		}
 

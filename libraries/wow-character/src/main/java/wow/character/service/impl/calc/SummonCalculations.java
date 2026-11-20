@@ -2,7 +2,7 @@ package wow.character.service.impl.calc;
 
 import wow.character.model.character.Character;
 import wow.character.model.snapshot.AccumulatedDurationStats;
-import wow.character.util.AttributeConditionArgs;
+import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.AnyDuration;
 import wow.commons.model.Duration;
 import wow.commons.model.spell.Spell;
@@ -17,12 +17,12 @@ public class SummonCalculations extends Calculations {
 			return baseDuration;
 		}
 
-		var conditionArgs = AttributeConditionArgs.forSpell(caster, spell, null);
-		var durationStats = new AccumulatedDurationStats(conditionArgs);
+		var checker = AttributeConditionChecker.forSpell(caster, spell, null);
+		var durationStats = new AccumulatedDurationStats(checker);
 
 		accumulateEffects(caster, durationStats);
 
-		var baseDurationSeconds = ((Duration) baseDuration).getSeconds();
+		var baseDurationSeconds = baseDuration.getSeconds();
 		var duration = durationStats.getDuration();
 		var durationPct = durationStats.getDurationPct();
 

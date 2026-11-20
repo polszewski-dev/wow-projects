@@ -1,7 +1,7 @@
 package wow.character.model.snapshot;
 
 import lombok.Getter;
-import wow.character.util.AttributeConditionArgs;
+import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.attribute.AttributeId;
 
 /**
@@ -18,8 +18,8 @@ public class AccumulatedRegenStats extends AccumulatedBaseStats {
 	private double inCombatHealthRegenPct;
 	private double inCombatManaRegenPct;
 
-	public AccumulatedRegenStats(AttributeConditionArgs conditionArgs) {
-		super(conditionArgs);
+	public AccumulatedRegenStats(AttributeConditionChecker checker) {
+		super(checker);
 	}
 
 	private AccumulatedRegenStats(AccumulatedRegenStats stats) {

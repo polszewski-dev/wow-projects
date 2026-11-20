@@ -1,7 +1,7 @@
 package wow.character.model.snapshot;
 
 import lombok.Getter;
-import wow.character.util.AttributeConditionArgs;
+import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.effect.component.StatConversionType;
 
@@ -23,8 +23,8 @@ public class AccumulatedSpellStats extends AccumulatedBaseStats {
 	private double critEffectMultiplierPct;
 	private double critCoeffPct;
 
-	public AccumulatedSpellStats(AttributeConditionArgs conditionArgs) {
-		super(conditionArgs);
+	public AccumulatedSpellStats(AttributeConditionChecker checker) {
+		super(checker);
 		accumulateBaseCrit();
 	}
 
@@ -44,7 +44,7 @@ public class AccumulatedSpellStats extends AccumulatedBaseStats {
 	}
 
 	private void accumulateBaseCrit() {
-		var baseStatInfo = conditionArgs.getCaster().getBaseStatInfo();
+		var baseStatInfo = checker.getCaster().getBaseStatInfo();
 
 		critPct += baseStatInfo.getBaseSpellCritPct().value();
 	}

@@ -1,7 +1,7 @@
 package wow.character.model.snapshot;
 
 import lombok.Getter;
-import wow.character.util.AttributeConditionArgs;
+import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.attribute.AttributeId;
@@ -10,7 +10,6 @@ import wow.commons.model.effect.component.StatConversionType;
 
 import java.util.List;
 
-import static wow.character.util.AttributeConditionChecker.check;
 import static wow.commons.model.attribute.PowerType.HEALING;
 
 /**
@@ -19,24 +18,24 @@ import static wow.commons.model.attribute.PowerType.HEALING;
  */
 public abstract class AccumulatedPartialStats extends AccumulatedStats {
 	@Getter
-	protected final AttributeConditionArgs conditionArgs;
+	protected final AttributeConditionChecker checker;
 	protected final boolean isDamage;
 	protected final boolean isHealing;
 
-	protected AccumulatedPartialStats(AttributeConditionArgs conditionArgs) {
-		super(conditionArgs);
-		this.conditionArgs = conditionArgs;
-		this.isDamage = conditionArgs.getPowerType() != null && conditionArgs.getPowerType() != HEALING;
-		this.isHealing = conditionArgs.getPowerType() == HEALING;
+	protected AccumulatedPartialStats(AttributeConditionChecker checker) {
+		super(checker);
+		this.checker = checker;
+		this.isDamage = checker.getPowerType() != null && checker.getPowerType() != HEALING;
+		this.isHealing = checker.getPowerType() == HEALING;
 	}
 
 	protected AccumulatedPartialStats(AccumulatedPartialStats stats) {
-		this(stats.conditionArgs);
+		this(stats.checker);
 	}
 
 	@Override
 	protected void accumulateAttribute(Attribute attribute, double scaleFactor) {
-		if(!check(attribute.condition(), conditionArgs)) {
+		if(!checker.check(attribute.condition())) {
 			return;
 		}
 
@@ -49,7 +48,7 @@ public abstract class AccumulatedPartialStats extends AccumulatedStats {
 	public abstract void accumulateAttribute(AttributeId id, double value);
 
 	public void accumulateAttribute(AttributeId id, double value, AttributeCondition condition) {
-		if (check(condition, conditionArgs)) {
+		if (checker.check(condition)) {
 			accumulateAttribute(id, value);
 		}
 	}
