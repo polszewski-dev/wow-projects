@@ -1,8 +1,15 @@
 package wow.character.model.snapshot;
 
 import lombok.Getter;
+import wow.character.model.character.Character;
 import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.attribute.Attribute;
+import wow.commons.model.effect.Effect;
+import wow.commons.model.spell.Spell;
+
+import java.util.Objects;
+
+import static wow.commons.model.spell.ActionType.SPELL;
 
 /**
  * User: POlszewski
@@ -15,7 +22,7 @@ public class AccumulatedDurationStats extends AccumulatedPartialStats {
 	private double hasteRating;
 	private double hastePct;
 
-	public AccumulatedDurationStats(AttributeConditionChecker checker) {
+	private AccumulatedDurationStats(AttributeConditionChecker checker) {
 		super(checker);
 	}
 
@@ -25,6 +32,26 @@ public class AccumulatedDurationStats extends AccumulatedPartialStats {
 		this.durationPct = stats.durationPct;
 		this.hasteRating = stats.hasteRating;
 		this.hastePct = stats.hastePct;
+	}
+
+	public static AccumulatedDurationStats forSpellEffect(Character caster, Spell spell, Character target, Effect effect) {
+		Objects.requireNonNull(caster);
+		Objects.requireNonNull(spell);
+
+		var checker = new AttributeConditionChecker(caster, spell, target, SPELL, null, spell.getSchool());
+
+		checker.setAppliedEffect(effect);
+
+		return new AccumulatedDurationStats(checker);
+	}
+
+	public static AccumulatedDurationStats forSpellSummon(Character caster, Spell spell, Character target) {
+		Objects.requireNonNull(caster);
+		Objects.requireNonNull(spell);
+
+		var checker = new AttributeConditionChecker(caster, spell, target, SPELL, null, spell.getSchool());
+
+		return new AccumulatedDurationStats(checker);
 	}
 
 	@Override

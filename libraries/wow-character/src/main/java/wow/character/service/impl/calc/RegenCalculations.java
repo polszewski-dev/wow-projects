@@ -4,7 +4,6 @@ import wow.character.model.character.Character;
 import wow.character.model.snapshot.AccumulatedRegenStats;
 import wow.character.model.snapshot.BaseStatsSnapshot;
 import wow.character.model.snapshot.RegenSnapshot;
-import wow.character.util.AttributeConditionChecker;
 
 import static java.lang.Math.*;
 import static wow.character.service.impl.calc.BaseStatsCalculations.getBaseStatsSnapshot;
@@ -65,8 +64,7 @@ public class RegenCalculations extends Calculations {
 	}
 
 	private static AccumulatedRegenStats getRegenStats(Character character) {
-		var checker = AttributeConditionChecker.forRegen(character);
-		var regenStats = new AccumulatedRegenStats(checker);
+		var regenStats = AccumulatedRegenStats.forRegen(character);
 
 		accumulateEffects(character, regenStats);
 

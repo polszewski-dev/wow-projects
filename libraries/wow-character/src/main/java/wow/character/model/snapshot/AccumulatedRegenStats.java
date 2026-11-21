@@ -1,8 +1,11 @@
 package wow.character.model.snapshot;
 
 import lombok.Getter;
+import wow.character.model.character.Character;
 import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.attribute.Attribute;
+
+import java.util.Objects;
 
 /**
  * User: POlszewski
@@ -18,7 +21,7 @@ public class AccumulatedRegenStats extends AccumulatedBaseStats {
 	private double inCombatHealthRegenPct;
 	private double inCombatManaRegenPct;
 
-	public AccumulatedRegenStats(AttributeConditionChecker checker) {
+	private AccumulatedRegenStats(AttributeConditionChecker checker) {
 		super(checker);
 	}
 
@@ -31,6 +34,14 @@ public class AccumulatedRegenStats extends AccumulatedBaseStats {
 		this.manaRegenPct = stats.manaRegenPct;
 		this.inCombatHealthRegenPct = stats.inCombatHealthRegenPct;
 		this.inCombatManaRegenPct = stats.inCombatManaRegenPct;
+	}
+
+	public static AccumulatedRegenStats forRegen(Character owner) {
+		Objects.requireNonNull(owner);
+
+		var checker = new AttributeConditionChecker(owner, null, null, null, null, null);
+
+		return new AccumulatedRegenStats(checker);
 	}
 
 	@Override

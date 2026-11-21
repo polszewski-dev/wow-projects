@@ -3,7 +3,6 @@ package wow.character.model.snapshot;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import wow.character.WowCharacterSpringTest;
-import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeId;
 
@@ -13,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static wow.character.model.snapshot.AttributePredicates.OWNER_OR_AURAS;
 import static wow.commons.model.attribute.AttributeId.RECEIVED_EFFECT_DURATION;
 import static wow.commons.model.attribute.AttributeId.RECEIVED_EFFECT_DURATION_PCT;
-import static wow.test.commons.AbilityNames.SHADOW_BOLT;
+import static wow.test.commons.AbilityNames.IMMOLATE;
 
 /**
  * User: POlszewski
@@ -58,9 +57,10 @@ class AccumulatedReceivedEffectStatsTest extends WowCharacterSpringTest {
 	@BeforeEach
 	void setUp() {
 		var caster = getPlayer();
-		var spell = caster.getAbility(SHADOW_BOLT).orElseThrow();
-		var checker = AttributeConditionChecker.forSpell(caster, spell, null);
+		var spell = caster.getAbility(IMMOLATE).orElseThrow();
+		var target = caster.getTarget();
+		var effect = spell.getApplyEffectCommands().getFirst().effect();
 
-		this.receivedEffectStats = new AccumulatedReceivedEffectStats(checker);
+		this.receivedEffectStats = AccumulatedReceivedEffectStats.forSpellTarget(target, spell, effect);
 	}
 }

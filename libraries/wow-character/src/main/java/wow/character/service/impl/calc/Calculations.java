@@ -4,10 +4,8 @@ import wow.character.model.character.Character;
 import wow.character.model.character.PetCharacter;
 import wow.character.model.snapshot.*;
 import wow.character.util.AbstractEffectCollector;
-import wow.character.util.AttributeConditionChecker;
 import wow.character.util.StatConversionConditionChecker;
 import wow.commons.model.attribute.Attribute;
-import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.component.StatConversion;
 
@@ -195,8 +193,7 @@ public abstract class Calculations {
 				return;
 			}
 
-			var checker = stats.getChecker().withCaster(master);
-			this.mastersSpellStats = new AccumulatedSpellStats(checker);
+			this.mastersSpellStats = AccumulatedSpellStats.forMaster(master, stats);
 
 			var masterConversionSolver = accumulateEffectsWithoutConversions(master, mastersSpellStats);
 
@@ -225,8 +222,7 @@ public abstract class Calculations {
 		}
 
 		private AccumulatedHitStats calcMasterHitStats() {
-			var masterChecker = stats.getChecker().withCaster(master);
-			var masterHitStats = new AccumulatedHitStats(masterChecker);
+			var masterHitStats = AccumulatedHitStats.forMaster(master, stats);
 
 			accumulateEffects(master, masterHitStats, false);
 			return masterHitStats;
@@ -290,23 +286,6 @@ public abstract class Calculations {
 				}
 
 				default -> throw new IllegalArgumentException("" + conversion.type());
-			}
-		}
-	}
-
-	static class AccumulatedSingleStat extends AccumulatedPartialStats {
-		private final AttributeId attributeId;
-		double totalValue;
-
-		AccumulatedSingleStat(AttributeId attributeId, AttributeConditionChecker checker) {
-			super(checker);
-			this.attributeId = attributeId;
-		}
-
-		@Override
-		public void accumulateAttribute(Attribute attribute, double scaleFactor) {
-			if (attribute.id() == attributeId) {
-				this.totalValue += getValue(attribute, scaleFactor);
 			}
 		}
 	}

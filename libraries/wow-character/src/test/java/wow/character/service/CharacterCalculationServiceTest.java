@@ -159,7 +159,6 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 			"Hit%,      Curses",
 			"Hit%,      Shadow",
 			"Hit%,      Spell",
-			"Hit%,      SpellDamage",
 			"HitRating, Spell",
 	})
 	void newAccumulatedHitStats(String idStr, String conditionStr) {

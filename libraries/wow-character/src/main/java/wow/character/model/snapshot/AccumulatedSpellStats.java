@@ -1,9 +1,17 @@
 package wow.character.model.snapshot;
 
 import lombok.Getter;
+import wow.character.model.character.Character;
 import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.attribute.Attribute;
+import wow.commons.model.attribute.PowerType;
 import wow.commons.model.effect.component.StatConversionType;
+import wow.commons.model.spell.Spell;
+import wow.commons.model.spell.SpellSchool;
+
+import java.util.Objects;
+
+import static wow.commons.model.spell.ActionType.SPELL;
 
 /**
  * User: POlszewski
@@ -23,7 +31,7 @@ public class AccumulatedSpellStats extends AccumulatedBaseStats {
 	private double critEffectMultiplierPct;
 	private double critCoeffPct;
 
-	public AccumulatedSpellStats(AttributeConditionChecker checker) {
+	private AccumulatedSpellStats(AttributeConditionChecker checker) {
 		super(checker);
 		accumulateBaseCrit();
 	}
@@ -41,6 +49,50 @@ public class AccumulatedSpellStats extends AccumulatedBaseStats {
 		this.critEffectPct = stats.critEffectPct;
 		this.critEffectMultiplierPct = stats.critEffectMultiplierPct;
 		this.critCoeffPct = stats.critCoeffPct;
+	}
+
+	public static AccumulatedSpellStats forAnySpell(Character caster) {
+		Objects.requireNonNull(caster);
+
+		var checker = new AttributeConditionChecker(caster, null, null, SPELL, null, null);
+
+		return new AccumulatedSpellStats(checker);
+	}
+
+	public static AccumulatedSpellStats forAnySpell(Character caster, PowerType powerType, SpellSchool spellSchool) {
+		Objects.requireNonNull(caster);
+
+		var checker = new AttributeConditionChecker(caster, null, null, SPELL, powerType, spellSchool);
+
+		return new AccumulatedSpellStats(checker);
+	}
+
+	public static AccumulatedSpellStats forDirectSpell(Character caster, Spell spell, Character target, PowerType powerType, SpellSchool spellSchool) {
+		Objects.requireNonNull(caster);
+		Objects.requireNonNull(spell);
+
+		var checker = new AttributeConditionChecker(caster, spell, target, SPELL, powerType, spellSchool);
+
+		checker.setDirect(true);
+
+		return new AccumulatedSpellStats(checker);
+	}
+
+	public static AccumulatedSpellStats forPeriodicSpell(Character caster, Spell spell, Character target, PowerType powerType, SpellSchool spellSchool) {
+		Objects.requireNonNull(caster);
+		Objects.requireNonNull(spell);
+
+		var checker = new AttributeConditionChecker(caster, spell, target, SPELL, powerType, spellSchool);
+
+		checker.setPeriodic(true);
+
+		return new AccumulatedSpellStats(checker);
+	}
+
+	public static AccumulatedSpellStats forMaster(Character master, AccumulatedPartialStats stats) {
+		var checker = stats.getChecker().withCaster(master);
+
+		return new AccumulatedSpellStats(checker);
 	}
 
 	private void accumulateBaseCrit() {

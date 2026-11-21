@@ -2,7 +2,6 @@ package wow.character.service.impl.calc;
 
 import wow.character.model.character.Character;
 import wow.character.model.snapshot.AccumulatedHitStats;
-import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.spell.Spell;
 
 import static java.lang.Math.clamp;
@@ -13,9 +12,7 @@ import static java.lang.Math.clamp;
  */
 public class HitCalculations extends Calculations {
 	public static AccumulatedHitStats newAccumulatedHitStats(Character caster, Spell spell, Character target) {
-		var checker = AttributeConditionChecker.forSpellDamage(caster, spell, target, null);
-
-		return new AccumulatedHitStats(checker);
+		return AccumulatedHitStats.forSpell(caster, spell, target);
 	}
 
 	private static AccumulatedHitStats getAccumulatedHitStats(Character caster, Spell spell, Character target) {

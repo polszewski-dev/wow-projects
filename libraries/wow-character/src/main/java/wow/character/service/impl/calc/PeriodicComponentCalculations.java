@@ -4,7 +4,6 @@ import wow.character.model.character.Character;
 import wow.character.model.snapshot.AccumulatedSpellStats;
 import wow.character.model.snapshot.AccumulatedTargetStats;
 import wow.character.model.snapshot.PeriodicSpellComponentSnapshot;
-import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.attribute.PowerType;
 import wow.commons.model.spell.Spell;
 
@@ -18,11 +17,7 @@ import static wow.commons.model.spell.component.ComponentCommand.*;
  */
 public class PeriodicComponentCalculations extends ComponentCalculations {
 	public static AccumulatedSpellStats newAccumulatedPeriodicComponentStats(Character caster, Spell spell, Character target, PowerType powerType, PeriodicCommand command) {
-		var checker = AttributeConditionChecker.forSpell(caster, spell, target, powerType, command.school());
-
-		checker.setPeriodic(true);
-
-		return newAccumulatedSpellStats(checker);
+		return AccumulatedSpellStats.forPeriodicSpell(caster, spell, target, powerType, command.school());
 	}
 
 	private static AccumulatedSpellStats getAccumulatedPeriodicComponentStats(Character caster, Spell spell, Character target, PowerType powerType, PeriodicCommand command) {
@@ -64,5 +59,4 @@ public class PeriodicComponentCalculations extends ComponentCalculations {
 
 		return snapshot;
 	}
-
 }

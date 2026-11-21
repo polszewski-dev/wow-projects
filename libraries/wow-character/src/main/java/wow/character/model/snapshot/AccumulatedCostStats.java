@@ -1,10 +1,16 @@
 package wow.character.model.snapshot;
 
 import lombok.Getter;
+import wow.character.model.character.Character;
 import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.effect.component.StatConversionType;
 import wow.commons.model.spell.ResourceType;
+import wow.commons.model.spell.Spell;
+
+import java.util.Objects;
+
+import static wow.commons.model.spell.ActionType.SPELL;
 
 /**
  * User: POlszewski
@@ -25,7 +31,7 @@ public class AccumulatedCostStats extends AccumulatedBaseStats {
 	private double cooldown;
 	private double cooldownPct;
 
-	public AccumulatedCostStats(AttributeConditionChecker checker) {
+	private AccumulatedCostStats(AttributeConditionChecker checker) {
 		super(checker);
 	}
 
@@ -43,6 +49,15 @@ public class AccumulatedCostStats extends AccumulatedBaseStats {
 		this.power = stats.power;
 		this.cooldown = stats.cooldown;
 		this.cooldownPct = stats.cooldownPct;
+	}
+
+	public static AccumulatedCostStats forSpell(Character caster, Spell spell, Character target) {
+		Objects.requireNonNull(caster);
+		Objects.requireNonNull(spell);
+
+		var checker = new AttributeConditionChecker(caster, spell, target, SPELL, null, spell.getSchool());
+
+		return new AccumulatedCostStats(checker);
 	}
 
 	@Override

@@ -1,7 +1,7 @@
 package wow.character.service.impl.calc;
 
 import wow.character.model.character.Character;
-import wow.character.util.AttributeConditionChecker;
+import wow.character.model.snapshot.AccumulatedSingleStat;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.Spell;
 
@@ -44,11 +44,10 @@ public class CopyCalculations extends Calculations {
 			return 0;
 		}
 
-		var args = AttributeConditionChecker.forSpell(caster, ability, null);
-		var accumulatedCopyPct = new AccumulatedSingleStat(COPY_PCT, args);
+		var accumulatedCopyPct = AccumulatedSingleStat.forSpell(COPY_PCT, caster, ability, null);
 
 		accumulateEffects(caster, accumulatedCopyPct);
 
-		return accumulatedCopyPct.totalValue;
+		return accumulatedCopyPct.getTotalValue();
 	}
 }

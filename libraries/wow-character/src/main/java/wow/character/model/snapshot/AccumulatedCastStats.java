@@ -1,8 +1,14 @@
 package wow.character.model.snapshot;
 
 import lombok.Getter;
+import wow.character.model.character.Character;
 import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.attribute.Attribute;
+import wow.commons.model.spell.Spell;
+
+import java.util.Objects;
+
+import static wow.commons.model.spell.ActionType.SPELL;
 
 /**
  * User: POlszewski
@@ -15,7 +21,7 @@ public class AccumulatedCastStats extends AccumulatedPartialStats {
 	private double castTime;
 	private double castTimePct;
 
-	public AccumulatedCastStats(AttributeConditionChecker checker) {
+	private AccumulatedCastStats(AttributeConditionChecker checker) {
 		super(checker);
 	}
 
@@ -25,6 +31,23 @@ public class AccumulatedCastStats extends AccumulatedPartialStats {
 		this.hastePct = stats.hastePct;
 		this.castTime = stats.castTime;
 		this.castTimePct = stats.castTimePct;
+	}
+
+	public static AccumulatedCastStats forSpell(Character caster, Spell spell, Character target) {
+		Objects.requireNonNull(caster);
+		Objects.requireNonNull(spell);
+
+		var checker = new AttributeConditionChecker(caster, spell, target, SPELL, null, spell.getSchool());
+
+		return new AccumulatedCastStats(checker);
+	}
+
+	public static AccumulatedCastStats forAnySpell(Character caster) {
+		Objects.requireNonNull(caster);
+
+		var checker = new AttributeConditionChecker(caster, null, null, SPELL, null, null);
+
+		return new AccumulatedCastStats(checker);
 	}
 
 	@Override

@@ -3,7 +3,6 @@ package wow.character.model.snapshot;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import wow.character.WowCharacterSpringTest;
-import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeId;
 
@@ -95,8 +94,7 @@ class AccumulatedRegenStatsTest extends WowCharacterSpringTest {
 	@BeforeEach
 	void setUp() {
 		var caster = getPlayer();
-		var checker = AttributeConditionChecker.forRegen(caster);
 
-		this.regenStats = new AccumulatedRegenStats(checker);
+		this.regenStats = AccumulatedRegenStats.forRegen(caster);
 	}
 }

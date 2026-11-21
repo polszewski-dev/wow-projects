@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import wow.character.WowCharacterSpringTest;
 import wow.character.constant.AttributeConditions;
-import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeId;
 
@@ -76,8 +75,7 @@ class AccumulatedCastStatsTest extends WowCharacterSpringTest {
 	void setUp() {
 		var caster = getPlayer();
 		var spell = caster.getAbility(SHADOW_BOLT).orElseThrow();
-		var checker = AttributeConditionChecker.forSpell(caster, spell, null);
 
-		this.castStats = new AccumulatedCastStats(checker);
+		this.castStats = AccumulatedCastStats.forSpell(caster, spell, null);
 	}
 }

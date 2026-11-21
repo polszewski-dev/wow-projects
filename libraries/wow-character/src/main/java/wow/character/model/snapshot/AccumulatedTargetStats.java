@@ -1,8 +1,16 @@
 package wow.character.model.snapshot;
 
 import lombok.Getter;
+import wow.character.model.character.Character;
 import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.attribute.Attribute;
+import wow.commons.model.attribute.PowerType;
+import wow.commons.model.spell.Spell;
+import wow.commons.model.spell.SpellSchool;
+
+import java.util.Objects;
+
+import static wow.commons.model.spell.ActionType.SPELL;
 
 /**
  * User: POlszewski
@@ -15,7 +23,7 @@ public class AccumulatedTargetStats extends AccumulatedPartialStats {
 	private double powerTaken;
 	private double critTakenPct;
 
-	public AccumulatedTargetStats(AttributeConditionChecker checker) {
+	private AccumulatedTargetStats(AttributeConditionChecker checker) {
 		super(checker);
 	}
 
@@ -25,6 +33,19 @@ public class AccumulatedTargetStats extends AccumulatedPartialStats {
 		this.amountTakenPct = stats.amountTakenPct;
 		this.powerTaken = stats.powerTaken;
 		this.critTakenPct = stats.critTakenPct;
+	}
+
+	public static AccumulatedTargetStats forSpellTarget(Character target, Spell spell, PowerType powerType, SpellSchool spellSchool) {
+		Objects.requireNonNull(target);
+		Objects.requireNonNull(spell);
+
+		var checker = new AttributeConditionChecker(target, spell, null, SPELL, powerType, spellSchool);
+
+		return new AccumulatedTargetStats(checker);
+	}
+
+	public static AccumulatedTargetStats emptyStats() {
+		return new AccumulatedTargetStats(new AttributeConditionChecker(null, null, null, null, null, null));
 	}
 
 	@Override

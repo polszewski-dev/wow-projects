@@ -1,6 +1,5 @@
 package wow.character.util;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -13,18 +12,14 @@ import wow.commons.model.effect.Effect;
 import wow.commons.model.spell.*;
 import wow.commons.model.talent.TalentTree;
 
-import java.util.Objects;
-
 import static wow.commons.model.attribute.AttributeCondition.*;
-import static wow.commons.model.attribute.PowerType.SPELL_DAMAGE;
-import static wow.commons.model.spell.ActionType.SPELL;
 
 
 /**
  * User: POlszewski
  * Date: 29.09.2024
  */
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor
 @Getter
 @Setter
 public final class AttributeConditionChecker implements AttributeScalingParams {
@@ -56,54 +51,6 @@ public final class AttributeConditionChecker implements AttributeScalingParams {
 		return result;
 	}
 
-	public static AttributeConditionChecker forAnySpell(Character caster) {
-		return forAnySpell(caster, null, null);
-	}
-
-	public static AttributeConditionChecker forAnySpell(Character caster, PowerType powerType, SpellSchool spellSchool) {
-		Objects.requireNonNull(caster);
-
-		return new AttributeConditionChecker(caster, null, null, SPELL, powerType, spellSchool);
-	}
-
-	public static AttributeConditionChecker forSpell(Character caster, Spell spell, Character target) {
-		return forSpell(caster, spell, target, null, null);
-	}
-
-	public static AttributeConditionChecker forSpell(Character caster, Spell spell, Character target, PowerType powerType, SpellSchool spellSchool) {
-		Objects.requireNonNull(caster);
-		Objects.requireNonNull(spell);
-
-		return new AttributeConditionChecker(caster, spell, target, SPELL, powerType, spellSchool);
-	}
-
-	public static AttributeConditionChecker forSpellDamage(Character caster, Spell spell, Character target, SpellSchool spellSchool) {
-		return forSpell(caster, spell, target, SPELL_DAMAGE, spellSchool);
-	}
-
-	public static AttributeConditionChecker forSpellTarget(Character target, Spell spell) {
-		return forSpellTarget(target, spell, null, null);
-	}
-
-	public static AttributeConditionChecker forSpellTarget(Character target, Spell spell, PowerType powerType, SpellSchool spellSchool) {
-		Objects.requireNonNull(target);
-		Objects.requireNonNull(spell);
-
-		return new AttributeConditionChecker(target, spell, null, SPELL, powerType, spellSchool);
-	}
-
-	public static AttributeConditionChecker forBaseStats(Character owner) {
-		Objects.requireNonNull(owner);
-
-		return new AttributeConditionChecker(owner, null, null, null, null, null);
-	}
-
-	public static AttributeConditionChecker forRegen(Character owner) {
-		Objects.requireNonNull(owner);
-
-		return new AttributeConditionChecker(owner, null, null, null, null, null);
-	}
-	
 	public boolean check(AttributeCondition condition) {
 		return switch (condition) {
 			case AbilityCategoryCondition(var abilityCategory) ->
