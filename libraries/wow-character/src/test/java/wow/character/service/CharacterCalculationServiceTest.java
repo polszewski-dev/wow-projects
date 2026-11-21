@@ -98,13 +98,11 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 
 	@ParameterizedTest
 	@CsvSource({
-			"ManaCost,       Spell",
 			"ManaCost,       Curse of Doom",
 			"ManaCost,       Curses",
 			"ManaCost,       Affliction",
 			"ManaCost,       IsInstantCast",
 			"ManaCost,       Shadow",
-			"ManaCost%,      Spell",
 			"ManaCost%,      Curse of Doom",
 			"ManaCost%,      Curses",
 			"ManaCost%,      Affliction",
@@ -190,8 +188,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 
 	@ParameterizedTest
 	@CsvSource({
-			"ReceivedEffectDuration,  Curse of Doom",
-			"ReceivedEffectDuration%, Curses",
+			"ReceivedEffectDuration,  EffectName(Curse of Doom)",
 	})
 	void newAccumulatedReceivedEffectStats(String idStr, String conditionStr) {
 		var ability = player.getAbility(CURSE_OF_DOOM).orElseThrow();

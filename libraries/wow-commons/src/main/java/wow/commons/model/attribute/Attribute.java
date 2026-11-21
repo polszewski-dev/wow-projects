@@ -19,6 +19,10 @@ public record Attribute(
 		Objects.requireNonNull(id);
 		Objects.requireNonNull(condition);
 		Objects.requireNonNull(scaling);
+
+		if (!id.accepts(condition)) {
+			throw new IllegalArgumentException("%s doesn't accept %s".formatted(id, condition));
+		}
 	}
 
 	public static Attribute of(AttributeId id, double value) {

@@ -5,6 +5,8 @@ import wow.commons.util.EnumUtil;
 
 import java.util.Objects;
 
+import static wow.commons.model.attribute.AttributeCondition.*;
+
 /**
  * User: POlszewski
  * Date: 2021-03-04
@@ -162,6 +164,217 @@ public enum AttributeId {
 					true;
 			default ->
 					false;
+		};
+	}
+
+	public boolean accepts(AttributeCondition condition) {
+		if (condition instanceof Comma comma) {
+			return comma.conditions().stream().allMatch(this::accepts);
+		}
+
+		if (condition instanceof BinaryOperator binaryOperator) {
+			return accepts(binaryOperator.left()) && accepts(binaryOperator.right());
+		}
+
+		return switch (this) {
+			case
+
+				STRENGTH, STRENGTH_PCT,
+				AGILITY, AGILITY_PCT,
+				STAMINA, STAMINA_PCT,
+				INTELLECT, INTELLECT_PCT,
+				SPIRIT, SPIRIT_PCT,
+				BASE_STATS, BASE_STATS_PCT,
+				STATS, STATS_PCT,
+				MAX_HEALTH, MAX_HEALTH_PCT,
+				MAX_MANA, MAX_MANA_PCT
+
+				->
+
+				condition instanceof BaseStatsCondition;
+
+			case
+
+				CAST_TIME, CAST_TIME_PCT
+
+				->
+
+				condition instanceof CastCondition;
+
+			case
+
+				HASTE_RATING, HASTE_PCT
+
+				->
+
+				condition instanceof CastCondition || condition instanceof DurationCondition;
+
+			case
+
+				MANA_COST, MANA_COST_PCT,
+				ENERGY_COST, ENERGY_COST_PCT,
+				RAGE_COST, RAGE_COST_PCT,
+				HEALTH_COST, HEALTH_COST_PCT,
+				COST_REDUCTION_CT,
+				COOLDOWN, COOLDOWN_PCT
+
+				->
+
+				condition instanceof CostCondition;
+
+			case
+
+				HIT_RATING, HIT_PCT
+
+				->
+
+				condition instanceof HitCondition;
+
+			case
+
+				POWER
+
+				->
+
+				condition instanceof CostCondition || condition instanceof SpellCondition;
+
+			case
+
+				DAMAGE, DAMAGE_PCT,
+				HEALING, HEALING_PCT,
+				EFFECT_PCT,
+				POWER_PCT,
+				POWER_COEFFICIENT_PCT,
+				CRIT_RATING,
+				CRIT_EFFECT_PCT,
+				CRIT_EFFECT_MULTIPLIER_PCT,
+				CRIT_COEFF_PCT,
+				CHAIN_MULTIPLIER
+
+				->
+
+				condition instanceof SpellCondition;
+
+			case
+
+				CRIT_PCT
+
+				->
+
+				condition instanceof SpellCondition || condition instanceof MeleeCondition;
+
+			case
+
+				DURATION, DURATION_PCT
+
+				->
+
+				condition instanceof DurationCondition;
+
+			case
+
+				RECEIVED_EFFECT_DURATION, RECEIVED_EFFECT_DURATION_PCT
+
+				->
+
+				condition instanceof ReceivedEffectCondition;
+
+			case
+
+				DAMAGE_TAKEN,
+				DAMAGE_TAKEN_PCT,
+				POWER_TAKEN,
+				HIT_TAKEN,
+				CRIT_TAKEN_PCT
+
+				->
+
+				condition instanceof TargetCondition;
+
+			case
+
+				HP5, MP5,
+				HEALING_TAKEN,
+				HEALTH_REGEN_PCT, MANA_REGEN_PCT,
+				IN_COMBAT_HEALTH_REGEN_PCT, IN_COMBAT_MANA_REGEN_PCT
+
+				->
+
+				condition instanceof RegenCondition;
+
+			case
+
+				HEALING_TAKEN_PCT
+
+				->
+
+				condition instanceof TargetCondition || condition instanceof RegenCondition;
+
+			case
+
+				RESISTANCE,
+				RESISTANCE_PCT,
+				EFFECT_RESIST,
+				PENETRATION
+
+				->
+
+				condition instanceof ResistanceCondition;
+
+			case
+
+				COPY_PCT
+
+				->
+
+				condition instanceof CopyCondition;
+
+			case
+
+				EXPERTISE_RATING,
+				WEAPON_SKILL,
+
+				ARMOR,
+				ARMOR_PCT,
+				DODGE_RATING,
+				DODGE_PCT,
+				DEFENSE,
+				DEFENSE_RATING,
+				BLOCK,
+				BLOCK_RATING,
+				BLOCK_PCT,
+				SHIELD_BLOCK,
+				SHIELD_BLOCK_RATING,
+				SHIELD_BLOCK_PCT,
+				PARRY_PCT,
+				PARRY_RATING
+
+				->
+
+				condition instanceof MeleeCondition;
+
+			case
+
+				ABSORPTION,
+				ABSORPTION_PCT,
+				SPEEED_PCT,
+
+				RANGE,
+				RANGE_PCT,
+				THREAT,
+				THREAT_PCT,
+				PUSHBACK_PCT,
+
+				RESILIENCE_RATING,
+
+				SKILL,
+
+				DAMAGE_TAKEN_TRANSFERRED_TO_PET_PCT,
+				SPELL_REFLECT_PCT
+
+				->
+
+				condition instanceof MiscCondition;
 		};
 	}
 

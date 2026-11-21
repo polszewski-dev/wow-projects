@@ -11,7 +11,6 @@ import wow.commons.model.attribute.AttributeId;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.character.constant.AttributeConditions.PHYSICAL;
 import static wow.character.model.snapshot.AttributePredicates.OWNER_OR_AURAS;
 import static wow.commons.model.attribute.AttributeId.*;
 
@@ -198,7 +197,6 @@ class AccumulatedBaseStatsTest extends WowCharacterSpringTest {
 	void accumulateTestAttributes(AttributeId attributeId) {
 		var list = List.of(
 				Attribute.of(attributeId, 10),
-				Attribute.of(attributeId, 20, PHYSICAL),
 				Attribute.of(attributeId, 30)
 		);
 

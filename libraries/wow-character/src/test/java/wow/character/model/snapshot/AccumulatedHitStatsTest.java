@@ -3,6 +3,7 @@ package wow.character.model.snapshot;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import wow.character.WowCharacterSpringTest;
+import wow.character.constant.AttributeConditions;
 import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeId;
@@ -10,8 +11,6 @@ import wow.commons.model.attribute.AttributeId;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.character.constant.AttributeConditions.PHYSICAL;
-import static wow.character.constant.AttributeConditions.SPELL;
 import static wow.character.model.snapshot.AttributePredicates.OWNER_OR_AURAS;
 import static wow.commons.model.attribute.AttributeId.HIT_PCT;
 import static wow.commons.model.attribute.AttributeId.HIT_RATING;
@@ -48,8 +47,8 @@ class AccumulatedHitStatsTest extends WowCharacterSpringTest {
 	void accumulateTestAttributes(AttributeId attributeId) {
 		var list = List.of(
 				Attribute.of(attributeId, 10),
-				Attribute.of(attributeId, 20, PHYSICAL),
-				Attribute.of(attributeId, 30, SPELL),
+				Attribute.of(attributeId, 20, AttributeConditions.FIRE),
+				Attribute.of(attributeId, 30, AttributeConditions.SHADOW),
 				Attribute.of(attributeId, 40)
 		);
 

@@ -3,18 +3,18 @@ package wow.character.model.snapshot;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import wow.character.WowCharacterSpringTest;
+import wow.character.constant.AbilityIds;
 import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.attribute.Attribute;
+import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.attribute.AttributeId;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static wow.character.constant.AttributeConditions.PHYSICAL;
-import static wow.character.constant.AttributeConditions.SPELL;
 import static wow.character.model.snapshot.AttributePredicates.OWNER_OR_AURAS;
 import static wow.commons.model.attribute.AttributeId.*;
-import static wow.test.commons.AbilityNames.SHADOW_BOLT;
+import static wow.test.commons.AbilityNames.IMMOLATE;
 
 /**
  * User: POlszewski
@@ -63,8 +63,8 @@ class AccumulatedDurationStatsTest extends WowCharacterSpringTest {
 	void accumulateTestAttributes(AttributeId attributeId) {
 		var list = List.of(
 				Attribute.of(attributeId, 10),
-				Attribute.of(attributeId, 20, PHYSICAL),
-				Attribute.of(attributeId, 30, SPELL),
+				Attribute.of(attributeId, 20, AttributeCondition.of(AbilityIds.CORRUPTION)),
+				Attribute.of(attributeId, 30, AttributeCondition.of(AbilityIds.IMMOLATE)),
 				Attribute.of(attributeId, 40)
 		);
 
@@ -76,7 +76,7 @@ class AccumulatedDurationStatsTest extends WowCharacterSpringTest {
 	@BeforeEach
 	void setUp() {
 		var caster = getPlayer();
-		var spell = caster.getAbility(SHADOW_BOLT).orElseThrow();
+		var spell = caster.getAbility(IMMOLATE).orElseThrow();
 		var checker = AttributeConditionChecker.forSpell(caster, spell, null);
 
 		this.durationStats = new AccumulatedDurationStats(checker);
