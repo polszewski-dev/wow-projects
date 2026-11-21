@@ -5,7 +5,6 @@ package wow.commons.util.condition;
  * Date: 2026-10-25
  */
 final class AttributeConditionStrings {
-	static final String OWNER_HEALTH_PCT 			= "Owner.Health%";
 	static final String OWNER_HAS_EFFECT 			= "Owner.HasEffect";
 	static final String TARGET_HEALTH_PCT 			= "Target.Health%";
 	static final String EFFECT_NAME					= "EffectName";

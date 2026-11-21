@@ -85,11 +85,6 @@ public class AttributeConditionParser extends ConditionParser<AttributeCondition
 
 	@Override
 	protected AttributeCondition lessThanOperator(String left, String right) {
-		if (OWNER_HEALTH_PCT.equalsIgnoreCase(left)) {
-			var pct = Double.parseDouble(right);
-			return new OwnerHealthPctLessThan(pct);
-		}
-
 		if (TARGET_HEALTH_PCT.equalsIgnoreCase(left)) {
 			var pct = Double.parseDouble(right);
 			return new TargetHealthPctLessThan(pct);

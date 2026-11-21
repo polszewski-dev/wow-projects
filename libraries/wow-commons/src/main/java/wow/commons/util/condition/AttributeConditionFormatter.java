@@ -72,9 +72,6 @@ public class AttributeConditionFormatter extends ConditionFormatter<AttributeCon
 			case OwnerHasEffect(var abilityId) ->
 					formatFunction(OWNER_HAS_EFFECT, abilityId);
 
-			case OwnerHealthPctLessThan(var value) ->
-					formatOperator(OWNER_HEALTH_PCT, "<", value);
-
 			case PetTypeCondition(var petType) ->
 					petType.toString();
 

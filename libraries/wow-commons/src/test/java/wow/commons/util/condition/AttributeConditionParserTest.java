@@ -145,10 +145,6 @@ class AttributeConditionParserTest {
 					new OwnerHasEffect(MANA_SHIELD.name())
 			),
 			testData(
-					"Owner.Health% < 35",
-					new OwnerHealthPctLessThan(35)
-			),
-			testData(
 					"Target.Health% < 20",
 					new TargetHealthPctLessThan(20)
 			),
@@ -201,8 +197,8 @@ class AttributeConditionParserTest {
 					or(of(SHADOW), or(of(FROST), of(FIRE)))
 			),
 			testData(
-					"Physical & Owner.Health% < 40",
-					and(AttributeConditions.PHYSICAL, new OwnerHealthPctLessThan(40))
+					"Physical & Target.Health% < 40",
+					and(AttributeConditions.PHYSICAL, new TargetHealthPctLessThan(40))
 			),
 			testData(
 					"Physical & Undead, Demon",

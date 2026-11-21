@@ -236,7 +236,5 @@ public sealed interface AttributeCondition extends Condition {
 		}
 	}
 
-	record OwnerHealthPctLessThan(double value) implements AttributeCondition {}
-
 	record TargetHealthPctLessThan(double value) implements AttributeCondition {}
 }

@@ -165,9 +165,6 @@ public final class AttributeConditionChecker implements AttributeScalingParams {
 			case OwnerHasEffect(var effectName) ->
 					caster.hasEffect(effectName);
 
-			case OwnerHealthPctLessThan(var value) ->
-					caster.getHealthPct().value() < value;
-
 			case PetTypeCondition(var petType) -> caster.getMaster().getActivePetType() == petType;
 
 			case PowerTypeCondition(var powerTypeArg) ->
