@@ -2,9 +2,11 @@ package wow.character.model.snapshot;
 
 import lombok.Getter;
 import wow.character.model.character.Character;
-import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.attribute.Attribute;
+import wow.commons.model.attribute.PowerType;
+import wow.commons.model.spell.ActionType;
 import wow.commons.model.spell.Spell;
+import wow.commons.model.spell.SpellSchool;
 
 import java.util.Objects;
 
@@ -21,8 +23,8 @@ public class AccumulatedCastStats extends AccumulatedPartialCasterStats {
 	private double castTime;
 	private double castTimePct;
 
-	private AccumulatedCastStats(Character caster, Spell spell, Character target, AttributeConditionChecker checker) {
-		super(caster, spell, target, checker);
+	private AccumulatedCastStats(Character caster, Spell spell, Character target, ActionType actionType, PowerType powerType, SpellSchool spellSchool) {
+		super(caster, spell, target, actionType, powerType, spellSchool);
 	}
 
 	private AccumulatedCastStats(AccumulatedCastStats stats) {
@@ -37,17 +39,13 @@ public class AccumulatedCastStats extends AccumulatedPartialCasterStats {
 		Objects.requireNonNull(caster);
 		Objects.requireNonNull(spell);
 
-		var checker = new AttributeConditionChecker(caster, spell, target, SPELL, null, spell.getSchool());
-
-		return new AccumulatedCastStats(caster, spell, target, checker);
+		return new AccumulatedCastStats(caster, spell, target, SPELL, null, null);
 	}
 
 	public static AccumulatedCastStats forAnySpell(Character caster) {
 		Objects.requireNonNull(caster);
 
-		var checker = new AttributeConditionChecker(caster, null, null, SPELL, null, null);
-
-		return new AccumulatedCastStats(caster, null, null, checker);
+		return new AccumulatedCastStats(caster, null, null, SPELL, null, null);
 	}
 
 	@Override

@@ -160,6 +160,6 @@ class AccumulatedSpellStatsTest extends WowCharacterSpringTest {
 	}
 
 	private BaseStatInfo getBaseStatInfo() {
-		return spellStats.checker.getCaster().getBaseStatInfo();
+		return spellStats.caster.getBaseStatInfo();
 	}
 }

@@ -2,11 +2,13 @@ package wow.character.model.snapshot;
 
 import lombok.Getter;
 import wow.character.model.character.Character;
-import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.attribute.Attribute;
+import wow.commons.model.attribute.PowerType;
 import wow.commons.model.effect.component.StatConversionType;
+import wow.commons.model.spell.ActionType;
 import wow.commons.model.spell.ResourceType;
 import wow.commons.model.spell.Spell;
+import wow.commons.model.spell.SpellSchool;
 
 import java.util.Objects;
 
@@ -33,9 +35,9 @@ public class AccumulatedCostStats extends AccumulatedPartialCasterStats {
 
 	private final AccumulatedBaseStats accumulatedBaseStats;
 
-	private AccumulatedCostStats(Character caster, Spell spell, Character target, AttributeConditionChecker checker) {
-		super(caster, spell, target, checker);
-		this.accumulatedBaseStats = new AccumulatedBaseStats(caster, checker);
+	private AccumulatedCostStats(Character caster, Spell spell, Character target, ActionType actionType, PowerType powerType, SpellSchool spellSchool) {
+		super(caster, spell, target, actionType, powerType, spellSchool);
+		this.accumulatedBaseStats = new AccumulatedBaseStats(caster);
 	}
 
 	private AccumulatedCostStats(AccumulatedCostStats stats) {
@@ -59,9 +61,7 @@ public class AccumulatedCostStats extends AccumulatedPartialCasterStats {
 		Objects.requireNonNull(caster);
 		Objects.requireNonNull(spell);
 
-		var checker = new AttributeConditionChecker(caster, spell, target, SPELL, null, spell.getSchool());
-
-		return new AccumulatedCostStats(caster, spell, target, checker);
+		return new AccumulatedCostStats(caster, spell, target, SPELL, null, null);
 	}
 
 	@Override

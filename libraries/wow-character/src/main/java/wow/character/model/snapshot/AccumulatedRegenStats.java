@@ -2,7 +2,6 @@ package wow.character.model.snapshot;
 
 import lombok.Getter;
 import wow.character.model.character.Character;
-import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.effect.component.StatConversionType;
 
@@ -24,9 +23,9 @@ public class AccumulatedRegenStats extends AccumulatedPartialOwnerStats {
 
 	private final AccumulatedBaseStats accumulatedBaseStats;
 
-	private AccumulatedRegenStats(Character owner, AttributeConditionChecker checker) {
-		super(owner, checker);
-		this.accumulatedBaseStats = new AccumulatedBaseStats(owner, checker);
+	private AccumulatedRegenStats(Character owner) {
+		super(owner);
+		this.accumulatedBaseStats = new AccumulatedBaseStats(owner);
 	}
 
 	private AccumulatedRegenStats(AccumulatedRegenStats stats) {
@@ -44,9 +43,7 @@ public class AccumulatedRegenStats extends AccumulatedPartialOwnerStats {
 	public static AccumulatedRegenStats forRegen(Character owner) {
 		Objects.requireNonNull(owner);
 
-		var checker = new AttributeConditionChecker(owner, null, null, null, null, null);
-
-		return new AccumulatedRegenStats(owner, checker);
+		return new AccumulatedRegenStats(owner);
 	}
 
 	@Override

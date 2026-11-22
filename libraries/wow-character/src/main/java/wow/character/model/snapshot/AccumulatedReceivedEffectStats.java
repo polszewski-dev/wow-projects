@@ -2,9 +2,11 @@ package wow.character.model.snapshot;
 
 import lombok.Getter;
 import wow.character.model.character.Character;
-import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.attribute.Attribute;
+import wow.commons.model.attribute.PowerType;
+import wow.commons.model.spell.ActionType;
 import wow.commons.model.spell.Spell;
+import wow.commons.model.spell.SpellSchool;
 
 import java.util.Objects;
 
@@ -20,8 +22,8 @@ public class AccumulatedReceivedEffectStats extends AccumulatedPartialTargetStat
 	private double receivedEffectDuration;
 	private double receivedEffectDurationPct;
 
-	private AccumulatedReceivedEffectStats(Character target, Spell spell, AttributeConditionChecker checker) {
-		super(target, spell, checker);
+	private AccumulatedReceivedEffectStats(Character target, Spell spell, ActionType actionType, PowerType powerType, SpellSchool spellSchool) {
+		super(target, spell, actionType, powerType, spellSchool);
 	}
 
 	private AccumulatedReceivedEffectStats(AccumulatedReceivedEffectStats stats) {
@@ -34,11 +36,11 @@ public class AccumulatedReceivedEffectStats extends AccumulatedPartialTargetStat
 		Objects.requireNonNull(target);
 		Objects.requireNonNull(spell);
 
-		var checker = new AttributeConditionChecker(target, spell, null, SPELL, null, spell.getSchool());
+		var stats = new AccumulatedReceivedEffectStats(target, spell, SPELL, null, null);
 
-		checker.setAppliedEffect(command.effect());
+		stats.appliedEffect = command.effect();
 
-		return new AccumulatedReceivedEffectStats(target, spell, checker);
+		return stats;
 	}
 
 	@Override

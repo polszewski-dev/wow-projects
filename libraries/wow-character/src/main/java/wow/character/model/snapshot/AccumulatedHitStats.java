@@ -2,10 +2,12 @@ package wow.character.model.snapshot;
 
 import lombok.Getter;
 import wow.character.model.character.Character;
-import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.attribute.Attribute;
+import wow.commons.model.attribute.PowerType;
 import wow.commons.model.effect.component.StatConversionType;
+import wow.commons.model.spell.ActionType;
 import wow.commons.model.spell.Spell;
+import wow.commons.model.spell.SpellSchool;
 
 import java.util.Objects;
 
@@ -20,8 +22,8 @@ public class AccumulatedHitStats extends AccumulatedPartialCasterStats {
 	private double hitRating;
 	private double hitPct;
 
-	private AccumulatedHitStats(Character caster, Spell spell, Character target, AttributeConditionChecker checker) {
-		super(caster, spell, target, checker);
+	private AccumulatedHitStats(Character caster, Spell spell, Character target, ActionType actionType, PowerType powerType, SpellSchool spellSchool) {
+		super(caster, spell, target, actionType, powerType, spellSchool);
 	}
 
 	private AccumulatedHitStats(AccumulatedHitStats stats) {
@@ -34,23 +36,20 @@ public class AccumulatedHitStats extends AccumulatedPartialCasterStats {
 		Objects.requireNonNull(caster);
 		Objects.requireNonNull(spell);
 
-		var checker = new AttributeConditionChecker(caster, spell, target, SPELL, null, spell.getSchool());
-
-		return new AccumulatedHitStats(caster, spell, target, checker);
+		return new AccumulatedHitStats(caster, spell, target, SPELL, null, null);
 	}
 
 	public static AccumulatedHitStats forAnySpell(Character caster) {
 		Objects.requireNonNull(caster);
 
-		var checker = new AttributeConditionChecker(caster, null, null, SPELL, null, null);
-
-		return new AccumulatedHitStats(caster, null, null, checker);
+		return new AccumulatedHitStats(caster, null, null, SPELL, null, null);
 	}
 
-	public static AccumulatedHitStats forMaster(Character master, AccumulatedHitStats stats) {
-		var checker = stats.getChecker().withCaster(master);
+	public static AccumulatedHitStats forMaster(Character master, AccumulatedHitStats petStats) {
+		var stats = new AccumulatedHitStats(master, petStats.spell, petStats.target, petStats.actionType, petStats.powerType, petStats.spellSchool);
 
-		return new AccumulatedHitStats(master, stats.spell, stats.target, checker);
+		stats.copyFrom(petStats);
+		return stats;
 	}
 
 	@Override

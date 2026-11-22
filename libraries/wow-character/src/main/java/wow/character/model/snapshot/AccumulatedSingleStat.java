@@ -2,10 +2,12 @@ package wow.character.model.snapshot;
 
 import lombok.Getter;
 import wow.character.model.character.Character;
-import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeId;
+import wow.commons.model.attribute.PowerType;
+import wow.commons.model.spell.ActionType;
 import wow.commons.model.spell.Spell;
+import wow.commons.model.spell.SpellSchool;
 
 import java.util.Objects;
 
@@ -20,8 +22,8 @@ public class AccumulatedSingleStat extends AccumulatedPartialCasterStats {
 	@Getter
 	private double totalValue;
 
-	public AccumulatedSingleStat(AttributeId attributeId, Character caster, Spell spell, Character target, AttributeConditionChecker checker) {
-		super(caster, spell, target, checker);
+	public AccumulatedSingleStat(AttributeId attributeId, Character caster, Spell spell, Character target, ActionType actionType, PowerType powerType, SpellSchool spellSchool) {
+		super(caster, spell, target, actionType, powerType, spellSchool);
 		this.attributeId = attributeId;
 	}
 
@@ -29,9 +31,7 @@ public class AccumulatedSingleStat extends AccumulatedPartialCasterStats {
 		Objects.requireNonNull(caster);
 		Objects.requireNonNull(spell);
 
-		var checker = new AttributeConditionChecker(caster, spell, target, SPELL, null, spell.getSchool());
-
-		return new AccumulatedSingleStat(attributeId, caster, spell, target, checker);
+		return new AccumulatedSingleStat(attributeId, caster, spell, target, SPELL, null, null);
 	}
 
 	@Override

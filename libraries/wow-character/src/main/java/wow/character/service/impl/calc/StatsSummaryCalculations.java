@@ -34,7 +34,7 @@ public class StatsSummaryCalculations extends Calculations {
 		var castStats = AccumulatedCastStats.forAnySpell(character);
 		var hitStats = AccumulatedHitStats.forAnySpell(character);
 		var spellStats = AccumulatedSpellStats.forAnySpell(character);
-		var targetStats = AccumulatedTargetStats.emptyStats();
+		var targetStats = AccumulatedTargetStats.forAnySpellTarget(character);
 
 		accumulateEffects(character, castStats);
 		accumulateEffects(character, hitStats);

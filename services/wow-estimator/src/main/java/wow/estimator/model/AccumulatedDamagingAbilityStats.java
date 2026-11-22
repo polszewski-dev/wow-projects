@@ -72,8 +72,7 @@ public class AccumulatedDamagingAbilityStats extends AccumulatedStats {
 	}
 
 	private boolean toConditionMatches(StatConversion statConversion) {
-		var directChecker = direct.getChecker();
-		var checker = new StatConversionConditionChecker(directChecker.getActionType(), directChecker.getPowerType());
+		var checker = new StatConversionConditionChecker(direct.getActionType(), direct.getPowerType());
 
 		return checker.check(statConversion);
 	}

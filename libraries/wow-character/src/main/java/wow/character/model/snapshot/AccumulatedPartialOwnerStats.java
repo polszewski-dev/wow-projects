@@ -1,8 +1,13 @@
 package wow.character.model.snapshot;
 
 import wow.character.model.character.Character;
-import wow.character.util.AttributeConditionChecker;
+import wow.commons.model.attribute.AttributeCondition;
+import wow.commons.model.attribute.PowerType;
+import wow.commons.model.spell.ActionType;
 import wow.commons.model.talent.TalentTree;
+
+import static wow.commons.model.attribute.AttributeCondition.EmptyCondition;
+import static wow.commons.model.attribute.AttributeCondition.Operator;
 
 /**
  * User: POlszewski
@@ -11,14 +16,12 @@ import wow.commons.model.talent.TalentTree;
 public abstract class AccumulatedPartialOwnerStats extends AccumulatedPartialStats {
 	protected final Character owner;
 
-	protected AccumulatedPartialOwnerStats(Character owner, AttributeConditionChecker checker) {
-		super(checker);
+	protected AccumulatedPartialOwnerStats(Character owner) {
 		this.owner = owner;
 	}
 
 	protected AccumulatedPartialOwnerStats(AccumulatedPartialOwnerStats stats) {
-		super(stats);
-		this.owner = stats.owner;
+		this(stats.owner);
 	}
 
 	@Override
@@ -29,5 +32,29 @@ public abstract class AccumulatedPartialOwnerStats extends AccumulatedPartialSta
 	@Override
 	public int getNumberOfEffectsOnTarget(TalentTree tree) {
 		return 0;
+	}
+
+	@Override
+	protected boolean checkCondition(AttributeCondition condition) {
+		return switch (condition) {
+			case EmptyCondition() ->
+					true;
+
+			case Operator operator ->
+					checkConditionOperator(operator);
+
+			default ->
+					unsupported(condition);
+		};
+	}
+
+	@Override
+	public ActionType getActionType() {
+		return null;
+	}
+
+	@Override
+	public PowerType getPowerType() {
+		return null;
 	}
 }

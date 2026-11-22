@@ -2,15 +2,16 @@ package wow.character.model.snapshot;
 
 import lombok.Getter;
 import wow.character.model.character.Character;
-import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.PowerType;
 import wow.commons.model.effect.component.StatConversionType;
+import wow.commons.model.spell.ActionType;
 import wow.commons.model.spell.Spell;
 import wow.commons.model.spell.SpellSchool;
 
 import java.util.Objects;
 
+import static wow.commons.model.attribute.PowerType.HEALING;
 import static wow.commons.model.spell.ActionType.SPELL;
 import static wow.commons.model.spell.component.ComponentCommand.ChangeHealthDirectly;
 import static wow.commons.model.spell.component.ComponentCommand.PeriodicCommand;
@@ -33,11 +34,16 @@ public class AccumulatedSpellStats extends AccumulatedPartialCasterStats {
 	private double critEffectMultiplierPct;
 	private double critCoeffPct;
 
+	private final boolean isDamage;
+	private final boolean isHealing;
+
 	private final AccumulatedBaseStats accumulatedBaseStats;
 
-	private AccumulatedSpellStats(Character caster, Spell spell, Character target, AttributeConditionChecker checker) {
-		super(caster, spell, target, checker);
-		this.accumulatedBaseStats = new AccumulatedBaseStats(caster, checker);
+	private AccumulatedSpellStats(Character caster, Spell spell, Character target, ActionType actionType, PowerType powerType, SpellSchool spellSchool) {
+		super(caster, spell, target, actionType, powerType, spellSchool);
+		this.isDamage = powerType != null && powerType != HEALING;
+		this.isHealing = powerType == HEALING;
+		this.accumulatedBaseStats = new AccumulatedBaseStats(caster);
 		accumulateBaseCrit();
 	}
 
@@ -55,50 +61,49 @@ public class AccumulatedSpellStats extends AccumulatedPartialCasterStats {
 		this.critEffectMultiplierPct = stats.critEffectMultiplierPct;
 		this.critCoeffPct = stats.critCoeffPct;
 		this.accumulatedBaseStats = stats.accumulatedBaseStats.copy();
+		this.isDamage = stats.isDamage;
+		this.isHealing = stats.isHealing;
 	}
 
 	public static AccumulatedSpellStats forAnySpell(Character caster) {
 		Objects.requireNonNull(caster);
 
-		var checker = new AttributeConditionChecker(caster, null, null, SPELL, null, null);
-
-		return new AccumulatedSpellStats(caster, null, null, checker);
+		return new AccumulatedSpellStats(caster, null, null, SPELL, null, null);
 	}
 
 	public static AccumulatedSpellStats forAnySpell(Character caster, PowerType powerType, SpellSchool spellSchool) {
 		Objects.requireNonNull(caster);
 
-		var checker = new AttributeConditionChecker(caster, null, null, SPELL, powerType, spellSchool);
-
-		return new AccumulatedSpellStats(caster, null, null, checker);
+		return new AccumulatedSpellStats(caster, null, null, SPELL, powerType, spellSchool);
 	}
 
 	public static AccumulatedSpellStats forDirectSpell(Character caster, Spell spell, Character target, PowerType powerType, ChangeHealthDirectly command) {
 		Objects.requireNonNull(caster);
 		Objects.requireNonNull(spell);
 
-		var checker = new AttributeConditionChecker(caster, spell, target, SPELL, powerType, command.school());
+		var stats = new AccumulatedSpellStats(caster, spell, target, SPELL, powerType, command.school());
 
-		checker.setDirect(true);
+		stats.direct = true;
 
-		return new AccumulatedSpellStats(caster, spell, target, checker);
+		return stats;
 	}
 
 	public static AccumulatedSpellStats forPeriodicSpell(Character caster, Spell spell, Character target, PowerType powerType, PeriodicCommand command) {
 		Objects.requireNonNull(caster);
 		Objects.requireNonNull(spell);
 
-		var checker = new AttributeConditionChecker(caster, spell, target, SPELL, powerType, command.school());
+		var stats = new AccumulatedSpellStats(caster, spell, target, SPELL, powerType, command.school());
 
-		checker.setPeriodic(true);
+		stats.periodic = true;
 
-		return new AccumulatedSpellStats(caster, spell, target, checker);
+		return stats;
 	}
 
-	public static AccumulatedSpellStats forMaster(Character master, AccumulatedSpellStats stats) {
-		var checker = stats.getChecker().withCaster(master);
+	public static AccumulatedSpellStats forMaster(Character master, AccumulatedSpellStats petStats) {
+		var stats = new AccumulatedSpellStats(master, petStats.spell, petStats.target, petStats.actionType, petStats.powerType, petStats.spellSchool);
 
-		return new AccumulatedSpellStats(master, stats.spell, stats.target, checker);
+		stats.copyFrom(petStats);
+		return stats;
 	}
 
 	private void accumulateBaseCrit() {

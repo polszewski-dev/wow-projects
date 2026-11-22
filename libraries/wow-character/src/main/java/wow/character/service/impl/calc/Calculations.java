@@ -236,8 +236,7 @@ public abstract class Calculations {
 		}
 
 		private boolean toConditionMatches(StatConversion statConversion) {
-			var statsChecker = stats.getChecker();
-			var checker = new StatConversionConditionChecker(statsChecker.getActionType(), statsChecker.getPowerType());
+			var checker = new StatConversionConditionChecker(stats.getActionType(), stats.getPowerType());
 
 			return checker.check(statConversion);
 		}

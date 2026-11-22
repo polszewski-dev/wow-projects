@@ -1,36 +1,22 @@
 package wow.character.model.snapshot;
 
-import lombok.Getter;
-import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.attribute.Attribute;
+import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.attribute.AttributeScalingParams;
+import wow.commons.model.attribute.PowerType;
 import wow.commons.model.effect.component.StatConversion;
 import wow.commons.model.effect.component.StatConversionType;
+import wow.commons.model.spell.ActionType;
 
 import java.util.List;
 
-import static wow.commons.model.attribute.PowerType.HEALING;
+import static wow.commons.model.attribute.AttributeCondition.*;
 
 /**
  * User: POlszewski
  * Date: 2023-11-16
  */
 public abstract class AccumulatedPartialStats extends AccumulatedStats implements AttributeScalingParams {
-	@Getter
-	protected final AttributeConditionChecker checker;
-	protected final boolean isDamage;
-	protected final boolean isHealing;
-
-	protected AccumulatedPartialStats(AttributeConditionChecker checker) {
-		this.checker = checker;
-		this.isDamage = checker.getPowerType() != null && checker.getPowerType() != HEALING;
-		this.isHealing = checker.getPowerType() == HEALING;
-	}
-
-	protected AccumulatedPartialStats(AccumulatedPartialStats stats) {
-		this(stats.checker);
-	}
-
 	public void accumulateConvertedAttributes(List<StatConversion> statConversions) {
 		accumulateConvertedAttributes(statConversions, this);
 	}
@@ -59,10 +45,42 @@ public abstract class AccumulatedPartialStats extends AccumulatedStats implement
 	}
 
 	protected double getValue(Attribute attribute, double scaleFactor) {
-		if (!checker.check(attribute.condition())) {
+		if (!checkCondition(attribute.condition())) {
 			return 0;
 		}
 
 		return scaleFactor * attribute.getScaledValue(this);
 	}
+
+	protected abstract boolean checkCondition(AttributeCondition condition);
+
+	protected boolean checkConditionOperator(Operator operator) {
+		return switch (operator) {
+			case And(var left, var right) ->
+					checkCondition(left) && checkCondition(right);
+
+			case Or(var left, var right) ->
+					checkCondition(left) || checkCondition(right);
+
+			case Comma comma ->
+					checkComma(comma);
+		};
+	}
+
+	private boolean checkComma(Comma comma) {
+		for (var condition : comma.conditions()) {
+			if (checkCondition(condition)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	protected static boolean unsupported(AttributeCondition condition) {
+		throw new IllegalArgumentException(condition + "");
+	}
+
+	public abstract ActionType getActionType();
+
+	public abstract PowerType getPowerType();
 }

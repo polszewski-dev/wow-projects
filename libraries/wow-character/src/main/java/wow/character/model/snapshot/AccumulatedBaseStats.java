@@ -2,7 +2,6 @@ package wow.character.model.snapshot;
 
 import lombok.Getter;
 import wow.character.model.character.Character;
-import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.effect.component.StatConversionType;
 
@@ -35,17 +34,15 @@ public class AccumulatedBaseStats extends AccumulatedPartialOwnerStats {
 	private double maxMana;
 	private double maxManaPct;
 
-	protected AccumulatedBaseStats(Character owner, AttributeConditionChecker checker) {
-		super(owner, checker);
+	protected AccumulatedBaseStats(Character owner) {
+		super(owner);
 		accumulateBaseStatInfo();
 	}
 
 	public static AccumulatedBaseStats forBaseStats(Character owner) {
 		Objects.requireNonNull(owner);
 
-		var checker = new AttributeConditionChecker(owner, null, null, null, null, null);
-
-		return new AccumulatedBaseStats(owner, checker);
+		return new AccumulatedBaseStats(owner);
 	}
 
 	protected AccumulatedBaseStats(AccumulatedBaseStats stats) {

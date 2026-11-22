@@ -212,6 +212,6 @@ class AccumulatedBaseStatsTest extends WowCharacterSpringTest {
 	}
 
 	private BaseStatInfo getBaseStatInfo() {
-		return baseStats.checker.getCaster().getBaseStatInfo();
+		return baseStats.owner.getBaseStatInfo();
 	}
 }

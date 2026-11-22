@@ -2,9 +2,11 @@ package wow.character.model.snapshot;
 
 import lombok.Getter;
 import wow.character.model.character.Character;
-import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.attribute.Attribute;
+import wow.commons.model.attribute.PowerType;
+import wow.commons.model.spell.ActionType;
 import wow.commons.model.spell.Spell;
+import wow.commons.model.spell.SpellSchool;
 
 import java.util.Objects;
 
@@ -22,8 +24,8 @@ public class AccumulatedDurationStats extends AccumulatedPartialCasterStats {
 	private double hasteRating;
 	private double hastePct;
 
-	private AccumulatedDurationStats(Character caster, Spell spell, Character target, AttributeConditionChecker checker) {
-		super(caster, spell, target, checker);
+	private AccumulatedDurationStats(Character caster, Spell spell, Character target, ActionType actionType, PowerType powerType, SpellSchool spellSchool) {
+		super(caster, spell, target, actionType, powerType, spellSchool);
 	}
 
 	private AccumulatedDurationStats(AccumulatedDurationStats stats) {
@@ -38,20 +40,18 @@ public class AccumulatedDurationStats extends AccumulatedPartialCasterStats {
 		Objects.requireNonNull(caster);
 		Objects.requireNonNull(spell);
 
-		var checker = new AttributeConditionChecker(caster, spell, target, SPELL, null, spell.getSchool());
+		var stats = new AccumulatedDurationStats(caster, spell, target, SPELL, null, null);
 
-		checker.setAppliedEffect(command.effect());
+		stats.appliedEffect = command.effect();
 
-		return new AccumulatedDurationStats(caster, spell, target, checker);
+		return stats;
 	}
 
 	public static AccumulatedDurationStats forSpellSummon(Character caster, Spell spell, Character target) {
 		Objects.requireNonNull(caster);
 		Objects.requireNonNull(spell);
 
-		var checker = new AttributeConditionChecker(caster, spell, target, SPELL, null, spell.getSchool());
-
-		return new AccumulatedDurationStats(caster, spell, target, checker);
+		return new AccumulatedDurationStats(caster, spell, target, SPELL, null, null);
 	}
 
 	@Override
