@@ -16,12 +16,8 @@ import static wow.commons.model.spell.component.ComponentCommand.*;
  * Date: 2026-10-25
  */
 public class DirectComponentCalculations extends ComponentCalculations {
-	public static AccumulatedSpellStats newAccumulatedDirectComponentStats(Character caster, Spell spell, Character target, PowerType powerType, ChangeHealthDirectly command) {
-		return AccumulatedSpellStats.forDirectSpell(caster, spell, target, powerType, command.school());
-	}
-
 	private static AccumulatedSpellStats getAccumulatedDirectComponentStats(Character caster, Spell spell, Character target, PowerType powerType, ChangeHealthDirectly command) {
-		var spellStats = newAccumulatedDirectComponentStats(caster, spell, target, powerType, command);
+		var spellStats = AccumulatedSpellStats.forDirectSpell(caster, spell, target, powerType, command);
 
 		accumulateEffects(caster, spellStats);
 		return spellStats;
@@ -37,7 +33,7 @@ public class DirectComponentCalculations extends ComponentCalculations {
 
 	private static DirectSpellComponentSnapshot getDirectSpellComponentSnapshot(Character caster, Spell spell, Character target, ChangeHealthDirectly command, PowerType powerType) {
 		var spellStats = getAccumulatedDirectComponentStats(caster, spell, target, powerType, command);
-		var targetStats = getAccumulatedTargetStats(spell, target, powerType, command.school());
+		var targetStats = getAccumulatedTargetStats(spell, target, powerType, command);
 
 		return getDirectSpellComponentSnapshot(caster, command, spellStats, targetStats);
 	}

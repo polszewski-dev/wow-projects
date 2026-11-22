@@ -16,12 +16,8 @@ import static wow.commons.model.spell.component.ComponentCommand.*;
  * Date: 2026-10-25
  */
 public class PeriodicComponentCalculations extends ComponentCalculations {
-	public static AccumulatedSpellStats newAccumulatedPeriodicComponentStats(Character caster, Spell spell, Character target, PowerType powerType, PeriodicCommand command) {
-		return AccumulatedSpellStats.forPeriodicSpell(caster, spell, target, powerType, command.school());
-	}
-
 	private static AccumulatedSpellStats getAccumulatedPeriodicComponentStats(Character caster, Spell spell, Character target, PowerType powerType, PeriodicCommand command) {
-		var spellStats = newAccumulatedPeriodicComponentStats(caster, spell, target, powerType, command);
+		var spellStats = AccumulatedSpellStats.forPeriodicSpell(caster, spell, target, powerType, command);
 
 		accumulateEffects(caster, spellStats);
 		return spellStats;
@@ -37,7 +33,7 @@ public class PeriodicComponentCalculations extends ComponentCalculations {
 
 	private static PeriodicSpellComponentSnapshot getPeriodicComponentSnapshot(Character caster, Spell spell, Character target, ChangeHealthPeriodically command, PowerType powerType) {
 		var spellStats = getAccumulatedPeriodicComponentStats(caster, spell, target, powerType, command);
-		var targetStats = getAccumulatedTargetStats(spell, target, powerType, command.school());
+		var targetStats = getAccumulatedTargetStats(spell, target, powerType, command);
 
 		return getPeriodicComponentSnapshot(command, spellStats, targetStats);
 	}

@@ -7,11 +7,9 @@ import wow.character.model.snapshot.*;
 import wow.character.service.CharacterCalculationService;
 import wow.character.service.impl.calc.*;
 import wow.commons.model.AnyDuration;
-import wow.commons.model.attribute.PowerType;
 import wow.commons.model.effect.EffectAugmentations;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.Spell;
-import wow.commons.model.spell.SpellSchool;
 
 import static wow.commons.model.spell.component.ComponentCommand.*;
 
@@ -22,51 +20,6 @@ import static wow.commons.model.spell.component.ComponentCommand.*;
 @Service
 @AllArgsConstructor
 public class CharacterCalculationServiceImpl implements CharacterCalculationService {
-	@Override
-	public AccumulatedBaseStats newAccumulatedBaseStats(Character character) {
-		return BaseStatsCalculations.newAccumulatedBaseStats(character);
-	}
-
-	@Override
-	public AccumulatedCastStats newAccumulatedCastStats(Character caster, Ability ability, Character target) {
-		return CastCalculations.newAccumulatedCastStats(caster, ability, target);
-	}
-
-	@Override
-	public AccumulatedCostStats newAccumulatedCostStats(Character caster, Ability ability, Character target) {
-		return CostCalculations.newAccumulatedCostStats(caster, ability, target);
-	}
-
-	@Override
-	public AccumulatedTargetStats newAccumulatedTargetStats(Character target, Spell spell, PowerType powerType, SpellSchool school) {
-		return ComponentCalculations.newAccumulatedTargetStats(target, spell, powerType, school);
-	}
-
-	@Override
-	public AccumulatedHitStats newAccumulatedHitStats(Character caster, Spell spell, Character target) {
-		return HitCalculations.newAccumulatedHitStats(caster, spell, target);
-	}
-
-	@Override
-	public AccumulatedDurationStats newAccumulatedDurationStats(Character caster, Spell spell, Character target, ApplyEffect command) {
-		return EffectCalculations.newAccumulatedDurationStats(caster, spell, target, command);
-	}
-
-	@Override
-	public AccumulatedReceivedEffectStats newAccumulatedReceivedEffectStats(Character target, Spell spell, ApplyEffect command) {
-		return EffectCalculations.newAccumulatedReceivedEffectStats(target, spell, command);
-	}
-
-	@Override
-	public AccumulatedSpellStats newAccumulatedDirectComponentStats(Character caster, Spell spell, Character target, PowerType powerType, ChangeHealthDirectly command) {
-		return DirectComponentCalculations.newAccumulatedDirectComponentStats(caster, spell, target, powerType, command);
-	}
-
-	@Override
-	public AccumulatedSpellStats newAccumulatedPeriodicComponentStats(Character caster, Spell spell, Character target, PowerType powerType, PeriodicCommand command) {
-		return PeriodicComponentCalculations.newAccumulatedPeriodicComponentStats(caster, spell, target, powerType, command);
-	}
-
 	@Override
 	public BaseStatsSnapshot getBaseStatsSnapshot(Character character) {
 		return BaseStatsCalculations.getBaseStatsSnapshot(character);

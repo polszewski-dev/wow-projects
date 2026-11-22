@@ -6,21 +6,32 @@ import wow.character.model.snapshot.AccumulatedTargetStats;
 import wow.commons.model.attribute.PowerType;
 import wow.commons.model.spell.Coefficient;
 import wow.commons.model.spell.Spell;
-import wow.commons.model.spell.SpellSchool;
 
 import static java.lang.Math.clamp;
+import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
+import static wow.commons.model.spell.component.ComponentCommand.PeriodicCommand;
 
 /**
  * User: POlszewski
  * Date: 2026-10-25
  */
 public class ComponentCalculations extends Calculations {
-	public static AccumulatedTargetStats newAccumulatedTargetStats(Character target, Spell spell, PowerType powerType, SpellSchool school) {
-		return AccumulatedTargetStats.forSpellTarget(target, spell, powerType, school);
+	static AccumulatedTargetStats getAccumulatedTargetStats(Spell spell, Character target, PowerType powerType) {
+		var targetStats = AccumulatedTargetStats.forSpellTarget(target, spell, powerType);
+
+		accumulateEffects(target, targetStats);
+		return targetStats;
 	}
 
-	static AccumulatedTargetStats getAccumulatedTargetStats(Spell spell, Character target, PowerType powerType, SpellSchool school) {
-		var targetStats = newAccumulatedTargetStats(target, spell, powerType, school);
+	static AccumulatedTargetStats getAccumulatedTargetStats(Spell spell, Character target, PowerType powerType, DirectCommand command) {
+		var targetStats = AccumulatedTargetStats.forSpellTarget(target, spell, powerType, command);
+
+		accumulateEffects(target, targetStats);
+		return targetStats;
+	}
+
+	static AccumulatedTargetStats getAccumulatedTargetStats(Spell spell, Character target, PowerType powerType, PeriodicCommand command) {
+		var targetStats = AccumulatedTargetStats.forSpellTarget(target, spell, powerType, command);
 
 		accumulateEffects(target, targetStats);
 		return targetStats;

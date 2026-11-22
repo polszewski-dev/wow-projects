@@ -11,12 +11,8 @@ import static java.lang.Math.clamp;
  * Date: 2026-10-25
  */
 public class HitCalculations extends Calculations {
-	public static AccumulatedHitStats newAccumulatedHitStats(Character caster, Spell spell, Character target) {
-		return AccumulatedHitStats.forSpell(caster, spell, target);
-	}
-
 	private static AccumulatedHitStats getAccumulatedHitStats(Character caster, Spell spell, Character target) {
-		var hitStats = newAccumulatedHitStats(caster, spell, target);
+		var hitStats = AccumulatedHitStats.forSpell(caster, spell, target);
 
 		accumulateEffects(caster, hitStats);
 		return hitStats;

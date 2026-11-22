@@ -12,6 +12,8 @@ import wow.commons.model.spell.SpellSchool;
 import java.util.Objects;
 
 import static wow.commons.model.spell.ActionType.SPELL;
+import static wow.commons.model.spell.component.ComponentCommand.ChangeHealthDirectly;
+import static wow.commons.model.spell.component.ComponentCommand.PeriodicCommand;
 
 /**
  * User: POlszewski
@@ -67,22 +69,22 @@ public class AccumulatedSpellStats extends AccumulatedBaseStats {
 		return new AccumulatedSpellStats(checker);
 	}
 
-	public static AccumulatedSpellStats forDirectSpell(Character caster, Spell spell, Character target, PowerType powerType, SpellSchool spellSchool) {
+	public static AccumulatedSpellStats forDirectSpell(Character caster, Spell spell, Character target, PowerType powerType, ChangeHealthDirectly command) {
 		Objects.requireNonNull(caster);
 		Objects.requireNonNull(spell);
 
-		var checker = new AttributeConditionChecker(caster, spell, target, SPELL, powerType, spellSchool);
+		var checker = new AttributeConditionChecker(caster, spell, target, SPELL, powerType, command.school());
 
 		checker.setDirect(true);
 
 		return new AccumulatedSpellStats(checker);
 	}
 
-	public static AccumulatedSpellStats forPeriodicSpell(Character caster, Spell spell, Character target, PowerType powerType, SpellSchool spellSchool) {
+	public static AccumulatedSpellStats forPeriodicSpell(Character caster, Spell spell, Character target, PowerType powerType, PeriodicCommand command) {
 		Objects.requireNonNull(caster);
 		Objects.requireNonNull(spell);
 
-		var checker = new AttributeConditionChecker(caster, spell, target, SPELL, powerType, spellSchool);
+		var checker = new AttributeConditionChecker(caster, spell, target, SPELL, powerType, command.school());
 
 		checker.setPeriodic(true);
 

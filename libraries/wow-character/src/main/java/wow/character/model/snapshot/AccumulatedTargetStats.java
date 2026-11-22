@@ -11,6 +11,8 @@ import wow.commons.model.spell.SpellSchool;
 import java.util.Objects;
 
 import static wow.commons.model.spell.ActionType.SPELL;
+import static wow.commons.model.spell.component.ComponentCommand.DirectCommand;
+import static wow.commons.model.spell.component.ComponentCommand.PeriodicCommand;
 
 /**
  * User: POlszewski
@@ -35,7 +37,19 @@ public class AccumulatedTargetStats extends AccumulatedPartialStats {
 		this.critTakenPct = stats.critTakenPct;
 	}
 
-	public static AccumulatedTargetStats forSpellTarget(Character target, Spell spell, PowerType powerType, SpellSchool spellSchool) {
+	public static AccumulatedTargetStats forSpellTarget(Character target, Spell spell, PowerType powerType) {
+		return forSpellTarget(target, spell, powerType, spell.getSchool());
+	}
+
+	public static AccumulatedTargetStats forSpellTarget(Character target, Spell spell, PowerType powerType, DirectCommand command) {
+		return forSpellTarget(target, spell, powerType, command.school());
+	}
+
+	public static AccumulatedTargetStats forSpellTarget(Character target, Spell spell, PowerType powerType, PeriodicCommand command) {
+		return forSpellTarget(target, spell, powerType, command.school());
+	}
+
+	private static AccumulatedTargetStats forSpellTarget(Character target, Spell spell, PowerType powerType, SpellSchool spellSchool) {
 		Objects.requireNonNull(target);
 		Objects.requireNonNull(spell);
 

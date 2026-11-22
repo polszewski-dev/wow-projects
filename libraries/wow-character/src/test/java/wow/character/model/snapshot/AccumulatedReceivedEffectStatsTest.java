@@ -59,8 +59,8 @@ class AccumulatedReceivedEffectStatsTest extends WowCharacterSpringTest {
 		var caster = getPlayer();
 		var spell = caster.getAbility(IMMOLATE).orElseThrow();
 		var target = caster.getTarget();
-		var effect = spell.getApplyEffectCommands().getFirst().effect();
+		var command = spell.getApplyEffectCommands().getFirst();
 
-		this.receivedEffectStats = AccumulatedReceivedEffectStats.forSpellTarget(target, spell, effect);
+		this.receivedEffectStats = AccumulatedReceivedEffectStats.forSpellTarget(target, spell, command);
 	}
 }

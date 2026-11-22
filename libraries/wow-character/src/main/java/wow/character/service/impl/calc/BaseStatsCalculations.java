@@ -13,12 +13,8 @@ import static wow.commons.constant.SpellConstants.MANA_PER_INTELLECT;
  * Date: 2026-10-25
  */
 public class BaseStatsCalculations extends Calculations {
-	public static AccumulatedBaseStats newAccumulatedBaseStats(Character character) {
-		return AccumulatedBaseStats.forBaseStats(character);
-	}
-
 	private static AccumulatedBaseStats getAccumulatedBaseStats(Character character) {
-		var stats = newAccumulatedBaseStats(character);
+		var stats = AccumulatedBaseStats.forBaseStats(character);
 
 		accumulateEffects(character, stats);
 		return stats;

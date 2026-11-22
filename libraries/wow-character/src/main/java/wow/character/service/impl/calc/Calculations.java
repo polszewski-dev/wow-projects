@@ -16,7 +16,6 @@ import java.util.function.Predicate;
 import static java.lang.Math.max;
 import static wow.character.model.snapshot.AttributePredicates.OWNER_OR_AURAS;
 import static wow.character.model.snapshot.AttributePredicates.PET_ONLY;
-import static wow.character.service.impl.calc.BaseStatsCalculations.newAccumulatedBaseStats;
 
 /**
  * User: POlszewski
@@ -163,7 +162,7 @@ public abstract class Calculations {
 				return;
 			}
 
-			this.petsBaseStats = newAccumulatedBaseStats(pet);
+			this.petsBaseStats = AccumulatedBaseStats.forBaseStats(pet);
 
 			var petConversionSolver = accumulateEffectsWithoutConversions(pet, petsBaseStats);
 
@@ -178,7 +177,7 @@ public abstract class Calculations {
 				return;
 			}
 
-			this.mastersBaseStats = newAccumulatedBaseStats(master);
+			this.mastersBaseStats = AccumulatedBaseStats.forBaseStats(master);
 
 			var masterConversionSolver = accumulateEffectsWithoutConversions(master, mastersBaseStats);
 

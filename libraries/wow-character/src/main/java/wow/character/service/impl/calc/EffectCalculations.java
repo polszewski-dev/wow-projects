@@ -30,19 +30,11 @@ import static wow.commons.model.spell.component.ComponentCommand.ApplyEffect;
  * Date: 2026-10-25
  */
 public class EffectCalculations extends Calculations {
-	public static AccumulatedDurationStats newAccumulatedDurationStats(Character caster, Spell spell, Character target, ApplyEffect command) {
-		return AccumulatedDurationStats.forSpellEffect(caster, spell, target, command.effect());
-	}
-
 	private static AccumulatedDurationStats getAccumulatedDurationStats(Character caster, Spell spell, Character target, ApplyEffect command) {
-		var durationStats = newAccumulatedDurationStats(caster, spell, target, command);
+		var durationStats = AccumulatedDurationStats.forSpellEffect(caster, spell, target, command);
 
 		accumulateEffects(caster, durationStats);
 		return durationStats;
-	}
-
-	public static AccumulatedReceivedEffectStats newAccumulatedReceivedEffectStats(Character target, Spell spell, ApplyEffect command) {
-		return AccumulatedReceivedEffectStats.forSpellTarget(target, spell, command.effect());
 	}
 
 	private static AccumulatedReceivedEffectStats getAccumulatedReceivedEffectStats(Spell spell, Character target, ApplyEffect command) {
@@ -50,7 +42,7 @@ public class EffectCalculations extends Calculations {
 			return null;
 		}
 
-		var receivedEffectStats = newAccumulatedReceivedEffectStats(target, spell, command);
+		var receivedEffectStats = AccumulatedReceivedEffectStats.forSpellTarget(target, spell, command);
 
 		accumulateEffects(target, receivedEffectStats);
 		return receivedEffectStats;

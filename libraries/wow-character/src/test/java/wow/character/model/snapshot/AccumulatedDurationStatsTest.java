@@ -77,8 +77,8 @@ class AccumulatedDurationStatsTest extends WowCharacterSpringTest {
 		var caster = getPlayer();
 		var spell = caster.getAbility(IMMOLATE).orElseThrow();
 		var target = caster.getTarget();
-		var effect = spell.getApplyEffectCommands().getFirst().effect();
+		var command = spell.getApplyEffectCommands().getFirst();
 
-		this.durationStats = AccumulatedDurationStats.forSpellEffect(caster, spell, target, effect);
+		this.durationStats = AccumulatedDurationStats.forSpellEffect(caster, spell, target, command);
 	}
 }

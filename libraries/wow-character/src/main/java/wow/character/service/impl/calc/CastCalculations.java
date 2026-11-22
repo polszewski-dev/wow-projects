@@ -15,12 +15,8 @@ import static wow.commons.constant.SpellConstants.MIN_GCD;
  * Date: 2026-10-25
  */
 public class CastCalculations extends Calculations {
-	public static AccumulatedCastStats newAccumulatedCastStats(Character caster, Ability ability, Character target) {
-		return AccumulatedCastStats.forSpell(caster, ability, target);
-	}
-
 	private static AccumulatedCastStats getAccumulatedCastStats(Character caster, Ability ability, Character target) {
-		var castStats = newAccumulatedCastStats(caster, ability, target);
+		var castStats = AccumulatedCastStats.forSpell(caster, ability, target);
 
 		accumulateEffects(caster, castStats);
 		return castStats;

@@ -63,7 +63,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 			"MaxMana%",
 	})
 	void newAccumulatedBaseStats(String idStr) {
-		var stats = characterCalculationService.newAccumulatedBaseStats(player);
+		var stats = AccumulatedBaseStats.forBaseStats(player);
 
 		assertAccumulatedValue(idStr, 10, 10, null, stats, this::getValue);
 	}
@@ -78,7 +78,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 	})
 	void newAccumulatedCastStats(String idStr, String conditionStr) {
 		var ability = player.getAbility(SHADOW_BOLT).orElseThrow();
-		var stats = characterCalculationService.newAccumulatedCastStats(player, ability, null);
+		var stats = AccumulatedCastStats.forSpell(player, ability, target);
 
 		player.setHealthPct(Percent.of(30));
 
@@ -91,7 +91,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 	})
 	void newAccumulatedCastStatsNotMatchingCondition(String idStr, String conditionStr) {
 		var ability = player.getAbility(SHADOW_BOLT).orElseThrow();
-		var stats = characterCalculationService.newAccumulatedCastStats(player, ability, null);
+		var stats = AccumulatedCastStats.forSpell(player, ability, target);
 
 		assertAccumulatedValue(idStr, 10, 0, conditionStr, stats, this::getValue);
 	}
@@ -115,7 +115,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 	})
 	void newAccumulatedCostStats(String idStr, String conditionStr) {
 		var ability = player.getAbility(CURSE_OF_DOOM).orElseThrow();
-		var stats = characterCalculationService.newAccumulatedCostStats(player, ability, null);
+		var stats = AccumulatedCostStats.forSpell(player, ability, target);
 
 		assertAccumulatedValue(idStr, 10, 10, conditionStr, stats, this::getValue);
 	}
@@ -133,7 +133,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 	})
 	void newAccumulatedTargetStats(String idStr, String conditionStr) {
 		var ability = player.getAbility(CURSE_OF_DOOM).orElseThrow();
-		var stats = characterCalculationService.newAccumulatedTargetStats(target, ability, SPELL_DAMAGE, SpellSchool.SHADOW);
+		var stats = AccumulatedTargetStats.forSpellTarget(target, ability, SPELL_DAMAGE);
 
 		assertAccumulatedValue(idStr, 10, 10, conditionStr, stats, this::getValue);
 	}
@@ -147,7 +147,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		var idStr = "DamageTaken%";
 		var conditionStr = "Spell & Voidwalker";
 		var ability = player.getAbility(CURSE_OF_DOOM).orElseThrow();
-		var stats = characterCalculationService.newAccumulatedTargetStats(playerTarget, ability, SPELL_DAMAGE, SpellSchool.SHADOW);
+		var stats = AccumulatedTargetStats.forSpellTarget(playerTarget, ability, SPELL_DAMAGE);
 
 		assertAccumulatedValue(idStr, 10, 10, conditionStr, stats, this::getValue);
 	}
@@ -163,7 +163,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 	})
 	void newAccumulatedHitStats(String idStr, String conditionStr) {
 		var ability = player.getAbility(CURSE_OF_DOOM).orElseThrow();
-		var stats = characterCalculationService.newAccumulatedHitStats(player, ability, target);
+		var stats = AccumulatedHitStats.forSpell(player, ability, target);
 
 		assertAccumulatedValue(idStr, 10, 10, conditionStr, stats, this::getValue);
 	}
@@ -180,7 +180,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 	void newAccumulatedDurationStats(String idStr, String conditionStr) {
 		var ability = player.getAbility(CURSE_OF_DOOM).orElseThrow();
 		var command = ability.getApplyEffectCommands().getFirst();
-		var stats = characterCalculationService.newAccumulatedDurationStats(player, ability, target, command);
+		var stats = AccumulatedDurationStats.forSpellEffect(player, ability, target, command);
 
 		assertAccumulatedValue(idStr, 10, 10, conditionStr, stats, this::getValue);
 	}
@@ -192,7 +192,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 	void newAccumulatedReceivedEffectStats(String idStr, String conditionStr) {
 		var ability = player.getAbility(CURSE_OF_DOOM).orElseThrow();
 		var command = ability.getApplyEffectCommands().getFirst();
-		var stats = characterCalculationService.newAccumulatedReceivedEffectStats(target, ability, command);
+		var stats = AccumulatedReceivedEffectStats.forSpellTarget(target, ability, command);
 
 		assertAccumulatedValue(idStr, 10, 10, conditionStr, stats, this::getValue);
 	}
@@ -232,7 +232,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 
 		var ability = player.getAbility(SHADOW_BOLT).orElseThrow();
 		var directCommand = (ChangeHealthDirectly) ability.getDirectCommands().getFirst();
-		var stats = characterCalculationService.newAccumulatedDirectComponentStats(player, ability, target, SPELL_DAMAGE, directCommand);
+		var stats = AccumulatedSpellStats.forDirectSpell(player, ability, target, SPELL_DAMAGE, directCommand);
 
 		assertAccumulatedValue(idStr, 10, 10, conditionStr, stats, this::getValue);
 	}
@@ -270,7 +270,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 
 		var ability = player.getAbility(CURSE_OF_DOOM).orElseThrow();
 		var periodicCommand = ability.getApplyEffectCommands().getFirst().effect().getPeriodicComponent().commands().getFirst();
-		var stats = characterCalculationService.newAccumulatedPeriodicComponentStats(player, ability, target, SPELL_DAMAGE, periodicCommand);
+		var stats = AccumulatedSpellStats.forPeriodicSpell(player, ability, target, SPELL_DAMAGE, periodicCommand);
 
 		assertAccumulatedValue(idStr, 10, 10, conditionStr, stats, this::getValue);
 	}

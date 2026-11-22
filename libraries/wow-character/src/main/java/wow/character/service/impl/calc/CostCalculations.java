@@ -10,12 +10,8 @@ import wow.commons.model.spell.Ability;
  * Date: 2026-10-25
  */
 public class CostCalculations extends Calculations {
-	public static AccumulatedCostStats newAccumulatedCostStats(Character caster, Ability ability, Character target) {
-		return AccumulatedCostStats.forSpell(caster, ability, target);
-	}
-
 	private static AccumulatedCostStats getAccumulatedCostStats(Character caster, Ability ability, Character target) {
-		var costStats = newAccumulatedCostStats(caster, ability, target);
+		var costStats = AccumulatedCostStats.forSpell(caster, ability, target);
 
 		accumulateEffects(caster, costStats);
 		return costStats;

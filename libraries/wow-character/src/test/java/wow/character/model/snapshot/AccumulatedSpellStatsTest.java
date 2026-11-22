@@ -9,7 +9,6 @@ import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spell.SpellId;
-import wow.commons.model.spell.SpellSchool;
 
 import java.util.List;
 
@@ -17,6 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static wow.character.model.snapshot.AttributePredicates.OWNER_OR_AURAS;
 import static wow.commons.model.attribute.AttributeId.*;
 import static wow.commons.model.attribute.PowerType.SPELL_DAMAGE;
+import static wow.commons.model.spell.component.ComponentCommand.ChangeHealthDirectly;
 import static wow.test.commons.AbilityNames.SHADOW_BOLT;
 
 /**
@@ -154,8 +154,9 @@ class AccumulatedSpellStatsTest extends WowCharacterSpringTest {
 		var caster = getPlayer();
 		var spell = caster.getAbility(SHADOW_BOLT).orElseThrow();
 		var target = caster.getTarget();
+		var command = (ChangeHealthDirectly) spell.getDirectCommands().getFirst();
 
-		this.spellStats = AccumulatedSpellStats.forDirectSpell(caster, spell, target, SPELL_DAMAGE, SpellSchool.SHADOW);
+		this.spellStats = AccumulatedSpellStats.forDirectSpell(caster, spell, target, SPELL_DAMAGE, command);
 	}
 
 	private BaseStatInfo getBaseStatInfo() {

@@ -17,7 +17,7 @@ import static wow.commons.model.attribute.PowerType.SPELL_DAMAGE;
 public class CopyCalculations extends Calculations {
 	public static double getCopiedAmountAsDamage(Character caster, Spell spell, Character target, int amount, double ratioPct) {
 		var copyIncreasePct = getCopiedAmountIncreasePct(caster, spell);
-		var targetStats = getAccumulatedTargetStats(spell, target, SPELL_DAMAGE, spell.getSchool());
+		var targetStats = getAccumulatedTargetStats(spell, target, SPELL_DAMAGE);
 		var damageTaken = targetStats.getAmountTaken();
 		var damageTakenPct = targetStats.getAmountTakenPct();
 
@@ -26,7 +26,7 @@ public class CopyCalculations extends Calculations {
 
 	public static double getCopiedAmountAsHeal(Character caster, Spell spell, Character target, int amount, double ratioPct) {
 		var copyIncreasePct = getCopiedAmountIncreasePct(caster, spell);
-		var targetStats = getAccumulatedTargetStats(spell, target, HEALING, spell.getSchool());
+		var targetStats = getAccumulatedTargetStats(spell, target, HEALING);
 		var healingTaken = targetStats.getAmountTaken();
 		var healingTakenPct = targetStats.getAmountTakenPct();
 

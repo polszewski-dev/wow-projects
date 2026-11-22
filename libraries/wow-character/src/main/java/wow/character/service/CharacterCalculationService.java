@@ -3,11 +3,9 @@ package wow.character.service;
 import wow.character.model.character.Character;
 import wow.character.model.snapshot.*;
 import wow.commons.model.AnyDuration;
-import wow.commons.model.attribute.PowerType;
 import wow.commons.model.effect.EffectAugmentations;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.Spell;
-import wow.commons.model.spell.SpellSchool;
 
 import static wow.commons.model.spell.component.ComponentCommand.*;
 
@@ -16,24 +14,6 @@ import static wow.commons.model.spell.component.ComponentCommand.*;
  * Date: 2023-04-27
  */
 public interface CharacterCalculationService {
-	AccumulatedBaseStats newAccumulatedBaseStats(Character character);
-
-	AccumulatedCastStats newAccumulatedCastStats(Character caster, Ability ability, Character target);
-
-	AccumulatedCostStats newAccumulatedCostStats(Character caster, Ability ability, Character target);
-
-	AccumulatedTargetStats newAccumulatedTargetStats(Character target, Spell spell, PowerType powerType, SpellSchool school);
-
-	AccumulatedHitStats newAccumulatedHitStats(Character caster, Spell spell, Character target);
-
-	AccumulatedDurationStats newAccumulatedDurationStats(Character caster, Spell spell, Character target, ApplyEffect command);
-
-	AccumulatedReceivedEffectStats newAccumulatedReceivedEffectStats(Character target, Spell spell, ApplyEffect command);
-
-	AccumulatedSpellStats newAccumulatedDirectComponentStats(Character caster, Spell spell, Character target, PowerType powerType, ChangeHealthDirectly command);
-
-	AccumulatedSpellStats newAccumulatedPeriodicComponentStats(Character caster, Spell spell, Character target, PowerType powerType, PeriodicCommand command);
-
 	BaseStatsSnapshot getBaseStatsSnapshot(Character character);
 
 	BaseStatsSnapshot getBaseStatsSnapshot(Character character, AccumulatedBaseStats stats);

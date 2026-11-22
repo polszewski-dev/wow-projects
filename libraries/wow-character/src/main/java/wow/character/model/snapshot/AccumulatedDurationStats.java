@@ -4,12 +4,12 @@ import lombok.Getter;
 import wow.character.model.character.Character;
 import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.attribute.Attribute;
-import wow.commons.model.effect.Effect;
 import wow.commons.model.spell.Spell;
 
 import java.util.Objects;
 
 import static wow.commons.model.spell.ActionType.SPELL;
+import static wow.commons.model.spell.component.ComponentCommand.ApplyEffect;
 
 /**
  * User: POlszewski
@@ -34,13 +34,13 @@ public class AccumulatedDurationStats extends AccumulatedPartialStats {
 		this.hastePct = stats.hastePct;
 	}
 
-	public static AccumulatedDurationStats forSpellEffect(Character caster, Spell spell, Character target, Effect effect) {
+	public static AccumulatedDurationStats forSpellEffect(Character caster, Spell spell, Character target, ApplyEffect command) {
 		Objects.requireNonNull(caster);
 		Objects.requireNonNull(spell);
 
 		var checker = new AttributeConditionChecker(caster, spell, target, SPELL, null, spell.getSchool());
 
-		checker.setAppliedEffect(effect);
+		checker.setAppliedEffect(command.effect());
 
 		return new AccumulatedDurationStats(checker);
 	}

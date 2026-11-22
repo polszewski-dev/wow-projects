@@ -75,7 +75,8 @@ class AccumulatedCastStatsTest extends WowCharacterSpringTest {
 	void setUp() {
 		var caster = getPlayer();
 		var spell = caster.getAbility(SHADOW_BOLT).orElseThrow();
+		var target = caster.getTarget();
 
-		this.castStats = AccumulatedCastStats.forSpell(caster, spell, null);
+		this.castStats = AccumulatedCastStats.forSpell(caster, spell, target);
 	}
 }

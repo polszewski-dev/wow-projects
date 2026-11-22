@@ -133,7 +133,8 @@ class AccumulatedCostStatsTest extends WowCharacterSpringTest {
 	void setUp() {
 		var caster = getPlayer();
 		var spell = caster.getAbility(SHADOW_BOLT).orElseThrow();
+		var target = caster.getTarget();
 
-		this.costStats = AccumulatedCostStats.forSpell(caster, spell, null);
+		this.costStats = AccumulatedCostStats.forSpell(caster, spell, target);
 	}
 }
