@@ -20,7 +20,7 @@ import static wow.commons.model.spell.component.ComponentCommand.PeriodicCommand
  * Date: 2022-12-16
  */
 @Getter
-public class AccumulatedSpellStats extends AccumulatedPartialStats {
+public class AccumulatedSpellStats extends AccumulatedPartialCasterStats {
 	private double amount;
 	private double amountPct;
 	private double effectPct;
@@ -35,9 +35,9 @@ public class AccumulatedSpellStats extends AccumulatedPartialStats {
 
 	private final AccumulatedBaseStats accumulatedBaseStats;
 
-	private AccumulatedSpellStats(AttributeConditionChecker checker) {
-		super(checker);
-		this.accumulatedBaseStats = new AccumulatedBaseStats(checker);
+	private AccumulatedSpellStats(Character caster, Spell spell, Character target, AttributeConditionChecker checker) {
+		super(caster, spell, target, checker);
+		this.accumulatedBaseStats = new AccumulatedBaseStats(caster, checker);
 		accumulateBaseCrit();
 	}
 
@@ -62,7 +62,7 @@ public class AccumulatedSpellStats extends AccumulatedPartialStats {
 
 		var checker = new AttributeConditionChecker(caster, null, null, SPELL, null, null);
 
-		return new AccumulatedSpellStats(checker);
+		return new AccumulatedSpellStats(caster, null, null, checker);
 	}
 
 	public static AccumulatedSpellStats forAnySpell(Character caster, PowerType powerType, SpellSchool spellSchool) {
@@ -70,7 +70,7 @@ public class AccumulatedSpellStats extends AccumulatedPartialStats {
 
 		var checker = new AttributeConditionChecker(caster, null, null, SPELL, powerType, spellSchool);
 
-		return new AccumulatedSpellStats(checker);
+		return new AccumulatedSpellStats(caster, null, null, checker);
 	}
 
 	public static AccumulatedSpellStats forDirectSpell(Character caster, Spell spell, Character target, PowerType powerType, ChangeHealthDirectly command) {
@@ -81,7 +81,7 @@ public class AccumulatedSpellStats extends AccumulatedPartialStats {
 
 		checker.setDirect(true);
 
-		return new AccumulatedSpellStats(checker);
+		return new AccumulatedSpellStats(caster, spell, target, checker);
 	}
 
 	public static AccumulatedSpellStats forPeriodicSpell(Character caster, Spell spell, Character target, PowerType powerType, PeriodicCommand command) {
@@ -92,17 +92,17 @@ public class AccumulatedSpellStats extends AccumulatedPartialStats {
 
 		checker.setPeriodic(true);
 
-		return new AccumulatedSpellStats(checker);
+		return new AccumulatedSpellStats(caster, spell, target, checker);
 	}
 
-	public static AccumulatedSpellStats forMaster(Character master, AccumulatedPartialStats stats) {
+	public static AccumulatedSpellStats forMaster(Character master, AccumulatedSpellStats stats) {
 		var checker = stats.getChecker().withCaster(master);
 
-		return new AccumulatedSpellStats(checker);
+		return new AccumulatedSpellStats(master, stats.spell, stats.target, checker);
 	}
 
 	private void accumulateBaseCrit() {
-		var baseStatInfo = checker.getCaster().getBaseStatInfo();
+		var baseStatInfo = caster.getBaseStatInfo();
 
 		critPct += baseStatInfo.getBaseSpellCritPct().value();
 	}

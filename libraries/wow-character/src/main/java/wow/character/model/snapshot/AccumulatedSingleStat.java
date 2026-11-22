@@ -15,13 +15,13 @@ import static wow.commons.model.spell.ActionType.SPELL;
  * User: POlszewski
  * Date: 2026-11-21
  */
-public class AccumulatedSingleStat extends AccumulatedPartialStats {
+public class AccumulatedSingleStat extends AccumulatedPartialCasterStats {
 	private final AttributeId attributeId;
 	@Getter
 	private double totalValue;
 
-	public AccumulatedSingleStat(AttributeId attributeId, AttributeConditionChecker checker) {
-		super(checker);
+	public AccumulatedSingleStat(AttributeId attributeId, Character caster, Spell spell, Character target, AttributeConditionChecker checker) {
+		super(caster, spell, target, checker);
 		this.attributeId = attributeId;
 	}
 
@@ -31,7 +31,7 @@ public class AccumulatedSingleStat extends AccumulatedPartialStats {
 
 		var checker = new AttributeConditionChecker(caster, spell, target, SPELL, null, spell.getSchool());
 
-		return new AccumulatedSingleStat(attributeId, checker);
+		return new AccumulatedSingleStat(attributeId, caster, spell, target, checker);
 	}
 
 	@Override

@@ -10,12 +10,6 @@ import java.util.function.Predicate;
  * Date: 2023-10-16
  */
 public abstract class AccumulatedStats {
-	protected final AttributeScalingParams scalingParams;
-
-	protected AccumulatedStats(AttributeScalingParams scalingParams) {
-		this.scalingParams = scalingParams;
-	}
-
 	public void accumulateAttributes(List<Attribute> attributes, double scaleFactor, Predicate<Attribute> targetPredicate) {
 		for (var attribute : attributes) {
 			if (targetPredicate.test(attribute)) {

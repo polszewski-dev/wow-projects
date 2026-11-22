@@ -3,6 +3,7 @@ package wow.character.model.snapshot;
 import lombok.Getter;
 import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.attribute.Attribute;
+import wow.commons.model.attribute.AttributeScalingParams;
 import wow.commons.model.effect.component.StatConversion;
 import wow.commons.model.effect.component.StatConversionType;
 
@@ -14,14 +15,13 @@ import static wow.commons.model.attribute.PowerType.HEALING;
  * User: POlszewski
  * Date: 2023-11-16
  */
-public abstract class AccumulatedPartialStats extends AccumulatedStats {
+public abstract class AccumulatedPartialStats extends AccumulatedStats implements AttributeScalingParams {
 	@Getter
 	protected final AttributeConditionChecker checker;
 	protected final boolean isDamage;
 	protected final boolean isHealing;
 
 	protected AccumulatedPartialStats(AttributeConditionChecker checker) {
-		super(checker);
 		this.checker = checker;
 		this.isDamage = checker.getPowerType() != null && checker.getPowerType() != HEALING;
 		this.isHealing = checker.getPowerType() == HEALING;
@@ -63,6 +63,6 @@ public abstract class AccumulatedPartialStats extends AccumulatedStats {
 			return 0;
 		}
 
-		return scaleFactor * attribute.getScaledValue(scalingParams);
+		return scaleFactor * attribute.getScaledValue(this);
 	}
 }

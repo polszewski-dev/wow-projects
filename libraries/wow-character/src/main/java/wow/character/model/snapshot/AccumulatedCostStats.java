@@ -17,7 +17,7 @@ import static wow.commons.model.spell.ActionType.SPELL;
  * Date: 2023-10-20
  */
 @Getter
-public class AccumulatedCostStats extends AccumulatedPartialStats {
+public class AccumulatedCostStats extends AccumulatedPartialCasterStats {
 	private double manaCost;
 	private double manaCostPct;
 	private double energyCost;
@@ -33,9 +33,9 @@ public class AccumulatedCostStats extends AccumulatedPartialStats {
 
 	private final AccumulatedBaseStats accumulatedBaseStats;
 
-	private AccumulatedCostStats(AttributeConditionChecker checker) {
-		super(checker);
-		this.accumulatedBaseStats = new AccumulatedBaseStats(checker);
+	private AccumulatedCostStats(Character caster, Spell spell, Character target, AttributeConditionChecker checker) {
+		super(caster, spell, target, checker);
+		this.accumulatedBaseStats = new AccumulatedBaseStats(caster, checker);
 	}
 
 	private AccumulatedCostStats(AccumulatedCostStats stats) {
@@ -61,7 +61,7 @@ public class AccumulatedCostStats extends AccumulatedPartialStats {
 
 		var checker = new AttributeConditionChecker(caster, spell, target, SPELL, null, spell.getSchool());
 
-		return new AccumulatedCostStats(checker);
+		return new AccumulatedCostStats(caster, spell, target, checker);
 	}
 
 	@Override

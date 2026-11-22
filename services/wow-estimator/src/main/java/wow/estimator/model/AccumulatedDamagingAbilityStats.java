@@ -6,7 +6,6 @@ import wow.character.model.snapshot.*;
 import wow.character.util.StatConversionConditionChecker;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeId;
-import wow.commons.model.attribute.AttributeScalingParams;
 import wow.commons.model.effect.component.StatConversion;
 import wow.commons.model.spell.Ability;
 
@@ -35,12 +34,9 @@ public class AccumulatedDamagingAbilityStats extends AccumulatedStats {
 	private AccumulatedDurationStats effectDuration;
 	private AccumulatedReceivedEffectStats receivedEffectStats;
 
-	public AccumulatedDamagingAbilityStats(AttributeScalingParams scalingParams) {
-		super(scalingParams);
-	}
+	public AccumulatedDamagingAbilityStats() {}
 
 	private AccumulatedDamagingAbilityStats(AccumulatedDamagingAbilityStats stats) {
-		this(stats.scalingParams);
 		this.ability = stats.ability;
 		this.directCommand = stats.directCommand;
 		this.periodicCommand = stats.periodicCommand;

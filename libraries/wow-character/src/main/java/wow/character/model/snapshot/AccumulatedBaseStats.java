@@ -13,7 +13,7 @@ import java.util.Objects;
  * Date: 2022-12-16
  */
 @Getter
-public class AccumulatedBaseStats extends AccumulatedPartialStats {
+public class AccumulatedBaseStats extends AccumulatedPartialOwnerStats {
 	private double baseStrength;
 	private double baseAgility;
 	private double baseStamina;
@@ -35,8 +35,8 @@ public class AccumulatedBaseStats extends AccumulatedPartialStats {
 	private double maxMana;
 	private double maxManaPct;
 
-	protected AccumulatedBaseStats(AttributeConditionChecker checker) {
-		super(checker);
+	protected AccumulatedBaseStats(Character owner, AttributeConditionChecker checker) {
+		super(owner, checker);
 		accumulateBaseStatInfo();
 	}
 
@@ -45,7 +45,7 @@ public class AccumulatedBaseStats extends AccumulatedPartialStats {
 
 		var checker = new AttributeConditionChecker(owner, null, null, null, null, null);
 
-		return new AccumulatedBaseStats(checker);
+		return new AccumulatedBaseStats(owner, checker);
 	}
 
 	protected AccumulatedBaseStats(AccumulatedBaseStats stats) {
@@ -73,7 +73,7 @@ public class AccumulatedBaseStats extends AccumulatedPartialStats {
 	}
 
 	private void accumulateBaseStatInfo() {
-		var baseStatInfo = checker.getCaster().getBaseStatInfo();
+		var baseStatInfo = owner.getBaseStatInfo();
 
 		baseStrength += baseStatInfo.getBaseStrength();
 		baseAgility += baseStatInfo.getBaseAgility();

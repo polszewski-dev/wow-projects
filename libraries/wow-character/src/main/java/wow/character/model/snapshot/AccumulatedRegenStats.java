@@ -13,7 +13,7 @@ import java.util.Objects;
  * Date: 2025-10-12
  */
 @Getter
-public class AccumulatedRegenStats extends AccumulatedPartialStats {
+public class AccumulatedRegenStats extends AccumulatedPartialOwnerStats {
 	private double hp5;
 	private double mp5;
 	private double healingTakenPct;
@@ -24,9 +24,9 @@ public class AccumulatedRegenStats extends AccumulatedPartialStats {
 
 	private final AccumulatedBaseStats accumulatedBaseStats;
 
-	private AccumulatedRegenStats(AttributeConditionChecker checker) {
-		super(checker);
-		this.accumulatedBaseStats = new AccumulatedBaseStats(checker);
+	private AccumulatedRegenStats(Character owner, AttributeConditionChecker checker) {
+		super(owner, checker);
+		this.accumulatedBaseStats = new AccumulatedBaseStats(owner, checker);
 	}
 
 	private AccumulatedRegenStats(AccumulatedRegenStats stats) {
@@ -46,7 +46,7 @@ public class AccumulatedRegenStats extends AccumulatedPartialStats {
 
 		var checker = new AttributeConditionChecker(owner, null, null, null, null, null);
 
-		return new AccumulatedRegenStats(checker);
+		return new AccumulatedRegenStats(owner, checker);
 	}
 
 	@Override

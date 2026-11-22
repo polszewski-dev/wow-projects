@@ -16,14 +16,14 @@ import static wow.commons.model.spell.component.ComponentCommand.ApplyEffect;
  * Date: 2023-10-25
  */
 @Getter
-public class AccumulatedDurationStats extends AccumulatedPartialStats {
+public class AccumulatedDurationStats extends AccumulatedPartialCasterStats {
 	private double duration;
 	private double durationPct;
 	private double hasteRating;
 	private double hastePct;
 
-	private AccumulatedDurationStats(AttributeConditionChecker checker) {
-		super(checker);
+	private AccumulatedDurationStats(Character caster, Spell spell, Character target, AttributeConditionChecker checker) {
+		super(caster, spell, target, checker);
 	}
 
 	private AccumulatedDurationStats(AccumulatedDurationStats stats) {
@@ -42,7 +42,7 @@ public class AccumulatedDurationStats extends AccumulatedPartialStats {
 
 		checker.setAppliedEffect(command.effect());
 
-		return new AccumulatedDurationStats(checker);
+		return new AccumulatedDurationStats(caster, spell, target, checker);
 	}
 
 	public static AccumulatedDurationStats forSpellSummon(Character caster, Spell spell, Character target) {
@@ -51,7 +51,7 @@ public class AccumulatedDurationStats extends AccumulatedPartialStats {
 
 		var checker = new AttributeConditionChecker(caster, spell, target, SPELL, null, spell.getSchool());
 
-		return new AccumulatedDurationStats(checker);
+		return new AccumulatedDurationStats(caster, spell, target, checker);
 	}
 
 	@Override

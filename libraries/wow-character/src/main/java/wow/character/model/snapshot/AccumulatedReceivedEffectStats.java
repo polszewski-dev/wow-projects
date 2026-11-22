@@ -16,12 +16,12 @@ import static wow.commons.model.spell.component.ComponentCommand.ApplyEffect;
  * Date: 2023-11-04
  */
 @Getter
-public class AccumulatedReceivedEffectStats extends AccumulatedPartialStats {
+public class AccumulatedReceivedEffectStats extends AccumulatedPartialTargetStats {
 	private double receivedEffectDuration;
 	private double receivedEffectDurationPct;
 
-	private AccumulatedReceivedEffectStats(AttributeConditionChecker checker) {
-		super(checker);
+	private AccumulatedReceivedEffectStats(Character target, Spell spell, AttributeConditionChecker checker) {
+		super(target, spell, checker);
 	}
 
 	private AccumulatedReceivedEffectStats(AccumulatedReceivedEffectStats stats) {
@@ -38,7 +38,7 @@ public class AccumulatedReceivedEffectStats extends AccumulatedPartialStats {
 
 		checker.setAppliedEffect(command.effect());
 
-		return new AccumulatedReceivedEffectStats(checker);
+		return new AccumulatedReceivedEffectStats(target, spell, checker);
 	}
 
 	@Override

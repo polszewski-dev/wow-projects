@@ -15,14 +15,14 @@ import static wow.commons.model.spell.ActionType.SPELL;
  * Date: 2023-10-21
  */
 @Getter
-public class AccumulatedCastStats extends AccumulatedPartialStats {
+public class AccumulatedCastStats extends AccumulatedPartialCasterStats {
 	private double hasteRating;
 	private double hastePct;
 	private double castTime;
 	private double castTimePct;
 
-	private AccumulatedCastStats(AttributeConditionChecker checker) {
-		super(checker);
+	private AccumulatedCastStats(Character caster, Spell spell, Character target, AttributeConditionChecker checker) {
+		super(caster, spell, target, checker);
 	}
 
 	private AccumulatedCastStats(AccumulatedCastStats stats) {
@@ -39,7 +39,7 @@ public class AccumulatedCastStats extends AccumulatedPartialStats {
 
 		var checker = new AttributeConditionChecker(caster, spell, target, SPELL, null, spell.getSchool());
 
-		return new AccumulatedCastStats(checker);
+		return new AccumulatedCastStats(caster, spell, target, checker);
 	}
 
 	public static AccumulatedCastStats forAnySpell(Character caster) {
@@ -47,7 +47,7 @@ public class AccumulatedCastStats extends AccumulatedPartialStats {
 
 		var checker = new AttributeConditionChecker(caster, null, null, SPELL, null, null);
 
-		return new AccumulatedCastStats(checker);
+		return new AccumulatedCastStats(caster, null, null, checker);
 	}
 
 	@Override

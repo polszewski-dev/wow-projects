@@ -16,12 +16,12 @@ import static wow.commons.model.spell.ActionType.SPELL;
  * Date: 2023-10-25
  */
 @Getter
-public class AccumulatedHitStats extends AccumulatedPartialStats {
+public class AccumulatedHitStats extends AccumulatedPartialCasterStats {
 	private double hitRating;
 	private double hitPct;
 
-	private AccumulatedHitStats(AttributeConditionChecker checker) {
-		super(checker);
+	private AccumulatedHitStats(Character caster, Spell spell, Character target, AttributeConditionChecker checker) {
+		super(caster, spell, target, checker);
 	}
 
 	private AccumulatedHitStats(AccumulatedHitStats stats) {
@@ -36,7 +36,7 @@ public class AccumulatedHitStats extends AccumulatedPartialStats {
 
 		var checker = new AttributeConditionChecker(caster, spell, target, SPELL, null, spell.getSchool());
 
-		return new AccumulatedHitStats(checker);
+		return new AccumulatedHitStats(caster, spell, target, checker);
 	}
 
 	public static AccumulatedHitStats forAnySpell(Character caster) {
@@ -44,13 +44,13 @@ public class AccumulatedHitStats extends AccumulatedPartialStats {
 
 		var checker = new AttributeConditionChecker(caster, null, null, SPELL, null, null);
 
-		return new AccumulatedHitStats(checker);
+		return new AccumulatedHitStats(caster, null, null, checker);
 	}
 
-	public static AccumulatedHitStats forMaster(Character master, AccumulatedPartialStats stats) {
+	public static AccumulatedHitStats forMaster(Character master, AccumulatedHitStats stats) {
 		var checker = stats.getChecker().withCaster(master);
 
-		return new AccumulatedHitStats(checker);
+		return new AccumulatedHitStats(master, stats.spell, stats.target, checker);
 	}
 
 	@Override

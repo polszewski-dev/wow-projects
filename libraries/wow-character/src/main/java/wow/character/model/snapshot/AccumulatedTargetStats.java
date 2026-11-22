@@ -19,14 +19,14 @@ import static wow.commons.model.spell.component.ComponentCommand.PeriodicCommand
  * Date: 2023-11-04
  */
 @Getter
-public class AccumulatedTargetStats extends AccumulatedPartialStats {
+public class AccumulatedTargetStats extends AccumulatedPartialTargetStats {
 	private double amountTaken;
 	private double amountTakenPct;
 	private double powerTaken;
 	private double critTakenPct;
 
-	private AccumulatedTargetStats(AttributeConditionChecker checker) {
-		super(checker);
+	private AccumulatedTargetStats(Character target, Spell spell, AttributeConditionChecker checker) {
+		super(target, spell, checker);
 	}
 
 	private AccumulatedTargetStats(AccumulatedTargetStats stats) {
@@ -55,11 +55,11 @@ public class AccumulatedTargetStats extends AccumulatedPartialStats {
 
 		var checker = new AttributeConditionChecker(target, spell, null, SPELL, powerType, spellSchool);
 
-		return new AccumulatedTargetStats(checker);
+		return new AccumulatedTargetStats(target, spell, checker);
 	}
 
 	public static AccumulatedTargetStats emptyStats() {
-		return new AccumulatedTargetStats(new AttributeConditionChecker(null, null, null, null, null, null));
+		return new AccumulatedTargetStats(null, null, new AttributeConditionChecker(null, null, null, null, null, null));
 	}
 
 	@Override

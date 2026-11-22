@@ -192,7 +192,7 @@ public abstract class Calculations {
 				return;
 			}
 
-			this.mastersSpellStats = AccumulatedSpellStats.forMaster(master, stats);
+			this.mastersSpellStats = AccumulatedSpellStats.forMaster(master, (AccumulatedSpellStats) stats);
 
 			var masterConversionSolver = accumulateEffectsWithoutConversions(master, mastersSpellStats);
 
@@ -221,7 +221,7 @@ public abstract class Calculations {
 		}
 
 		private AccumulatedHitStats calcMasterHitStats() {
-			var masterHitStats = AccumulatedHitStats.forMaster(master, stats);
+			var masterHitStats = AccumulatedHitStats.forMaster(master, (AccumulatedHitStats) stats);
 
 			accumulateEffects(master, masterHitStats, false);
 			return masterHitStats;
