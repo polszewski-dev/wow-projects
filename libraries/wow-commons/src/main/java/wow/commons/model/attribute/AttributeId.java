@@ -187,59 +187,28 @@ public enum AttributeId {
 				BASE_STATS, BASE_STATS_PCT,
 				STATS, STATS_PCT,
 				MAX_HEALTH, MAX_HEALTH_PCT,
-				MAX_MANA, MAX_MANA_PCT
+				MAX_MANA, MAX_MANA_PCT,
+				HP5, MP5,
+				HEALING_TAKEN,
+				HEALTH_REGEN_PCT, MANA_REGEN_PCT,
+				IN_COMBAT_HEALTH_REGEN_PCT, IN_COMBAT_MANA_REGEN_PCT
 
 				->
 
-				condition instanceof BaseStatsCondition;
+				condition instanceof OwnerCondition;
 
 			case
 
-				CAST_TIME, CAST_TIME_PCT
-
-				->
-
-				condition instanceof CastCondition;
-
-			case
-
-				HASTE_RATING, HASTE_PCT
-
-				->
-
-				condition instanceof CastCondition || condition instanceof DurationCondition;
-
-			case
-
+				CAST_TIME, CAST_TIME_PCT,
+				HASTE_RATING, HASTE_PCT,
 				MANA_COST, MANA_COST_PCT,
 				ENERGY_COST, ENERGY_COST_PCT,
 				RAGE_COST, RAGE_COST_PCT,
 				HEALTH_COST, HEALTH_COST_PCT,
 				COST_REDUCTION_CT,
-				COOLDOWN, COOLDOWN_PCT
-
-				->
-
-				condition instanceof CostCondition;
-
-			case
-
-				HIT_RATING, HIT_PCT
-
-				->
-
-				condition instanceof HitCondition;
-
-			case
-
-				POWER
-
-				->
-
-				condition instanceof CostCondition || condition instanceof SpellCondition;
-
-			case
-
+				COOLDOWN, COOLDOWN_PCT,
+				HIT_RATING, HIT_PCT,
+				POWER,
 				DAMAGE, DAMAGE_PCT,
 				HEALING, HEALING_PCT,
 				EFFECT_PCT,
@@ -249,11 +218,13 @@ public enum AttributeId {
 				CRIT_EFFECT_PCT,
 				CRIT_EFFECT_MULTIPLIER_PCT,
 				CRIT_COEFF_PCT,
-				CHAIN_MULTIPLIER
+				CHAIN_MULTIPLIER,
+				DURATION, DURATION_PCT,
+				COPY_PCT
 
 				->
 
-				condition instanceof SpellCondition;
+				condition instanceof CasterCondition;
 
 			case
 
@@ -261,28 +232,12 @@ public enum AttributeId {
 
 				->
 
-				condition instanceof SpellCondition || condition instanceof MeleeCondition;
+				condition instanceof CasterCondition || condition instanceof MiscCondition;
 
 			case
 
-				DURATION, DURATION_PCT
-
-				->
-
-				condition instanceof DurationCondition;
-
-			case
-
-				RECEIVED_EFFECT_DURATION, RECEIVED_EFFECT_DURATION_PCT
-
-				->
-
-				condition instanceof ReceivedEffectCondition;
-
-			case
-
-				DAMAGE_TAKEN,
-				DAMAGE_TAKEN_PCT,
+				RECEIVED_EFFECT_DURATION, RECEIVED_EFFECT_DURATION_PCT,
+				DAMAGE_TAKEN, DAMAGE_TAKEN_PCT,
 				POWER_TAKEN,
 				HIT_TAKEN,
 				CRIT_TAKEN_PCT
@@ -291,16 +246,6 @@ public enum AttributeId {
 
 				condition instanceof TargetCondition;
 
-			case
-
-				HP5, MP5,
-				HEALING_TAKEN,
-				HEALTH_REGEN_PCT, MANA_REGEN_PCT,
-				IN_COMBAT_HEALTH_REGEN_PCT, IN_COMBAT_MANA_REGEN_PCT
-
-				->
-
-				condition instanceof RegenCondition;
 
 			case
 
@@ -308,28 +253,14 @@ public enum AttributeId {
 
 				->
 
-				condition instanceof TargetCondition || condition instanceof RegenCondition;
+				condition instanceof TargetCondition || condition instanceof OwnerCondition;
 
 			case
 
 				RESISTANCE,
 				RESISTANCE_PCT,
 				EFFECT_RESIST,
-				PENETRATION
-
-				->
-
-				condition instanceof ResistanceCondition;
-
-			case
-
-				COPY_PCT
-
-				->
-
-				condition instanceof CopyCondition;
-
-			case
+				PENETRATION,
 
 				EXPERTISE_RATING,
 				WEAPON_SKILL,
@@ -347,13 +278,7 @@ public enum AttributeId {
 				SHIELD_BLOCK_RATING,
 				SHIELD_BLOCK_PCT,
 				PARRY_PCT,
-				PARRY_RATING
-
-				->
-
-				condition instanceof MeleeCondition;
-
-			case
+				PARRY_RATING,
 
 				ABSORPTION,
 				ABSORPTION_PCT,

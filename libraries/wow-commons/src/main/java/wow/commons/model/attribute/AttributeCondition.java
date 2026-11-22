@@ -93,7 +93,7 @@ public sealed interface AttributeCondition extends Condition {
 		return new Comma(List.copyOf(conditions));
 	}
 
-	record EmptyCondition() implements BaseStatsCondition, CastCondition, CostCondition, HitCondition, SpellCondition, DurationCondition, ReceivedEffectCondition, TargetCondition, RegenCondition, ResistanceCondition, CopyCondition, MeleeCondition, MiscCondition {
+	record EmptyCondition() implements OwnerCondition, CasterCondition, TargetCondition, MiscCondition {
 		@Override
 		public boolean isEmpty() {
 			return true;
@@ -136,93 +136,75 @@ public sealed interface AttributeCondition extends Condition {
 		}
 	}
 
-	sealed interface BaseStatsCondition extends AttributeCondition {}
+	sealed interface OwnerCondition extends AttributeCondition {}
 
-	sealed interface CastCondition extends AttributeCondition {}
-
-	sealed interface CostCondition extends AttributeCondition {}
-
-	sealed interface HitCondition extends AttributeCondition {}
-
-	sealed interface SpellCondition extends AttributeCondition {}
-
-	sealed interface DurationCondition extends AttributeCondition {}
-
-	sealed interface ReceivedEffectCondition extends AttributeCondition {}
+	sealed interface CasterCondition extends AttributeCondition {}
 
 	sealed interface TargetCondition extends AttributeCondition {}
 
-	sealed interface RegenCondition extends AttributeCondition {}
-
-	sealed interface ResistanceCondition extends AttributeCondition {}
-
-	sealed interface CopyCondition extends AttributeCondition {}
-
-	sealed interface MeleeCondition extends AttributeCondition {}
-
 	sealed interface MiscCondition extends AttributeCondition {}
 
-	record ActionTypeCondition(ActionType actionType) implements CastCondition, HitCondition, SpellCondition, TargetCondition, ResistanceCondition, MiscCondition {
+	record ActionTypeCondition(ActionType actionType) implements CasterCondition, TargetCondition, MiscCondition {
 		public ActionTypeCondition {
 			Objects.requireNonNull(actionType);
 		}
 	}
 
-	record PowerTypeCondition(PowerType powerType) implements CostCondition, HitCondition, SpellCondition, TargetCondition, MiscCondition {
+	record PowerTypeCondition(PowerType powerType) implements CasterCondition, TargetCondition, MiscCondition {
 		public PowerTypeCondition {
 			Objects.requireNonNull(powerType);
 		}
 	}
 
-	record TalentTreeCondition(TalentTree talentTree) implements CostCondition, HitCondition, SpellCondition, MiscCondition {
+	record TalentTreeCondition(TalentTree talentTree) implements CasterCondition, MiscCondition {
 		public TalentTreeCondition {
 			Objects.requireNonNull(talentTree);
 		}
 	}
 
-	record SpellSchoolCondition(SpellSchool spellSchool) implements CostCondition, CastCondition, HitCondition, SpellCondition, TargetCondition, ResistanceCondition, MiscCondition {
+	record SpellSchoolCondition(SpellSchool spellSchool) implements CasterCondition, TargetCondition, MiscCondition {
 		public SpellSchoolCondition {
 			Objects.requireNonNull(spellSchool);
 		}
 	}
 
-	record AbilityIdCondition(AbilityId abilityId) implements CastCondition, CostCondition, HitCondition, SpellCondition, DurationCondition, CopyCondition, ResistanceCondition, MiscCondition {
+	record AbilityIdCondition(AbilityId abilityId) implements CasterCondition, MiscCondition {
 		public AbilityIdCondition {
 			Objects.requireNonNull(abilityId);
 		}
 	}
 
-	record EffectNameCondition(String effectName) implements DurationCondition, ReceivedEffectCondition {
+	record EffectNameCondition(String effectName) implements CasterCondition, TargetCondition {
 		public EffectNameCondition {
 			Objects.requireNonNull(effectName);
 		}
 	}
 
-	record AbilityCategoryCondition(AbilityCategory abilityCategory) implements CostCondition, HitCondition, SpellCondition, DurationCondition, ResistanceCondition, MiscCondition {
+	record AbilityCategoryCondition(AbilityCategory abilityCategory) implements CasterCondition, MiscCondition {
 		public AbilityCategoryCondition {
 			Objects.requireNonNull(abilityCategory);
 		}
 	}
 
-	record PetTypeCondition(PetType petType) implements SpellCondition, TargetCondition, ResistanceCondition, MiscCondition {
+	record PetTypeCondition(PetType petType) implements CasterCondition, TargetCondition, MiscCondition {
 		public PetTypeCondition {
 			Objects.requireNonNull(petType);
 		}
 	}
 
-	record TargetTypeCondition(CreatureType creatureType) implements SpellCondition {
+	record TargetTypeCondition(CreatureType creatureType) implements CasterCondition {
 		public TargetTypeCondition {
 			Objects.requireNonNull(creatureType);
 		}
 	}
 
-	record EffectCategoryCondition(EffectCategory effectCategory) implements DurationCondition, ReceivedEffectCondition, ResistanceCondition {
+	record EffectCategoryCondition(EffectCategory effectCategory) implements CasterCondition, TargetCondition, MiscCondition {
 		public EffectCategoryCondition {
 			Objects.requireNonNull(effectCategory);
 		}
 	}
 
-	record WeaponTypeCondition(WeaponSubType weaponType) implements MeleeCondition {
+	record WeaponTypeCondition(WeaponSubType weaponType) implements CasterCondition, MiscCondition {
 		public WeaponTypeCondition {
 			Objects.requireNonNull(weaponType);
 		}
@@ -240,27 +222,27 @@ public sealed interface AttributeCondition extends Condition {
 		}
 	}
 
-	record IsDirect() implements SpellCondition {}
+	record IsDirect() implements CasterCondition {}
 
-	record IsPeriodic() implements SpellCondition {}
+	record IsPeriodic() implements CasterCondition {}
 
-	record HasHealingComponent() implements CostCondition {}
+	record HasHealingComponent() implements CasterCondition {}
 
-	record IsInstantCast() implements CostCondition {}
+	record IsInstantCast() implements CasterCondition {}
 
-	record HasCastTime() implements CastCondition {}
+	record HasCastTime() implements CasterCondition {}
 
-	record HasCastTimeUnder10Sec() implements CastCondition {}
+	record HasCastTimeUnder10Sec() implements CasterCondition {}
 
 	record HadCrit() implements MiscCondition {}
 
-	record HasPet() implements SpellCondition {}
+	record HasPet() implements CasterCondition {}
 
-	record OwnerHasEffect(String effectName) implements SpellCondition {
+	record OwnerHasEffect(String effectName) implements CasterCondition {
 		public OwnerHasEffect {
 			Objects.requireNonNull(effectName);
 		}
 	}
 
-	record TargetHealthPctLessThan(double value) implements SpellCondition {}
+	record TargetHealthPctLessThan(double value) implements CasterCondition {}
 }
