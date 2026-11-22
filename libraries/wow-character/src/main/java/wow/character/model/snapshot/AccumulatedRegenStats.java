@@ -4,6 +4,7 @@ import lombok.Getter;
 import wow.character.model.character.Character;
 import wow.character.util.AttributeConditionChecker;
 import wow.commons.model.attribute.Attribute;
+import wow.commons.model.effect.component.StatConversionType;
 
 import java.util.Objects;
 
@@ -12,7 +13,7 @@ import java.util.Objects;
  * Date: 2025-10-12
  */
 @Getter
-public class AccumulatedRegenStats extends AccumulatedBaseStats {
+public class AccumulatedRegenStats extends AccumulatedPartialStats {
 	private double hp5;
 	private double mp5;
 	private double healingTakenPct;
@@ -21,8 +22,11 @@ public class AccumulatedRegenStats extends AccumulatedBaseStats {
 	private double inCombatHealthRegenPct;
 	private double inCombatManaRegenPct;
 
+	private final AccumulatedBaseStats accumulatedBaseStats;
+
 	private AccumulatedRegenStats(AttributeConditionChecker checker) {
 		super(checker);
+		this.accumulatedBaseStats = new AccumulatedBaseStats(checker);
 	}
 
 	private AccumulatedRegenStats(AccumulatedRegenStats stats) {
@@ -34,6 +38,7 @@ public class AccumulatedRegenStats extends AccumulatedBaseStats {
 		this.manaRegenPct = stats.manaRegenPct;
 		this.inCombatHealthRegenPct = stats.inCombatHealthRegenPct;
 		this.inCombatManaRegenPct = stats.inCombatManaRegenPct;
+		this.accumulatedBaseStats = stats.accumulatedBaseStats.copy();
 	}
 
 	public static AccumulatedRegenStats forRegen(Character owner) {
@@ -69,12 +74,16 @@ public class AccumulatedRegenStats extends AccumulatedBaseStats {
 				this.inCombatManaRegenPct += getValue(attribute, scaleFactor);
 				break;
 			default:
-				super.accumulateAttribute(attribute, scaleFactor);
+				accumulatedBaseStats.accumulateAttribute(attribute, scaleFactor);
 		}
 	}
 
-	@Override
 	public AccumulatedRegenStats copy() {
 		return new AccumulatedRegenStats(this);
+	}
+
+	@Override
+	protected double getValueFrom(StatConversionType type) {
+		return accumulatedBaseStats.getValueFrom(type);
 	}
 }

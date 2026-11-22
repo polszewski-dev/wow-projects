@@ -17,7 +17,7 @@ import static wow.commons.model.spell.ActionType.SPELL;
  * Date: 2023-10-20
  */
 @Getter
-public class AccumulatedCostStats extends AccumulatedBaseStats {
+public class AccumulatedCostStats extends AccumulatedPartialStats {
 	private double manaCost;
 	private double manaCostPct;
 	private double energyCost;
@@ -31,8 +31,11 @@ public class AccumulatedCostStats extends AccumulatedBaseStats {
 	private double cooldown;
 	private double cooldownPct;
 
+	private final AccumulatedBaseStats accumulatedBaseStats;
+
 	private AccumulatedCostStats(AttributeConditionChecker checker) {
 		super(checker);
+		this.accumulatedBaseStats = new AccumulatedBaseStats(checker);
 	}
 
 	private AccumulatedCostStats(AccumulatedCostStats stats) {
@@ -49,6 +52,7 @@ public class AccumulatedCostStats extends AccumulatedBaseStats {
 		this.power = stats.power;
 		this.cooldown = stats.cooldown;
 		this.cooldownPct = stats.cooldownPct;
+		this.accumulatedBaseStats = stats.accumulatedBaseStats.copy();
 	}
 
 	public static AccumulatedCostStats forSpell(Character caster, Spell spell, Character target) {
@@ -100,7 +104,7 @@ public class AccumulatedCostStats extends AccumulatedBaseStats {
 				this.cooldownPct += getValue(attribute, scaleFactor);
 				break;
 			default:
-				super.accumulateAttribute(attribute, scaleFactor);
+				accumulatedBaseStats.accumulateAttribute(attribute, scaleFactor);
 		}
 	}
 
@@ -124,7 +128,6 @@ public class AccumulatedCostStats extends AccumulatedBaseStats {
 		};
 	}
 
-	@Override
 	public AccumulatedCostStats copy() {
 		return new AccumulatedCostStats(this);
 	}
@@ -140,7 +143,7 @@ public class AccumulatedCostStats extends AccumulatedBaseStats {
 
 			default
 
-					-> super.getValueFrom(type);
+					-> accumulatedBaseStats.getValueFrom(type);
 		};
 	}
 }

@@ -202,7 +202,7 @@ public abstract class Calculations {
 			}
 		}
 
-		private StatConversionSolver accumulateEffectsWithoutConversions(Character character, AccumulatedBaseStats baseStats) {
+		private StatConversionSolver accumulateEffectsWithoutConversions(Character character, AccumulatedPartialStats baseStats) {
 			var collector = accumulateEffects(character, baseStats, false);
 
 			return collector.newStatsConversionSolver();

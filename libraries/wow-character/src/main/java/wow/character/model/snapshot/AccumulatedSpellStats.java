@@ -20,7 +20,7 @@ import static wow.commons.model.spell.component.ComponentCommand.PeriodicCommand
  * Date: 2022-12-16
  */
 @Getter
-public class AccumulatedSpellStats extends AccumulatedBaseStats {
+public class AccumulatedSpellStats extends AccumulatedPartialStats {
 	private double amount;
 	private double amountPct;
 	private double effectPct;
@@ -33,8 +33,11 @@ public class AccumulatedSpellStats extends AccumulatedBaseStats {
 	private double critEffectMultiplierPct;
 	private double critCoeffPct;
 
+	private final AccumulatedBaseStats accumulatedBaseStats;
+
 	private AccumulatedSpellStats(AttributeConditionChecker checker) {
 		super(checker);
+		this.accumulatedBaseStats = new AccumulatedBaseStats(checker);
 		accumulateBaseCrit();
 	}
 
@@ -51,6 +54,7 @@ public class AccumulatedSpellStats extends AccumulatedBaseStats {
 		this.critEffectPct = stats.critEffectPct;
 		this.critEffectMultiplierPct = stats.critEffectMultiplierPct;
 		this.critCoeffPct = stats.critCoeffPct;
+		this.accumulatedBaseStats = stats.accumulatedBaseStats.copy();
 	}
 
 	public static AccumulatedSpellStats forAnySpell(Character caster) {
@@ -154,11 +158,10 @@ public class AccumulatedSpellStats extends AccumulatedBaseStats {
 				this.critCoeffPct += getValue(attribute, scaleFactor);
 				break;
 			default:
-				super.accumulateAttribute(attribute, scaleFactor);
+				accumulatedBaseStats.accumulateAttribute(attribute, scaleFactor);
 		}
 	}
 
-	@Override
 	public AccumulatedSpellStats copy() {
 		return new AccumulatedSpellStats(this);
 	}
@@ -174,7 +177,11 @@ public class AccumulatedSpellStats extends AccumulatedBaseStats {
 
 			default
 
-					-> super.getValueFrom(type);
+					-> accumulatedBaseStats.getValueFrom(type);
 		};
+	}
+
+	public double getTotalIntellect() {
+		return accumulatedBaseStats.getTotalIntellect();
 	}
 }
