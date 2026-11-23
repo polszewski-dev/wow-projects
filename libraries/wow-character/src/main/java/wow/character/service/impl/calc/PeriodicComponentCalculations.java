@@ -1,7 +1,7 @@
 package wow.character.service.impl.calc;
 
 import wow.character.model.character.Character;
-import wow.character.model.snapshot.AccumulatedSpellStats;
+import wow.character.model.snapshot.AccumulatedCasterStats;
 import wow.character.model.snapshot.AccumulatedTargetStats;
 import wow.character.model.snapshot.PeriodicSpellComponentSnapshot;
 import wow.commons.model.attribute.PowerType;
@@ -16,8 +16,8 @@ import static wow.commons.model.spell.component.ComponentCommand.*;
  * Date: 2026-10-25
  */
 public class PeriodicComponentCalculations extends ComponentCalculations {
-	private static AccumulatedSpellStats getAccumulatedPeriodicComponentStats(Character caster, Spell spell, Character target, PowerType powerType, PeriodicCommand command) {
-		var spellStats = AccumulatedSpellStats.forPeriodicSpell(caster, spell, target, powerType, command);
+	private static AccumulatedCasterStats getAccumulatedPeriodicComponentStats(Character caster, Spell spell, Character target, PowerType powerType, PeriodicCommand command) {
+		var spellStats = AccumulatedCasterStats.forPeriodicSpellResolution(caster, spell, target, powerType, command);
 
 		accumulateEffects(caster, spellStats);
 		return spellStats;
@@ -38,7 +38,7 @@ public class PeriodicComponentCalculations extends ComponentCalculations {
 		return getPeriodicComponentSnapshot(command, spellStats, targetStats);
 	}
 
-	public static PeriodicSpellComponentSnapshot getPeriodicComponentSnapshot(ChangeHealthPeriodically command, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats) {
+	public static PeriodicSpellComponentSnapshot getPeriodicComponentSnapshot(ChangeHealthPeriodically command, AccumulatedCasterStats spellStats, AccumulatedTargetStats targetStats) {
 		var snapshot = new PeriodicSpellComponentSnapshot(command);
 
 		var amount = getSpellAmount(spellStats, targetStats);

@@ -52,7 +52,7 @@ class AccumulatedReceivedEffectStatsTest extends WowCharacterSpringTest {
 		receivedEffectStats.accumulateAttributes(list, 2, OWNER_OR_AURAS);
 	}
 
-	AccumulatedReceivedEffectStats receivedEffectStats;
+	AccumulatedTargetStats receivedEffectStats;
 
 	@BeforeEach
 	void setUp() {
@@ -61,6 +61,6 @@ class AccumulatedReceivedEffectStatsTest extends WowCharacterSpringTest {
 		var target = caster.getTarget();
 		var command = spell.getApplyEffectCommands().getFirst();
 
-		this.receivedEffectStats = AccumulatedReceivedEffectStats.forSpellTarget(target, spell, command);
+		this.receivedEffectStats = AccumulatedTargetStats.forSpellEffectTarget(target, spell, command);
 	}
 }

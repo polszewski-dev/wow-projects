@@ -1,9 +1,8 @@
 package wow.character.service.impl.calc;
 
 import wow.character.model.character.Character;
-import wow.character.model.snapshot.AccumulatedDurationStats;
-import wow.character.model.snapshot.AccumulatedReceivedEffectStats;
-import wow.character.model.snapshot.AccumulatedSingleStat;
+import wow.character.model.snapshot.AccumulatedCasterStats;
+import wow.character.model.snapshot.AccumulatedTargetStats;
 import wow.character.model.snapshot.EffectDurationSnapshot;
 import wow.character.util.AbstractEffectCollector;
 import wow.commons.model.Duration;
@@ -30,19 +29,19 @@ import static wow.commons.model.spell.component.ComponentCommand.ApplyEffect;
  * Date: 2026-10-25
  */
 public class EffectCalculations extends Calculations {
-	private static AccumulatedDurationStats getAccumulatedDurationStats(Character caster, Spell spell, Character target, ApplyEffect command) {
-		var durationStats = AccumulatedDurationStats.forSpellEffect(caster, spell, target, command);
+	private static AccumulatedCasterStats getAccumulatedDurationStats(Character caster, Spell spell, Character target, ApplyEffect command) {
+		var durationStats = AccumulatedCasterStats.forSpellEffectDuration(caster, spell, target, command);
 
 		accumulateEffects(caster, durationStats);
 		return durationStats;
 	}
 
-	private static AccumulatedReceivedEffectStats getAccumulatedReceivedEffectStats(Spell spell, Character target, ApplyEffect command) {
+	private static AccumulatedTargetStats getAccumulatedPartialTargetStats(Spell spell, Character target, ApplyEffect command) {
 		if (spell instanceof Ability ability && (ability.isChanneled() || command.target().hasType(GROUND))) {
 			return null;
 		}
 
-		var receivedEffectStats = AccumulatedReceivedEffectStats.forSpellTarget(target, spell, command);
+		var receivedEffectStats = AccumulatedTargetStats.forSpellEffectTarget(target, spell, command);
 
 		accumulateEffects(target, receivedEffectStats);
 		return receivedEffectStats;
@@ -50,12 +49,12 @@ public class EffectCalculations extends Calculations {
 
 	public static EffectDurationSnapshot getEffectDurationSnapshot(Character caster, Spell spell, Character target, ApplyEffect command) {
 		var durationStats = getAccumulatedDurationStats(caster, spell, target, command);
-		var receivedEffectStats = getAccumulatedReceivedEffectStats(spell, target, command);
+		var receivedEffectStats = getAccumulatedPartialTargetStats(spell, target, command);
 
 		return getEffectDurationSnapshot(caster, spell, command, durationStats, receivedEffectStats);
 	}
 
-	public static EffectDurationSnapshot getEffectDurationSnapshot(Character caster, Spell spell, ApplyEffect command, AccumulatedDurationStats durationStats, AccumulatedReceivedEffectStats receivedEffectStats) {
+	public static EffectDurationSnapshot getEffectDurationSnapshot(Character caster, Spell spell, ApplyEffect command, AccumulatedCasterStats durationStats, AccumulatedTargetStats receivedEffectStats) {
 		if (spell instanceof Ability ability && ability.isChanneled()) {
 			return getChanneledEffectDurationSnapshot(caster, command, durationStats, receivedEffectStats);
 		}
@@ -69,7 +68,7 @@ public class EffectCalculations extends Calculations {
 		}
 	}
 
-	private static EffectDurationSnapshot getChanneledEffectDurationSnapshot(Character caster, ApplyEffect command, AccumulatedDurationStats durationStats, AccumulatedReceivedEffectStats receivedEffectStats) {
+	private static EffectDurationSnapshot getChanneledEffectDurationSnapshot(Character caster, ApplyEffect command, AccumulatedCasterStats durationStats, AccumulatedTargetStats receivedEffectStats) {
 		var effect = command.effect();
 
 		var baseDuration = (Duration) command.duration();
@@ -92,7 +91,7 @@ public class EffectCalculations extends Calculations {
 		return durationSnapshot;
 	}
 
-	private static EffectDurationSnapshot getPeriodicEffectDurationSnapshot(ApplyEffect command, AccumulatedDurationStats durationStats, AccumulatedReceivedEffectStats receivedEffectStats) {
+	private static EffectDurationSnapshot getPeriodicEffectDurationSnapshot(ApplyEffect command, AccumulatedCasterStats durationStats, AccumulatedTargetStats receivedEffectStats) {
 		var effect = command.effect();
 		var baseDuration = (Duration) command.duration();
 		var tickInterval = effect.getTickInterval();
@@ -108,7 +107,7 @@ public class EffectCalculations extends Calculations {
 		return durationSnapshot;
 	}
 
-	private static EffectDurationSnapshot getNonPeriodicEffectDurationSnapshot(ApplyEffect command, AccumulatedDurationStats durationStats, AccumulatedReceivedEffectStats receivedEffectStats) {
+	private static EffectDurationSnapshot getNonPeriodicEffectDurationSnapshot(ApplyEffect command, AccumulatedCasterStats durationStats, AccumulatedTargetStats receivedEffectStats) {
 		var baseDuration = command.duration();
 		var duration = baseDuration.isInfinite()
 				? baseDuration
@@ -123,7 +122,7 @@ public class EffectCalculations extends Calculations {
 		return durationSnapshot;
 	}
 
-	private static Duration getEffectDuration(Duration baseDuration, AccumulatedDurationStats durationStats, AccumulatedReceivedEffectStats receivedEffectStats) {
+	private static Duration getEffectDuration(Duration baseDuration, AccumulatedCasterStats durationStats, AccumulatedTargetStats receivedEffectStats) {
 		var baseDurationSeconds = baseDuration.getSeconds();
 		var duration = durationStats.getDuration();
 		var durationPct = durationStats.getDurationPct();
@@ -148,7 +147,7 @@ public class EffectCalculations extends Calculations {
 		collector.solveAll();
 
 		return new EffectAugmentations(
-				collector.accumulatedEffectIncreasePct.getTotalValue(),
+				collector.accumulatedEffectIncreasePct.getEffectPct(),
 				collector.extraModifiers,
 				collector.extraStatConversions,
 				collector.extraEvents
@@ -158,7 +157,7 @@ public class EffectCalculations extends Calculations {
 	private static class EffectAugmentationCollector extends AbstractEffectCollector.OnlyEffects {
 		final Ability ability;
 		final Character target;
-		final AccumulatedSingleStat accumulatedEffectIncreasePct;
+		final AccumulatedCasterStats accumulatedEffectIncreasePct;
 
 		List<Attribute> extraModifiers = new ArrayList<>();
 		List<StatConversion> extraStatConversions = new ArrayList<>();
@@ -168,7 +167,7 @@ public class EffectCalculations extends Calculations {
 			super(caster);
 			this.ability = ability;
 			this.target = target;
-			this.accumulatedEffectIncreasePct = AccumulatedSingleStat.forSpell(EFFECT_PCT, caster, ability, target);
+			this.accumulatedEffectIncreasePct = AccumulatedCasterStats.forSpellSingleStat(EFFECT_PCT, caster, ability, target);
 		}
 
 		@Override

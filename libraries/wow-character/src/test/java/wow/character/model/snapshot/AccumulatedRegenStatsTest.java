@@ -89,12 +89,12 @@ class AccumulatedRegenStatsTest extends WowCharacterSpringTest {
 		regenStats.accumulateAttributes(list, 2, OWNER_OR_AURAS);
 	}
 
-	AccumulatedRegenStats regenStats;
+	AccumulatedOwnerStats regenStats;
 
 	@BeforeEach
 	void setUp() {
 		var caster = getPlayer();
 
-		this.regenStats = AccumulatedRegenStats.forRegen(caster);
+		this.regenStats = AccumulatedOwnerStats.forRegen(caster);
 	}
 }

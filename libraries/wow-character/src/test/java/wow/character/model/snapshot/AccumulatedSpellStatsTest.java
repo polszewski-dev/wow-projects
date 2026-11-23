@@ -147,7 +147,7 @@ class AccumulatedSpellStatsTest extends WowCharacterSpringTest {
 		spellStats.accumulateAttributes(list, 2, OWNER_OR_AURAS);
 	}
 
-	AccumulatedSpellStats spellStats;
+	AccumulatedCasterStats spellStats;
 
 	@BeforeEach
 	void setUp() {
@@ -156,10 +156,10 @@ class AccumulatedSpellStatsTest extends WowCharacterSpringTest {
 		var target = caster.getTarget();
 		var command = (ChangeHealthDirectly) spell.getDirectCommands().getFirst();
 
-		this.spellStats = AccumulatedSpellStats.forDirectSpell(caster, spell, target, SPELL_DAMAGE, command);
+		this.spellStats = AccumulatedCasterStats.forDirectSpellResolution(caster, spell, target, SPELL_DAMAGE, command);
 	}
 
 	private BaseStatInfo getBaseStatInfo() {
-		return spellStats.caster.getBaseStatInfo();
+		return spellStats.getCaster().getBaseStatInfo();
 	}
 }

@@ -3,16 +3,23 @@ package wow.character.model.snapshot;
 import lombok.Getter;
 import wow.character.model.character.Character;
 import wow.commons.model.attribute.Attribute;
+import wow.commons.model.attribute.AttributeCondition;
+import wow.commons.model.attribute.PowerType;
 import wow.commons.model.effect.component.StatConversionType;
+import wow.commons.model.spell.ActionType;
+import wow.commons.model.talent.TalentTree;
 
 import java.util.Objects;
 
+import static wow.commons.model.attribute.AttributeCondition.EmptyCondition;
+import static wow.commons.model.attribute.AttributeCondition.Operator;
+
 /**
  * User: POlszewski
- * Date: 2022-12-16
+ * Date: 2026-11-22
  */
 @Getter
-public class AccumulatedBaseStats extends AccumulatedPartialOwnerStats {
+public final class AccumulatedOwnerStats extends AccumulatedPartialStats {
 	private double baseStrength;
 	private double baseAgility;
 	private double baseStamina;
@@ -33,20 +40,35 @@ public class AccumulatedBaseStats extends AccumulatedPartialOwnerStats {
 	private double maxHealthPct;
 	private double maxMana;
 	private double maxManaPct;
+	private double hp5;
+	private double mp5;
+	private double healingTakenPct;
+	private double healthRegenPct;
+	private double manaRegenPct;
+	private double inCombatHealthRegenPct;
+	private double inCombatManaRegenPct;
 
-	protected AccumulatedBaseStats(Character owner) {
-		super(owner);
+	private final Character owner;
+
+	private AccumulatedOwnerStats(Character owner) {
+		this.owner = owner;
 		accumulateBaseStatInfo();
 	}
 
-	public static AccumulatedBaseStats forBaseStats(Character owner) {
+	public static AccumulatedOwnerStats forBaseStats(Character owner) {
 		Objects.requireNonNull(owner);
 
-		return new AccumulatedBaseStats(owner);
+		return new AccumulatedOwnerStats(owner);
 	}
 
-	protected AccumulatedBaseStats(AccumulatedBaseStats stats) {
-		super(stats);
+	public static AccumulatedOwnerStats forRegen(Character owner) {
+		Objects.requireNonNull(owner);
+
+		return new AccumulatedOwnerStats(owner);
+	}
+
+	private AccumulatedOwnerStats(AccumulatedOwnerStats stats) {
+		this(stats.owner);
 		this.baseStrength = stats.baseStrength;
 		this.baseAgility = stats.baseAgility;
 		this.baseStamina = stats.baseStamina;
@@ -67,6 +89,17 @@ public class AccumulatedBaseStats extends AccumulatedPartialOwnerStats {
 		this.maxHealthPct = stats.maxHealthPct;
 		this.maxMana = stats.maxMana;
 		this.maxManaPct = stats.maxManaPct;
+		this.hp5 = stats.hp5;
+		this.mp5 = stats.mp5;
+		this.healingTakenPct = stats.healingTakenPct;
+		this.healthRegenPct = stats.healthRegenPct;
+		this.manaRegenPct = stats.manaRegenPct;
+		this.inCombatHealthRegenPct = stats.inCombatHealthRegenPct;
+		this.inCombatManaRegenPct = stats.inCombatManaRegenPct;
+	}
+
+	public AccumulatedOwnerStats copy() {
+		return new AccumulatedOwnerStats(this);
 	}
 
 	private void accumulateBaseStatInfo() {
@@ -79,6 +112,16 @@ public class AccumulatedBaseStats extends AccumulatedPartialOwnerStats {
 		baseSpirit += baseStatInfo.getBaseSpirit();
 		maxHealth += baseStatInfo.getBaseHealth();
 		maxMana += baseStatInfo.getBaseMana();
+	}
+
+	@Override
+	public int getLevel() {
+		return owner.getLevel();
+	}
+
+	@Override
+	public int getNumberOfEffectsOnTarget(TalentTree tree) {
+		return 0;
 	}
 
 	@Override
@@ -150,13 +193,30 @@ public class AccumulatedBaseStats extends AccumulatedPartialOwnerStats {
 			case MAX_MANA_PCT:
 				this.maxManaPct += getValue(attribute, scaleFactor);
 				break;
+			case HP5:
+				this.hp5 += getValue(attribute, scaleFactor);
+				break;
+			case MP5:
+				this.mp5 += getValue(attribute, scaleFactor);
+				break;
+			case HEALING_TAKEN_PCT:
+				this.healingTakenPct += getValue(attribute, scaleFactor);
+				break;
+			case HEALTH_REGEN_PCT:
+				this.healthRegenPct += getValue(attribute, scaleFactor);
+				break;
+			case MANA_REGEN_PCT:
+				this.manaRegenPct += getValue(attribute, scaleFactor);
+				break;
+			case IN_COMBAT_HEALTH_REGEN_PCT:
+				this.inCombatHealthRegenPct += getValue(attribute, scaleFactor);
+				break;
+			case IN_COMBAT_MANA_REGEN_PCT:
+				this.inCombatManaRegenPct += getValue(attribute, scaleFactor);
+				break;
 			default:
 				// ignore the rest
 		}
-	}
-
-	public AccumulatedBaseStats copy() {
-		return new AccumulatedBaseStats(this);
 	}
 
 	public double getTotalStrength() {
@@ -170,7 +230,7 @@ public class AccumulatedBaseStats extends AccumulatedPartialOwnerStats {
 	public double getTotalStamina() {
 		return getPrimaryStat(baseStamina, baseStatsPct, stamina, staminaPct);
 	}
-	
+
 	public double getTotalIntellect() {
 		return getPrimaryStat(baseIntellect, baseStatsPct, intellect, intellectPct);
 	}
@@ -179,8 +239,22 @@ public class AccumulatedBaseStats extends AccumulatedPartialOwnerStats {
 		return getPrimaryStat(baseSpirit, baseStatsPct, spirit, spiritPct);
 	}
 
-	private double getPrimaryStat(double base, double basePct, double bonus, double bonusPct) {
+	static double getPrimaryStat(double base, double basePct, double bonus, double bonusPct) {
 		return (base * (1 + basePct / 100) + bonus) * (1 + bonusPct / 100);
+	}
+
+	@Override
+	protected boolean checkCondition(AttributeCondition condition) {
+		return switch (condition) {
+			case EmptyCondition() ->
+					true;
+
+			case Operator operator ->
+					checkConditionOperator(operator);
+
+			default ->
+					unsupported(condition);
+		};
 	}
 
 	@Override
@@ -213,5 +287,15 @@ public class AccumulatedBaseStats extends AccumulatedPartialOwnerStats {
 					-> super.getValueFrom(type);
 
 		};
+	}
+
+	@Override
+	public ActionType getActionType() {
+		return null;
+	}
+
+	@Override
+	public PowerType getPowerType() {
+		return null;
 	}
 }

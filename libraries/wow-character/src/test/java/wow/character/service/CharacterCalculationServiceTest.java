@@ -10,7 +10,10 @@ import wow.character.model.character.Character;
 import wow.character.model.character.PetCharacter;
 import wow.character.model.character.PlayerCharacter;
 import wow.character.model.character.impl.PetCharacterImpl;
-import wow.character.model.snapshot.*;
+import wow.character.model.snapshot.AccumulatedCasterStats;
+import wow.character.model.snapshot.AccumulatedOwnerStats;
+import wow.character.model.snapshot.AccumulatedStats;
+import wow.character.model.snapshot.AccumulatedTargetStats;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.attribute.Attribute;
@@ -63,7 +66,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 			"MaxMana%",
 	})
 	void newAccumulatedBaseStats(String idStr) {
-		var stats = AccumulatedBaseStats.forBaseStats(player);
+		var stats = AccumulatedOwnerStats.forBaseStats(player);
 
 		assertAccumulatedValue(idStr, 10, 10, null, stats, this::getValue);
 	}
@@ -78,7 +81,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 	})
 	void newAccumulatedCastStats(String idStr, String conditionStr) {
 		var ability = player.getAbility(SHADOW_BOLT).orElseThrow();
-		var stats = AccumulatedCastStats.forSpell(player, ability, target);
+		var stats = AccumulatedCasterStats.forSpellCast(player, ability, target);
 
 		player.setHealthPct(Percent.of(30));
 
@@ -91,7 +94,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 	})
 	void newAccumulatedCastStatsNotMatchingCondition(String idStr, String conditionStr) {
 		var ability = player.getAbility(SHADOW_BOLT).orElseThrow();
-		var stats = AccumulatedCastStats.forSpell(player, ability, target);
+		var stats = AccumulatedCasterStats.forSpellCast(player, ability, target);
 
 		assertAccumulatedValue(idStr, 10, 0, conditionStr, stats, this::getValue);
 	}
@@ -115,7 +118,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 	})
 	void newAccumulatedCostStats(String idStr, String conditionStr) {
 		var ability = player.getAbility(CURSE_OF_DOOM).orElseThrow();
-		var stats = AccumulatedCostStats.forSpell(player, ability, target);
+		var stats = AccumulatedCasterStats.forSpellCost(player, ability, target);
 
 		assertAccumulatedValue(idStr, 10, 10, conditionStr, stats, this::getValue);
 	}
@@ -163,7 +166,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 	})
 	void newAccumulatedHitStats(String idStr, String conditionStr) {
 		var ability = player.getAbility(CURSE_OF_DOOM).orElseThrow();
-		var stats = AccumulatedHitStats.forSpell(player, ability, target);
+		var stats = AccumulatedCasterStats.forSpellHit(player, ability, target);
 
 		assertAccumulatedValue(idStr, 10, 10, conditionStr, stats, this::getValue);
 	}
@@ -180,7 +183,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 	void newAccumulatedDurationStats(String idStr, String conditionStr) {
 		var ability = player.getAbility(CURSE_OF_DOOM).orElseThrow();
 		var command = ability.getApplyEffectCommands().getFirst();
-		var stats = AccumulatedDurationStats.forSpellEffect(player, ability, target, command);
+		var stats = AccumulatedCasterStats.forSpellEffectDuration(player, ability, target, command);
 
 		assertAccumulatedValue(idStr, 10, 10, conditionStr, stats, this::getValue);
 	}
@@ -192,7 +195,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 	void newAccumulatedReceivedEffectStats(String idStr, String conditionStr) {
 		var ability = player.getAbility(CURSE_OF_DOOM).orElseThrow();
 		var command = ability.getApplyEffectCommands().getFirst();
-		var stats = AccumulatedReceivedEffectStats.forSpellTarget(target, ability, command);
+		var stats = AccumulatedTargetStats.forSpellEffectTarget(target, ability, command);
 
 		assertAccumulatedValue(idStr, 10, 10, conditionStr, stats, this::getValue);
 	}
@@ -232,7 +235,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 
 		var ability = player.getAbility(SHADOW_BOLT).orElseThrow();
 		var directCommand = (ChangeHealthDirectly) ability.getDirectCommands().getFirst();
-		var stats = AccumulatedSpellStats.forDirectSpell(player, ability, target, SPELL_DAMAGE, directCommand);
+		var stats = AccumulatedCasterStats.forDirectSpellResolution(player, ability, target, SPELL_DAMAGE, directCommand);
 
 		assertAccumulatedValue(idStr, 10, 10, conditionStr, stats, this::getValue);
 	}
@@ -270,7 +273,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 
 		var ability = player.getAbility(CURSE_OF_DOOM).orElseThrow();
 		var periodicCommand = ability.getApplyEffectCommands().getFirst().effect().getPeriodicComponent().commands().getFirst();
-		var stats = AccumulatedSpellStats.forPeriodicSpell(player, ability, target, SPELL_DAMAGE, periodicCommand);
+		var stats = AccumulatedCasterStats.forPeriodicSpellResolution(player, ability, target, SPELL_DAMAGE, periodicCommand);
 
 		assertAccumulatedValue(idStr, 10, 10, conditionStr, stats, this::getValue);
 	}
@@ -528,7 +531,7 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		assertThat(snapshot.getInterruptedManaRegen()).isZero();
 	}
 
-	private double getValue(AccumulatedBaseStats stats, AttributeId id) {
+	private double getValue(AccumulatedOwnerStats stats, AttributeId id) {
 		return switch (id) {
 			case STRENGTH -> stats.getStrength();
 			case STRENGTH_PCT -> stats.getStrengthPct();
@@ -549,18 +552,12 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 		};
 	}
 
-	private double getValue(AccumulatedCastStats stats, AttributeId id) {
+	private double getValue(AccumulatedCasterStats stats, AttributeId id) {
 		return switch (id) {
 			case HASTE_RATING -> stats.getHasteRating();
 			case HASTE_PCT -> stats.getHastePct();
 			case CAST_TIME -> stats.getCastTime();
 			case CAST_TIME_PCT -> stats.getCastTimePct();
-			default -> throw new IllegalArgumentException();
-		};
-	}
-
-	private double getValue(AccumulatedCostStats stats, AttributeId id) {
-		return switch (id) {
 			case MANA_COST -> stats.getManaCost();
 			case MANA_COST_PCT -> stats.getManaCostPct();
 			case ENERGY_COST -> stats.getEnergyCost();
@@ -570,51 +567,10 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 			case HEALTH_COST -> stats.getHealthCost();
 			case HEALTH_COST_PCT -> stats.getHealthCostPct();
 			case COST_REDUCTION_CT -> stats.getCostReductionPct();
-			case POWER -> stats.getPower();
 			case COOLDOWN -> stats.getCooldown();
 			case COOLDOWN_PCT -> stats.getCooldownPct();
-			default -> throw new IllegalArgumentException();
-		};
-	}
-
-	private double getValue(AccumulatedTargetStats stats, AttributeId id) {
-		return switch (id) {
-			case DAMAGE_TAKEN -> stats.getAmountTaken();
-			case DAMAGE_TAKEN_PCT -> stats.getAmountTakenPct();
-			case POWER_TAKEN -> stats.getPowerTaken();
-			case CRIT_TAKEN_PCT -> stats.getCritTakenPct();
-			default -> throw new IllegalArgumentException();
-		};
-	}
-
-	private double getValue(AccumulatedHitStats stats, AttributeId id) {
-		return switch (id) {
 			case HIT_RATING -> stats.getHitRating();
 			case HIT_PCT -> stats.getHitPct();
-			default -> throw new IllegalArgumentException();
-		};
-	}
-
-	private double getValue(AccumulatedDurationStats stats, AttributeId id) {
-		return switch (id) {
-			case DURATION -> stats.getDuration();
-			case DURATION_PCT -> stats.getDurationPct();
-			case HASTE_RATING -> stats.getHasteRating();
-			case HASTE_PCT -> stats.getHastePct();
-			default -> throw new IllegalArgumentException();
-		};
-	}
-
-	private double getValue(AccumulatedReceivedEffectStats stats, AttributeId id) {
-		return switch (id) {
-			case RECEIVED_EFFECT_DURATION -> stats.getReceivedEffectDuration();
-			case RECEIVED_EFFECT_DURATION_PCT -> stats.getReceivedEffectDurationPct();
-			default -> throw new IllegalArgumentException();
-		};
-	}
-
-	private double getValue(AccumulatedSpellStats stats, AttributeId id) {
-		return switch (id) {
 			case DAMAGE -> stats.getAmount();
 			case DAMAGE_PCT -> stats.getAmountPct();
 			case EFFECT_PCT -> stats.getEffectPct();
@@ -626,6 +582,20 @@ class CharacterCalculationServiceTest extends WowCharacterSpringTest {
 			case CRIT_EFFECT_PCT -> stats.getCritEffectPct();
 			case CRIT_EFFECT_MULTIPLIER_PCT -> stats.getCritEffectMultiplierPct();
 			case CRIT_COEFF_PCT -> stats.getCritCoeffPct();
+			case DURATION -> stats.getDuration();
+			case DURATION_PCT -> stats.getDurationPct();
+			default -> throw new IllegalArgumentException();
+		};
+	}
+
+	private double getValue(AccumulatedTargetStats stats, AttributeId id) {
+		return switch (id) {
+			case DAMAGE_TAKEN -> stats.getAmountTaken();
+			case DAMAGE_TAKEN_PCT -> stats.getAmountTakenPct();
+			case POWER_TAKEN -> stats.getPowerTaken();
+			case CRIT_TAKEN_PCT -> stats.getCritTakenPct();
+			case RECEIVED_EFFECT_DURATION -> stats.getReceivedEffectDuration();
+			case RECEIVED_EFFECT_DURATION_PCT -> stats.getReceivedEffectDurationPct();
 			default -> throw new IllegalArgumentException();
 		};
 	}

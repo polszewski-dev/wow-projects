@@ -2,7 +2,7 @@ package wow.estimator.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import wow.character.model.snapshot.AccumulatedBaseStats;
+import wow.character.model.snapshot.AccumulatedOwnerStats;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.component.StatConversion;
 import wow.commons.model.spell.Ability;
@@ -22,7 +22,7 @@ import java.util.Map;
 @Getter
 @Setter
 public class AccumulatedRotationStats implements NonModifierHandler {
-	private AccumulatedBaseStats baseStats;
+	private AccumulatedOwnerStats baseStats;
 	private final Map<AbilityId, AccumulatedDamagingAbilityStats> statsByAbilityId = new HashMap<>();
 	private final List<StatConversion> statConversions = new ArrayList<>();
 	private final List<Effect> nonModifierEffects = new ArrayList<>();

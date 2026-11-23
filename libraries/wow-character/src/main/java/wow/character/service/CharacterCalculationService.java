@@ -16,23 +16,23 @@ import static wow.commons.model.spell.component.ComponentCommand.*;
 public interface CharacterCalculationService {
 	BaseStatsSnapshot getBaseStatsSnapshot(Character character);
 
-	BaseStatsSnapshot getBaseStatsSnapshot(Character character, AccumulatedBaseStats stats);
+	BaseStatsSnapshot getBaseStatsSnapshot(Character character, AccumulatedOwnerStats stats);
 
 	SpellCastSnapshot getSpellCastSnapshot(Character caster, Ability ability, Character target);
 
-	SpellCastSnapshot getSpellCastSnapshot(Character caster, Ability ability, AccumulatedCastStats castStats);
+	SpellCastSnapshot getSpellCastSnapshot(Character caster, Ability ability, AccumulatedCasterStats castStats);
 
 	SpellCostSnapshot getSpellCostSnapshot(Character caster, Ability ability, Character target);
 
-	SpellCostSnapshot getSpellCostSnapshot(Character caster, Ability ability, AccumulatedCostStats costStats);
+	SpellCostSnapshot getSpellCostSnapshot(Character caster, Ability ability, AccumulatedCasterStats costStats);
 
 	double getSpellHitPct(Character caster, Spell spell, Character target);
 
-	double getSpellHitPct(Character caster, Character target, AccumulatedHitStats hitStats);
+	double getSpellHitPct(Character caster, Character target, AccumulatedCasterStats hitStats);
 
 	EffectDurationSnapshot getEffectDurationSnapshot(Character caster, Spell spell, Character target, ApplyEffect command);
 
-	EffectDurationSnapshot getEffectDurationSnapshot(Character caster, Spell spell, ApplyEffect command, AccumulatedDurationStats durationStats, AccumulatedReceivedEffectStats receivedEffectStats);
+	EffectDurationSnapshot getEffectDurationSnapshot(Character caster, Spell spell, ApplyEffect command, AccumulatedCasterStats durationStats, AccumulatedTargetStats receivedEffectStats);
 
 	AnyDuration getSummonDuration(Character caster, Spell spell, AnyDuration baseDuration);
 
@@ -40,13 +40,13 @@ public interface CharacterCalculationService {
 
 	DirectSpellComponentSnapshot getDirectHealingSnapshot(Character caster, Spell spell, Character target, HealDirectly command);
 
-	DirectSpellComponentSnapshot getDirectSpellComponentSnapshot(Character caster, ChangeHealthDirectly command, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats);
+	DirectSpellComponentSnapshot getDirectSpellComponentSnapshot(Character caster, ChangeHealthDirectly command, AccumulatedCasterStats spellStats, AccumulatedTargetStats targetStats);
 
 	PeriodicSpellComponentSnapshot getPeriodicSpellDamageSnapshot(Character caster, Spell spell, Character target, DealDamagePeriodically command);
 
 	PeriodicSpellComponentSnapshot getPeriodicHealingSnapshot(Character caster, Spell spell, Character target, HealPeriodically command);
 
-	PeriodicSpellComponentSnapshot getPeriodicComponentSnapshot(ChangeHealthPeriodically command, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats);
+	PeriodicSpellComponentSnapshot getPeriodicComponentSnapshot(ChangeHealthPeriodically command, AccumulatedCasterStats spellStats, AccumulatedTargetStats targetStats);
 
 	RegenSnapshot getRegenSnapshot(Character character);
 

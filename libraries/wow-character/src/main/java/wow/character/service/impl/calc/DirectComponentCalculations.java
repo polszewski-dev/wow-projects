@@ -1,7 +1,7 @@
 package wow.character.service.impl.calc;
 
 import wow.character.model.character.Character;
-import wow.character.model.snapshot.AccumulatedSpellStats;
+import wow.character.model.snapshot.AccumulatedCasterStats;
 import wow.character.model.snapshot.AccumulatedTargetStats;
 import wow.character.model.snapshot.DirectSpellComponentSnapshot;
 import wow.commons.model.attribute.PowerType;
@@ -16,8 +16,8 @@ import static wow.commons.model.spell.component.ComponentCommand.*;
  * Date: 2026-10-25
  */
 public class DirectComponentCalculations extends ComponentCalculations {
-	private static AccumulatedSpellStats getAccumulatedDirectComponentStats(Character caster, Spell spell, Character target, PowerType powerType, ChangeHealthDirectly command) {
-		var spellStats = AccumulatedSpellStats.forDirectSpell(caster, spell, target, powerType, command);
+	private static AccumulatedCasterStats getAccumulatedDirectComponentStats(Character caster, Spell spell, Character target, PowerType powerType, ChangeHealthDirectly command) {
+		var spellStats = AccumulatedCasterStats.forDirectSpellResolution(caster, spell, target, powerType, command);
 
 		accumulateEffects(caster, spellStats);
 		return spellStats;
@@ -38,7 +38,7 @@ public class DirectComponentCalculations extends ComponentCalculations {
 		return getDirectSpellComponentSnapshot(caster, command, spellStats, targetStats);
 	}
 
-	public static DirectSpellComponentSnapshot getDirectSpellComponentSnapshot(Character caster, ChangeHealthDirectly command, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats) {
+	public static DirectSpellComponentSnapshot getDirectSpellComponentSnapshot(Character caster, ChangeHealthDirectly command, AccumulatedCasterStats spellStats, AccumulatedTargetStats targetStats) {
 		var snapshot = new DirectSpellComponentSnapshot(command);
 
 		var critPct = getSpellCritPct(caster, spellStats, targetStats);

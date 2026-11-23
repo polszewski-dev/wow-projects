@@ -3,7 +3,10 @@ package wow.estimator.service.impl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import wow.character.model.character.Character;
-import wow.character.model.snapshot.*;
+import wow.character.model.snapshot.AccumulatedCasterStats;
+import wow.character.model.snapshot.AccumulatedOwnerStats;
+import wow.character.model.snapshot.AccumulatedTargetStats;
+import wow.character.model.snapshot.StatSummary;
 import wow.character.service.CharacterCalculationService;
 import wow.character.service.CharacterService;
 import wow.commons.model.Duration;
@@ -95,8 +98,8 @@ public class CalculationServiceImpl implements CalculationService {
 		return result;
 	}
 
-	private AccumulatedBaseStats getAccumulatedBaseStats(Player player, EffectList effectList, NonModifierHandler nonModifierHandler) {
-		var stats = AccumulatedBaseStats.forBaseStats(player);
+	private AccumulatedOwnerStats getAccumulatedBaseStats(Player player, EffectList effectList, NonModifierHandler nonModifierHandler) {
+		var stats = AccumulatedOwnerStats.forBaseStats(player);
 		effectList.accumulateAttributes(stats, nonModifierHandler);
 		return stats;
 	}
@@ -119,10 +122,10 @@ public class CalculationServiceImpl implements CalculationService {
 		stats.setDirectCommand(directCommand);
 		stats.setPeriodicCommand(periodicCommand);
 
-		var castStats = AccumulatedCastStats.forSpell(player, ability, target);
-		var costStats = AccumulatedCostStats.forSpell(player, ability, target);
+		var castStats = AccumulatedCasterStats.forSpellCast(player, ability, target);
+		var costStats = AccumulatedCasterStats.forSpellCost(player, ability, target);
 		var targetStats = AccumulatedTargetStats.forSpellTarget(player, ability, SPELL_DAMAGE);
-		var hitStats = AccumulatedHitStats.forSpell(player, ability, target);
+		var hitStats = AccumulatedCasterStats.forSpellHit(player, ability, target);
 
 		stats.setCast(castStats);
 		stats.setCost(costStats);
@@ -130,7 +133,7 @@ public class CalculationServiceImpl implements CalculationService {
 		stats.setHit(hitStats);
 
 		if (directCommand != null) {
-			var directComponentStats = AccumulatedSpellStats.forDirectSpell(player, ability, target, SPELL_DAMAGE, directCommand);
+			var directComponentStats = AccumulatedCasterStats.forDirectSpellResolution(player, ability, target, SPELL_DAMAGE, directCommand);
 
 			stats.setDirect(directComponentStats);
 		}
@@ -139,9 +142,9 @@ public class CalculationServiceImpl implements CalculationService {
 
 		if (!applyEffectCommands.isEmpty()) {
 			var command = applyEffectCommands.getFirst();
-			var periodicStats = AccumulatedSpellStats.forPeriodicSpell(player, ability, target, SPELL_DAMAGE, periodicCommand);
-			var effectDurationStats = AccumulatedDurationStats.forSpellEffect(player, ability, target, command);
-			var receivedEffectStats = AccumulatedReceivedEffectStats.forSpellTarget(target, ability, command);
+			var periodicStats = AccumulatedCasterStats.forPeriodicSpellResolution(player, ability, target, SPELL_DAMAGE, periodicCommand);
+			var effectDurationStats = AccumulatedCasterStats.forSpellEffectDuration(player, ability, target, command);
+			var receivedEffectStats = AccumulatedTargetStats.forSpellEffectTarget(target, ability, command);
 
 			stats.setPeriodic(periodicStats);
 			stats.setEffectDuration(effectDurationStats);

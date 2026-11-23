@@ -2,7 +2,9 @@ package wow.estimator.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import wow.character.model.snapshot.*;
+import wow.character.model.snapshot.AccumulatedCasterStats;
+import wow.character.model.snapshot.AccumulatedStats;
+import wow.character.model.snapshot.AccumulatedTargetStats;
 import wow.character.util.StatConversionConditionChecker;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeId;
@@ -25,14 +27,14 @@ public class AccumulatedDamagingAbilityStats extends AccumulatedStats {
 	private DealDamageDirectly directCommand;
 	private DealDamagePeriodically periodicCommand;
 
-	private AccumulatedCastStats cast;
-	private AccumulatedCostStats cost;
+	private AccumulatedCasterStats cast;
+	private AccumulatedCasterStats cost;
 	private AccumulatedTargetStats target;
-	private AccumulatedHitStats hit;
-	private AccumulatedSpellStats direct;
-	private AccumulatedSpellStats periodic;
-	private AccumulatedDurationStats effectDuration;
-	private AccumulatedReceivedEffectStats receivedEffectStats;
+	private AccumulatedCasterStats hit;
+	private AccumulatedCasterStats direct;
+	private AccumulatedCasterStats periodic;
+	private AccumulatedCasterStats effectDuration;
+	private AccumulatedTargetStats receivedEffectStats;
 
 	public AccumulatedDamagingAbilityStats() {}
 

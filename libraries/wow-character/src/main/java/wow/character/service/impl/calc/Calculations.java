@@ -2,7 +2,9 @@ package wow.character.service.impl.calc;
 
 import wow.character.model.character.Character;
 import wow.character.model.character.PetCharacter;
-import wow.character.model.snapshot.*;
+import wow.character.model.snapshot.AccumulatedCasterStats;
+import wow.character.model.snapshot.AccumulatedOwnerStats;
+import wow.character.model.snapshot.AccumulatedPartialStats;
 import wow.character.util.AbstractEffectCollector;
 import wow.character.util.StatConversionConditionChecker;
 import wow.commons.model.attribute.Attribute;
@@ -110,9 +112,9 @@ public abstract class Calculations {
 		private final AccumulatedPartialStats stats;
 		private final List<StatConversion> conversions;
 
-		private AccumulatedBaseStats petsBaseStats;
-		private AccumulatedBaseStats mastersBaseStats;
-		private AccumulatedSpellStats mastersSpellStats;
+		private AccumulatedOwnerStats petsBaseStats;
+		private AccumulatedOwnerStats mastersBaseStats;
+		private AccumulatedCasterStats mastersSpellStats;
 
 		private final List<StatConversion> ownersBaseStatsAvailable = new ArrayList<>();
 		private final List<StatConversion> petsBaseStatsRequired = new ArrayList<>();
@@ -162,7 +164,7 @@ public abstract class Calculations {
 				return;
 			}
 
-			this.petsBaseStats = AccumulatedBaseStats.forBaseStats(pet);
+			this.petsBaseStats = AccumulatedOwnerStats.forBaseStats(pet);
 
 			var petConversionSolver = accumulateEffectsWithoutConversions(pet, petsBaseStats);
 
@@ -177,7 +179,7 @@ public abstract class Calculations {
 				return;
 			}
 
-			this.mastersBaseStats = AccumulatedBaseStats.forBaseStats(master);
+			this.mastersBaseStats = AccumulatedOwnerStats.forBaseStats(master);
 
 			var masterConversionSolver = accumulateEffectsWithoutConversions(master, mastersBaseStats);
 
@@ -192,7 +194,7 @@ public abstract class Calculations {
 				return;
 			}
 
-			this.mastersSpellStats = AccumulatedSpellStats.forMaster(master, (AccumulatedSpellStats) stats);
+			this.mastersSpellStats = AccumulatedCasterStats.forMasterResolution(master, (AccumulatedCasterStats) stats);
 
 			var masterConversionSolver = accumulateEffectsWithoutConversions(master, mastersSpellStats);
 
@@ -209,19 +211,19 @@ public abstract class Calculations {
 		}
 
 		private void setPetsBaseStats(AccumulatedPartialStats petStats) {
-			if (petStats instanceof AccumulatedBaseStats baseStats) {
+			if (petStats instanceof AccumulatedOwnerStats baseStats) {
 				this.petsBaseStats = baseStats;
 			}
 		}
 
 		private void setMastersBaseStats(AccumulatedPartialStats mastersStats) {
-			if (mastersStats instanceof AccumulatedBaseStats baseStats) {
+			if (mastersStats instanceof AccumulatedOwnerStats baseStats) {
 				this.mastersBaseStats = baseStats;
 			}
 		}
 
-		private AccumulatedHitStats calcMasterHitStats() {
-			var masterHitStats = AccumulatedHitStats.forMaster(master, (AccumulatedHitStats) stats);
+		private AccumulatedCasterStats calcMasterHitStats() {
+			var masterHitStats = AccumulatedCasterStats.forMasterHit(master, (AccumulatedCasterStats) stats);
 
 			accumulateEffects(master, masterHitStats, false);
 			return masterHitStats;
@@ -244,37 +246,37 @@ public abstract class Calculations {
 		private void addToTheCorrectList(StatConversion conversion) {
 			switch (conversion.type()) {
 				case OWNER_INTELLECT_TO_SPELL_POWER, OWNER_INTELLECT_TO_SPELL_DAMAGE, OWNER_INTELLECT_TO_SPELL_HEALING, OWNER_SPIRIT_TO_SPELL_POWER -> {
-					if ((stats instanceof AccumulatedSpellStats || stats instanceof AccumulatedCostStats)) {
+					if (stats instanceof AccumulatedCasterStats) {
 						ownersBaseStatsAvailable.add(conversion);
 					}
 				}
 
 				case PET_STAMINA_TO_SPELL_DAMAGE, PET_INTELLECT_TO_SPELL_DAMAGE -> {
-					if (pet != null && stats instanceof AccumulatedSpellStats) {
+					if (pet != null && stats instanceof AccumulatedCasterStats) {
 						petsBaseStatsRequired.add(conversion);
 					}
 				}
 
 				case MASTER_POWER_TO_SPELL_DAMAGE, MASTER_POWER_TO_ATTACK_POWER -> {
-					if (master != null && stats instanceof AccumulatedSpellStats) {
+					if (master != null && stats instanceof AccumulatedCasterStats) {
 						mastersSpellStatsRequired.add(conversion);
 					}
 				}
 
 				case OWNER_INTELLECT_TO_MP5 -> {
-					if (stats instanceof AccumulatedRegenStats) {
+					if (stats instanceof AccumulatedOwnerStats) {
 						ownersBaseStatsAvailable.add(conversion);
 					}
 				}
 
 				case MASTER_STAMINA_TO_STAMINA, MASTER_INTELLECT_TO_INTELLECT -> {
-					if (master != null && stats instanceof AccumulatedBaseStats) {
+					if (master != null && stats instanceof AccumulatedOwnerStats) {
 						mastersBaseStatsRequired.add(conversion);
 					}
 				}
 
 				case MASTER_HIT_PCT_TO_HIT_PCT, MASTER_HIT_RATING_TO_HIT_RATING -> {
-					if (master != null && stats instanceof AccumulatedHitStats) {
+					if (master != null && stats instanceof AccumulatedCasterStats) {
 						mastersHitStatsRequired.add(conversion);
 					}
 				}

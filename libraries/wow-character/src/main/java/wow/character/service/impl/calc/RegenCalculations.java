@@ -1,7 +1,7 @@
 package wow.character.service.impl.calc;
 
 import wow.character.model.character.Character;
-import wow.character.model.snapshot.AccumulatedRegenStats;
+import wow.character.model.snapshot.AccumulatedOwnerStats;
 import wow.character.model.snapshot.BaseStatsSnapshot;
 import wow.character.model.snapshot.RegenSnapshot;
 
@@ -63,8 +63,8 @@ public class RegenCalculations extends Calculations {
 		return BASE_MANA_REGEN_PER_LEVEL[level];
 	}
 
-	private static AccumulatedRegenStats getRegenStats(Character character) {
-		var regenStats = AccumulatedRegenStats.forRegen(character);
+	private static AccumulatedOwnerStats getRegenStats(Character character) {
+		var regenStats = AccumulatedOwnerStats.forRegen(character);
 
 		accumulateEffects(character, regenStats);
 

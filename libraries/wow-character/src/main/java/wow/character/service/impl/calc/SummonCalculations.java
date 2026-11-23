@@ -1,7 +1,7 @@
 package wow.character.service.impl.calc;
 
 import wow.character.model.character.Character;
-import wow.character.model.snapshot.AccumulatedDurationStats;
+import wow.character.model.snapshot.AccumulatedCasterStats;
 import wow.commons.model.AnyDuration;
 import wow.commons.model.Duration;
 import wow.commons.model.spell.Spell;
@@ -16,7 +16,7 @@ public class SummonCalculations extends Calculations {
 			return baseDuration;
 		}
 
-		var durationStats = AccumulatedDurationStats.forSpellSummon(caster, spell, null);
+		var durationStats = AccumulatedCasterStats.forSpellSummonDuration(caster, spell, null);
 
 		accumulateEffects(caster, durationStats);
 

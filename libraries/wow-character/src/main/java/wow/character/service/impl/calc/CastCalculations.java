@@ -1,8 +1,7 @@
 package wow.character.service.impl.calc;
 
 import wow.character.model.character.Character;
-import wow.character.model.snapshot.AccumulatedCastStats;
-import wow.character.model.snapshot.AccumulatedDurationStats;
+import wow.character.model.snapshot.AccumulatedCasterStats;
 import wow.character.model.snapshot.SpellCastSnapshot;
 import wow.commons.model.spell.Ability;
 
@@ -15,8 +14,8 @@ import static wow.commons.constant.SpellConstants.MIN_GCD;
  * Date: 2026-10-25
  */
 public class CastCalculations extends Calculations {
-	private static AccumulatedCastStats getAccumulatedCastStats(Character caster, Ability ability, Character target) {
-		var castStats = AccumulatedCastStats.forSpell(caster, ability, target);
+	private static AccumulatedCasterStats getAccumulatedCastStats(Character caster, Ability ability, Character target) {
+		var castStats = AccumulatedCasterStats.forSpellCast(caster, ability, target);
 
 		accumulateEffects(caster, castStats);
 		return castStats;
@@ -28,7 +27,7 @@ public class CastCalculations extends Calculations {
 		return getSpellCastSnapshot(caster, ability, castStats);
 	}
 
-	public static SpellCastSnapshot getSpellCastSnapshot(Character caster, Ability ability, AccumulatedCastStats castStats) {
+	public static SpellCastSnapshot getSpellCastSnapshot(Character caster, Ability ability, AccumulatedCasterStats castStats) {
 		var snapshot = new SpellCastSnapshot();
 
 		var hastePct = getHastePct(caster, castStats);
@@ -42,7 +41,7 @@ public class CastCalculations extends Calculations {
 		return snapshot;
 	}
 
-	private static double getCastTime(Ability ability, AccumulatedCastStats castStats, double hastePct) {
+	private static double getCastTime(Ability ability, AccumulatedCasterStats castStats, double hastePct) {
 		var modifiedCastTime = addAndMultiplyByPct(
 				ability.getCastTime().getSeconds(),
 				castStats.getCastTime(),
@@ -63,11 +62,7 @@ public class CastCalculations extends Calculations {
 		return baseCastTime / (1 + hastePct / 100);
 	}
 
-	static double getHastePct(Character caster, AccumulatedCastStats castStats) {
-		return getHastePct(caster, castStats.getHastePct(), castStats.getHasteRating());
-	}
-
-	static double getHastePct(Character caster, AccumulatedDurationStats durationStats) {
+	static double getHastePct(Character caster, AccumulatedCasterStats durationStats) {
 		return getHastePct(caster, durationStats.getHastePct(), durationStats.getHasteRating());
 	}
 

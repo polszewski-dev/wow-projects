@@ -1,7 +1,7 @@
 package wow.character.service.impl.calc;
 
 import wow.character.model.character.Character;
-import wow.character.model.snapshot.AccumulatedSpellStats;
+import wow.character.model.snapshot.AccumulatedCasterStats;
 import wow.character.model.snapshot.AccumulatedTargetStats;
 import wow.commons.model.attribute.PowerType;
 import wow.commons.model.spell.Coefficient;
@@ -37,7 +37,7 @@ public class ComponentCalculations extends Calculations {
 		return targetStats;
 	}
 
-	static double getSpellCritPct(Character caster, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats) {
+	static double getSpellCritPct(Character caster, AccumulatedCasterStats spellStats, AccumulatedTargetStats targetStats) {
 		var baseStatInfo = caster.getBaseStatInfo();
 		var cr = caster.getCombatRatingInfo();
 
@@ -52,7 +52,7 @@ public class ComponentCalculations extends Calculations {
 		return clamp(totalCrit, 0, 100);
 	}
 
-	static double getSpellCritCoeff(AccumulatedSpellStats spellStats) {
+	static double getSpellCritCoeff(AccumulatedCasterStats spellStats) {
 		var increasedCriticalEffect = spellStats.getCritEffectPct() / 100;
 		var talentIncrease = spellStats.getCritEffectMultiplierPct() / 100;
 		var extraCritCoeff = spellStats.getCritCoeffPct();
@@ -60,19 +60,19 @@ public class ComponentCalculations extends Calculations {
 		return 1 + (0.5 + 1.5 * increasedCriticalEffect) * (1 + talentIncrease) + extraCritCoeff;
 	}
 
-	static int getSpellAmount(AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats) {
+	static int getSpellAmount(AccumulatedCasterStats spellStats, AccumulatedTargetStats targetStats) {
 		return (int) (spellStats.getAmount() + targetStats.getAmountTaken());
 	}
 
-	static double getSpellAmountPct(AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats) {
+	static double getSpellAmountPct(AccumulatedCasterStats spellStats, AccumulatedTargetStats targetStats) {
 		return spellStats.getAmountPct() + spellStats.getEffectPct() + targetStats.getAmountTakenPct();
 	}
 
-	static int getSpellPower(AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats) {
+	static int getSpellPower(AccumulatedCasterStats spellStats, AccumulatedTargetStats targetStats) {
 		return (int) (spellStats.getPower() + targetStats.getPowerTaken());
 	}
 
-	static double getPowerCoefficient(Coefficient coefficient, AccumulatedSpellStats spellStats) {
+	static double getPowerCoefficient(Coefficient coefficient, AccumulatedCasterStats spellStats) {
 		var coeff = coefficient.value().value();
 		var coeffBonus = spellStats.getPowerCoeffPct();
 

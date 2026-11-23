@@ -1,7 +1,9 @@
 package wow.character.service.impl.calc;
 
 import wow.character.model.character.Character;
-import wow.character.model.snapshot.*;
+import wow.character.model.snapshot.AccumulatedCasterStats;
+import wow.character.model.snapshot.AccumulatedTargetStats;
+import wow.character.model.snapshot.StatSummary;
 import wow.commons.model.attribute.PowerType;
 import wow.commons.model.spell.SpellSchool;
 
@@ -31,9 +33,9 @@ public class StatsSummaryCalculations extends Calculations {
 
 		var levelDifference = 3;
 
-		var castStats = AccumulatedCastStats.forAnySpell(character);
-		var hitStats = AccumulatedHitStats.forAnySpell(character);
-		var spellStats = AccumulatedSpellStats.forAnySpell(character);
+		var castStats = AccumulatedCasterStats.forAnySpellCast(character);
+		var hitStats = AccumulatedCasterStats.forAnySpellHit(character);
+		var spellStats = AccumulatedCasterStats.forAnySpellResolution(character);
 		var targetStats = AccumulatedTargetStats.forAnySpellTarget(character);
 
 		accumulateEffects(character, castStats);
@@ -94,14 +96,14 @@ public class StatsSummaryCalculations extends Calculations {
 	}
 
 	private static int getSpellAmount(Character caster, PowerType powerType, SpellSchool school) {
-		var spellStats = AccumulatedSpellStats.forAnySpell(caster, powerType, school);
+		var spellStats = AccumulatedCasterStats.forAnySpellResolution(caster, powerType, school);
 
 		accumulateEffects(caster, spellStats);
 		return (int) spellStats.getPower();
 	}
 
 	private static double getSpellPctAmount(Character caster, PowerType powerType, SpellSchool school) {
-		var spellStats = AccumulatedSpellStats.forAnySpell(caster, powerType, school);
+		var spellStats = AccumulatedCasterStats.forAnySpellResolution(caster, powerType, school);
 
 		accumulateEffects(caster, spellStats);
 		return spellStats.getAmountPct();

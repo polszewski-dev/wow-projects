@@ -127,7 +127,7 @@ class AccumulatedCostStatsTest extends WowCharacterSpringTest {
 		costStats.accumulateAttributes(list, 2, OWNER_OR_AURAS);
 	}
 
-	AccumulatedCostStats costStats;
+	AccumulatedCasterStats costStats;
 
 	@BeforeEach
 	void setUp() {
@@ -135,6 +135,6 @@ class AccumulatedCostStatsTest extends WowCharacterSpringTest {
 		var spell = caster.getAbility(SHADOW_BOLT).orElseThrow();
 		var target = caster.getTarget();
 
-		this.costStats = AccumulatedCostStats.forSpell(caster, spell, target);
+		this.costStats = AccumulatedCasterStats.forSpellCost(caster, spell, target);
 	}
 }

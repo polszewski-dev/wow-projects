@@ -69,7 +69,7 @@ class AccumulatedCastStatsTest extends WowCharacterSpringTest {
 		castStats.accumulateAttributes(list, 2, OWNER_OR_AURAS);
 	}
 
-	AccumulatedCastStats castStats;
+	AccumulatedCasterStats castStats;
 
 	@BeforeEach
 	void setUp() {
@@ -77,6 +77,6 @@ class AccumulatedCastStatsTest extends WowCharacterSpringTest {
 		var spell = caster.getAbility(SHADOW_BOLT).orElseThrow();
 		var target = caster.getTarget();
 
-		this.castStats = AccumulatedCastStats.forSpell(caster, spell, target);
+		this.castStats = AccumulatedCasterStats.forSpellCast(caster, spell, target);
 	}
 }

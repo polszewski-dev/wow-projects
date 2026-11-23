@@ -1,7 +1,7 @@
 package wow.character.service.impl.calc;
 
 import wow.character.model.character.Character;
-import wow.character.model.snapshot.AccumulatedCostStats;
+import wow.character.model.snapshot.AccumulatedCasterStats;
 import wow.character.model.snapshot.SpellCostSnapshot;
 import wow.commons.model.spell.Ability;
 
@@ -10,8 +10,8 @@ import wow.commons.model.spell.Ability;
  * Date: 2026-10-25
  */
 public class CostCalculations extends Calculations {
-	private static AccumulatedCostStats getAccumulatedCostStats(Character caster, Ability ability, Character target) {
-		var costStats = AccumulatedCostStats.forSpell(caster, ability, target);
+	private static AccumulatedCasterStats getAccumulatedCostStats(Character caster, Ability ability, Character target) {
+		var costStats = AccumulatedCasterStats.forSpellCost(caster, ability, target);
 
 		accumulateEffects(caster, costStats);
 		return costStats;
@@ -27,7 +27,7 @@ public class CostCalculations extends Calculations {
 		return getSpellCostSnapshot(caster, ability, costStats);
 	}
 
-	public static SpellCostSnapshot getSpellCostSnapshot(Character caster, Ability ability, AccumulatedCostStats costStats) {
+	public static SpellCostSnapshot getSpellCostSnapshot(Character caster, Ability ability, AccumulatedCasterStats costStats) {
 		if (ability.getCost() == null) {
 			return null;
 		}
@@ -46,7 +46,7 @@ public class CostCalculations extends Calculations {
 		return snapshot;
 	}
 
-	private static int getCost(Character caster, Ability ability, AccumulatedCostStats costStats) {
+	private static int getCost(Character caster, Ability ability, AccumulatedCasterStats costStats) {
 		var cost = ability.getCost();
 		var result = (double) cost.amount();
 
@@ -71,7 +71,7 @@ public class CostCalculations extends Calculations {
 		);
 	}
 
-	private static double getCooldown(Ability ability, AccumulatedCostStats costStats) {
+	private static double getCooldown(Ability ability, AccumulatedCasterStats costStats) {
 		var spellCooldown = ability.getCooldown().getSeconds();
 		var cooldown = costStats.getCooldown();
 		var cooldownPct = costStats.getCooldownPct();

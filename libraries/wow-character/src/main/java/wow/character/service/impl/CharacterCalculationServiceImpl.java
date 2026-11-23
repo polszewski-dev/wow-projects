@@ -26,7 +26,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public BaseStatsSnapshot getBaseStatsSnapshot(Character character, AccumulatedBaseStats stats) {
+	public BaseStatsSnapshot getBaseStatsSnapshot(Character character, AccumulatedOwnerStats stats) {
 		return BaseStatsCalculations.getBaseStatsSnapshot(character, stats);
 	}
 
@@ -36,7 +36,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public SpellCastSnapshot getSpellCastSnapshot(Character caster, Ability ability, AccumulatedCastStats castStats) {
+	public SpellCastSnapshot getSpellCastSnapshot(Character caster, Ability ability, AccumulatedCasterStats castStats) {
 		return CastCalculations.getSpellCastSnapshot(caster, ability, castStats);
 	}
 
@@ -46,7 +46,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public SpellCostSnapshot getSpellCostSnapshot(Character caster, Ability ability, AccumulatedCostStats costStats) {
+	public SpellCostSnapshot getSpellCostSnapshot(Character caster, Ability ability, AccumulatedCasterStats costStats) {
 		return CostCalculations.getSpellCostSnapshot(caster, ability, costStats);
 	}
 
@@ -56,7 +56,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public double getSpellHitPct(Character caster, Character target, AccumulatedHitStats hitStats) {
+	public double getSpellHitPct(Character caster, Character target, AccumulatedCasterStats hitStats) {
 		return HitCalculations.getSpellHitPct(caster, target, hitStats);
 	}
 
@@ -66,7 +66,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public EffectDurationSnapshot getEffectDurationSnapshot(Character caster, Spell spell, ApplyEffect command, AccumulatedDurationStats durationStats, AccumulatedReceivedEffectStats receivedEffectStats) {
+	public EffectDurationSnapshot getEffectDurationSnapshot(Character caster, Spell spell, ApplyEffect command, AccumulatedCasterStats durationStats, AccumulatedTargetStats receivedEffectStats) {
 		return EffectCalculations.getEffectDurationSnapshot(caster, spell, command, durationStats, receivedEffectStats);
 	}
 
@@ -86,7 +86,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public DirectSpellComponentSnapshot getDirectSpellComponentSnapshot(Character caster, ChangeHealthDirectly command, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats) {
+	public DirectSpellComponentSnapshot getDirectSpellComponentSnapshot(Character caster, ChangeHealthDirectly command, AccumulatedCasterStats spellStats, AccumulatedTargetStats targetStats) {
 		return DirectComponentCalculations.getDirectSpellComponentSnapshot(caster, command, spellStats, targetStats);
 	}
 
@@ -101,7 +101,7 @@ public class CharacterCalculationServiceImpl implements CharacterCalculationServ
 	}
 
 	@Override
-	public PeriodicSpellComponentSnapshot getPeriodicComponentSnapshot(ChangeHealthPeriodically command, AccumulatedSpellStats spellStats, AccumulatedTargetStats targetStats) {
+	public PeriodicSpellComponentSnapshot getPeriodicComponentSnapshot(ChangeHealthPeriodically command, AccumulatedCasterStats spellStats, AccumulatedTargetStats targetStats) {
 		return PeriodicComponentCalculations.getPeriodicComponentSnapshot(command, spellStats, targetStats);
 	}
 

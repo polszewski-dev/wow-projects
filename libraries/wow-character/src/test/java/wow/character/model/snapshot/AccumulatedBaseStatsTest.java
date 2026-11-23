@@ -202,16 +202,16 @@ class AccumulatedBaseStatsTest extends WowCharacterSpringTest {
 		baseStats.accumulateAttributes(list, 2, OWNER_OR_AURAS);
 	}
 
-	AccumulatedBaseStats baseStats;
+	AccumulatedOwnerStats baseStats;
 
 	@BeforeEach
 	void setUp() {
 		var caster = getPlayer();
 
-		this.baseStats = AccumulatedBaseStats.forBaseStats(caster);
+		this.baseStats = AccumulatedOwnerStats.forBaseStats(caster);
 	}
 
 	private BaseStatInfo getBaseStatInfo() {
-		return baseStats.owner.getBaseStatInfo();
+		return baseStats.getOwner().getBaseStatInfo();
 	}
 }

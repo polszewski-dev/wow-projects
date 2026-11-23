@@ -70,7 +70,7 @@ class AccumulatedDurationStatsTest extends WowCharacterSpringTest {
 		durationStats.accumulateAttributes(list, 2, OWNER_OR_AURAS);
 	}
 
-	AccumulatedDurationStats durationStats;
+	AccumulatedCasterStats durationStats;
 
 	@BeforeEach
 	void setUp() {
@@ -79,6 +79,6 @@ class AccumulatedDurationStatsTest extends WowCharacterSpringTest {
 		var target = caster.getTarget();
 		var command = spell.getApplyEffectCommands().getFirst();
 
-		this.durationStats = AccumulatedDurationStats.forSpellEffect(caster, spell, target, command);
+		this.durationStats = AccumulatedCasterStats.forSpellEffectDuration(caster, spell, target, command);
 	}
 }

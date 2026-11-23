@@ -1,7 +1,7 @@
 package wow.character.service.impl.calc;
 
 import wow.character.model.character.Character;
-import wow.character.model.snapshot.AccumulatedHitStats;
+import wow.character.model.snapshot.AccumulatedCasterStats;
 import wow.commons.model.spell.Spell;
 
 import static java.lang.Math.clamp;
@@ -11,8 +11,8 @@ import static java.lang.Math.clamp;
  * Date: 2026-10-25
  */
 public class HitCalculations extends Calculations {
-	private static AccumulatedHitStats getAccumulatedHitStats(Character caster, Spell spell, Character target) {
-		var hitStats = AccumulatedHitStats.forSpell(caster, spell, target);
+	private static AccumulatedCasterStats getAccumulatedHitStats(Character caster, Spell spell, Character target) {
+		var hitStats = AccumulatedCasterStats.forSpellHit(caster, spell, target);
 
 		accumulateEffects(caster, hitStats);
 		return hitStats;
@@ -24,13 +24,13 @@ public class HitCalculations extends Calculations {
 		return getSpellHitPct(caster, target, hitStats);
 	}
 
-	public static double getSpellHitPct(Character caster, Character target, AccumulatedHitStats hitStats) {
+	public static double getSpellHitPct(Character caster, Character target, AccumulatedCasterStats hitStats) {
 		var levelDifference = Character.getLevelDifference(caster, target);
 
 		return getSpellHitPct(caster, hitStats, levelDifference);
 	}
 
-	static double getSpellHitPct(Character caster, AccumulatedHitStats hitStats, int levelDifference) {
+	static double getSpellHitPct(Character caster, AccumulatedCasterStats hitStats, int levelDifference) {
 		var totalHit = getSpellHitPctBonus(caster, hitStats);
 
 		var gameVersion = caster.getGameVersion();
@@ -40,7 +40,7 @@ public class HitCalculations extends Calculations {
 		return clamp(baseSpellHitChancePct + totalHit, 0, maxSpellHitChancePct);
 	}
 
-	static double getSpellHitPctBonus(Character caster, AccumulatedHitStats hitStats) {
+	static double getSpellHitPctBonus(Character caster, AccumulatedCasterStats hitStats) {
 		var cr = caster.getCombatRatingInfo();
 		var ratingHit = hitStats.getHitRating() / cr.getSpellHit();
 		var pctHit = hitStats.getHitPct();
