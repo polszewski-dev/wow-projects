@@ -21,18 +21,4 @@ public record StatConversion(
 	public AttributeId to() {
 		return type.getTo();
 	}
-
-	public boolean isFromOwner() {
-		return switch (type) {
-			case
-					OWNER_INTELLECT_TO_SPELL_POWER,
-					OWNER_INTELLECT_TO_SPELL_DAMAGE,
-					OWNER_INTELLECT_TO_SPELL_HEALING,
-					OWNER_INTELLECT_TO_MP5,
-					OWNER_INTELLECT_TO_ARMOR,
-					OWNER_SPIRIT_TO_SPELL_POWER
-			-> true;
-			default -> false;
-		};
-	}
 }

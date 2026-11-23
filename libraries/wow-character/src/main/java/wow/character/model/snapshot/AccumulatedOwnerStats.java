@@ -5,7 +5,6 @@ import wow.character.model.character.Character;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.attribute.PowerType;
-import wow.commons.model.effect.component.StatConversionType;
 import wow.commons.model.spell.ActionType;
 import wow.commons.model.talent.TalentTree;
 
@@ -254,38 +253,6 @@ public final class AccumulatedOwnerStats extends AccumulatedPartialStats {
 
 			default ->
 					unsupported(condition);
-		};
-	}
-
-	@Override
-	protected double getValueFrom(StatConversionType type) {
-		return switch (type) {
-			case
-					PET_STAMINA_TO_SPELL_DAMAGE,
-					MASTER_STAMINA_TO_STAMINA
-
-					-> getTotalStamina();
-
-			case
-					OWNER_INTELLECT_TO_SPELL_POWER,
-					OWNER_INTELLECT_TO_SPELL_DAMAGE,
-					OWNER_INTELLECT_TO_SPELL_HEALING,
-					OWNER_INTELLECT_TO_MP5,
-					OWNER_INTELLECT_TO_ARMOR,
-					PET_INTELLECT_TO_SPELL_DAMAGE,
-					MASTER_INTELLECT_TO_INTELLECT
-
-					-> getTotalIntellect();
-
-			case
-					OWNER_SPIRIT_TO_SPELL_POWER
-
-					-> getTotalSpirit();
-
-			default
-
-					-> super.getValueFrom(type);
-
 		};
 	}
 

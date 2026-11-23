@@ -5,7 +5,7 @@ import lombok.Setter;
 import wow.character.model.snapshot.AccumulatedCasterStats;
 import wow.character.model.snapshot.AccumulatedStats;
 import wow.character.model.snapshot.AccumulatedTargetStats;
-import wow.character.util.StatConversionConditionChecker;
+import wow.character.service.impl.calc.StatConversionSolver;
 import wow.commons.model.attribute.Attribute;
 import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.effect.component.StatConversion;
@@ -73,37 +73,32 @@ public class AccumulatedDamagingAbilityStats extends AccumulatedStats {
 		}
 	}
 
-	private boolean toConditionMatches(StatConversion statConversion) {
-		var checker = new StatConversionConditionChecker(direct.getActionType(), direct.getPowerType());
-
-		return checker.check(statConversion);
-	}
-
 	public void increasePower(double value) {
 		accumulateAttribute(AttributeId.POWER, value);
 	}
 
 	public void solveStatConversions(List<StatConversion> statConversions) {
-		for (var statConversion : statConversions) {
-			if (statConversion.isFromOwner() && toConditionMatches(statConversion)) {
-				accumulateConvertedStat(statConversion);
-			}
+		if (statConversions.isEmpty()) {
+			return;
 		}
-	}
 
-	private void accumulateConvertedStat(StatConversion statConversion) {
-		cast.accumulateConvertedAttribute(statConversion);
-		cost.accumulateConvertedAttribute(statConversion);
-		hit.accumulateConvertedAttribute(statConversion);
+		solveStatConversions(cast, statConversions);
+		solveStatConversions(cost, statConversions);
+		solveStatConversions(hit, statConversions);
 
 		if (direct != null) {
-			direct.accumulateConvertedAttribute(statConversion);
+			solveStatConversions(direct, statConversions);
 		}
 
 		if (periodic != null) {
-			periodic.accumulateConvertedAttribute(statConversion);
-			effectDuration.accumulateConvertedAttribute(statConversion);
-			receivedEffectStats.accumulateConvertedAttribute(statConversion);
+			solveStatConversions(periodic, statConversions);
+			solveStatConversions(effectDuration, statConversions);
 		}
+	}
+
+	private void solveStatConversions(AccumulatedCasterStats stats, List<StatConversion> statConversions) {
+		var solver = new StatConversionSolver(stats.getCaster(), stats, statConversions);
+
+		solver.solve();
 	}
 }

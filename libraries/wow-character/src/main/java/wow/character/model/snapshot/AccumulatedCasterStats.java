@@ -7,7 +7,6 @@ import wow.commons.model.attribute.AttributeCondition;
 import wow.commons.model.attribute.AttributeId;
 import wow.commons.model.attribute.PowerType;
 import wow.commons.model.effect.Effect;
-import wow.commons.model.effect.component.StatConversionType;
 import wow.commons.model.spell.*;
 import wow.commons.model.spell.component.ComponentCommand;
 import wow.commons.model.talent.TalentTree;
@@ -131,13 +130,6 @@ public final class AccumulatedCasterStats extends AccumulatedPartialStats {
 		return new AccumulatedCasterStats(caster, null, null, SPELL, null, null);
 	}
 
-	public static AccumulatedCasterStats forMasterHit(Character master, AccumulatedCasterStats petStats) {
-		var stats = new AccumulatedCasterStats(master, petStats.spell, petStats.target, petStats.actionType, petStats.powerType, petStats.spellSchool);
-
-		stats.copyFrom(petStats);
-		return stats;
-	}
-
 	public static AccumulatedCasterStats forAnySpellResolution(Character caster) {
 		Objects.requireNonNull(caster);
 
@@ -172,10 +164,13 @@ public final class AccumulatedCasterStats extends AccumulatedPartialStats {
 		return stats;
 	}
 
-	public static AccumulatedCasterStats forMasterResolution(Character master, AccumulatedCasterStats petStats) {
-		var stats = new AccumulatedCasterStats(master, petStats.spell, petStats.target, petStats.actionType, petStats.powerType, petStats.spellSchool);
+	public static AccumulatedCasterStats withTheSameParams(Character newCaster, AccumulatedCasterStats oldStats) {
+		var stats = new AccumulatedCasterStats(newCaster, oldStats.spell, oldStats.target, oldStats.actionType, oldStats.powerType, oldStats.spellSchool);
 
-		stats.copyFrom(petStats);
+		stats.direct = oldStats.direct;
+		stats.periodic = oldStats.periodic;
+		stats.appliedEffect = oldStats.appliedEffect;
+
 		return stats;
 	}
 
@@ -254,12 +249,6 @@ public final class AccumulatedCasterStats extends AccumulatedPartialStats {
 
 	public AccumulatedCasterStats copy() {
 		return new AccumulatedCasterStats(this);
-	}
-
-	private void copyFrom(AccumulatedCasterStats stats) {
-		this.direct = stats.direct;
-		this.periodic = stats.periodic;
-		this.appliedEffect = stats.appliedEffect;
 	}
 
 	private void accumulateBaseStatInfo() {
@@ -560,49 +549,6 @@ public final class AccumulatedCasterStats extends AccumulatedPartialStats {
 			case RAGE -> rageCostPct;
 			case HEALTH -> healthCostPct;
 			case PET_MANA -> throw new UnsupportedOperationException();
-		};
-	}
-
-	@Override
-	protected double getValueFrom(StatConversionType type) {
-		return switch (type) {
-			case
-					PET_STAMINA_TO_SPELL_DAMAGE,
-					MASTER_STAMINA_TO_STAMINA
-
-					-> getTotalStamina();
-
-			case
-					OWNER_INTELLECT_TO_SPELL_POWER,
-					OWNER_INTELLECT_TO_SPELL_DAMAGE,
-					OWNER_INTELLECT_TO_SPELL_HEALING,
-					OWNER_INTELLECT_TO_MP5,
-					OWNER_INTELLECT_TO_ARMOR,
-					PET_INTELLECT_TO_SPELL_DAMAGE,
-					MASTER_INTELLECT_TO_INTELLECT
-
-					-> getTotalIntellect();
-
-			case
-					OWNER_SPIRIT_TO_SPELL_POWER
-
-					-> getTotalSpirit();
-
-			case
-					MASTER_POWER_TO_SPELL_DAMAGE,
-					MASTER_POWER_TO_ATTACK_POWER
-
-					-> power;
-
-			case
-					MASTER_HIT_PCT_TO_HIT_PCT
-
-					-> hitPct;
-
-			case
-					MASTER_HIT_RATING_TO_HIT_RATING
-
-					-> hitRating;
 		};
 	}
 }
