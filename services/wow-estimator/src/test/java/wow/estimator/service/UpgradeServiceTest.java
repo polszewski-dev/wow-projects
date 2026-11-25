@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import wow.character.model.equipment.GemFilter;
 import wow.character.model.equipment.ItemFilter;
 import wow.character.model.equipment.ItemLevelFilter;
-import wow.character.model.equipment.ItemSocket;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 
@@ -106,7 +105,7 @@ class UpgradeServiceTest extends ServiceTest {
 
 		assertThat(item.getEnchant()).isNotNull();
 
-		for (ItemSocket socket : item.getSockets()) {
+		for (var socket : item.getSockets()) {
 			assertThat(socket.getGem()).isNotNull();
 		}
 	}

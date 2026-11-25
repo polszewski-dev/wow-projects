@@ -295,7 +295,7 @@ public class CharacterServiceImpl implements CharacterService {
 		var gem = item.getGem(socketNo);
 
 		if (gem != null && !gem.isAvailableTo(player)) {
-			item.getSockets().insertGem(socketNo, null);
+			item.insertGem(socketNo, null);
 		}
 	}
 

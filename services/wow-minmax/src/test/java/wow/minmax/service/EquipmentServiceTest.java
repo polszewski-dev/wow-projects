@@ -76,7 +76,7 @@ class EquipmentServiceTest extends ServiceTest {
 
 		var chest = player.getEquippedItem(CHEST).copy();
 
-		chest.getSockets().insertGem(1, gem);
+		chest.insertGem(1, gem);
 
 		underTest.equipItem(PLAYER_ID, CHEST, chest);
 
@@ -110,9 +110,9 @@ class EquipmentServiceTest extends ServiceTest {
 	@Test
 	void getEquipmentSocketStatusNonMatching() {
 		var shoulder = player.getEquippedItem(SHOULDER).copy();
-		var gem = shoulder.getSockets().getGem(1);// inserting orange gem into blue socket
+		var gem = shoulder.getGem(1);// inserting orange gem into blue socket
 
-		shoulder.getSockets().insertGem(0, gem);
+		shoulder.insertGem(0, gem);
 		underTest.equipItem(PLAYER_ID, SHOULDER, shoulder);
 
 		var statuses = underTest.getEquipmentSocketStatus(PLAYER_ID);

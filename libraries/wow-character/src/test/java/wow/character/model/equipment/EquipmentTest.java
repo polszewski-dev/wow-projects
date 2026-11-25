@@ -1,8 +1,9 @@
 package wow.character.model.equipment;
 
-import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import wow.character.WowCharacterSpringTest;
+import wow.character.model.character.PlayerCharacter;
 import wow.commons.model.item.Gem;
 
 import static org.assertj.core.api.Assertions.*;
@@ -14,32 +15,18 @@ import static wow.commons.model.categorization.ItemSlot.HEAD;
  */
 class EquipmentTest extends WowCharacterSpringTest {
 	@Test
-	@DisplayName("Equipping null does nothing")
-	void noItem() {
-		Equipment equipment = new Equipment();
-
+	void equipping_null_does_nothing() {
 		assertThatNoException().isThrownBy(() -> equipment.equip(null));
 	}
 
 	@Test
-	@DisplayName("Equipping wrong item generates error")
-	void wrongItem() {
-		EquippableItem mainHand = getItem("Sunflare");
-
-		Equipment equipment = new Equipment();
-
+	void equipping_wrong_item_type_generates_error() {
 		assertThatThrownBy(() -> equipment.equip(mainHand, HEAD))
 				.isInstanceOf(IllegalArgumentException.class);
 	}
 
 	@Test
-	@DisplayName("Equipping off-hand while 2-hander is equipped generates error")
-	void equippingWeapons() {
-		EquippableItem twoHand = getItem("Grand Magister's Staff of Torrents");
-		EquippableItem mainHand = getItem("Sunflare");
-		EquippableItem offHand = getItem("Heart of the Pit");
-
-		Equipment equipment = new Equipment();
+	void equipping_off_hand_while_2_hander_is_equipped_generates_error() {
 		equipment.equip(twoHand);
 
 		assertThat(equipment.getMainHand()).isEqualTo(twoHand);
@@ -55,38 +42,20 @@ class EquipmentTest extends WowCharacterSpringTest {
 	}
 
 	@Test
-	@DisplayName("Colored gems matchings are correct")
-	void gemCounts() {
-		Gem orangeGem = getGem("Reckless Pyrestone");
-		Gem violetGem = getGem("Glowing Shadowsong Amethyst");
+	void colored_gems_matchings_are_correct() {
+		equipment.equip(shoulder);
 
-		EquippableItem item = getItem("Mantle of the Malefic");// blue + yellow socket
+		shoulder.gem(violetGem, orangeGem);
 
-		Equipment equipment = new Equipment();
+		assertThat(equipment.allSocketsHaveMatchingGems(shoulder)).isTrue();
 
-		equipment.equip(item);
+		shoulder.gem(orangeGem, violetGem);
 
-		item.gem(violetGem, orangeGem);
-
-		assertThat(equipment.allSocketsHaveMatchingGems(item)).isTrue();
-
-		item.gem(orangeGem, violetGem);
-
-		assertThat(equipment.allSocketsHaveMatchingGems(item)).isFalse();
+		assertThat(equipment.allSocketsHaveMatchingGems(shoulder)).isFalse();
 	}
 
 	@Test
-	@DisplayName("Meta matching is correct")
-	void meta() {
-		Gem metaGem = getGem("Chaotic Skyfire Diamond");
-		Gem orangeGem = getGem("Reckless Pyrestone");
-		Gem violetGem = getGem("Glowing Shadowsong Amethyst");
-
-		EquippableItem head = getItem("Dark Conjuror's Collar");// meta + blue socket
-		EquippableItem shoulder = getItem("Mantle of the Malefic");// blue + yellow socket
-
-		Equipment equipment = new Equipment();
-
+	void meta_matching_is_correct() {
 		equipment.equip(head);
 		equipment.equip(shoulder);
 
@@ -95,5 +64,52 @@ class EquipmentTest extends WowCharacterSpringTest {
 
 		assertThat(equipment.allSocketsHaveMatchingGems(head)).isTrue();
 		assertThat(equipment.allSocketsHaveMatchingGems(shoulder)).isTrue();
+	}
+
+	PlayerCharacter player;
+	Equipment equipment;
+
+	EquippableItem head;// meta + blue socket
+	EquippableItem shoulder;// blue + yellow socket
+	EquippableItem chest;// yellow + yellow + blue  socket
+	EquippableItem hands;// yellow socket
+	EquippableItem legs;// yellow socket
+	EquippableItem feet;// yellow socket
+
+	EquippableItem twoHand;// red + red + red socket
+	EquippableItem mainHand;
+	EquippableItem offHand;
+
+	Gem metaGem;
+	Gem redGem;
+	Gem orangeGem;
+	Gem yellowGem;
+	Gem greenGem;
+	Gem blueGem;
+	Gem violetGem;
+
+	@BeforeEach
+	void setup() {
+		player = getPlayer();
+		equipment = player.getEquipment();
+
+		head = getItem("Dark Conjuror's Collar");
+		shoulder = getItem("Mantle of the Malefic");
+		chest = getItem("Robe of the Malefic");
+		hands = getItem("Gloves of the Malefic");
+		legs = getItem("Leggings of the Malefic");
+		feet = getItem("Boots of the Malefic");
+
+		twoHand = getItem("Grand Magister's Staff of Torrents");
+		mainHand = getItem("Sunflare");
+		offHand = getItem("Heart of the Pit");
+
+		metaGem = getGem("Chaotic Skyfire Diamond");
+		redGem = getGem(32196);
+		orangeGem = getGem("Reckless Pyrestone");
+		yellowGem = getGem("Quick Lionseye");
+		greenGem = getGem("Forceful Seaspray Emerald");
+		blueGem = getGem("Solid Empyrean Sapphire");
+		violetGem  = getGem("Glowing Shadowsong Amethyst");
 	}
 }

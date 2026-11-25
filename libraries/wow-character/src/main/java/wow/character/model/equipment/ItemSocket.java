@@ -14,13 +14,13 @@ public class ItemSocket implements Copyable<ItemSocket> {
 	private final SocketType socketType;
 	private Gem gem;
 
-	public ItemSocket(SocketType socketType) {
+	ItemSocket(SocketType socketType) {
 		this.socketType = socketType;
 	}
 
 	@Override
 	public ItemSocket copy() {
-		ItemSocket copy = new ItemSocket(socketType);
+		var copy = new ItemSocket(socketType);
 		copy.gem = gem;
 		return copy;
 	}
@@ -33,6 +33,7 @@ public class ItemSocket implements Copyable<ItemSocket> {
 		if (gem != null && !socketType.accepts(gem.getColor())) {
 			throw new IllegalArgumentException(String.format("%s socket does not accept gems of color: %s", socketType, gem.getColor()));
 		}
+
 		this.gem = gem;
 	}
 

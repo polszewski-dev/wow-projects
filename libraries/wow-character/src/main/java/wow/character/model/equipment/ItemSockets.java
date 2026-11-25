@@ -8,33 +8,26 @@ import wow.commons.model.item.SocketType;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * User: POlszewski
  * Date: 2021-03-06
  */
-public record ItemSockets(
-		ItemSocketSpecification specification,
-		List<ItemSocket> sockets
-) implements Copyable<ItemSockets>, Iterable<ItemSocket> {
-	public static final ItemSockets EMPTY = new ItemSockets(ItemSocketSpecification.EMPTY, List.of());
+public class ItemSockets implements Copyable<ItemSockets>, Iterable<ItemSocket> {
+	private final ItemSocketSpecification specification;
+	private final List<ItemSocket> sockets;
 
-	public ItemSockets {
-		Objects.requireNonNull(specification);
-		Objects.requireNonNull(sockets);
+	private ItemSockets(ItemSocketSpecification specification, List<ItemSocket> sockets) {
+		this.specification = specification;
+		this.sockets = sockets;
 	}
 
 	public static ItemSockets create(ItemSocketSpecification specification) {
-		if (!specification.hasSockets()) {
-			return ItemSockets.EMPTY;
-		}
-
-		List<ItemSocket> itemSockets = specification.socketTypes().stream()
+		var itemSockets = specification.socketTypes().stream()
 				.map(ItemSocket::new)
 				.toList();
+
 		return new ItemSockets(specification, itemSockets);
 	}
 
@@ -61,19 +54,17 @@ public record ItemSockets(
 	}
 
 	public boolean allSocketsHaveMatchingGems(int numRed, int numYellow, int numBlue) {
-		for (ItemSocket socket : sockets) {
+		for (var socket : sockets) {
 			if (!socket.hasMatchingGem(numRed, numYellow, numBlue)) {
 				return false;
 			}
 		}
+
 		return true;
 	}
 
 	public ItemSocket getSocket(int socketNo) {
-		if (0 <= socketNo && socketNo < getSocketCount()) {
-			return sockets.get(socketNo);
-		}
-		throw new IllegalArgumentException("Socket no: " + socketNo);
+		return sockets.get(socketNo);
 	}
 
 	public List<Gem> getGems() {
@@ -92,12 +83,15 @@ public record ItemSockets(
 
 	public int getGemCount(SocketType socketType) {
 		int result = 0;
+
 		for (int socketNo = 0; socketNo < getSocketCount(); ++socketNo) {
-			Gem gem = getGem(socketNo);
+			var gem = getGem(socketNo);
+
 			if (gem != null && gem.getColor().matchesSocket(socketType)) {
 				++result;
 			}
 		}
+
 		return result;
 	}
 
@@ -107,6 +101,7 @@ public record ItemSockets(
 				return false;
 			}
 		}
+
 		return true;
 	}
 
@@ -119,15 +114,12 @@ public record ItemSockets(
 		return sockets.iterator();
 	}
 
-	public Stream<ItemSocket> stream() {
-		return sockets.stream();
-	}
-
 	@Override
 	public String toString() {
 		if (getSocketCount() == 0) {
 			return "no sockets";
 		}
+
 		return String.format(
 				"%s, socket bonus: %s",
 				sockets.stream()

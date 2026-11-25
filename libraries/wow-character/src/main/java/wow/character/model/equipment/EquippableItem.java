@@ -109,13 +109,10 @@ public class EquippableItem implements EffectCollection, Copyable<EquippableItem
 	}
 
 	public EquippableItem enchant(Enchant enchant) {
-		if (enchant == null) {
-			this.enchant = null;
-			return this;
-		}
-		if (!enchant.matches(item.getItemType(), item.getItemSubType())) {
+		if (enchant != null && !enchant.matches(item.getItemType(), item.getItemSubType())) {
 			throw new IllegalArgumentException("Enchanting wrong item type");
 		}
+
 		this.enchant = enchant;
 		return this;
 	}
@@ -161,17 +158,13 @@ public class EquippableItem implements EffectCollection, Copyable<EquippableItem
 	}
 
 	public boolean hasMatchingGem(int socketNo, int numRed, int numYellow, int numBlue) {
-		ItemSocket socket = sockets.getSocket(socketNo);
+		var socket = sockets.getSocket(socketNo);
+
 		return socket.hasMatchingGem(numRed, numYellow, numBlue);
 	}
 
 	public boolean allSocketsHaveMatchingGems(int numRed, int numYellow, int numBlue) {
 		return sockets.allSocketsHaveMatchingGems(numRed, numYellow, numBlue);
-	}
-
-	public boolean hasGemMatchingSocketColor(int socketNo) {
-		ItemSocket socket = sockets.getSocket(socketNo);
-		return socket.hasGemMatchingSocketColor();
 	}
 
 	@Override
