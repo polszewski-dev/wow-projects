@@ -101,4 +101,16 @@ public class TestPlayerCharacter extends PlayerCharacterImpl {
 		super.socketBonusRemoved(socketBonus);
 		addEvent(new SocketBonusRemoved(socketBonus));
 	}
+
+	@Override
+	public void talentEnabled(Talent talent) {
+		super.talentEnabled(talent);
+		addEvent(new TalentEnabled(talent));
+	}
+
+	@Override
+	public void talentDisabled(Talent talent) {
+		super.talentDisabled(talent);
+		addEvent(new TalentDisabled(talent));
+	}
 }

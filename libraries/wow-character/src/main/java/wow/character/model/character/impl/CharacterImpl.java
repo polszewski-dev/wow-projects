@@ -258,6 +258,16 @@ public abstract class CharacterImpl implements Character {
 	}
 
 	@Override
+	public void talentEnabled(Talent talent) {
+		//todo
+	}
+
+	@Override
+	public void talentDisabled(Talent talent) {
+		//todo
+	}
+
+	@Override
 	public String toString() {
 		return name;
 	}

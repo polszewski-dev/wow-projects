@@ -42,7 +42,7 @@ public class CalculationServiceImpl implements CalculationService {
 	public double getTalentSpEquivalent(String talentName, Player player) {
 		var copy = player.copy();
 
-		copy.getTalents().removeTalent(talentName);
+		copy.getTalents().disable(talentName);
 		characterService.updateAfterRestrictionChange(copy);
 
 		var baseEffectList = EffectList.createSolved(copy);

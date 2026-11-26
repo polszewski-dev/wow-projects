@@ -99,7 +99,10 @@ public class Talents implements EffectCollection {
 	}
 
 	public void reset() {
+		var disabledTalents = List.copyOf(talentByName.values());
+
 		talentByName.clear();
+		disabledTalents.forEach(this::talentDisabled);
 	}
 
 	public void loadFromTalentLink(String link) {
@@ -147,7 +150,12 @@ public class Talents implements EffectCollection {
 	}
 
 	private void enable(Talent talent) {
-		talentByName.put(talent.getName(), talent);
+		var name = talent.getName();
+		var disabledTalent = talentByName.get(name);
+
+		talentDisabled(disabledTalent);
+		talentByName.put(name, talent);
+		talentEnabled(talent);
 	}
 
 	private Optional<Talent> getTalent(String name, int rank) {
@@ -172,8 +180,22 @@ public class Talents implements EffectCollection {
 		return Optional.ofNullable(availableTalentsById.get(talentId));
 	}
 
-	public void removeTalent(String name) {
-		talentByName.remove(name);
+	public void disable(String name) {
+		var removedTalent = talentByName.remove(name);
+
+		talentDisabled(removedTalent);
+	}
+
+	private void talentEnabled(Talent talent) {
+		if (talent != null) {
+			owner.talentEnabled(talent);
+		}
+	}
+
+	private void talentDisabled(Talent talent) {
+		if (talent != null) {
+			owner.talentDisabled(talent);
+		}
 	}
 
 	@Override

@@ -22,6 +22,7 @@ import wow.commons.model.pve.PhaseId;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.ResourceType;
+import wow.commons.model.talent.Talent;
 import wow.commons.model.talent.TalentTree;
 
 import java.util.List;
@@ -269,4 +270,8 @@ public interface Character extends CharacterInfo, EffectCollection {
 	void socketBonusAdded(Effect socketBonus);
 
 	void socketBonusRemoved(Effect socketBonus);
+
+	void talentEnabled(Talent talent);
+
+	void talentDisabled(Talent talent);
 }
