@@ -9,8 +9,12 @@ import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.*;
 import wow.commons.model.config.CharacterInfo;
+import wow.commons.model.effect.Effect;
 import wow.commons.model.effect.RacialEffect;
+import wow.commons.model.item.Enchant;
+import wow.commons.model.item.Gem;
 import wow.commons.model.item.Item;
+import wow.commons.model.item.ItemSetBonus;
 import wow.commons.model.pve.GameVersion;
 import wow.commons.model.pve.GameVersionId;
 import wow.commons.model.pve.Phase;
@@ -245,4 +249,24 @@ public interface Character extends CharacterInfo, EffectCollection {
 	default void dismissPet() {
 		setActivePet(null);
 	}
+
+	void itemStatsAdded(Item item);
+
+	void itemStatsRemoved(Item item);
+
+	void itemSetBonusAdded(ItemSetBonus setBonus);
+
+	void itemSetBonusRemoved(ItemSetBonus setBonus);
+
+	void enchantStatsAdded(Enchant enchant);
+
+	void enchantStatsRemoved(Enchant enchant);
+
+	void gemStatsAdded(Gem gem);
+
+	void gemStatsRemoved(Gem gem);
+
+	void socketBonusAdded(Effect socketBonus);
+
+	void socketBonusRemoved(Effect socketBonus);
 }

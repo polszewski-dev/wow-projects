@@ -15,6 +15,7 @@ import wow.commons.model.Duration;
 import wow.commons.model.Percent;
 import wow.commons.model.character.*;
 import wow.commons.model.effect.Effect;
+import wow.commons.model.item.Item;
 import wow.commons.model.item.ItemSet;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
@@ -98,7 +99,6 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 			List<Talent> availableTalents
 	) {
 		super(name, phase, characterClass, level, creatureType, race, side, baseStatInfo, combatRatingInfo, availableTalents);
-		getEquipment().setOnEquipmentChanged(this::onEquipmentChanged);
 		this.state = new PassiveState();
 		this.resources.setHealth(10_000, 10_000);
 		this.resources.setMana(10_000, 10_000);
@@ -1048,6 +1048,18 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 		if (effectInstance.isAura()) {
 			invalidateAuras();
 		}
+	}
+
+	@Override
+	public void itemStatsAdded(Item item) {
+		super.itemStatsAdded(item);
+		onEquipmentChanged();
+	}
+
+	@Override
+	public void itemStatsRemoved(Item item) {
+		super.itemStatsRemoved(item);
+		onEquipmentChanged();
 	}
 
 	private void onEquipmentChanged() {

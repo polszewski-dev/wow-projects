@@ -1,11 +1,12 @@
 package wow.character.model.equipment;
 
-import wow.character.model.Copyable;
+import lombok.Getter;
 import wow.commons.model.effect.Effect;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.ItemSocketSpecification;
 import wow.commons.model.item.SocketType;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,8 +15,9 @@ import java.util.stream.Collectors;
  * User: POlszewski
  * Date: 2021-03-06
  */
-public class ItemSockets implements Copyable<ItemSockets>, Iterable<ItemSocket> {
+public class ItemSockets implements Iterable<ItemSocket> {
 	private final ItemSocketSpecification specification;
+	@Getter
 	private final List<ItemSocket> sockets;
 
 	private ItemSockets(ItemSocketSpecification specification, List<ItemSocket> sockets) {
@@ -23,22 +25,18 @@ public class ItemSockets implements Copyable<ItemSockets>, Iterable<ItemSocket> 
 		this.sockets = sockets;
 	}
 
-	public static ItemSockets create(ItemSocketSpecification specification) {
-		var itemSockets = specification.socketTypes().stream()
-				.map(ItemSocket::new)
-				.toList();
+	public static ItemSockets create(EquippableItem equippableItem, ItemSocketSpecification specification) {
+		var socketTypes = specification.socketTypes();
+		var itemSockets = new ArrayList<ItemSocket>(socketTypes.size());
+
+		for (int i = 0; i < socketTypes.size(); i++) {
+			var socketType = socketTypes.get(i);
+			var socket = new ItemSocket(equippableItem, i, socketType);
+
+			itemSockets.add(socket);
+		}
 
 		return new ItemSockets(specification, itemSockets);
-	}
-
-	@Override
-	public ItemSockets copy() {
-		return new ItemSockets(
-				specification,
-				sockets.stream()
-					   .map(ItemSocket::copy)
-					   .toList()
-		);
 	}
 
 	public int getSocketCount() {

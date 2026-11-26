@@ -56,7 +56,7 @@ class GemComboFinderTest extends WowEstimatorSpringTest {
 		var socketTypes = Stream.of(colorStr.split(";")).map(SocketType::valueOf).toList();
 		var player = getPlayer();
 		var specification = new ItemSocketSpecification(socketTypes, Effect.EMPTY);
-		var sockets = ItemSockets.create(specification);
+		var sockets = ItemSockets.create(null, specification);
 
 		var finder = new GemComboFinder(player, specification, HEAD, false, itemService);
 
@@ -100,7 +100,7 @@ class GemComboFinderTest extends WowEstimatorSpringTest {
 		var socketTypes = Stream.of(colorStr.split(";")).map(SocketType::valueOf).toList();
 		var player = getPlayer();
 		var specification = new ItemSocketSpecification(socketTypes, Effect.EMPTY);
-		var sockets = ItemSockets.create(specification);
+		var sockets = ItemSockets.create(null, specification);
 
 		var finder = new GemComboFinder(player, specification, HEAD, true, itemService);
 

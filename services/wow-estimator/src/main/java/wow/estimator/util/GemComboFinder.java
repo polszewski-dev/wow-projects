@@ -38,7 +38,7 @@ public class GemComboFinder {
 	) {
 		this.player = player;
 		this.socketSpecification = socketSpecification;
-		this.itemSockets = ItemSockets.create(socketSpecification);
+		this.itemSockets = ItemSockets.create(null, socketSpecification);
 		this.slotGroup = slotGroup;
 		this.includeUniqueGems = includeUniqueGems;
 		this.itemService = itemService;

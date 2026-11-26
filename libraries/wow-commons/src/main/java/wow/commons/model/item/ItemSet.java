@@ -14,6 +14,8 @@ import java.util.List;
 public interface ItemSet extends Described, TimeRestricted, CharacterRestricted {
 	List<ItemSetBonus> getItemSetBonuses();
 
+	List<ItemSetBonus> getItemSetBonuses(int numPieces);
+
 	List<String> getPieces();
 
 	ProfessionId getRequiredProfession();

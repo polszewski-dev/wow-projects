@@ -21,19 +21,21 @@ public class EquippableItem implements EffectCollection, Copyable<EquippableItem
 	private final Item item;
 	private final ItemSockets sockets;
 	private Enchant enchant;
+	private Equipment equipment;
 
 	public EquippableItem(Item item) {
-		this(item, ItemSockets.create(item.getSocketSpecification()));
-	}
-
-	private EquippableItem(Item item, ItemSockets sockets) {
 		this.item = item;
-		this.sockets = sockets;
+		this.sockets = ItemSockets.create(this, item.getSocketSpecification());
 	}
 
 	@Override
 	public EquippableItem copy() {
-		EquippableItem copy = new EquippableItem(item, sockets.copy());
+		var copy = new EquippableItem(item);
+
+		for (int socketNo = 0; socketNo < getSocketCount(); ++socketNo) {
+			copy.insertGem(socketNo, getGem(socketNo));
+		}
+
 		copy.enchant = enchant;
 		return copy;
 	}
@@ -113,7 +115,9 @@ public class EquippableItem implements EffectCollection, Copyable<EquippableItem
 			throw new IllegalArgumentException("Enchanting wrong item type");
 		}
 
+		enchantUnequipped(this.enchant);
 		this.enchant = enchant;
+		enchantEquipped(enchant);
 		return this;
 	}
 
@@ -167,6 +171,10 @@ public class EquippableItem implements EffectCollection, Copyable<EquippableItem
 		return sockets.allSocketsHaveMatchingGems(numRed, numYellow, numBlue);
 	}
 
+	boolean equippedGemMatchesSocketColor(int socketNo, Gem gem) {
+		return sockets.getSocket(socketNo).matchesSocketColor(gem);
+	}
+
 	@Override
 	public void collectEffects(EffectCollector collector) {
 		collector.addEffects(item.getEffects());
@@ -209,6 +217,46 @@ public class EquippableItem implements EffectCollection, Copyable<EquippableItem
 				&& enchant == other.enchant
 				&& IntStream.range(0, sockets.getSocketCount())
 						.allMatch(socketNo -> sockets.getGem(socketNo) == other.sockets.getGem(socketNo));
+	}
+
+	private void enchantUnequipped(Enchant enchant) {
+		if (enchant != null && equipment != null) {
+			equipment.enchantUnequipped(enchant);
+		}
+	}
+
+	private void enchantEquipped(Enchant enchant) {
+		if (enchant != null && equipment != null) {
+			equipment.enchantEquipped(enchant);
+		}
+	}
+
+	void gemUnequipped(int socketNo, Gem gem) {
+		if (gem != null && equipment != null) {
+			equipment.gemUnequipped(this, socketNo, gem);
+		}
+	}
+
+	void gemEquipped(int socketNo, Gem gem) {
+		if (gem != null && equipment != null) {
+			equipment.gemEquipped(this, socketNo, gem);
+		}
+	}
+
+	void linkToEquipment(Equipment equipment) {
+		this.equipment = equipment;
+	}
+
+	void unlinkFromEquipment() {
+		this.equipment = null;
+	}
+
+	void setGemMatches(int socketNo, boolean value) {
+		sockets.getSocket(socketNo).setMatches(value);
+	}
+
+	boolean allSocketsHaveMatchingGems() {
+		return sockets.getSockets().stream().allMatch(ItemSocket::isMatches);
 	}
 
 	@Override

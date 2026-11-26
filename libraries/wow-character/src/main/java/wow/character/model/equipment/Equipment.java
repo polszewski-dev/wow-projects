@@ -1,13 +1,12 @@
 package wow.character.model.equipment;
 
-import lombok.Setter;
 import wow.character.model.character.Character;
 import wow.character.model.effect.EffectCollection;
 import wow.character.model.effect.EffectCollector;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.categorization.ItemType;
-import wow.commons.model.item.SocketType;
+import wow.commons.model.item.*;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.ActivatedAbility;
 
@@ -22,8 +21,16 @@ import static wow.commons.model.categorization.ItemSlot.*;
 public class Equipment implements EffectCollection {
 	private final Character owner;
 	private final Map<ItemSlot, EquippableItem> itemsBySlot = new EnumMap<>(ItemSlot.class);
-	@Setter
-	private Runnable onEquipmentChanged;
+
+	private EquippableItem metaSocketItem;
+	private int metaSocketNo;
+	private Gem metaGem;
+
+	private int numRed;
+	private int numYellow;
+	private int numBlue;
+
+	private final Map<ItemSet, Integer> itemSetPieces = new LinkedHashMap<>();
 
 	public Equipment(Character owner) {
 		this.owner = owner;
@@ -141,13 +148,20 @@ public class Equipment implements EffectCollection {
 			}
 			default -> putOrRemove(slot, item);
 		}
-
-		equipmentChanged();
 	}
 
 	private void putOrRemove(ItemSlot slot, EquippableItem item) {
+		var unequipped = get(slot);
+
+		if (unequipped != null) {
+			unequipped.unlinkFromEquipment();
+			itemUnequipped(unequipped);
+		}
+
 		if (item != null) {
 			itemsBySlot.put(slot, item);
+			item.linkToEquipment(this);
+			itemEquipped(item);
 		} else {
 			itemsBySlot.remove(slot);
 		}
@@ -181,8 +195,11 @@ public class Equipment implements EffectCollection {
 	}
 
 	public void reset() {
-		itemsBySlot.clear();
-		equipmentChanged();
+		var equippedSlots = List.copyOf(itemsBySlot.keySet());
+
+		for (var slot : equippedSlots) {
+			putOrRemove(slot, null);
+		}
 	}
 
 	public List<EquippableItem> toList() {
@@ -233,9 +250,214 @@ public class Equipment implements EffectCollection {
 		return Optional.empty();
 	}
 
-	private void equipmentChanged() {
-		if (onEquipmentChanged != null) {
-			onEquipmentChanged.run();
+	void itemEquipped(EquippableItem equippableItem) {
+		owner.itemStatsAdded(equippableItem.getItem());
+
+		var itemSet = equippableItem.getItemSet();
+
+		if (itemSet != null) {
+			itemSetPieceEquipped(itemSet);
+		}
+
+		var enchant = equippableItem.getEnchant();
+
+		if (enchant != null) {
+			enchantEquipped(enchant);
+		}
+
+		var sockets = equippableItem.getSockets();
+
+		for (var socket : sockets) {
+			var gem = socket.getGem();
+
+			if (gem != null) {
+				gemEquipped(equippableItem, socket.getSocketNo(), gem);
+			}
+		}
+	}
+
+	void itemUnequipped(EquippableItem equippableItem) {
+		owner.itemStatsRemoved(equippableItem.getItem());
+
+		var itemSet = equippableItem.getItemSet();
+
+		if (itemSet != null) {
+			itemSetPieceUnequipped(itemSet);
+		}
+
+		var enchant = equippableItem.getEnchant();
+
+		if (enchant != null) {
+			enchantUnequipped(enchant);
+		}
+
+		var sockets = equippableItem.getSockets();
+
+		for (var socket : sockets) {
+			var gem = socket.getGem();
+
+			if (gem != null) {
+				gemUnequipped(equippableItem, socket.getSocketNo(), gem);
+			}
+		}
+	}
+
+	private void itemSetPieceEquipped(ItemSet itemSet) {
+		int numPiecesAfterEquip = itemSetPieces.getOrDefault(itemSet, 0) + 1;
+
+		itemSetPieces.put(itemSet, numPiecesAfterEquip);
+
+		var equippedBonuses = itemSet.getItemSetBonuses(numPiecesAfterEquip);
+
+		for (var equippedBonus : equippedBonuses) {
+			owner.itemSetBonusAdded(equippedBonus);
+		}
+	}
+
+	private void itemSetPieceUnequipped(ItemSet itemSet) {
+		int numPiecesBeforeUnequip = itemSetPieces.get(itemSet);
+
+		itemSetPieces.put(itemSet, numPiecesBeforeUnequip - 1);
+
+		var unequippedBonuses = itemSet.getItemSetBonuses(numPiecesBeforeUnequip);
+
+		for (var unequippedBonus : unequippedBonuses) {
+			owner.itemSetBonusRemoved(unequippedBonus);
+		}
+	}
+
+	void enchantEquipped(Enchant enchant) {
+		owner.enchantStatsAdded(enchant);
+	}
+
+	void enchantUnequipped(Enchant enchant) {
+		owner.enchantStatsRemoved(enchant);
+	}
+
+	void gemEquipped(EquippableItem equippableItem, int socketNo, Gem gem) {
+		if (gem.getColor() == GemColor.META) {
+			metaGemEquipped(equippableItem, socketNo, gem);
+
+		} else {
+			coloredGemEquipped(equippableItem, socketNo, gem);
+		}
+	}
+
+	void gemUnequipped(EquippableItem equippableItem, int socketNo, Gem gem) {
+		if (gem.getColor() == GemColor.META) {
+			metaGemUnequipped();
+		} else {
+			coloredGemUnequipped(equippableItem, socketNo, gem);
+		}
+	}
+
+	private void metaGemEquipped(EquippableItem equippableItem, int socketNo, Gem gem) {
+		this.metaSocketItem = equippableItem;
+		this.metaSocketNo = socketNo;
+		this.metaGem = gem;
+
+		if (isMetaConditionTrue()) {
+			enableMetaGem();
+		}
+	}
+
+	private void metaGemUnequipped() {
+		if (isMetaConditionTrue()) {
+			disableMetaGem();
+		}
+
+		this.metaSocketItem = null;
+		this.metaSocketNo = -1;
+		this.metaGem = null;
+	}
+
+	private void coloredGemEquipped(EquippableItem equippableItem, int socketNo, Gem gem) {
+		owner.gemStatsAdded(gem);
+
+		if (equippableItem.equippedGemMatchesSocketColor(socketNo, gem)) {
+			equippableItem.setGemMatches(socketNo, true);
+
+			if (equippableItem.allSocketsHaveMatchingGems()) {
+				owner.socketBonusAdded(equippableItem.getSocketBonus());
+			}
+		}
+
+		var metaEnabledBefore = metaGem != null && isMetaConditionTrue();
+
+		if (gem.getColor().matchesSocket(SocketType.RED)) {
+			++numRed;
+		}
+
+		if (gem.getColor().matchesSocket(SocketType.YELLOW)) {
+			++numYellow;
+		}
+
+		if (gem.getColor().matchesSocket(SocketType.BLUE)) {
+			++numBlue;
+		}
+
+		updateMetaGemEnabledStatus(metaEnabledBefore);
+	}
+
+	private void coloredGemUnequipped(EquippableItem equippableItem, int socketNo, Gem gem) {
+		var metaEnabledBefore = metaGem != null && isMetaConditionTrue();
+
+		removeEffectAndSocketBonus(equippableItem, socketNo, gem);
+
+		if (gem.getColor().matchesSocket(SocketType.RED)) {
+			--numRed;
+		}
+
+		if (gem.getColor().matchesSocket(SocketType.YELLOW)) {
+			--numYellow;
+		}
+
+		if (gem.getColor().matchesSocket(SocketType.BLUE)) {
+			--numBlue;
+		}
+
+		updateMetaGemEnabledStatus(metaEnabledBefore);
+	}
+
+	private void updateMetaGemEnabledStatus(boolean metaEnabledBefore) {
+		if (metaGem == null) {
+			return;
+		}
+
+		var metaEnabledAfter = isMetaConditionTrue();
+
+		if (!metaEnabledBefore && metaEnabledAfter) {
+			enableMetaGem();
+		} else if (metaEnabledBefore && !metaEnabledAfter) {
+			disableMetaGem();
+		}
+	}
+
+	private boolean isMetaConditionTrue() {
+		return metaGem.isMetaConditionTrue(numRed, numYellow, numBlue);
+	}
+
+	private void enableMetaGem() {
+		metaSocketItem.setGemMatches(metaSocketNo, true);
+
+		if (metaSocketItem.allSocketsHaveMatchingGems()) {
+			owner.gemStatsAdded(metaGem);
+			owner.socketBonusAdded(metaSocketItem.getSocketBonus());
+		}
+	}
+
+	private void disableMetaGem() {
+		removeEffectAndSocketBonus(metaSocketItem, metaSocketNo, metaGem);
+	}
+
+	private void removeEffectAndSocketBonus(EquippableItem equippableItem, int socketNo, Gem gem) {
+		var allSocketsMatchedBefore = equippableItem.allSocketsHaveMatchingGems();
+
+		equippableItem.setGemMatches(socketNo, false);
+		owner.gemStatsRemoved(gem);
+
+		if (allSocketsMatchedBefore) {
+			owner.socketBonusRemoved(equippableItem.getSocketBonus());
 		}
 	}
 

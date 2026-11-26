@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import wow.character.model.character.PlayerCharacter;
+import wow.character.model.character.TestPlayerCharacter;
 import wow.character.model.equipment.EquippableItem;
 import wow.character.service.CharacterService;
 import wow.commons.model.character.CharacterClassId;
@@ -85,29 +86,30 @@ public abstract class WowCharacterSpringTest {
 		return enchantRepository.getEnchant(name, PHASE).orElseThrow();
 	}
 
-	protected PlayerCharacter getPlayer() {
+	protected TestPlayerCharacter getPlayer() {
 		return getPlayer(CHARACTER_CLASS, RACE);
 	}
 
-	protected PlayerCharacter getPlayer(CharacterClassId characterClass, RaceId race) {
+	protected TestPlayerCharacter getPlayer(CharacterClassId characterClass, RaceId race) {
 		return getPlayer(characterClass, race, LEVEL, PHASE);
 	}
 
-	protected PlayerCharacter getPlayer(String name, CharacterClassId characterClass, RaceId race) {
+	protected TestPlayerCharacter getPlayer(String name, CharacterClassId characterClass, RaceId race) {
 		return getPlayer(name, characterClass, race, LEVEL, PHASE);
 	}
 
-	protected PlayerCharacter getPlayer(CharacterClassId characterClass, RaceId race, int level, PhaseId phase) {
+	protected TestPlayerCharacter getPlayer(CharacterClassId characterClass, RaceId race, int level, PhaseId phase) {
 		return getPlayer("Player", characterClass, race, level, phase);
 	}
 
-	protected PlayerCharacter getPlayer(String name, CharacterClassId characterClass, RaceId race, int level, PhaseId phase) {
+	protected TestPlayerCharacter getPlayer(String name, CharacterClassId characterClass, RaceId race, int level, PhaseId phase) {
 		var character = characterService.createPlayerCharacter(
 				name,
 				characterClass,
 				race,
 				level,
-				phase
+				phase,
+				TestPlayerCharacter::new
 		);
 
 		var target = characterService.createNonPlayerCharacter(

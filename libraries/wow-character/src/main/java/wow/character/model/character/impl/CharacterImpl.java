@@ -12,6 +12,11 @@ import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.Race;
+import wow.commons.model.effect.Effect;
+import wow.commons.model.item.Enchant;
+import wow.commons.model.item.Gem;
+import wow.commons.model.item.Item;
+import wow.commons.model.item.ItemSetBonus;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
 import wow.commons.model.spell.Ability;
@@ -200,6 +205,56 @@ public abstract class CharacterImpl implements Character {
 		for (var racial : getRacials()) {
 			collector.addEffect(racial);
 		}
+	}
+
+	@Override
+	public void itemStatsAdded(Item item) {
+		//todo
+	}
+
+	@Override
+	public void itemStatsRemoved(Item item) {
+		//todo
+	}
+
+	@Override
+	public void itemSetBonusAdded(ItemSetBonus setBonus) {
+		//todo
+	}
+
+	@Override
+	public void itemSetBonusRemoved(ItemSetBonus setBonus) {
+		//todo
+	}
+
+	@Override
+	public void enchantStatsAdded(Enchant enchant) {
+		//todo
+	}
+
+	@Override
+	public void enchantStatsRemoved(Enchant enchant) {
+		//todo
+	}
+
+	@Override
+	public void gemStatsAdded(Gem gem) {
+		//todo
+	}
+
+	@Override
+	public void gemStatsRemoved(Gem gem) {
+		//todo
+	}
+
+	@Override
+	public void socketBonusAdded(Effect socketBonus) {
+		//todo
+	}
+
+	@Override
+	public void socketBonusRemoved(Effect socketBonus) {
+		//todo
 	}
 
 	@Override

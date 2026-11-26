@@ -28,6 +28,13 @@ public class ItemSetImpl implements ItemSet {
 	private List<ItemSetBonus> itemSetBonuses;
 
 	@Override
+	public List<ItemSetBonus> getItemSetBonuses(int numPieces) {
+		return itemSetBonuses.stream()
+				.filter(setBonus -> setBonus.numPieces() == numPieces)
+				.toList();
+	}
+
+	@Override
 	public String toString() {
 		return getName();
 	}

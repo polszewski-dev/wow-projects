@@ -1,7 +1,8 @@
 package wow.character.model.equipment;
 
+import lombok.AccessLevel;
 import lombok.Getter;
-import wow.character.model.Copyable;
+import lombok.Setter;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.SocketType;
 
@@ -10,19 +11,20 @@ import wow.commons.model.item.SocketType;
  * Date: 2021-12-14
  */
 @Getter
-public class ItemSocket implements Copyable<ItemSocket> {
+public class ItemSocket {
+	private final EquippableItem equippableItem;
+	private final int socketNo;
 	private final SocketType socketType;
 	private Gem gem;
 
-	ItemSocket(SocketType socketType) {
-		this.socketType = socketType;
-	}
+	@Getter(AccessLevel.PACKAGE)
+	@Setter(AccessLevel.PACKAGE)
+	private boolean matches;
 
-	@Override
-	public ItemSocket copy() {
-		var copy = new ItemSocket(socketType);
-		copy.gem = gem;
-		return copy;
+	ItemSocket(EquippableItem equippableItem, int socketNo, SocketType socketType) {
+		this.equippableItem = equippableItem;
+		this.socketNo = socketNo;
+		this.socketType = socketType;
 	}
 
 	public boolean isMetaSocket() {
@@ -34,7 +36,21 @@ public class ItemSocket implements Copyable<ItemSocket> {
 			throw new IllegalArgumentException(String.format("%s socket does not accept gems of color: %s", socketType, gem.getColor()));
 		}
 
+		gemUnequipped(this.gem);
 		this.gem = gem;
+		gemEquipped(gem);
+	}
+
+	private void gemUnequipped(Gem gem) {
+		if (gem != null) {
+			equippableItem.gemUnequipped(socketNo, gem);
+		}
+	}
+
+	private void gemEquipped(Gem gem) {
+		if (gem != null) {
+			equippableItem.gemEquipped(socketNo, gem);
+		}
 	}
 
 	public boolean matchesSocketColor(Gem gem) {
