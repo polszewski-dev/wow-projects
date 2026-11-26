@@ -28,10 +28,12 @@ public class ConsumableRepositoryImpl implements ConsumableRepository {
 		parser.getConsumables().forEach(this::addConsumable);
 	}
 
+	@Override
 	public Optional<Consumable> getConsumable(ConsumableId consumableId, PhaseId phaseId) {
 		return consumableById.getOptional(phaseId, consumableId);
 	}
 
+	@Override
 	public Optional<Consumable> getConsumable(String name, PhaseId phaseId) {
 		return consumableByName.getOptional(phaseId, name);
 	}

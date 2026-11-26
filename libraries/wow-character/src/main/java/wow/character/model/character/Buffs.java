@@ -39,4 +39,18 @@ public class Buffs extends Options<Buff, BuffId> implements EffectCollection {
 
 		return buff.getName();
 	}
+
+	@Override
+	protected void optionEnabled(Buff buff) {
+		if (buff != null) {
+			owner.buffEnabled(buff);
+		}
+	}
+
+	@Override
+	protected void optionDisabled(Buff buff) {
+		if (buff != null) {
+			owner.buffDisabled(buff);
+		}
+	}
 }

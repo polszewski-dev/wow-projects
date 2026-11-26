@@ -50,4 +50,18 @@ public class Consumables extends Options<Consumable, ConsumableId> implements Ef
 
 		return consumable.getName();
 	}
+
+	@Override
+	protected void optionEnabled(Consumable consumable) {
+		if (consumable != null) {
+			owner.consumableEnabled(consumable);
+		}
+	}
+
+	@Override
+	protected void optionDisabled(Consumable consumable) {
+		if (consumable != null) {
+			owner.consumableDisabled(consumable);
+		}
+	}
 }

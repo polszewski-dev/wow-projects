@@ -1,13 +1,12 @@
 package wow.character.model.character;
 
+import wow.character.model.asset.Asset;
 import wow.character.model.character.impl.PlayerCharacterImpl;
+import wow.commons.model.buff.Buff;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.Race;
 import wow.commons.model.effect.Effect;
-import wow.commons.model.item.Enchant;
-import wow.commons.model.item.Gem;
-import wow.commons.model.item.Item;
-import wow.commons.model.item.ItemSetBonus;
+import wow.commons.model.item.*;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.talent.Talent;
 
@@ -112,5 +111,41 @@ public class TestPlayerCharacter extends PlayerCharacterImpl {
 	public void talentDisabled(Talent talent) {
 		super.talentDisabled(talent);
 		addEvent(new TalentDisabled(talent));
+	}
+
+	@Override
+	public void buffEnabled(Buff buff) {
+		super.buffEnabled(buff);
+		addEvent(new BuffEnabled(buff));
+	}
+
+	@Override
+	public void buffDisabled(Buff buff) {
+		super.buffDisabled(buff);
+		addEvent(new BuffDisabled(buff));
+	}
+
+	@Override
+	public void consumableEnabled(Consumable consumable) {
+		super.consumableEnabled(consumable);
+		addEvent(new ConsumableEnabled(consumable));
+	}
+
+	@Override
+	public void consumableDisabled(Consumable consumable) {
+		super.consumableDisabled(consumable);
+		addEvent(new ConsumableDisabled(consumable));
+	}
+
+	@Override
+	public void assetEnabled(Asset asset) {
+		super.assetEnabled(asset);
+		addEvent(new AssetEnabled(asset));
+	}
+
+	@Override
+	public void assetDisabled(Asset asset) {
+		super.assetDisabled(asset);
+		addEvent(new AssetDisabled(asset));
 	}
 }

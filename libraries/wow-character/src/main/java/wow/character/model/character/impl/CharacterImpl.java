@@ -8,15 +8,13 @@ import wow.character.model.character.*;
 import wow.character.model.effect.EffectCollector;
 import wow.character.model.equipment.Equipment;
 import wow.character.model.talent.Talents;
+import wow.commons.model.buff.Buff;
 import wow.commons.model.categorization.PveRole;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.Race;
 import wow.commons.model.effect.Effect;
-import wow.commons.model.item.Enchant;
-import wow.commons.model.item.Gem;
-import wow.commons.model.item.Item;
-import wow.commons.model.item.ItemSetBonus;
+import wow.commons.model.item.*;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
 import wow.commons.model.spell.Ability;
@@ -264,6 +262,26 @@ public abstract class CharacterImpl implements Character {
 
 	@Override
 	public void talentDisabled(Talent talent) {
+		//todo
+	}
+
+	@Override
+	public void buffEnabled(Buff buff) {
+		//todo
+	}
+
+	@Override
+	public void buffDisabled(Buff buff) {
+		//todo
+	}
+
+	@Override
+	public void consumableEnabled(Consumable consumable) {
+		//todo
+	}
+
+	@Override
+	public void consumableDisabled(Consumable consumable) {
 		//todo
 	}
 

@@ -127,7 +127,11 @@ public abstract class Options<T, I> {
 	}
 
 	public void reset() {
-		enabledByKey.clear();
+		var options = List.copyOf(enabledByKey.values());
+
+		for (var option : options) {
+			enableImpl(option, false);
+		}
 	}
 
 	public void enable(I id, boolean enabled) {
@@ -160,11 +164,15 @@ public abstract class Options<T, I> {
 
 	private void enableImpl(T option, boolean enabled) {
 		var key = getKey(option);
+		var currentOption = enabledByKey.get(key);
 
 		if (enabled) {
+			optionDisabled(currentOption);
 			enabledByKey.put(key, option);
+			optionEnabled(option);
 		} else {
 			enabledByKey.remove(key);
+			optionDisabled(currentOption);
 		}
 	}
 
@@ -199,4 +207,8 @@ public abstract class Options<T, I> {
 			this.enableImpl(option, true);
 		}
 	}
+
+	protected abstract void optionEnabled(T option);
+
+	protected abstract void optionDisabled(T option);
 }

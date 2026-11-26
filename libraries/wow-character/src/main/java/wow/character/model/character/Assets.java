@@ -32,4 +32,18 @@ public class Assets extends Options<Asset, AssetId> {
 
 		return asset.name();
 	}
+
+	@Override
+	protected void optionEnabled(Asset asset) {
+		if (asset != null) {
+			owner.assetEnabled(asset);
+		}
+	}
+
+	@Override
+	protected void optionDisabled(Asset asset) {
+		if (asset != null) {
+			owner.assetDisabled(asset);
+		}
+	}
 }

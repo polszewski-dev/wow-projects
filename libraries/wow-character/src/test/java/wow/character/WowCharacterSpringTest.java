@@ -15,6 +15,7 @@ import wow.commons.model.item.Enchant;
 import wow.commons.model.item.Gem;
 import wow.commons.model.item.GemId;
 import wow.commons.model.pve.PhaseId;
+import wow.commons.repository.item.ConsumableRepository;
 import wow.commons.repository.item.EnchantRepository;
 import wow.commons.repository.item.GemRepository;
 import wow.commons.repository.item.ItemRepository;
@@ -53,6 +54,9 @@ public abstract class WowCharacterSpringTest {
 
 	@Autowired
 	protected BuffRepository buffRepository;
+
+	@Autowired
+	protected ConsumableRepository consumableRepository;
 
 	@Autowired
 	protected CharacterService characterService;

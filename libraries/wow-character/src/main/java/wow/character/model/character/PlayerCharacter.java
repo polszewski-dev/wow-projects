@@ -1,5 +1,6 @@
 package wow.character.model.character;
 
+import wow.character.model.asset.Asset;
 import wow.commons.model.profession.ProfessionId;
 import wow.commons.model.profession.ProfessionSpecializationId;
 
@@ -72,4 +73,8 @@ public interface PlayerCharacter extends Character {
 	default PlayerCharacter getMaster() {
 		return this;
 	}
+
+	default void assetEnabled(Asset asset) {}
+
+	default void assetDisabled(Asset asset) {}
 }

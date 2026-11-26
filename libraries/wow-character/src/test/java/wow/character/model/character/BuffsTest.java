@@ -11,6 +11,8 @@ import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static wow.character.model.character.TestEvent.BuffDisabled;
+import static wow.character.model.character.TestEvent.BuffEnabled;
 import static wow.test.commons.BuffNames.*;
 
 /**
@@ -139,14 +141,86 @@ class BuffsTest extends WowCharacterSpringTest {
 		assertBuff(FLASK_OF_SUPREME_POWER, false);
 	}
 
+	@Test
+	void enable_talent() {
+		buffs.enable(FLASK_OF_SUPREME_POWER);
+
+		assertEvents(
+				new BuffEnabled(supremePower)
+		);
+	}
+
+	@Test
+	void disable_talent() {
+		buffs.enable(FLASK_OF_SUPREME_POWER);
+		buffs.disable(FLASK_OF_SUPREME_POWER);
+
+		assertEvents(
+				new BuffEnabled(supremePower),
+				new BuffDisabled(supremePower)
+		);
+	}
+
+	@Test
+	void disable_not_enabled_talent() {
+		buffs.disable(FLASK_OF_SUPREME_POWER);
+
+		assertEvents();
+	}
+
+	@Test
+	void reset_talent() {
+		buffs.enable(FLASK_OF_SUPREME_POWER);
+		buffs.reset();
+
+		assertEvents(
+				new BuffEnabled(supremePower),
+				new BuffDisabled(supremePower)
+		);
+	}
+
+	@Test
+	void enable_from_the_same_exclusion_group() {
+		buffs.enable(FLASK_OF_SUPREME_POWER);
+		buffs.enable(FLASK_OF_PURE_DEATH);
+
+		assertEvents(
+				new BuffEnabled(supremePower),
+				new BuffDisabled(supremePower),
+				new BuffEnabled(pureDeath)
+		);
+	}
+
+	TestPlayerCharacter player;
 	Buffs buffs;
+
+	Buff supremePower;
+	Buff pureDeath;
 
 	@BeforeEach
 	void setup() {
-		buffs = getPlayer().getBuffs();
+		player = getPlayer();
+		buffs = player.getBuffs();
 		buffs.reset();
+
+		resetEvents();
+
+		supremePower = getBuff(FLASK_OF_SUPREME_POWER);
+		pureDeath = getBuff(FLASK_OF_PURE_DEATH);
 	}
 
+	Buff getBuff(String name) {
+		return buffRepository.getBuff(name, player.getPhaseId()).orElseThrow();
+	}
+
+	void assertEvents(TestEvent... expected) {
+		assertThat(player.events).isEqualTo(List.of(expected));
+	}
+
+	void resetEvents() {
+		player.events.clear();
+	}
+	
 	void assertNoBuffs() {
 		assertBuffs(buffs);
 	}
