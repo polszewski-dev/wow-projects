@@ -8,7 +8,6 @@ import wow.character.model.character.*;
 import wow.character.model.character.impl.NonPlayerCharacterImpl;
 import wow.character.model.character.impl.PlayerCharacterImpl;
 import wow.character.model.equipment.EquippableItem;
-import wow.character.model.talent.Talents;
 import wow.character.repository.*;
 import wow.character.service.CharacterService;
 import wow.character.service.NonPlayerCharacterFactory;
@@ -83,7 +82,7 @@ public class CharacterServiceImpl implements CharacterService {
 		var race = gameVersion.getRace(raceId).orElseThrow();
 		var baseStatInfo = baseStatInfoRepository.getBaseStatInfo(gameVersion.getGameVersionId(), characterClassId, raceId, level).orElseThrow();
 		var combatRatingInfo = combatRatingInfoRepository.getCombatRatingInfo(gameVersion.getGameVersionId(), level).orElseThrow();
-		var talents = new Talents(characterClassId, phaseId, getAvailableTalents(characterClassId, phaseId));
+		var availableTalents = getAvailableTalents(characterClassId, phaseId);
 		var professions = new CharacterProfessions(getAvailableProfessions(phase), phase, level);
 		var exclusiveFactions = new ExclusiveFactions(getAvailableExclusiveFactions(phaseId));
 
@@ -95,7 +94,7 @@ public class CharacterServiceImpl implements CharacterService {
 				level,
 				baseStatInfo,
 				combatRatingInfo,
-				talents,
+				availableTalents,
 				professions,
 				exclusiveFactions
 		);
@@ -117,7 +116,7 @@ public class CharacterServiceImpl implements CharacterService {
 		var side = Side.HOSTILE;
 		var baseStatInfo = BaseStatInfo.getDummyBaseStatInfo(characterClass, level, phase);
 		var combatRatingInfo = combatRatingInfoRepository.getCombatRatingInfo(gameVersion.getGameVersionId(), level).orElseThrow();
-		var talents = new Talents(characterClassId, phaseId, List.of());
+		var availableTalents = List.<Talent>of();
 
 		return factory.newNonPlayerCharacter(
 				name,
@@ -129,7 +128,7 @@ public class CharacterServiceImpl implements CharacterService {
 				side,
 				baseStatInfo,
 				combatRatingInfo,
-				talents
+				availableTalents
 		);
 	}
 
@@ -143,7 +142,7 @@ public class CharacterServiceImpl implements CharacterService {
 		var side = master.getSide();
 		var baseStatInfo = master.getBaseStatInfo();
 		var combatRatingInfo = master.getCombatRatingInfo();
-		var talents = new Talents(characterClassId, phase.getPhaseId(), List.of());
+		var availableTalents = List.<Talent>of();
 
 		return factory.newPetCharacter(
 				name,
@@ -155,7 +154,7 @@ public class CharacterServiceImpl implements CharacterService {
 				side,
 				baseStatInfo,
 				combatRatingInfo,
-				talents,
+				availableTalents,
 				sourceSpell
 		);
 	}

@@ -19,19 +19,6 @@ import static wow.test.commons.BuffNames.*;
  */
 class BuffsTest extends WowCharacterSpringTest {
 	@Test
-	void copy() {
-		buffs.enable(FLASK_OF_SUPREME_POWER);
-
-		assertBuffs(FLASK_OF_SUPREME_POWER);
-
-		var copy = buffs.copy();
-		buffs.reset();
-
-		assertNoBuffs();
-		assertBuffs(copy, FLASK_OF_SUPREME_POWER);
-	}
-
-	@Test
 	void getList() {
 		assertNoBuffs();
 

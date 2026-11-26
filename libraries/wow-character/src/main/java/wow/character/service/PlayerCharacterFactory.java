@@ -1,10 +1,12 @@
 package wow.character.service;
 
 import wow.character.model.character.*;
-import wow.character.model.talent.Talents;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.Race;
 import wow.commons.model.pve.Phase;
+import wow.commons.model.talent.Talent;
+
+import java.util.List;
 
 /**
  * User: POlszewski
@@ -20,7 +22,7 @@ public interface PlayerCharacterFactory<T extends PlayerCharacter> {
 			int level,
 			BaseStatInfo baseStatInfo,
 			CombatRatingInfo combatRatingInfo,
-			Talents talents,
+			List<Talent> availableTalents,
 			CharacterProfessions characterProfessions,
 			ExclusiveFactions exclusiveFactions
 	);

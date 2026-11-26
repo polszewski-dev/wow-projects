@@ -2,21 +2,24 @@ package wow.estimator.model.impl;
 
 import lombok.Getter;
 import lombok.Setter;
+import wow.character.model.character.BaseStatInfo;
 import wow.character.model.character.Character;
-import wow.character.model.character.*;
+import wow.character.model.character.CombatRatingInfo;
+import wow.character.model.character.Spellbook;
 import wow.character.model.character.impl.CharacterImpl;
 import wow.character.model.effect.EffectCollector;
-import wow.character.model.equipment.Equipment;
-import wow.character.model.talent.Talents;
 import wow.commons.model.Percent;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.Race;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
+import wow.commons.model.talent.Talent;
 import wow.estimator.model.EffectInstances;
 import wow.estimator.model.NonPlayer;
 import wow.estimator.model.Unit;
+
+import java.util.List;
 
 /**
  * User: POlszewski
@@ -38,10 +41,10 @@ public class NonPlayerImpl extends CharacterImpl implements NonPlayer {
 			Side side,
 			BaseStatInfo baseStatInfo,
 			CombatRatingInfo combatRatingInfo,
-			Talents talents
+			List<Talent> availableTalents
 	) {
-		super(name, phase, characterClass, level, creatureType, race, side, baseStatInfo, combatRatingInfo, talents);
-		this.effectInstances = new EffectInstances();
+		super(name, phase, characterClass, level, creatureType, race, side, baseStatInfo, combatRatingInfo, availableTalents);
+		this.effectInstances = new EffectInstances(this);
 	}
 
 	private NonPlayerImpl(
@@ -54,15 +57,11 @@ public class NonPlayerImpl extends CharacterImpl implements NonPlayer {
 			Side side,
 			BaseStatInfo baseStatInfo,
 			CombatRatingInfo combatRatingInfo,
-			Talents talents,
-			Spellbook spellbook,
-			Equipment equipment,
-			Consumables consumables,
-			Buffs buffs,
-			EffectInstances effectInstances
+			List<Talent> availableTalents,
+			Spellbook spellbook
 	) {
-		super(name, phase, characterClass, level, creatureType, race, side, baseStatInfo, combatRatingInfo, talents, spellbook, equipment, consumables, buffs);
-		this.effectInstances = effectInstances;
+		super(name, phase, characterClass, level, creatureType, race, side, baseStatInfo, combatRatingInfo, availableTalents, spellbook);
+		this.effectInstances = new EffectInstances(this);
 	}
 
 	@Override
@@ -98,17 +97,18 @@ public class NonPlayerImpl extends CharacterImpl implements NonPlayer {
 				getSide(),
 				getBaseStatInfo(),
 				getCombatRatingInfo(),
-				getTalents().copy(),
-				getSpellbook().copy(),
-				getEquipment().copy(),
-				getConsumables().copy(),
-				getBuffs().copy(),
-				getEffectInstances().copy()
+				getTalents().getAvailableTalents(),
+				getSpellbook().copy()
 		);
+		copy.setEquipment(getEquipment());
+		copy.setTalents(getTalents());
+		copy.getBuffs().copyFrom(getBuffs());
+		copy.getConsumables().copyFrom(getConsumables());
 		copy.setRole(getRole());
 		copy.setScript(getScript());
 		copy.setTarget(getTarget());
 		copy.setFocus(getFocus());
+		copy.getEffectInstances().copyFrom(effectInstances);
 		return copy;
 	}
 

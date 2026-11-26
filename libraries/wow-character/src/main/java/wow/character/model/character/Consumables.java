@@ -1,6 +1,5 @@
 package wow.character.model.character;
 
-import wow.character.model.Copyable;
 import wow.character.model.effect.EffectCollection;
 import wow.character.model.effect.EffectCollector;
 import wow.commons.model.item.Consumable;
@@ -14,7 +13,13 @@ import java.util.Optional;
  * User: POlszewski
  * Date: 2024-11-21
  */
-public class Consumables extends Options<Consumable, ConsumableId> implements EffectCollection, Copyable<Consumables> {
+public class Consumables extends Options<Consumable, ConsumableId> implements EffectCollection {
+	private final Character owner;
+
+	public Consumables(Character owner) {
+		this.owner = owner;
+	}
+
 	public Optional<ActivatedAbility> getAbility(AbilityId abilityId) {
 		return getStream()
 				.map(Consumable::getActivatedAbility)
@@ -25,13 +30,6 @@ public class Consumables extends Options<Consumable, ConsumableId> implements Ef
 	@Override
 	public void collectEffects(EffectCollector collector) {
 		forEach(consumable -> collector.addActivatedAbility(consumable.getActivatedAbility()));
-	}
-
-	@Override
-	public Consumables copy() {
-		var copy = new Consumables();
-		copyInto(copy);
-		return copy;
 	}
 
 	@Override

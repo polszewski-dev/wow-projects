@@ -74,7 +74,8 @@ public class PlayerConfigConverter implements Converter<Player, PlayerConfig>, B
 
 		player.setProfessions(characterProfessionConfigConverter.convertBackList(source.getProfessions()));
 		player.getExclusiveFactions().set(source.getExclusiveFactions());
-		player.setEquipment(equipmentConfigConverter.convertBack(source.getEquipment(), player.getPhaseId()));
+
+		equipmentConfigConverter.convertBack(source.getEquipment(), player);
 
 		var target = nonPlayerConfigConverter.convertBack(source.getTarget());
 		player.setTarget(target);

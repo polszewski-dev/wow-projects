@@ -63,7 +63,8 @@ public abstract class AbstractPlayerConverter<P extends PlayerCharacter> impleme
 
 		player.setProfessions(characterProfessionConverter.convertBackList(source.professions()));
 		player.getExclusiveFactions().set(source.exclusiveFactions());
-		player.setEquipment(equipmentConverter.convertBack(source.equipment(), source.phaseId()));
+
+		equipmentConverter.convertBack(source.equipment(), player);
 
 		characterService.updateAfterRestrictionChange(player);
 

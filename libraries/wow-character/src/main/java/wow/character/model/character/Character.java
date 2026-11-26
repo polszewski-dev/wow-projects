@@ -22,6 +22,7 @@ import wow.commons.model.talent.TalentTree;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * User: POlszewski
@@ -151,6 +152,10 @@ public interface Character extends CharacterInfo, EffectCollection {
 
 	default void setEquipment(Equipment equipment) {
 		getEquipment().setEquipment(equipment);
+	}
+
+	default void setTalents(Talents talents) {
+		getTalents().setIds(talents.getIds(), Function.identity());
 	}
 
 	default EquippableItem getEquippedItem(ItemSlot slot) {

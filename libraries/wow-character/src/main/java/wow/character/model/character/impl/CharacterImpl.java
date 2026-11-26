@@ -16,7 +16,9 @@ import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.AbilityId;
+import wow.commons.model.talent.Talent;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -53,7 +55,7 @@ public abstract class CharacterImpl implements Character {
 
 	private static final String IDLE_SCRIPT = "idle";
 
-	protected CharacterImpl(
+	public CharacterImpl(
 			String name,
 			Phase phase,
 			CharacterClass characterClass,
@@ -63,7 +65,8 @@ public abstract class CharacterImpl implements Character {
 			Side side,
 			BaseStatInfo baseStatInfo,
 			CombatRatingInfo combatRatingInfo,
-			Talents talents
+			List<Talent> availableTalents,
+			Spellbook spellbook
 	) {
 		this.name = name;
 		this.phase = phase;
@@ -74,11 +77,39 @@ public abstract class CharacterImpl implements Character {
 		this.side = side;
 		this.baseStatInfo = baseStatInfo;
 		this.combatRatingInfo = combatRatingInfo;
-		this.talents = talents;
+		this.talents = new Talents(this, availableTalents);
+		this.spellbook = spellbook;
+		this.equipment = new Equipment(this);
+		this.consumables = new Consumables(this);
+		this.buffs = new Buffs(this);
+	}
+
+	protected CharacterImpl(
+			String name,
+			Phase phase,
+			CharacterClass characterClass,
+			int level,
+			CreatureType creatureType,
+			Race race,
+			Side side,
+			BaseStatInfo baseStatInfo,
+			CombatRatingInfo combatRatingInfo,
+			List<Talent> availableTalents
+	) {
+		this.name = name;
+		this.phase = phase;
+		this.characterClass = characterClass;
+		this.level = level;
+		this.creatureType = creatureType;
+		this.race = race;
+		this.side = side;
+		this.baseStatInfo = baseStatInfo;
+		this.combatRatingInfo = combatRatingInfo;
+		this.talents = new Talents(this, availableTalents);
 		this.spellbook = new Spellbook();
-		this.equipment = new Equipment();
-		this.consumables = new Consumables();
-		this.buffs = new Buffs();
+		this.equipment = new Equipment(this);
+		this.consumables = new Consumables(this);
+		this.buffs = new Buffs(this);
 		this.script = IDLE_SCRIPT;
 	}
 

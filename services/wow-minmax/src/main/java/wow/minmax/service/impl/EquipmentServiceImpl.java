@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import wow.character.model.character.GearSet;
 import wow.character.model.equipment.Equipment;
+import wow.character.model.equipment.EquipmentSnapshot;
 import wow.character.model.equipment.EquippableItem;
 import wow.character.model.equipment.GemFilter;
 import wow.character.service.CharacterService;
@@ -51,7 +52,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 		var player = playerService.getPlayer(playerId);
 		var itemToEquip = getItemToEquip(slot, item, bestVariant, gemFilter, player);
 
-		var oldEquipment = player.getEquipment().deepCopy();
+		var oldEquipment = player.getEquipment().getSnapshot();
 
 		characterService.equipItem(player, slot, itemToEquip);
 
@@ -64,7 +65,7 @@ public class EquipmentServiceImpl implements EquipmentService {
 	public List<ItemSlotStatus> equipItemGroup(PlayerId playerId, ItemSlotGroup slotGroup, List<EquippableItem> items) {
 		var player = playerService.getPlayer(playerId);
 
-		var oldEquipment = player.getEquipment().deepCopy();
+		var oldEquipment = player.getEquipment().getSnapshot();
 
 		characterService.equipItemGroup(player, slotGroup, items);
 
@@ -73,8 +74,8 @@ public class EquipmentServiceImpl implements EquipmentService {
 		return getEquipmentDiff(oldEquipment, player);
 	}
 
-	private List<ItemSlotStatus> getEquipmentDiff(Equipment oldEquipment, Player player) {
-		var newEquipment = player.getEquipment().deepCopy();
+	private List<ItemSlotStatus> getEquipmentDiff(EquipmentSnapshot oldEquipment, Player player) {
+		var newEquipment = player.getEquipment().getSnapshot();
 		var changedSlots = newEquipment.getChangedSlots(oldEquipment);
 
 		return changedSlots.entrySet().stream()

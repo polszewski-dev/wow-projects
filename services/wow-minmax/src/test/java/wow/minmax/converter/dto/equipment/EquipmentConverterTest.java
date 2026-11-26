@@ -1,5 +1,6 @@
 package wow.minmax.converter.dto.equipment;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import wow.character.model.equipment.Equipment;
@@ -10,6 +11,7 @@ import wow.minmax.WowMinMaxSpringTest;
 import wow.minmax.client.dto.equipment.EquipmentDTO;
 import wow.minmax.client.dto.equipment.EquippableItemDTO;
 import wow.minmax.client.dto.equipment.ItemDTO;
+import wow.minmax.model.Player;
 
 import java.util.List;
 import java.util.Map;
@@ -35,8 +37,6 @@ class EquipmentConverterTest extends WowMinMaxSpringTest {
 
 	@Test
 	void convert() {
-		var equipment = new Equipment();
-
 		var trinket1 = new EquippableItem(itemRepository.getItem(ItemId.of(32483), TBC_P5).orElseThrow());
 		var trinket2 = new EquippableItem(itemRepository.getItem(ItemId.of(33829), TBC_P5).orElseThrow());
 
@@ -60,15 +60,24 @@ class EquipmentConverterTest extends WowMinMaxSpringTest {
 		var trinket1 = new EquippableItemDTO(new ItemDTO(32483, null, null, null, null, 0, null, null, null, null, null, null, null, null), null, List.of());
 		var trinket2 = new EquippableItemDTO(new ItemDTO(33829, null, null, null, null, 0, null, null, null, null, null, null, null, null), null, List.of());
 
-		var equipment = new EquipmentDTO(Map.ofEntries(
+		var equipmentDTO = new EquipmentDTO(Map.ofEntries(
 				Map.entry(TRINKET_1, trinket1),
 				Map.entry(TRINKET_2, trinket2)
 		));
 
 
-		var converted = equipmentConverter.convertBack(equipment, TBC_P5);
+		equipmentConverter.convertBack(equipmentDTO, player);
 
-		assertThat(converted.getTrinket1().getId()).isEqualTo(ItemId.of(32483));
-		assertThat(converted.getTrinket2().getId()).isEqualTo(ItemId.of(33829));
+		assertThat(equipment.getTrinket1().getId()).isEqualTo(ItemId.of(32483));
+		assertThat(equipment.getTrinket2().getId()).isEqualTo(ItemId.of(33829));
+	}
+
+	Player player;
+	Equipment equipment;
+
+	@BeforeEach
+	void setup() {
+		player = getPlayer();
+		equipment = player.getEquipment();
 	}
 }

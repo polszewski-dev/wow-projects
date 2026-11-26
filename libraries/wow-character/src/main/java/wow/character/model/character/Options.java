@@ -186,9 +186,17 @@ public abstract class Options<T, I> {
 
 	protected abstract String getKey(T option);
 
-	protected void copyInto(Options<T, I> copy) {
-		copy.availableById.putAll(this.availableById);
-		copy.availableByName.putAll(this.availableByName);
-		copy.enabledByKey.putAll(this.enabledByKey);
+	public void copyFrom(Options<T, I> original) {
+		reset();
+
+		this.availableById.clear();
+		this.availableByName.clear();
+
+		this.availableById.putAll(original.availableById);
+		this.availableByName.putAll(original.availableByName);
+
+		for (T option : original.enabledByKey.values()) {
+			this.enableImpl(option, true);
+		}
 	}
 }

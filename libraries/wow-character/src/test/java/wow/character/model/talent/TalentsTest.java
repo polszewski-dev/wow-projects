@@ -16,15 +16,6 @@ import static wow.test.commons.TalentNames.*;
  */
 class TalentsTest extends WowCharacterSpringTest {
 	@Test
-	void copy() {
-		Talents copy = talents.copy();
-
-		talents.reset();
-
-		assertThat(copy.getList()).isNotEmpty();
-	}
-
-	@Test
 	void reset() {
 		talents.reset();
 

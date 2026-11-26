@@ -3,11 +3,13 @@ package wow.character.model.character.impl;
 import lombok.Getter;
 import lombok.Setter;
 import wow.character.model.character.*;
-import wow.character.model.talent.Talents;
 import wow.commons.model.Percent;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.Race;
 import wow.commons.model.pve.Phase;
+import wow.commons.model.talent.Talent;
+
+import java.util.List;
 
 /**
  * User: POlszewski
@@ -29,13 +31,13 @@ public class PlayerCharacterImpl extends CharacterImpl implements PlayerCharacte
 			int level,
 			BaseStatInfo baseStatInfo,
 			CombatRatingInfo combatRatingInfo,
-			Talents talents,
+			List<Talent> availableTalents,
 			CharacterProfessions professions,
 			ExclusiveFactions exclusiveFactions
 	) {
-		super(name, phase, characterClass, level, race.getCreatureType(), race, race.getSide(), baseStatInfo, combatRatingInfo, talents);
+		super(name, phase, characterClass, level, race.getCreatureType(), race, race.getSide(), baseStatInfo, combatRatingInfo, availableTalents);
 		this.professions = professions;
 		this.exclusiveFactions = exclusiveFactions;
-		this.assets = new Assets();
+		this.assets = new Assets(this);
 	}
 }

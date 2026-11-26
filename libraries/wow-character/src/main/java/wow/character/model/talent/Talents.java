@@ -1,13 +1,10 @@
 package wow.character.model.talent;
 
-import lombok.AllArgsConstructor;
-import wow.character.model.Copyable;
+import wow.character.model.character.Character;
 import wow.character.model.effect.EffectCollection;
 import wow.character.model.effect.EffectCollector;
 import wow.character.util.TalentLinkFormatter;
 import wow.character.util.TalentLinkParser;
-import wow.commons.model.character.CharacterClassId;
-import wow.commons.model.pve.PhaseId;
 import wow.commons.model.talent.Talent;
 import wow.commons.model.talent.TalentId;
 import wow.commons.model.talent.TalentNameRank;
@@ -20,10 +17,8 @@ import java.util.stream.Stream;
  * User: POlszewski
  * Date: 2022-12-20
  */
-@AllArgsConstructor
-public class Talents implements EffectCollection, Copyable<Talents> {
-	private final CharacterClassId characterClassId;
-	private final PhaseId phaseId;
+public class Talents implements EffectCollection {
+	private final Character owner;
 	private final Map<TalentId, Talent> availableTalentsById;
 	private final Map<TalentNameRank, Talent> availableTalentsByNameRank;
 	private final Map<CalcPositionKey, Talent> availableTalentsByCalcPosition;
@@ -31,9 +26,8 @@ public class Talents implements EffectCollection, Copyable<Talents> {
 
 	private record CalcPositionKey(int talentCalculatorPosition, int rank) {}
 
-	public Talents(CharacterClassId characterClassId, PhaseId phaseId, List<Talent> availableTalents) {
-		this.characterClassId = characterClassId;
-		this.phaseId = phaseId;
+	public Talents(Character owner, List<Talent> availableTalents) {
+		this.owner = owner;
 		this.availableTalentsById = new HashMap<>();
 		this.availableTalentsByNameRank = new HashMap<>();
 		this.availableTalentsByCalcPosition = new HashMap<>();
@@ -86,8 +80,8 @@ public class Talents implements EffectCollection, Copyable<Talents> {
 	public String getTalentLink() {
 		var talentLinkFormatter = new TalentLinkFormatter(
 				this,
-				phaseId.getGameVersionId(),
-				characterClassId
+				owner.getGameVersionId(),
+				owner.getCharacterClassId()
 		);
 
 		return talentLinkFormatter.format();
@@ -115,7 +109,7 @@ public class Talents implements EffectCollection, Copyable<Talents> {
 	}
 
 	public void loadFromTalentLink(TalentLink link) {
-		if (!link.matches(characterClassId, phaseId.getGameVersionId())) {
+		if (!link.matches(owner.getCharacterClassId(), owner.getGameVersionId())) {
 			throw new IllegalArgumentException("Incorrect talent link");
 		}
 
@@ -187,19 +181,5 @@ public class Talents implements EffectCollection, Copyable<Talents> {
 		for (var talent : talentByName.values()) {
 			collector.addEffect(talent.getEffect());
 		}
-	}
-
-	@Override
-	public Talents copy() {
-		var copy = new Talents(
-				characterClassId,
-				phaseId,
-				availableTalentsById,
-				availableTalentsByNameRank,
-				availableTalentsByCalcPosition
-		);
-
-		copy.talentByName.putAll(talentByName);
-		return copy;
 	}
 }

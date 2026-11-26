@@ -1,7 +1,5 @@
 package wow.character.model.character;
 
-import lombok.AllArgsConstructor;
-import wow.character.model.Copyable;
 import wow.character.model.effect.EffectCollection;
 import wow.character.model.effect.EffectCollector;
 import wow.commons.model.buff.Buff;
@@ -11,18 +9,16 @@ import wow.commons.model.buff.BuffId;
  * User: POlszewski
  * Date: 2022-12-20
  */
-@AllArgsConstructor
-public class Buffs extends Options<Buff, BuffId> implements EffectCollection, Copyable<Buffs> {
-	@Override
-	public void collectEffects(EffectCollector collector) {
-		forEach(buff -> collector.addEffect(buff.getEffect()));
+public class Buffs extends Options<Buff, BuffId> implements EffectCollection {
+	private final Character owner;
+
+	public Buffs(Character owner) {
+		this.owner = owner;
 	}
 
 	@Override
-	public Buffs copy() {
-		var copy = new Buffs();
-		copyInto(copy);
-		return copy;
+	public void collectEffects(EffectCollector collector) {
+		forEach(buff -> collector.addEffect(buff.getEffect()));
 	}
 
 	@Override

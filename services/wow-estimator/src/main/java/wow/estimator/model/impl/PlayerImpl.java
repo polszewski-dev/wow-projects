@@ -6,16 +6,17 @@ import wow.character.model.character.Character;
 import wow.character.model.character.*;
 import wow.character.model.character.impl.CharacterImpl;
 import wow.character.model.effect.EffectCollector;
-import wow.character.model.equipment.Equipment;
 import wow.character.model.script.ScriptPathResolver;
-import wow.character.model.talent.Talents;
 import wow.commons.model.Percent;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.Race;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.spell.Ability;
+import wow.commons.model.talent.Talent;
 import wow.commons.model.talent.TalentTree;
 import wow.estimator.model.*;
+
+import java.util.List;
 
 /**
  * User: POlszewski
@@ -39,15 +40,15 @@ public class PlayerImpl extends CharacterImpl implements Player {
 			int level,
 			BaseStatInfo baseStatInfo,
 			CombatRatingInfo combatRatingInfo,
-			Talents talents,
+			List<Talent> availableTalents,
 			CharacterProfessions professions,
 			ExclusiveFactions exclusiveFactions
 	) {
-		super(name, phase, characterClass, level, race.getCreatureType(), race, race.getSide(), baseStatInfo, combatRatingInfo, talents);
+		super(name, phase, characterClass, level, race.getCreatureType(), race, race.getSide(), baseStatInfo, combatRatingInfo, availableTalents);
 		this.professions = professions;
 		this.exclusiveFactions = exclusiveFactions;
-		this.assets = new Assets();
-		this.effectInstances = new EffectInstances();
+		this.assets = new Assets(this);
+		this.effectInstances = new EffectInstances(this);
 	}
 
 	private PlayerImpl(
@@ -59,20 +60,15 @@ public class PlayerImpl extends CharacterImpl implements Player {
 			CombatRatingInfo combatRatingInfo,
 			Spellbook spellbook,
 			Race race,
-			Talents talents,
-			Equipment equipment,
+			List<Talent> availableTalents,
 			CharacterProfessions professions,
-			ExclusiveFactions exclusiveFactions,
-			Consumables consumables,
-			Buffs buffs,
-			Assets assets,
-			EffectInstances effectInstances
+			ExclusiveFactions exclusiveFactions
 	) {
-		super(name, phase, characterClass, level, race.getCreatureType(), race, race.getSide(), baseStatInfo, combatRatingInfo, talents, spellbook, equipment, consumables, buffs);
+		super(name, phase, characterClass, level, race.getCreatureType(), race, race.getSide(), baseStatInfo, combatRatingInfo, availableTalents, spellbook);
 		this.professions = professions;
 		this.exclusiveFactions = exclusiveFactions;
-		this.assets = assets;
-		this.effectInstances = effectInstances;
+		this.assets = new Assets(this);
+		this.effectInstances = new EffectInstances(this);
 	}
 
 	@Override
@@ -107,19 +103,20 @@ public class PlayerImpl extends CharacterImpl implements Player {
 				getCombatRatingInfo(),
 				getSpellbook().copy(),
 				getRace(),
-				getTalents().copy(),
-				getEquipment().copy(),
+				getTalents().getAvailableTalents(),
 				getProfessions().copy(),
-				getExclusiveFactions().copy(),
-				getConsumables().copy(),
-				getBuffs().copy(),
-				getAssets().copy(),
-				getEffectInstances().copy()
+				getExclusiveFactions().copy()
 		);
+		copy.setEquipment(getEquipment());
+		copy.setTalents(getTalents());
+		copy.getBuffs().copyFrom(getBuffs());
+		copy.getConsumables().copyFrom(getConsumables());
+		copy.getAssets().copyFrom(getAssets());
 		copy.setRole(getRole());
 		copy.setScript(getScript());
 		copy.setTarget(getTarget());
 		copy.setFocus(getFocus());
+		copy.getEffectInstances().copyFrom(effectInstances);
 		return copy;
 	}
 

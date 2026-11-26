@@ -1,7 +1,7 @@
 package wow.character.model.equipment;
 
 import lombok.Setter;
-import wow.character.model.Copyable;
+import wow.character.model.character.Character;
 import wow.character.model.effect.EffectCollection;
 import wow.character.model.effect.EffectCollector;
 import wow.commons.model.categorization.ItemSlot;
@@ -19,29 +19,27 @@ import static wow.commons.model.categorization.ItemSlot.*;
  * User: POlszewski
  * Date: 2021-09-27
  */
-public class Equipment implements EffectCollection, Copyable<Equipment> {
+public class Equipment implements EffectCollection {
+	private final Character owner;
 	private final Map<ItemSlot, EquippableItem> itemsBySlot = new EnumMap<>(ItemSlot.class);
 	@Setter
 	private Runnable onEquipmentChanged;
 
-	@Override
-	public Equipment copy() {
-		var copy = new Equipment();
-		copy.itemsBySlot.putAll(itemsBySlot);
-		return copy;
+	public Equipment(Character owner) {
+		this.owner = owner;
 	}
 
-	public Equipment deepCopy() {
-		var copy = new Equipment();
+	public EquipmentSnapshot getSnapshot() {
+		var itemsBySlot = new EnumMap<ItemSlot, EquippableItem>(ItemSlot.class);
 
-		for (var entry : itemsBySlot.entrySet()) {
+		for (var entry : this.itemsBySlot.entrySet()) {
 			var slot = entry.getKey();
 			var item = entry.getValue();
 
-			copy.itemsBySlot.put(slot, item.copy());
+			itemsBySlot.put(slot, item.copy());
 		}
 
-		return copy;
+		return new EquipmentSnapshot(itemsBySlot);
 	}
 
 	@Override
@@ -233,21 +231,6 @@ public class Equipment implements EffectCollection, Copyable<Equipment> {
 		}
 
 		return Optional.empty();
-	}
-
-	public Map<ItemSlot, EquippableItem> getChangedSlots(Equipment oldEquipment) {
-		var result = new EnumMap<ItemSlot, EquippableItem>(ItemSlot.class);
-
-		for (var itemSlot : ItemSlot.getDpsSlots()) {
-			var oldItem = oldEquipment.get(itemSlot);
-			var newItem = this.get(itemSlot);
-
-			if (!((oldItem == newItem) || (oldItem != null && oldItem.isTheSameAs(newItem)))) {
-				result.put(itemSlot, newItem);
-			}
-		}
-
-		return result;
 	}
 
 	private void equipmentChanged() {

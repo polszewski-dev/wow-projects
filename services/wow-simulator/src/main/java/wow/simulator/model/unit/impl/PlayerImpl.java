@@ -2,13 +2,15 @@ package wow.simulator.model.unit.impl;
 
 import lombok.Getter;
 import wow.character.model.character.*;
-import wow.character.model.talent.Talents;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.Race;
 import wow.commons.model.pve.Phase;
+import wow.commons.model.talent.Talent;
 import wow.simulator.model.unit.Player;
 import wow.simulator.model.unit.UnitParty;
 import wow.simulator.model.unit.UnitRaid;
+
+import java.util.List;
 
 /**
  * User: POlszewski
@@ -31,14 +33,14 @@ public class PlayerImpl extends UnitImpl implements Player, UnitParty.OnAddRemov
 			int level,
 			BaseStatInfo baseStatInfo,
 			CombatRatingInfo combatRatingInfo,
-			Talents talents,
+			List<Talent> availableTalents,
 			CharacterProfessions professions,
 			ExclusiveFactions exclusiveFactions
 	) {
-		super(name, phase, characterClass, level, race.getCreatureType(), race, race.getSide(), baseStatInfo, combatRatingInfo, talents);
+		super(name, phase, characterClass, level, race.getCreatureType(), race, race.getSide(), baseStatInfo, combatRatingInfo, availableTalents);
 		this.professions = professions;
 		this.exclusiveFactions = exclusiveFactions;
-		this.assets = new Assets();
+		this.assets = new Assets(this);
 
 		UnitRaid.newUnitRaid(this);
 	}

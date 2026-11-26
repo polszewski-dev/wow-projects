@@ -1,7 +1,5 @@
 package wow.estimator.model;
 
-import lombok.NoArgsConstructor;
-import wow.character.model.Copyable;
 import wow.character.model.effect.EffectCollection;
 import wow.character.model.effect.EffectCollector;
 import wow.commons.model.spell.SpellSchool;
@@ -15,17 +13,12 @@ import java.util.function.Predicate;
  * User: POlszewski
  * Date: 2026-03-24
  */
-@NoArgsConstructor
-public class EffectInstances implements Copyable<EffectInstances>, EffectCollection {
+public class EffectInstances implements EffectCollection {
+	private final Unit owner;
 	private final List<EffectInstance> list = new ArrayList<>();
 
-	public EffectInstances(EffectInstances effectInstances) {
-		list.addAll(effectInstances.list);
-	}
-
-	@Override
-	public EffectInstances copy() {
-		return new EffectInstances(this);
+	public EffectInstances(Unit owner) {
+		this.owner = owner;
 	}
 
 	@Override
@@ -55,5 +48,11 @@ public class EffectInstances implements Copyable<EffectInstances>, EffectCollect
 		return list.stream()
 				.filter(effectInstance -> effectInstance.effect().getName().equals(effectName))
 				.findFirst();
+	}
+
+	public void copyFrom(EffectInstances original) {
+		for (var effectInstance : original.list) {
+			add(effectInstance);
+		}
 	}
 }

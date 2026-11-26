@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import wow.character.model.equipment.Equipment;
 import wow.commons.client.converter.Converter;
 import wow.commons.client.converter.ParametrizedBackConverter;
-import wow.commons.model.pve.PhaseId;
+import wow.minmax.model.Player;
 import wow.minmax.model.db.equipment.EquipmentConfig;
 
 /**
@@ -14,7 +14,7 @@ import wow.minmax.model.db.equipment.EquipmentConfig;
  */
 @Component
 @AllArgsConstructor
-public class EquipmentConfigConverter implements Converter<Equipment, EquipmentConfig>, ParametrizedBackConverter<Equipment, EquipmentConfig, PhaseId> {
+public class EquipmentConfigConverter implements Converter<Equipment, EquipmentConfig>, ParametrizedBackConverter<Void, EquipmentConfig, Player> {
 	private final EquippableItemConfigConverter equippableItemConfigConverter;
 
 	@Override
@@ -25,14 +25,13 @@ public class EquipmentConfigConverter implements Converter<Equipment, EquipmentC
 	}
 
 	@Override
-	public Equipment doConvertBack(EquipmentConfig source, PhaseId phaseId) {
-		var itemsBySlot = equippableItemConfigConverter.convertBackMap(source.getItemsBySlot(), phaseId);
-		var equipment = new Equipment();
+	public Void doConvertBack(EquipmentConfig source, Player player) {
+		var itemsBySlot = equippableItemConfigConverter.convertBackMap(source.getItemsBySlot(), player.getPhaseId());
 
 		for (var entry : itemsBySlot.entrySet()) {
-			equipment.equip(entry.getValue(), entry.getKey());
+			player.equip(entry.getValue(), entry.getKey());
 		}
 
-		return equipment;
+		return null;
 	}
 }

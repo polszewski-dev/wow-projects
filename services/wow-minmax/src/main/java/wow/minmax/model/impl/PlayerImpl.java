@@ -4,15 +4,17 @@ import lombok.Getter;
 import lombok.Setter;
 import wow.character.model.character.*;
 import wow.character.model.character.impl.CharacterImpl;
-import wow.character.model.talent.Talents;
 import wow.character.service.PlayerCharacterFactory;
 import wow.commons.model.Percent;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.Race;
 import wow.commons.model.pve.Phase;
+import wow.commons.model.talent.Talent;
 import wow.minmax.model.Player;
 import wow.minmax.model.PlayerId;
 import wow.minmax.model.Unit;
+
+import java.util.List;
 
 /**
  * User: POlszewski
@@ -36,15 +38,15 @@ public class PlayerImpl extends CharacterImpl implements Player {
 			int level,
 			BaseStatInfo baseStatInfo,
 			CombatRatingInfo combatRatingInfo,
-			Talents talents,
+			List<Talent> availableTalents,
 			CharacterProfessions professions,
 			ExclusiveFactions exclusiveFactions
 	) {
-		super(name, phase, characterClass, level, race.getCreatureType(), race, race.getSide(), baseStatInfo, combatRatingInfo, talents);
+		super(name, phase, characterClass, level, race.getCreatureType(), race, race.getSide(), baseStatInfo, combatRatingInfo, availableTalents);
 		this.playerId = playerId;
 		this.professions = professions;
 		this.exclusiveFactions = exclusiveFactions;
-		this.assets = new Assets();
+		this.assets = new Assets(this);
 	}
 
 	@Override

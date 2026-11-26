@@ -6,7 +6,6 @@ import wow.character.model.character.BaseStatInfo;
 import wow.character.model.character.Character;
 import wow.character.model.character.CombatRatingInfo;
 import wow.character.model.character.PetCharacter;
-import wow.character.model.talent.Talents;
 import wow.commons.model.Percent;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.PetType;
@@ -14,6 +13,9 @@ import wow.commons.model.character.Race;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
 import wow.commons.model.spell.Spell;
+import wow.commons.model.talent.Talent;
+
+import java.util.List;
 
 /**
  * User: POlszewski
@@ -37,10 +39,10 @@ public class PetCharacterImpl extends CharacterImpl implements PetCharacter {
 			Side side,
 			BaseStatInfo baseStatInfo,
 			CombatRatingInfo combatRatingInfo,
-			Talents talents,
+			List<Talent> availableTalents,
 			Spell sourceSpell
 	) {
-		super(name, phase, characterClass, level, petType.getCreatureType(), race, side, baseStatInfo, combatRatingInfo, talents);
+		super(name, phase, characterClass, level, petType.getCreatureType(), race, side, baseStatInfo, combatRatingInfo, availableTalents);
 		this.petType = petType;
 		this.sourceSpell = sourceSpell;
 	}

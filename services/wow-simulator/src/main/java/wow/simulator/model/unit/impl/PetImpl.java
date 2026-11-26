@@ -4,7 +4,6 @@ import lombok.Getter;
 import wow.character.model.character.BaseStatInfo;
 import wow.character.model.character.Character;
 import wow.character.model.character.CombatRatingInfo;
-import wow.character.model.talent.Talents;
 import wow.commons.model.AnyDuration;
 import wow.commons.model.Duration;
 import wow.commons.model.character.CharacterClass;
@@ -14,10 +13,12 @@ import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.spell.Spell;
+import wow.commons.model.talent.Talent;
 import wow.simulator.model.unit.Pet;
 import wow.simulator.model.unit.Unit;
 import wow.simulator.model.unit.UnitParty;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 import static wow.simulator.constant.HiddenEffectNames.PET_CONVERSIONS;
@@ -43,11 +44,11 @@ public class PetImpl extends UnitImpl implements Pet {
 			Side side,
 			BaseStatInfo baseStatInfo,
 			CombatRatingInfo combatRatingInfo,
-			Talents talents,
+			List<Talent> availableTalents,
 			Spell sourceSpell
 
 	) {
-		super(name, phase, characterClass, level, petType.getCreatureType(), race, side, baseStatInfo, combatRatingInfo, talents);
+		super(name, phase, characterClass, level, petType.getCreatureType(), race, side, baseStatInfo, combatRatingInfo, availableTalents);
 		this.petType = petType;
 		this.sourceSpell = sourceSpell;
 	}

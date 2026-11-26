@@ -10,7 +10,6 @@ import wow.character.model.effect.EffectCollector;
 import wow.character.model.equipment.ItemSockets;
 import wow.character.model.script.ScriptPathResolver;
 import wow.character.model.snapshot.*;
-import wow.character.model.talent.Talents;
 import wow.commons.model.AnyDuration;
 import wow.commons.model.Duration;
 import wow.commons.model.Percent;
@@ -20,6 +19,7 @@ import wow.commons.model.item.ItemSet;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
 import wow.commons.model.spell.*;
+import wow.commons.model.talent.Talent;
 import wow.commons.model.talent.TalentTree;
 import wow.simulator.model.context.CommandContext;
 import wow.simulator.model.context.SpellCastContext;
@@ -95,9 +95,9 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 			Side side,
 			BaseStatInfo baseStatInfo,
 			CombatRatingInfo combatRatingInfo,
-			Talents talents
+			List<Talent> availableTalents
 	) {
-		super(name, phase, characterClass, level, creatureType, race, side, baseStatInfo, combatRatingInfo, talents);
+		super(name, phase, characterClass, level, creatureType, race, side, baseStatInfo, combatRatingInfo, availableTalents);
 		getEquipment().setOnEquipmentChanged(this::onEquipmentChanged);
 		this.state = new PassiveState();
 		this.resources.setHealth(10_000, 10_000);

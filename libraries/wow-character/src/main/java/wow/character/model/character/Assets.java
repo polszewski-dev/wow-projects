@@ -1,6 +1,5 @@
 package wow.character.model.character;
 
-import wow.character.model.Copyable;
 import wow.character.model.asset.Asset;
 import wow.character.model.asset.AssetId;
 
@@ -8,7 +7,13 @@ import wow.character.model.asset.AssetId;
  * User: POlszewski
  * Date: 2026-03-06
  */
-public class Assets extends Options<Asset, AssetId> implements Copyable<Assets> {
+public class Assets extends Options<Asset, AssetId> {
+	private final PlayerCharacter owner;
+
+	public Assets(PlayerCharacter owner) {
+		this.owner = owner;
+	}
+
 	@Override
 	protected AssetId getId(Asset asset) {
 		return asset.id();
@@ -26,12 +31,5 @@ public class Assets extends Options<Asset, AssetId> implements Copyable<Assets> 
 		}
 
 		return asset.name();
-	}
-
-	@Override
-	public Assets copy() {
-		var copy = new Assets();
-		copyInto(copy);
-		return copy;
 	}
 }

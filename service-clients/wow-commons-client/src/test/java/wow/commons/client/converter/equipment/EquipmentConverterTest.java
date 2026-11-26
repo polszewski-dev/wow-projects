@@ -1,7 +1,9 @@
 package wow.commons.client.converter.equipment;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import wow.character.model.character.PlayerCharacter;
 import wow.character.model.equipment.Equipment;
 import wow.character.model.equipment.EquippableItem;
 import wow.commons.client.WowCommonsClientSpringTest;
@@ -34,8 +36,6 @@ class EquipmentConverterTest extends WowCommonsClientSpringTest {
 
 	@Test
 	void convert() {
-		var equipment = new Equipment();
-
 		var trinket1 = new EquippableItem(itemRepository.getItem(ItemId.of(32483), TBC_P5).orElseThrow());
 		var trinket2 = new EquippableItem(itemRepository.getItem(ItemId.of(33829), TBC_P5).orElseThrow());
 
@@ -59,15 +59,24 @@ class EquipmentConverterTest extends WowCommonsClientSpringTest {
 		var trinket1 = new EquippableItemDTO(32483, null, List.of());
 		var trinket2 = new EquippableItemDTO(33829, null, List.of());
 
-		var equipment = new EquipmentDTO(Map.ofEntries(
+		var equipmentDTO = new EquipmentDTO(Map.ofEntries(
 				Map.entry(TRINKET_1, trinket1),
 				Map.entry(TRINKET_2, trinket2)
 		));
 
 
-		var converted = equipmentConverter.convertBack(equipment, TBC_P5);
+		equipmentConverter.convertBack(equipmentDTO, player);
 
-		assertThat(converted.getTrinket1().getId()).isEqualTo(ItemId.of(32483));
-		assertThat(converted.getTrinket2().getId()).isEqualTo(ItemId.of(33829));
+		assertThat(equipment.getTrinket1().getId()).isEqualTo(ItemId.of(32483));
+		assertThat(equipment.getTrinket2().getId()).isEqualTo(ItemId.of(33829));
+	}
+
+	PlayerCharacter player;
+	Equipment equipment;
+
+	@BeforeEach
+	void setup() {
+		player = getPlayer();
+		equipment = player.getEquipment();
 	}
 }
