@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import wow.character.model.character.PlayerCharacter;
+import wow.character.model.character.impl.NonPlayerCharacterImpl;
 import wow.character.model.character.impl.PlayerCharacterImpl;
 import wow.character.service.CharacterService;
 import wow.commons.model.character.CharacterClassId;
@@ -63,7 +64,8 @@ public abstract class WowCommonsClientSpringTest {
 				"Target",
 				ENEMY_TYPE,
 				level + LVL_DIFF,
-				phase
+				phase,
+				NonPlayerCharacterImpl::new
 		);
 
 		character.setTarget(target);

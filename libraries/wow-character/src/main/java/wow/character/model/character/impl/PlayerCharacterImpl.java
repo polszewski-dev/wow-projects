@@ -1,9 +1,7 @@
 package wow.character.model.character.impl;
 
 import lombok.Getter;
-import lombok.Setter;
 import wow.character.model.character.*;
-import wow.commons.model.Percent;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.Race;
 import wow.commons.model.pve.Phase;
@@ -16,12 +14,10 @@ import java.util.List;
  * Date: 2023-10-31
  */
 @Getter
-public class PlayerCharacterImpl extends CharacterImpl implements PlayerCharacter {
+public class PlayerCharacterImpl extends UnitImpl implements PlayerCharacter {
 	private final CharacterProfessions professions;
 	private final ExclusiveFactions exclusiveFactions;
 	private final Assets assets;
-	@Setter
-	private Percent healthPct = Percent._100;
 
 	public PlayerCharacterImpl(
 			String name,

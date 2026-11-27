@@ -5,8 +5,6 @@ import org.springframework.stereotype.Service;
 import wow.character.model.asset.Asset;
 import wow.character.model.character.Character;
 import wow.character.model.character.*;
-import wow.character.model.character.impl.NonPlayerCharacterImpl;
-import wow.character.model.character.impl.PlayerCharacterImpl;
 import wow.character.model.equipment.EquippableItem;
 import wow.character.repository.*;
 import wow.character.service.CharacterService;
@@ -68,11 +66,6 @@ public class CharacterServiceImpl implements CharacterService {
 	private final FactionRepository factionRepository;
 
 	@Override
-	public PlayerCharacter createPlayerCharacter(String name, CharacterClassId characterClassId, RaceId raceId, int level, PhaseId phaseId) {
-		return createPlayerCharacter(name, characterClassId, raceId, level, phaseId, PlayerCharacterImpl::new);
-	}
-
-	@Override
 	public <T extends PlayerCharacter> T createPlayerCharacter(
 			String name, CharacterClassId characterClassId, RaceId raceId, int level, PhaseId phaseId, PlayerCharacterFactory<T> factory
 	) {
@@ -98,11 +91,6 @@ public class CharacterServiceImpl implements CharacterService {
 				professions,
 				exclusiveFactions
 		);
-	}
-
-	@Override
-	public NonPlayerCharacter createNonPlayerCharacter(String name, CreatureType creatureType, int level, PhaseId phaseId) {
-		return createNonPlayerCharacter(name, creatureType, level, phaseId, NonPlayerCharacterImpl::new);
 	}
 
 	@Override

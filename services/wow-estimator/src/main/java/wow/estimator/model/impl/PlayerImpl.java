@@ -1,20 +1,18 @@
 package wow.estimator.model.impl;
 
 import lombok.Getter;
-import lombok.Setter;
-import wow.character.model.character.Character;
 import wow.character.model.character.*;
-import wow.character.model.character.impl.CharacterImpl;
 import wow.character.model.effect.EffectCollector;
 import wow.character.model.script.ScriptPathResolver;
-import wow.commons.model.Percent;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.Race;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.spell.Ability;
 import wow.commons.model.talent.Talent;
 import wow.commons.model.talent.TalentTree;
-import wow.estimator.model.*;
+import wow.estimator.model.Player;
+import wow.estimator.model.Rotation;
+import wow.estimator.model.RotationTemplate;
 
 import java.util.List;
 
@@ -23,14 +21,11 @@ import java.util.List;
  * Date: 2024-11-20
  */
 @Getter
-public class PlayerImpl extends CharacterImpl implements Player {
+public class PlayerImpl extends UnitImpl implements Player {
 	private final CharacterProfessions professions;
 	private final ExclusiveFactions exclusiveFactions;
 	private final Assets assets;
-	private final EffectInstances effectInstances;
 	private Rotation rotation;
-	@Setter
-	private Percent healthPct = Percent._100;
 
 	public PlayerImpl(
 			String name,
@@ -48,7 +43,6 @@ public class PlayerImpl extends CharacterImpl implements Player {
 		this.professions = professions;
 		this.exclusiveFactions = exclusiveFactions;
 		this.assets = new Assets(this);
-		this.effectInstances = new EffectInstances(this);
 	}
 
 	private PlayerImpl(
@@ -68,28 +62,6 @@ public class PlayerImpl extends CharacterImpl implements Player {
 		this.professions = professions;
 		this.exclusiveFactions = exclusiveFactions;
 		this.assets = new Assets(this);
-		this.effectInstances = new EffectInstances(this);
-	}
-
-	@Override
-	public Unit getTarget() {
-		return (Unit) super.getTarget();
-	}
-
-	@Override
-	public void setTarget(Character target) {
-		if (target != null && !(target instanceof Unit)) {
-			throw new IllegalArgumentException();
-		}
-		super.setTarget(target);
-	}
-
-	@Override
-	public void setFocus(Character focus) {
-		if (focus != null && !(focus instanceof Unit)) {
-			throw new IllegalArgumentException();
-		}
-		super.setFocus(focus);
 	}
 
 	@Override
@@ -116,7 +88,7 @@ public class PlayerImpl extends CharacterImpl implements Player {
 		copy.setScript(getScript());
 		copy.setTarget(getTarget());
 		copy.setFocus(getFocus());
-		copy.getEffectInstances().copyFrom(effectInstances);
+		copy.getEffectInstances().copyFrom(getEffectInstances());
 		return copy;
 	}
 
@@ -165,15 +137,5 @@ public class PlayerImpl extends CharacterImpl implements Player {
 		super.invalidateCaches();
 
 		this.rotation = null;
-	}
-
-	@Override
-	public void effectApplied(EffectInstance effectInstance) {
-		//todo
-	}
-
-	@Override
-	public void effectRemoved(EffectInstance effectInstance) {
-		//todo
 	}
 }

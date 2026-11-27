@@ -1,11 +1,7 @@
 package wow.minmax.model.impl;
 
-import lombok.Getter;
-import lombok.Setter;
 import wow.character.model.character.BaseStatInfo;
 import wow.character.model.character.CombatRatingInfo;
-import wow.character.model.character.impl.CharacterImpl;
-import wow.commons.model.Percent;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.Race;
@@ -13,7 +9,6 @@ import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
 import wow.commons.model.talent.Talent;
 import wow.minmax.model.NonPlayer;
-import wow.minmax.model.Unit;
 
 import java.util.List;
 
@@ -21,11 +16,7 @@ import java.util.List;
  * User: POlszewski
  * Date: 2026-02-09
  */
-@Getter
-@Setter
-public class NonPlayerImpl extends CharacterImpl implements NonPlayer {
-	private Percent healthPct = Percent._100;
-
+public class NonPlayerImpl extends UnitImpl implements NonPlayer {
 	public NonPlayerImpl(
 			String name,
 			Phase phase,
@@ -39,10 +30,5 @@ public class NonPlayerImpl extends CharacterImpl implements NonPlayer {
 			List<Talent> availableTalents
 	) {
 		super(name, phase, characterClass, level, creatureType, race, side, baseStatInfo, combatRatingInfo, availableTalents);
-	}
-
-	@Override
-	public Unit getTarget() {
-		return (Unit) super.getTarget();
 	}
 }

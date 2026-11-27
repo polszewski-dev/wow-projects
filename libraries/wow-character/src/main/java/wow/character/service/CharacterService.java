@@ -19,11 +19,7 @@ import java.util.List;
  * Date: 2022-12-14
  */
 public interface CharacterService {
-	PlayerCharacter createPlayerCharacter(String name, CharacterClassId characterClassId, RaceId raceId, int level, PhaseId phaseId);
-
 	<T extends PlayerCharacter> T createPlayerCharacter(String name, CharacterClassId characterClassId, RaceId raceId, int level, PhaseId phaseId, PlayerCharacterFactory<T> factory);
-
-	NonPlayerCharacter createNonPlayerCharacter(String name, CreatureType creatureType, int level, PhaseId phaseId);
 
 	<T extends NonPlayerCharacter> T createNonPlayerCharacter(String name, CreatureType creatureType, int level, PhaseId phaseId, NonPlayerCharacterFactory<T> factory);
 

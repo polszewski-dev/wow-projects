@@ -5,7 +5,6 @@ import lombok.Setter;
 import wow.character.model.character.BaseStatInfo;
 import wow.character.model.character.CombatRatingInfo;
 import wow.character.model.character.NonPlayerCharacter;
-import wow.commons.model.Percent;
 import wow.commons.model.character.CharacterClass;
 import wow.commons.model.character.CreatureType;
 import wow.commons.model.character.Race;
@@ -21,9 +20,7 @@ import java.util.List;
  */
 @Getter
 @Setter
-public class NonPlayerCharacterImpl extends CharacterImpl implements NonPlayerCharacter {
-	private Percent healthPct = Percent._100;
-
+public class NonPlayerCharacterImpl extends UnitImpl implements NonPlayerCharacter {
 	public NonPlayerCharacterImpl(
 			String name,
 			Phase phase,
