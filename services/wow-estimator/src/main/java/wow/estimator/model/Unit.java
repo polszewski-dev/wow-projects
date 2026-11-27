@@ -11,4 +11,8 @@ public interface Unit extends Character {
 
 	@Override
 	Unit getTarget();
+
+	void effectApplied(EffectInstance effectInstance);
+
+	void effectRemoved(EffectInstance effectInstance);
 }

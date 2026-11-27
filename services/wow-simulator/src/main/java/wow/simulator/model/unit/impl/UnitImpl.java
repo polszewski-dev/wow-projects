@@ -1105,6 +1105,36 @@ public abstract class UnitImpl extends CharacterImpl implements Unit, Simulation
 		state.onScriptChanged();
 	}
 
+	@Override
+	public void effectApplied(EffectInstance effectInstance) {
+		//todo
+	}
+
+	@Override
+	public void effectExpired(EffectInstance effectInstance) {
+		//todo
+	}
+
+	@Override
+	public void effectRemoved(EffectInstance effectInstance) {
+		//todo
+	}
+
+	@Override
+	public void effectStacked(EffectInstance effectInstance) {
+		//todo
+	}
+
+	@Override
+	public void effectStacksIncreased(EffectInstance effectInstance) {
+		//todo
+	}
+
+	@Override
+	public void effectStacksDecreased(EffectInstance effectInstance) {
+		//todo
+	}
+
 	@RequiredArgsConstructor
 	private static class AuraExcludingCollector implements EffectCollector {
 		private final EffectCollector collector;

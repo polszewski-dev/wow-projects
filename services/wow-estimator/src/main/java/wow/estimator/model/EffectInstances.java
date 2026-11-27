@@ -30,14 +30,23 @@ public class EffectInstances implements EffectCollection {
 
 	public void add(EffectInstance effectInstance) {
 		list.add(effectInstance);
+		effectApplied(effectInstance);
 	}
 
 	public void reset() {
+		list.forEach(this::effectRemoved);
 		list.clear();
 	}
 
 	public void removeIf(Predicate<EffectInstance> predicate) {
-		list.removeIf(predicate);
+		for (var iterator = list.iterator(); iterator.hasNext(); ) {
+			var effectInstance = iterator.next();
+
+			if (predicate.test(effectInstance)) {
+				iterator.remove();
+				effectRemoved(effectInstance);
+			}
+		}
 	}
 
 	public boolean isSchoolPrevented(SpellSchool school) {
@@ -54,5 +63,13 @@ public class EffectInstances implements EffectCollection {
 		for (var effectInstance : original.list) {
 			add(effectInstance);
 		}
+	}
+
+	private void effectApplied(EffectInstance effectInstance) {
+		owner.effectApplied(effectInstance);
+	}
+
+	private void effectRemoved(EffectInstance effectInstance) {
+		owner.effectRemoved(effectInstance);
 	}
 }

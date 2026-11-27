@@ -166,4 +166,14 @@ public class PlayerImpl extends CharacterImpl implements Player {
 
 		this.rotation = null;
 	}
+
+	@Override
+	public void effectApplied(EffectInstance effectInstance) {
+		//todo
+	}
+
+	@Override
+	public void effectRemoved(EffectInstance effectInstance) {
+		//todo
+	}
 }

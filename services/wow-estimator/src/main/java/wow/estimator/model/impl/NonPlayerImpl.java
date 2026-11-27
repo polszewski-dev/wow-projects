@@ -15,6 +15,7 @@ import wow.commons.model.character.Race;
 import wow.commons.model.pve.Phase;
 import wow.commons.model.pve.Side;
 import wow.commons.model.talent.Talent;
+import wow.estimator.model.EffectInstance;
 import wow.estimator.model.EffectInstances;
 import wow.estimator.model.NonPlayer;
 import wow.estimator.model.Unit;
@@ -115,5 +116,15 @@ public class NonPlayerImpl extends CharacterImpl implements NonPlayer {
 	@Override
 	public void collectEffects(EffectCollector collector) {
 		getEffectInstances().collectEffects(collector);
+	}
+
+	@Override
+	public void effectApplied(EffectInstance effectInstance) {
+		//todo
+	}
+
+	@Override
+	public void effectRemoved(EffectInstance effectInstance) {
+		//todo
 	}
 }

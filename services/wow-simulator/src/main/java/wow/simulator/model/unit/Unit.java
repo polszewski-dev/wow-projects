@@ -263,4 +263,16 @@ public interface Unit extends Character, SimulationContextSource {
 	void resetAfterCombat();
 
 	EventBus getEventBus();
+
+	void effectApplied(EffectInstance effectInstance);
+
+	void effectExpired(EffectInstance effectInstance);
+
+	void effectRemoved(EffectInstance effectInstance);
+
+	void effectStacked(EffectInstance effectInstance);
+
+	void effectStacksIncreased(EffectInstance effectInstance);
+
+	void effectStacksDecreased(EffectInstance effectInstance);
 }

@@ -100,6 +100,7 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	@Override
 	protected void onStarted() {
 		effectListChanged();
+		owner.effectApplied(this);
 		getGameLog().effectApplied(this);
 		fireDeferredEvents();
 	}
@@ -108,6 +109,7 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 	protected void onFinished() {
 		this.removed = true;
 
+		owner.effectExpired(this);
 		getGameLog().effectExpired(this);
 
 		if (onEffectFinished != null) {
@@ -123,6 +125,7 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 		this.removed = true;
 		getScheduler().rescheduleInterruptedActionToPresent(this, endTime);
 
+		owner.effectRemoved(this);
 		getGameLog().effectRemoved(this);
 		effectListChanged();
 		fireEffectEnded();
@@ -208,6 +211,7 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 		resetDuration();
 		addStacks(newEffect.getNumStacks(), parentContext);
 		addCounters(newEffect.getNumCounters(), parentContext);
+		owner.effectStacked(this);
 		getGameLog().effectStacked(this);
 		fireDeferredEvents();
 	}
@@ -220,6 +224,7 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 
 		resetDuration();
 		addStacks(1, parentContext);
+		owner.effectStacksIncreased(this);
 		getGameLog().effectStacksIncreased(this);
 	}
 
@@ -302,6 +307,7 @@ public abstract class EffectInstanceImpl extends Action implements EffectInstanc
 		} else {
 			effectListChanged();
 
+			owner.effectStacksDecreased(this);
 			getGameLog().effectStacksDecreased(this);
 		}
 	}
