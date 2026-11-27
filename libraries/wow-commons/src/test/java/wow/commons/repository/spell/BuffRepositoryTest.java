@@ -31,7 +31,7 @@ class BuffRepositoryTest extends WowCommonsSpringTest {
 
 	@Test
 	void buff_attributes_are_correct() {
-		var buff = buffRepository.getBuff(BRILLIANT_WIZARD_OIL, TBC_P5).getFirst();
+		var buff = buffRepository.getBuff(BRILLIANT_WIZARD_OIL, TBC_P5).orElseThrow();
 
 		assertThat(buff.getName()).isEqualTo(BRILLIANT_WIZARD_OIL);
 		assertThat(buff.getRequiredLevel()).isEqualTo(55);

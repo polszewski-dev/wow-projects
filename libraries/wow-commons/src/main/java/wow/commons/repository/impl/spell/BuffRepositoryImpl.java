@@ -19,7 +19,7 @@ import java.util.function.Predicate;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
-import static wow.commons.util.PhaseMap.*;
+import static wow.commons.util.PhaseMap.putForEveryPhase;
 
 /**
  * User: POlszewski
@@ -28,12 +28,11 @@ import static wow.commons.util.PhaseMap.*;
 @Component
 public class BuffRepositoryImpl implements BuffRepository {
 	private final PhaseMap<BuffId, Buff> buffsById = new PhaseMap<>();
-	private final PhaseMap<String, List<Buff>> buffsByNameRank = new PhaseMap<>();
+	private final PhaseMap<String, Buff> buffsByName = new PhaseMap<>();
 
 	public BuffRepositoryImpl(BuffExcelParser parser) throws IOException {
 		parser.readFromXls();
 		parser.getBuffs().forEach(this::addBuff);
-		compactLists(buffsByNameRank);
 	}
 
 	@Override
@@ -54,12 +53,12 @@ public class BuffRepositoryImpl implements BuffRepository {
 	}
 
 	@Override
-	public List<Buff> getBuff(String name, PhaseId phaseId) {
-		return buffsByNameRank.getOrDefault(phaseId, name, List.of());
+	public Optional<Buff> getBuff(String name, PhaseId phaseId) {
+		return buffsByName.getOptional(phaseId, name);
 	}
 
 	private void addBuff(Buff buff) {
 		putForEveryPhase(buffsById, buff.getId(), buff);
-		addEntryForEveryPhase(buffsByNameRank, buff.getName(), buff);
+		putForEveryPhase(buffsByName, buff.getName(), buff);
 	}
 }

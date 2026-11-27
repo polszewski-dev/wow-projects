@@ -23,7 +23,7 @@ class BuffConverterTest extends WowMinMaxSpringTest {
 
 	@Test
 	void convert() {
-		var buff = buffRepository.getBuff(FLASK_OF_BLINDING_LIGHT, TBC_P5).getFirst();
+		var buff = buffRepository.getBuff(FLASK_OF_BLINDING_LIGHT, TBC_P5).orElseThrow();
 
 		var converted = buffConverter.convert(buff);
 
