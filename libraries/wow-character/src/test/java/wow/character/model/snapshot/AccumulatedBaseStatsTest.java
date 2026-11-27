@@ -19,20 +19,6 @@ import static wow.commons.model.attribute.AttributeId.*;
  */
 class AccumulatedBaseStatsTest extends WowCharacterSpringTest {
 	@Test
-	void accumulateBaseStatInfo() {
-		var baseStatInfo = getBaseStatInfo();
-
-		assertThat(baseStats.getBaseStrength()).isEqualTo(baseStatInfo.getBaseStrength());
-		assertThat(baseStats.getBaseAgility()).isEqualTo(baseStatInfo.getBaseAgility());
-		assertThat(baseStats.getBaseStamina()).isEqualTo(baseStatInfo.getBaseStamina());
-		assertThat(baseStats.getBaseIntellect()).isEqualTo(baseStatInfo.getBaseIntellect());
-		assertThat(baseStats.getBaseSpirit()).isEqualTo(baseStatInfo.getBaseSpirit());
-
-		assertThat(baseStats.getMaxHealth()).isEqualTo(baseStatInfo.getBaseHealth());
-		assertThat(baseStats.getMaxMana()).isEqualTo(baseStatInfo.getBaseMana());
-	}
-
-	@Test
 	void getStrength() {
 		accumulateTestAttributes(STRENGTH);
 		assertThat(baseStats.getStrength()).isEqualTo(80);
@@ -98,11 +84,7 @@ class AccumulatedBaseStatsTest extends WowCharacterSpringTest {
 
 		var baseStatInfo = getBaseStatInfo();
 
-		assertThat(baseStats.getBaseStrength()).isEqualTo(80 + baseStatInfo.getBaseStrength());
-		assertThat(baseStats.getBaseAgility()).isEqualTo(80 + baseStatInfo.getBaseAgility());
-		assertThat(baseStats.getBaseStamina()).isEqualTo(80 + baseStatInfo.getBaseStamina());
-		assertThat(baseStats.getBaseIntellect()).isEqualTo(80 + baseStatInfo.getBaseIntellect());
-		assertThat(baseStats.getBaseSpirit()).isEqualTo(80 + baseStatInfo.getBaseSpirit());
+		assertThat(baseStats.getBaseStats()).isEqualTo(80);
 	}
 
 	@Test
@@ -114,27 +96,19 @@ class AccumulatedBaseStatsTest extends WowCharacterSpringTest {
 	@Test
 	void getStats() {
 		accumulateTestAttributes(STATS);
-		assertThat(baseStats.getStrength()).isEqualTo(80);
-		assertThat(baseStats.getAgility()).isEqualTo(80);
-		assertThat(baseStats.getStamina()).isEqualTo(80);
-		assertThat(baseStats.getIntellect()).isEqualTo(80);
-		assertThat(baseStats.getSpirit()).isEqualTo(80);
+		assertThat(baseStats.getStats()).isEqualTo(80);
 	}
 
 	@Test
 	void getStatsPct() {
 		accumulateTestAttributes(STATS_PCT);
-		assertThat(baseStats.getStrengthPct()).isEqualTo(80);
-		assertThat(baseStats.getAgilityPct()).isEqualTo(80);
-		assertThat(baseStats.getStaminaPct()).isEqualTo(80);
-		assertThat(baseStats.getIntellectPct()).isEqualTo(80);
-		assertThat(baseStats.getSpiritPct()).isEqualTo(80);
+		assertThat(baseStats.getStatsPct()).isEqualTo(80);
 	}
 
 	@Test
 	void getMaxHealth() {
 		accumulateTestAttributes(MAX_HEALTH);
-		assertThat(baseStats.getMaxHealth()).isEqualTo(80 + getBaseStatInfo().getBaseHealth());
+		assertThat(baseStats.getMaxHealth()).isEqualTo(80);
 	}
 
 	@Test
@@ -146,7 +120,7 @@ class AccumulatedBaseStatsTest extends WowCharacterSpringTest {
 	@Test
 	void getMaxMana() {
 		accumulateTestAttributes(MAX_MANA);
-		assertThat(baseStats.getMaxMana()).isEqualTo(80 + getBaseStatInfo().getBaseMana());
+		assertThat(baseStats.getMaxMana()).isEqualTo(80);
 	}
 
 	@Test

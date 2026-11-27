@@ -49,14 +49,16 @@ public class BaseStatsCalculations extends Calculations {
 	}
 
 	private static int getMaxHealth(BaseStatInfo baseStatInfo, AccumulatedOwnerStats stats, double stamina) {
-		var healthBonus = HEALTH_PER_STAMINA * (stamina - baseStatInfo.getBaseStamina()) + stats.getMaxHealth();
+		var baseHealth = baseStatInfo.getBaseHealth();
+		var healthBonus = HEALTH_PER_STAMINA * (stamina - baseStatInfo.getBaseStamina()) + baseHealth + stats.getMaxHealth();
 		var healthBonusPct = stats.getMaxHealthPct();
 
 		return (int) addAndMultiplyByPct(0, healthBonus, healthBonusPct);
 	}
 
 	private static int getMaxMana(BaseStatInfo baseStatInfo, AccumulatedOwnerStats stats, double intellect) {
-		var manaBonus = MANA_PER_INTELLECT * (intellect - baseStatInfo.getBaseIntellect()) + stats.getMaxMana();
+		var baseMana = baseStatInfo.getBaseMana();
+		var manaBonus = MANA_PER_INTELLECT * (intellect - baseStatInfo.getBaseIntellect()) + baseMana + stats.getMaxMana();
 		var manaBonusPct = stats.getMaxManaPct();
 
 		return (int) addAndMultiplyByPct(0, manaBonus, manaBonusPct);

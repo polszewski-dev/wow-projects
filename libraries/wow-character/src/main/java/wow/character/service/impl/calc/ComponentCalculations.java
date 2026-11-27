@@ -44,7 +44,8 @@ public class ComponentCalculations extends Calculations {
 		var intellect = (int) spellStats.getTotalIntellect();
 		var intCrit = intellect / baseStatInfo.getIntellectPerCritPct();
 		var ratingCrit = spellStats.getCritRating() / cr.getSpellCrit();
-		var pctCrit = spellStats.getCritPct();
+		var baseSpellCritPct = baseStatInfo.getBaseSpellCritPct().value();
+		var pctCrit = baseSpellCritPct + spellStats.getCritPct();
 		var targetCrit = targetStats.getCritTakenPct();
 
 		var totalCrit = intCrit + ratingCrit + pctCrit + targetCrit;

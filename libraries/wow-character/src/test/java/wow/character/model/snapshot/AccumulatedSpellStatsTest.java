@@ -25,13 +25,6 @@ import static wow.test.commons.AbilityNames.SHADOW_BOLT;
  */
 class AccumulatedSpellStatsTest extends WowCharacterSpringTest {
 	@Test
-	void accumulateBaseStatInfo() {
-		var baseStatInfo = getBaseStatInfo();
-
-		assertThat(spellStats.getCritPct()).isEqualTo(baseStatInfo.getBaseSpellCritPct().value());
-	}
-
-	@Test
 	void getDamage() {
 		accumulateTestAttributes(DAMAGE);
 		assertThat(spellStats.getAmount()).isEqualTo(160);
@@ -76,7 +69,7 @@ class AccumulatedSpellStatsTest extends WowCharacterSpringTest {
 	@Test
 	void getCritPct() {
 		accumulateTestAttributes(CRIT_PCT);
-		assertThat(spellStats.getCritPct()).isEqualTo(160 + getBaseStatInfo().getBaseSpellCritPct().value());
+		assertThat(spellStats.getCritPct()).isEqualTo(160);
 	}
 
 	@Test

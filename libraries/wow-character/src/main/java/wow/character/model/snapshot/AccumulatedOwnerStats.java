@@ -19,11 +19,6 @@ import static wow.commons.model.attribute.AttributeCondition.Operator;
  */
 @Getter
 public final class AccumulatedOwnerStats extends AccumulatedPartialStats {
-	private double baseStrength;
-	private double baseAgility;
-	private double baseStamina;
-	private double baseIntellect;
-	private double baseSpirit;
 	private double strength;
 	private double strengthPct;
 	private double agility;
@@ -34,7 +29,10 @@ public final class AccumulatedOwnerStats extends AccumulatedPartialStats {
 	private double intellectPct;
 	private double spirit;
 	private double spiritPct;
+	private double baseStats;
 	private double baseStatsPct;
+	private double stats;
+	private double statsPct;
 	private double maxHealth;
 	private double maxHealthPct;
 	private double maxMana;
@@ -51,7 +49,6 @@ public final class AccumulatedOwnerStats extends AccumulatedPartialStats {
 
 	private AccumulatedOwnerStats(Character owner) {
 		this.owner = owner;
-		accumulateBaseStatInfo();
 	}
 
 	public static AccumulatedOwnerStats forBaseStats(Character owner) {
@@ -68,11 +65,6 @@ public final class AccumulatedOwnerStats extends AccumulatedPartialStats {
 
 	private AccumulatedOwnerStats(AccumulatedOwnerStats stats) {
 		this(stats.owner);
-		this.baseStrength = stats.baseStrength;
-		this.baseAgility = stats.baseAgility;
-		this.baseStamina = stats.baseStamina;
-		this.baseIntellect = stats.baseIntellect;
-		this.baseSpirit = stats.baseSpirit;
 		this.strength = stats.strength;
 		this.strengthPct = stats.strengthPct;
 		this.agility = stats.agility;
@@ -83,7 +75,10 @@ public final class AccumulatedOwnerStats extends AccumulatedPartialStats {
 		this.intellectPct = stats.intellectPct;
 		this.spirit = stats.spirit;
 		this.spiritPct = stats.spiritPct;
+		this.baseStats = stats.baseStats;
 		this.baseStatsPct = stats.baseStatsPct;
+		this.stats = stats.stats;
+		this.statsPct = stats.statsPct;
 		this.maxHealth = stats.maxHealth;
 		this.maxHealthPct = stats.maxHealthPct;
 		this.maxMana = stats.maxMana;
@@ -99,18 +94,6 @@ public final class AccumulatedOwnerStats extends AccumulatedPartialStats {
 
 	public AccumulatedOwnerStats copy() {
 		return new AccumulatedOwnerStats(this);
-	}
-
-	private void accumulateBaseStatInfo() {
-		var baseStatInfo = owner.getBaseStatInfo();
-
-		baseStrength += baseStatInfo.getBaseStrength();
-		baseAgility += baseStatInfo.getBaseAgility();
-		baseStamina += baseStatInfo.getBaseStamina();
-		baseIntellect += baseStatInfo.getBaseIntellect();
-		baseSpirit += baseStatInfo.getBaseSpirit();
-		maxHealth += baseStatInfo.getBaseHealth();
-		maxMana += baseStatInfo.getBaseMana();
 	}
 
 	@Override
@@ -157,28 +140,16 @@ public final class AccumulatedOwnerStats extends AccumulatedPartialStats {
 				this.spiritPct += getValue(attribute, scaleFactor);
 				break;
 			case BASE_STATS:
-				this.baseStrength += getValue(attribute, scaleFactor);
-				this.baseAgility += getValue(attribute, scaleFactor);
-				this.baseStamina += getValue(attribute, scaleFactor);
-				this.baseIntellect += getValue(attribute, scaleFactor);
-				this.baseSpirit += getValue(attribute, scaleFactor);
+				this.baseStats += getValue(attribute, scaleFactor);
 				break;
 			case BASE_STATS_PCT:
 				this.baseStatsPct += getValue(attribute, scaleFactor);
 				break;
 			case STATS:
-				this.strength += getValue(attribute, scaleFactor);
-				this.agility += getValue(attribute, scaleFactor);
-				this.stamina += getValue(attribute, scaleFactor);
-				this.intellect += getValue(attribute, scaleFactor);
-				this.spirit += getValue(attribute, scaleFactor);
+				this.stats += getValue(attribute, scaleFactor);
 				break;
 			case STATS_PCT:
-				this.strengthPct += getValue(attribute, scaleFactor);
-				this.agilityPct += getValue(attribute, scaleFactor);
-				this.staminaPct += getValue(attribute, scaleFactor);
-				this.intellectPct += getValue(attribute, scaleFactor);
-				this.spiritPct += getValue(attribute, scaleFactor);
+				this.statsPct += getValue(attribute, scaleFactor);
 				break;
 			case MAX_HEALTH:
 				this.maxHealth += getValue(attribute, scaleFactor);
@@ -219,23 +190,33 @@ public final class AccumulatedOwnerStats extends AccumulatedPartialStats {
 	}
 
 	public double getTotalStrength() {
-		return getPrimaryStat(baseStrength, baseStatsPct, strength, strengthPct);
+		var baseStatInfo = owner.getBaseStatInfo();
+
+		return getPrimaryStat(baseStatInfo.getBaseStrength() + baseStats, baseStatsPct, strength + stats, strengthPct + statsPct);
 	}
 
 	public double getTotalAgility() {
-		return getPrimaryStat(baseAgility, baseStatsPct, agility, agilityPct);
+		var baseStatInfo = owner.getBaseStatInfo();
+
+		return getPrimaryStat(baseStatInfo.getBaseAgility() + baseStats, baseStatsPct, agility + stats, agilityPct + statsPct);
 	}
 
 	public double getTotalStamina() {
-		return getPrimaryStat(baseStamina, baseStatsPct, stamina, staminaPct);
+		var baseStatInfo = owner.getBaseStatInfo();
+
+		return getPrimaryStat(baseStatInfo.getBaseStamina() + baseStats, baseStatsPct, stamina + stats, staminaPct + statsPct);
 	}
 
 	public double getTotalIntellect() {
-		return getPrimaryStat(baseIntellect, baseStatsPct, intellect, intellectPct);
+		var baseStatInfo = owner.getBaseStatInfo();
+
+		return getPrimaryStat(baseStatInfo.getBaseIntellect() + baseStats, baseStatsPct, intellect + stats, intellectPct + statsPct);
 	}
 
 	public double getTotalSpirit() {
-		return getPrimaryStat(baseSpirit, baseStatsPct, spirit, spiritPct);
+		var baseStatInfo = owner.getBaseStatInfo();
+
+		return getPrimaryStat(baseStatInfo.getBaseSpirit() + baseStats, baseStatsPct, spirit + stats, spiritPct + statsPct);
 	}
 
 	static double getPrimaryStat(double base, double basePct, double bonus, double bonusPct) {

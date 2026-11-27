@@ -24,16 +24,16 @@ import static wow.commons.model.spell.ActionType.SPELL;
  */
 @Getter
 public final class AccumulatedCasterStats extends AccumulatedPartialStats {
-	private double baseStamina;
-	private double baseIntellect;
-	private double baseSpirit;
 	private double stamina;
 	private double staminaPct;
 	private double intellect;
 	private double intellectPct;
 	private double spirit;
 	private double spiritPct;
+	private double baseStats;
 	private double baseStatsPct;
+	private double stats;
+	private double statsPct;
 	private double hasteRating;
 	private double hastePct;
 	private double castTime;
@@ -93,8 +93,6 @@ public final class AccumulatedCasterStats extends AccumulatedPartialStats {
 				: null;
 		this.isDamage = powerType != null && powerType != HEALING;
 		this.isHealing = powerType == HEALING;
-		accumulateBaseStatInfo();
-		accumulateBaseCrit();
 	}
 
 	public static AccumulatedCasterStats forSpellCast(Character caster, Spell spell, Character target) {
@@ -204,16 +202,16 @@ public final class AccumulatedCasterStats extends AccumulatedPartialStats {
 		this.direct = stats.direct;
 		this.periodic = stats.periodic;
 		this.appliedEffect = stats.appliedEffect;
-		this.baseStamina = stats.baseStamina;
-		this.baseIntellect = stats.baseIntellect;
-		this.baseSpirit = stats.baseSpirit;
 		this.stamina = stats.stamina;
 		this.staminaPct = stats.staminaPct;
 		this.intellect = stats.intellect;
 		this.intellectPct = stats.intellectPct;
 		this.spirit = stats.spirit;
 		this.spiritPct = stats.spiritPct;
+		this.baseStats = stats.baseStats;
 		this.baseStatsPct = stats.baseStatsPct;
+		this.stats = stats.stats;
+		this.statsPct = stats.statsPct;
 		this.hasteRating = stats.hasteRating;
 		this.hastePct = stats.hastePct;
 		this.castTime = stats.castTime;
@@ -251,20 +249,6 @@ public final class AccumulatedCasterStats extends AccumulatedPartialStats {
 		return new AccumulatedCasterStats(this);
 	}
 
-	private void accumulateBaseStatInfo() {
-		var baseStatInfo = caster.getBaseStatInfo();
-
-		baseStamina += baseStatInfo.getBaseStamina();
-		baseIntellect += baseStatInfo.getBaseIntellect();
-		baseSpirit += baseStatInfo.getBaseSpirit();
-	}
-
-	private void accumulateBaseCrit() {
-		var baseStatInfo = caster.getBaseStatInfo();
-
-		critPct += baseStatInfo.getBaseSpellCritPct().value();
-	}
-
 	@Override
 	public int getLevel() {
 		return caster.getLevel();
@@ -300,22 +284,16 @@ public final class AccumulatedCasterStats extends AccumulatedPartialStats {
 				this.spiritPct += getValue(attribute, scaleFactor);
 				break;
 			case BASE_STATS:
-				this.baseStamina += getValue(attribute, scaleFactor);
-				this.baseIntellect += getValue(attribute, scaleFactor);
-				this.baseSpirit += getValue(attribute, scaleFactor);
+				this.baseStats += getValue(attribute, scaleFactor);
 				break;
 			case BASE_STATS_PCT:
 				this.baseStatsPct += getValue(attribute, scaleFactor);
 				break;
 			case STATS:
-				this.stamina += getValue(attribute, scaleFactor);
-				this.intellect += getValue(attribute, scaleFactor);
-				this.spirit += getValue(attribute, scaleFactor);
+				this.stats += getValue(attribute, scaleFactor);
 				break;
 			case STATS_PCT:
-				this.staminaPct += getValue(attribute, scaleFactor);
-				this.intellectPct += getValue(attribute, scaleFactor);
-				this.spiritPct += getValue(attribute, scaleFactor);
+				this.statsPct += getValue(attribute, scaleFactor);
 				break;
 			case HASTE_RATING:
 				this.hasteRating += getValue(attribute, scaleFactor);
@@ -521,15 +499,21 @@ public final class AccumulatedCasterStats extends AccumulatedPartialStats {
 	}
 
 	public double getTotalStamina() {
-		return getPrimaryStat(baseStamina, baseStatsPct, stamina, staminaPct);
+		var baseStatInfo = caster.getBaseStatInfo();
+
+		return getPrimaryStat(baseStatInfo.getBaseStamina() + baseStats, baseStatsPct, stamina + stats, staminaPct + statsPct);
 	}
 
 	public double getTotalIntellect() {
-		return getPrimaryStat(baseIntellect, baseStatsPct, intellect, intellectPct);
+		var baseStatInfo = caster.getBaseStatInfo();
+
+		return getPrimaryStat(baseStatInfo.getBaseIntellect() + baseStats, baseStatsPct, intellect + stats, intellectPct + statsPct);
 	}
 
 	public double getTotalSpirit() {
-		return getPrimaryStat(baseSpirit, baseStatsPct, spirit, spiritPct);
+		var baseStatInfo = caster.getBaseStatInfo();
+
+		return getPrimaryStat(baseStatInfo.getBaseSpirit() + baseStats, baseStatsPct, spirit + stats, spiritPct + statsPct);
 	}
 
 	public double getCost(ResourceType resourceType) {

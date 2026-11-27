@@ -51,10 +51,10 @@ class CalculationServiceTest extends ServiceTest {
 
 		var baseStats = stats.getBaseStats();
 
-		assertThat(baseStats.getBaseIntellect()).isEqualTo(131);
-		assertThat(baseStats.getIntellect()).isEqualTo(444);
-		assertThat(baseStats.getIntellectPct()).isEqualTo(10);
+		assertThat(baseStats.getIntellect()).isEqualTo(424);
+		assertThat(baseStats.getIntellectPct()).isZero();
 		assertThat(baseStats.getBaseStatsPct()).isZero();
+		assertThat(baseStats.getStatsPct()).isEqualTo(10);
 
 		var abilityStats = stats.get(SHADOW_BOLT);
 
@@ -108,7 +108,7 @@ class CalculationServiceTest extends ServiceTest {
 		assertThat(direct.getPowerPct()).isZero();
 		assertThat(direct.getPowerCoeffPct()).isEqualTo(20);
 		assertThat(direct.getCritRating()).isEqualTo(270);
-		assertThat(direct.getCritPct()).isEqualTo(12.7, PRECISION);
+		assertThat(direct.getCritPct()).isEqualTo(11, PRECISION);
 		assertThat(direct.getCritEffectPct()).isEqualTo(3);
 		assertThat(direct.getCritEffectMultiplierPct()).isEqualTo(100);
 		assertThat(direct.getCritCoeffPct()).isZero();
