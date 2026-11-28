@@ -12,9 +12,13 @@ import java.util.List;
 public interface Gem extends AbstractItem<GemId>, PveRoleClassified {
 	GemColor getColor();
 
+	boolean isMeta();
+
 	List<MetaEnabler> getMetaEnablers();
 
 	List<Effect> getEffects();
 
 	boolean isMetaConditionTrue(int numRed, int numYellow, int numBlue);
+
+	boolean matchesSocket(SocketType socket);
 }

@@ -6,7 +6,10 @@ import wow.character.model.effect.EffectCollector;
 import wow.commons.model.categorization.ItemSlot;
 import wow.commons.model.categorization.ItemSlotGroup;
 import wow.commons.model.categorization.ItemType;
-import wow.commons.model.item.*;
+import wow.commons.model.item.Enchant;
+import wow.commons.model.item.Gem;
+import wow.commons.model.item.ItemSet;
+import wow.commons.model.item.SocketType;
 import wow.commons.model.spell.AbilityId;
 import wow.commons.model.spell.ActivatedAbility;
 
@@ -22,9 +25,7 @@ public class Equipment implements EffectCollection {
 	private final Character owner;
 	private final Map<ItemSlot, EquippableItem> itemsBySlot = new EnumMap<>(ItemSlot.class);
 
-	private EquippableItem metaSocketItem;
-	private int metaSocketNo;
-	private Gem metaGem;
+	private ItemSocket metaSocket;
 
 	private int numRed;
 	private int numYellow;
@@ -268,10 +269,8 @@ public class Equipment implements EffectCollection {
 		var sockets = equippableItem.getSockets();
 
 		for (var socket : sockets) {
-			var gem = socket.getGem();
-
-			if (gem != null) {
-				gemEquipped(equippableItem, socket.getSocketNo(), gem);
+			if (socket.hasGem()) {
+				gemEquipped(socket);
 			}
 		}
 	}
@@ -297,7 +296,7 @@ public class Equipment implements EffectCollection {
 			var gem = socket.getGem();
 
 			if (gem != null) {
-				gemUnequipped(equippableItem, socket.getSocketNo(), gem);
+				gemUnequipped(socket, gem);
 			}
 		}
 	}
@@ -334,27 +333,25 @@ public class Equipment implements EffectCollection {
 		owner.enchantStatsRemoved(enchant);
 	}
 
-	void gemEquipped(EquippableItem equippableItem, int socketNo, Gem gem) {
-		if (gem.getColor() == GemColor.META) {
-			metaGemEquipped(equippableItem, socketNo, gem);
+	void gemEquipped(ItemSocket socket) {
+		if (socket.isMetaSocket()) {
+			metaGemEquipped(socket);
 
 		} else {
-			coloredGemEquipped(equippableItem, socketNo, gem);
+			coloredGemEquipped(socket);
 		}
 	}
 
-	void gemUnequipped(EquippableItem equippableItem, int socketNo, Gem gem) {
-		if (gem.getColor() == GemColor.META) {
+	void gemUnequipped(ItemSocket socket, Gem gem) {
+		if (gem.isMeta()) {
 			metaGemUnequipped();
 		} else {
-			coloredGemUnequipped(equippableItem, socketNo, gem);
+			coloredGemUnequipped(socket, gem);
 		}
 	}
 
-	private void metaGemEquipped(EquippableItem equippableItem, int socketNo, Gem gem) {
-		this.metaSocketItem = equippableItem;
-		this.metaSocketNo = socketNo;
-		this.metaGem = gem;
+	private void metaGemEquipped(ItemSocket socket) {
+		this.metaSocket = socket;
 
 		if (isMetaConditionTrue()) {
 			enableMetaGem();
@@ -366,53 +363,53 @@ public class Equipment implements EffectCollection {
 			disableMetaGem();
 		}
 
-		this.metaSocketItem = null;
-		this.metaSocketNo = -1;
-		this.metaGem = null;
+		this.metaSocket = null;
 	}
 
-	private void coloredGemEquipped(EquippableItem equippableItem, int socketNo, Gem gem) {
+	private void coloredGemEquipped(ItemSocket socket) {
+		var gem = socket.getGem();
+
 		owner.gemStatsAdded(gem);
 
-		if (equippableItem.equippedGemMatchesSocketColor(socketNo, gem)) {
-			equippableItem.setGemMatches(socketNo, true);
+		if (socket.hasGemMatchingSocketColor()) {
+			socket.setHasMatch(true);
 
-			if (equippableItem.allSocketsHaveMatchingGems()) {
-				owner.socketBonusAdded(equippableItem.getSocketBonus());
+			if (socket.allSocketsHaveMatchingGems()) {
+				owner.socketBonusAdded(socket.getSocketBonus());
 			}
 		}
 
-		var metaEnabledBefore = metaGem != null && isMetaConditionTrue();
+		var metaEnabledBefore = metaSocket != null && isMetaConditionTrue();
 
-		if (gem.getColor().matchesSocket(SocketType.RED)) {
+		if (gem.matchesSocket(SocketType.RED)) {
 			++numRed;
 		}
 
-		if (gem.getColor().matchesSocket(SocketType.YELLOW)) {
+		if (gem.matchesSocket(SocketType.YELLOW)) {
 			++numYellow;
 		}
 
-		if (gem.getColor().matchesSocket(SocketType.BLUE)) {
+		if (gem.matchesSocket(SocketType.BLUE)) {
 			++numBlue;
 		}
 
 		updateMetaGemEnabledStatus(metaEnabledBefore);
 	}
 
-	private void coloredGemUnequipped(EquippableItem equippableItem, int socketNo, Gem gem) {
-		var metaEnabledBefore = metaGem != null && isMetaConditionTrue();
+	private void coloredGemUnequipped(ItemSocket socket, Gem gem) {
+		var metaEnabledBefore = metaSocket != null && isMetaConditionTrue();
 
-		removeEffectAndSocketBonus(equippableItem, socketNo, gem);
+		removeEffectAndSocketBonus(socket, gem);
 
-		if (gem.getColor().matchesSocket(SocketType.RED)) {
+		if (gem.matchesSocket(SocketType.RED)) {
 			--numRed;
 		}
 
-		if (gem.getColor().matchesSocket(SocketType.YELLOW)) {
+		if (gem.matchesSocket(SocketType.YELLOW)) {
 			--numYellow;
 		}
 
-		if (gem.getColor().matchesSocket(SocketType.BLUE)) {
+		if (gem.matchesSocket(SocketType.BLUE)) {
 			--numBlue;
 		}
 
@@ -420,7 +417,7 @@ public class Equipment implements EffectCollection {
 	}
 
 	private void updateMetaGemEnabledStatus(boolean metaEnabledBefore) {
-		if (metaGem == null) {
+		if (metaSocket == null) {
 			return;
 		}
 
@@ -434,30 +431,30 @@ public class Equipment implements EffectCollection {
 	}
 
 	private boolean isMetaConditionTrue() {
-		return metaGem.isMetaConditionTrue(numRed, numYellow, numBlue);
+		return metaSocket.getGem().isMetaConditionTrue(numRed, numYellow, numBlue);
 	}
 
 	private void enableMetaGem() {
-		metaSocketItem.setGemMatches(metaSocketNo, true);
+		metaSocket.setHasMatch(true);
 
-		if (metaSocketItem.allSocketsHaveMatchingGems()) {
-			owner.gemStatsAdded(metaGem);
-			owner.socketBonusAdded(metaSocketItem.getSocketBonus());
+		if (metaSocket.allSocketsHaveMatchingGems()) {
+			owner.gemStatsAdded(metaSocket.getGem());
+			owner.socketBonusAdded(metaSocket.getSocketBonus());
 		}
 	}
 
 	private void disableMetaGem() {
-		removeEffectAndSocketBonus(metaSocketItem, metaSocketNo, metaGem);
+		removeEffectAndSocketBonus(metaSocket, metaSocket.getGem());
 	}
 
-	private void removeEffectAndSocketBonus(EquippableItem equippableItem, int socketNo, Gem gem) {
-		var allSocketsMatchedBefore = equippableItem.allSocketsHaveMatchingGems();
+	private void removeEffectAndSocketBonus(ItemSocket socket, Gem gem) {
+		var allSocketsMatchedBefore = socket.allSocketsHaveMatchingGems();
 
-		equippableItem.setGemMatches(socketNo, false);
+		socket.setHasMatch(false);
 		owner.gemStatsRemoved(gem);
 
 		if (allSocketsMatchedBefore) {
-			owner.socketBonusRemoved(equippableItem.getSocketBonus());
+			owner.socketBonusRemoved(socket.getSocketBonus());
 		}
 	}
 

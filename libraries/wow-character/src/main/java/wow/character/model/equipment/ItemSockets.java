@@ -85,7 +85,7 @@ public class ItemSockets implements Iterable<ItemSocket> {
 		for (int socketNo = 0; socketNo < getSocketCount(); ++socketNo) {
 			var gem = getGem(socketNo);
 
-			if (gem != null && gem.getColor().matchesSocket(socketType)) {
+			if (gem != null && gem.matchesSocket(socketType)) {
 				++result;
 			}
 		}

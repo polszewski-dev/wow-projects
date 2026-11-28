@@ -171,10 +171,6 @@ public class EquippableItem implements EffectCollection, Copyable<EquippableItem
 		return sockets.allSocketsHaveMatchingGems(numRed, numYellow, numBlue);
 	}
 
-	boolean equippedGemMatchesSocketColor(int socketNo, Gem gem) {
-		return sockets.getSocket(socketNo).matchesSocketColor(gem);
-	}
-
 	@Override
 	public void collectEffects(EffectCollector collector) {
 		collector.addEffects(item.getEffects());
@@ -231,15 +227,15 @@ public class EquippableItem implements EffectCollection, Copyable<EquippableItem
 		}
 	}
 
-	void gemUnequipped(int socketNo, Gem gem) {
+	void gemUnequipped(ItemSocket socket, Gem gem) {
 		if (gem != null && equipment != null) {
-			equipment.gemUnequipped(this, socketNo, gem);
+			equipment.gemUnequipped(socket, gem);
 		}
 	}
 
-	void gemEquipped(int socketNo, Gem gem) {
-		if (gem != null && equipment != null) {
-			equipment.gemEquipped(this, socketNo, gem);
+	void gemEquipped(ItemSocket socket) {
+		if (socket.hasGem() && equipment != null) {
+			equipment.gemEquipped(socket);
 		}
 	}
 
@@ -251,12 +247,8 @@ public class EquippableItem implements EffectCollection, Copyable<EquippableItem
 		this.equipment = null;
 	}
 
-	void setGemMatches(int socketNo, boolean value) {
-		sockets.getSocket(socketNo).setMatches(value);
-	}
-
 	boolean allSocketsHaveMatchingGems() {
-		return sockets.getSockets().stream().allMatch(ItemSocket::isMatches);
+		return sockets.getSockets().stream().allMatch(ItemSocket::hasMatch);
 	}
 
 	@Override

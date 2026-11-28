@@ -491,6 +491,178 @@ class EquipmentTest extends WowCharacterSpringTest {
 		);
 	}
 
+	@Test
+	void enabling_and_disabling_socket_bonus() {
+		equipment.equip(shoulder);
+		shoulder.insertGem(0, blueGem);
+		shoulder.insertGem(1, yellowGem);
+
+		resetEvents();
+
+		shoulder.insertGem(0, yellowGem);
+
+		assertEvents(
+				new GemStatsRemoved(blueGem),
+				new SocketBonusRemoved(shoulderSocketBonus),
+				new GemStatsAdded(yellowGem)
+		);
+
+		resetEvents();
+
+		shoulder.insertGem(0, blueGem);
+
+		assertEvents(
+				new GemStatsRemoved(yellowGem),
+				new GemStatsAdded(blueGem),
+				new SocketBonusAdded(shoulderSocketBonus)
+		);
+
+		resetEvents();
+
+		shoulder.insertGem(0, yellowGem);
+
+		assertEvents(
+				new GemStatsRemoved(blueGem),
+				new SocketBonusRemoved(shoulderSocketBonus),
+				new GemStatsAdded(yellowGem)
+		);
+	}
+
+	@Test
+	void reequipping_item_with_matching_gems() {
+		equipment.equip(shoulder);
+		shoulder.insertGem(0, blueGem);
+		shoulder.insertGem(1, yellowGem);
+
+		equipment.equip(null, SHOULDER);
+
+		resetEvents();
+
+		equipment.equip(shoulder);
+
+		assertEvents(
+				new ItemStatsAdded(shoulder),
+				new GemStatsAdded(blueGem),
+				new GemStatsAdded(yellowGem),
+				new SocketBonusAdded(shoulderSocketBonus)
+		);
+	}
+
+	@Test
+	void reequipping_item_with_non_matching_gems() {
+		equipment.equip(shoulder);
+		shoulder.insertGem(0, yellowGem);
+		shoulder.insertGem(1, yellowGem);
+
+		equipment.equip(null, SHOULDER);
+
+		resetEvents();
+
+		equipment.equip(shoulder);
+
+		assertEvents(
+				new ItemStatsAdded(shoulder),
+				new GemStatsAdded(yellowGem),
+				new GemStatsAdded(yellowGem)
+		);
+	}
+
+	@Test
+	void reequipping_item_with_matching_gems_and_meta_present() {
+		head.insertGem(0, metaGem);
+		head.insertGem(1, blueGem);
+		equipment.equip(head);
+
+		equipment.equip(shoulder);
+		shoulder.insertGem(0, blueGem);
+		shoulder.insertGem(1, yellowGem);
+
+		equipment.equip(null, SHOULDER);
+
+		resetEvents();
+
+		equipment.equip(shoulder);
+
+		assertEvents(
+				new ItemStatsAdded(shoulder),
+				new GemStatsAdded(blueGem),
+				new GemStatsAdded(metaGem),
+				new SocketBonusAdded(headSocketBonus),
+				new GemStatsAdded(yellowGem),
+				new SocketBonusAdded(shoulderSocketBonus)
+		);
+	}
+
+	@Test
+	void reequipping_item_with_non_matching_gems_and_meta_present() {
+		head.insertGem(0, metaGem);
+		head.insertGem(1, blueGem);
+		equipment.equip(head);
+
+		equipment.equip(shoulder);
+		shoulder.insertGem(0, yellowGem);
+		shoulder.insertGem(1, yellowGem);
+
+		equipment.equip(null, SHOULDER);
+
+		resetEvents();
+
+		equipment.equip(shoulder);
+
+		assertEvents(
+				new ItemStatsAdded(shoulder),
+				new GemStatsAdded(yellowGem),
+				new GemStatsAdded(yellowGem)
+		);
+	}
+
+
+	@Test
+	void reequipping_item_with_enabled_meta() {
+		head.insertGem(0, metaGem);
+		head.insertGem(1, blueGem);
+		equipment.equip(head);
+
+		equipment.equip(shoulder);
+		shoulder.insertGem(0, blueGem);
+		shoulder.insertGem(1, yellowGem);
+
+		equipment.equip(null, HEAD);
+
+		resetEvents();
+
+		equipment.equip(head);
+
+		assertEvents(
+				new ItemStatsAdded(head),
+				new GemStatsAdded(blueGem),
+				new GemStatsAdded(metaGem),
+				new SocketBonusAdded(headSocketBonus)
+		);
+	}
+
+	@Test
+	void reequipping_item_with_disabled_meta() {
+		head.insertGem(0, metaGem);
+		head.insertGem(1, blueGem);
+		equipment.equip(head);
+
+		equipment.equip(shoulder);
+		shoulder.insertGem(0, yellowGem);
+		shoulder.insertGem(1, yellowGem);
+
+		equipment.equip(null, HEAD);
+
+		resetEvents();
+
+		equipment.equip(head);
+
+		assertEvents(
+				new ItemStatsAdded(head),
+				new GemStatsAdded(blueGem)
+		);
+	}
+
 	TestPlayerCharacter player;
 	Equipment equipment;
 

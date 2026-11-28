@@ -43,6 +43,11 @@ public class GemImpl extends AbstractItemImpl<GemId> implements Gem {
 	}
 
 	@Override
+	public boolean isMeta() {
+		return color == GemColor.META;
+	}
+
+	@Override
 	public boolean isMetaConditionTrue(int numRed, int numYellow, int numBlue) {
 		if (metaEnablers.isEmpty()) {
 			return true;
@@ -55,5 +60,10 @@ public class GemImpl extends AbstractItemImpl<GemId> implements Gem {
 		}
 
 		return true;
+	}
+
+	@Override
+	public boolean matchesSocket(SocketType socket) {
+		return color.matchesSocket(socket);
 	}
 }
